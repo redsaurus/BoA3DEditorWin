@@ -1,0 +1,288 @@
+[Project]
+FileName=BoA3DEditor.dev
+Name=3D BoA Editor Windows
+UnitCount=24
+Type=0
+Ver=1
+ObjFiles=
+Includes=
+Libs=
+PrivateResource=3D_BoA_Editor_Windows_private.rc
+ResourceIncludes=
+MakeIncludes=
+Compiler=
+CppCompiler=
+Linker=../../../../../Dev-Cpp/lib/libwinmm.a_@@_
+IsCpp=1
+Icon=
+ExeOutput=
+ObjectOutput=
+OverrideOutput=0
+OverrideOutputName=BoA3DEditor.exe
+HostApplication=
+Folders=
+CommandLine=
+UseCustomMakefile=0
+CustomMakefile=
+IncludeVersionInfo=0
+SupportXPThemes=0
+CompilerSet=0
+CompilerSettings=0000000000000000000000
+
+[Unit1]
+FileName=Bl A Editor.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit2]
+FileName=Bl A Fileio.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit3]
+FileName=Blscened.rc
+Folder=3D BoA Editor Windows
+Compile=1
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit4]
+FileName=CMemStream.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit5]
+FileName=CMemStream.h
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit6]
+FileName=DibEngine.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit7]
+FileName=DibEngine.h
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit8]
+FileName=dlogtool.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit9]
+FileName=EdFcns.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit10]
+FileName=EdGlobal.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit11]
+FileName=EdParser.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit12]
+FileName=EdUtils.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit13]
+FileName=global.h
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit14]
+FileName=Graphics.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit15]
+FileName=Graphutl.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit16]
+FileName=keydlgs.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit17]
+FileName=Library.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit18]
+FileName=Resource.h
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit19]
+FileName=sound.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit20]
+FileName=stdafx.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit21]
+FileName=stdafx.h
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit22]
+FileName=tokntype.h
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit23]
+FileName=townout.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit24]
+FileName=version.h
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[VersionInfo]
+Major=0
+Minor=1
+Release=1
+Build=1
+LanguageID=1033
+CharsetID=1252
+CompanyName=
+FileVersion=
+FileDescription=Developed using the Dev-C++ IDE
+InternalName=
+LegalCopyright=
+LegalTrademarks=
+OriginalFilename=
+ProductName=
+ProductVersion=
+AutoIncBuildNr=0
+

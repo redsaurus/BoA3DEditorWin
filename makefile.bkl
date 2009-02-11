@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<makefile>
+
+	<exe id = "BoA3DEditor" exename = "BoA3DEditor" >
+
+        <win32-res> Blscened.rc </win32-res>
+
+		<sources>
+
+            BlAEditor.cpp
+            BlAFileio.cpp
+            CMemStream.cpp
+            DibEngine.cpp
+            dlogtool.cpp
+            EdFcns.cpp
+            EdGlobal.cpp
+            EdParser.cpp
+            EdUtils.cpp
+            Graphics.cpp
+            Graphutl.cpp
+            keydlgs.cpp
+            Library.cpp
+            sound.cpp
+            stdafx.cpp
+            townout.cpp
+
+		</sources>
+
+        <lib-path> "c:\Dev-Cpp\lib" </lib-path>
+        <lib-path> "c:\wx\msw_build\lib" </lib-path>
+
+        <include> "c:\Dev-Cpp\include" </include>
+
+        <cxxflags> -O2 -mthreads -Wall -Wno-ctor-dtor-privacy </cxxflags>
+        <ldflags> -mthreads -Wl -lgdi32 -lwinmm -lComdlg32 </ldflags>
+
+	</exe>
+
+</makefile>

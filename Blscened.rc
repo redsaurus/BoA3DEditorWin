@@ -1,0 +1,4083 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// ニュートラル (既定) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEUD)
+#ifdef _WIN32
+LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_CURSOR130           CURSOR                  "Resources/sword.cur"
+IDC_CURSOR131           CURSOR                  "Resources/eyedrop.cur"
+IDC_CURSOR132           CURSOR                  "Resources/paintbrush.cur"
+IDC_CURSOR133           CURSOR                  "Resources/spraycan.cur"
+IDC_CURSOR134           CURSOR                  "Resources/eraser.cur"
+IDC_CURSOR135           CURSOR                  "Resources/rect ul.cur"
+IDC_CURSOR136           CURSOR                  "Resources/rect dr.cur"
+IDC_CURSOR137           CURSOR                  "Resources/hand.cur"
+IDC_CURSOR138           CURSOR                  "resources/rect up.cur"
+IDC_CURSOR139           CURSOR                  "resources/rect dw.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_BOA3DEDITOR         ICON                    "Resources/BladesofAvernumEditor.ico"
+IDI_SMALL               ICON                    "Resources/BladesofAvernumEditor.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// 100
+//
+
+1                       100                     "Resources/snd0.wav"
+2                       100                     "Resources/snd1.wav"
+4                       100                     "Resources/snd3.wav"
+35                      100                     "Resources/snd34.wav"
+38                      100                     "Resources/snd34.wav"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDC_BOA3DEDITOR MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&Open Scenario\tCtrl+O",      1
+        MENUITEM "&Save Scenario\tCtrl+S",      2
+        MENUITEM "New Scenario",                3
+        MENUITEM "Import Blades of Exile Scenario", 4
+        MENUITEM SEPARATOR
+        MENUITEM "&Quit\tCtrl+Q",               6
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&Cut\tCtrl+X",                101
+        MENUITEM "&Copy\tCtrl+C",               102
+        MENUITEM "&Paste\tCtrl+V",              103
+        MENUITEM "Clear",                       104
+    END
+    POPUP "&Scenario"
+    BEGIN
+        MENUITEM "Edit Town\tCtrl+T",           201
+        MENUITEM "Edit Outdoor Section\tCtrl+R", 202
+        MENUITEM "Create New Town",             203
+        MENUITEM SEPARATOR
+        MENUITEM "Basic Scenario Details",      205
+        MENUITEM "Set Label Icon",              206
+        MENUITEM "Intro Text 1",                207
+        MENUITEM "Intro Text 2",                208
+        MENUITEM "Intro Text 3",                209
+        MENUITEM SEPARATOR
+        MENUITEM "Advanced:",                   211
+        MENUITEM "  Reload Scenario Script",    212
+        MENUITEM "  Clean Up Walls",            213
+        MENUITEM "  Import Town",               214
+        MENUITEM "  Import Outdoor Section",    215
+        MENUITEM "  Set Variable Town Entry",   216
+        MENUITEM "  Edit Item Placement Shortcuts", 217
+        MENUITEM "  Delete Last Town",          218
+        MENUITEM "  Write Scenario Data To Text File", 219
+        MENUITEM "  Change Outdoor Size",       ID_SCENARIO_CHANGEOUTDOORSIZE
+
+    END
+    POPUP "&Town"
+    BEGIN
+        MENUITEM "Load Different Town\tCtrl+L", 301
+        MENUITEM "Town Details\tCtrl+D",        302
+        MENUITEM "Town Wandering Monsters",     303
+        MENUITEM "Set Town Boundaries",         304
+        MENUITEM "Frill Up Terrain",            305
+        MENUITEM "Remove Terrain Frills",       306
+        MENUITEM "Edit Area Descriptions",      307
+        MENUITEM SEPARATOR
+        MENUITEM "Set Starting Location",       309
+        MENUITEM SEPARATOR
+        MENUITEM "Add Random Items",            311
+        MENUITEM "Set All Items Not Property",  312
+        MENUITEM "Clear All Items",             313
+        MENUITEM SEPARATOR
+        MENUITEM "Advanced:",                   315
+        MENUITEM "  Clear All Monsters",        316
+        MENUITEM "  Clear All Special Encounters", 317
+    END
+    POPUP "&Outdoors"
+    BEGIN
+        MENUITEM "Load Different Outdoor Section\tCtrl+L", 401
+        MENUITEM "Outdoor Details\tCtrl+D",     402
+        MENUITEM "Outdoor Wandering Monsters",  403
+        MENUITEM "Outdoor Special Encounters",  404
+        MENUITEM "Outdoor Preset Encounters",   405
+        MENUITEM "Frill Up Terrain",            406
+        MENUITEM "Remove Terrain Frills",       407
+        MENUITEM "Edit Area Descriptions",      408
+        MENUITEM SEPARATOR
+        MENUITEM "Set Starting Location",       410
+    END
+    POPUP "&I1"
+    BEGIN
+        MENUITEM "Dummy",                       600
+    END
+    POPUP "&I2"
+    BEGIN
+        MENUITEM "Dummy",                       601
+    END
+    POPUP "&I3"
+    BEGIN
+        MENUITEM "Dummy",                       602
+    END
+    POPUP "&I4"
+    BEGIN
+        MENUITEM "Dummy",                       603
+    END
+    POPUP "&I5"
+    BEGIN
+        MENUITEM "Dummy",                       604
+    END
+    POPUP "&I6"
+    BEGIN
+        MENUITEM "Dummy",                       605
+    END
+    POPUP "&I7"
+    BEGIN
+        MENUITEM "Dummy",                       606
+    END
+    POPUP "&I8"
+    BEGIN
+        MENUITEM "Dummy",                       607
+    END
+    POPUP "&I9"
+    BEGIN
+        MENUITEM "Dummy",                       608
+    END
+    POPUP "&I10"
+    BEGIN
+        MENUITEM "Dummy",                       609
+    END
+    POPUP "&C1"
+    BEGIN
+        MENUITEM "Dummy",                       700
+    END
+    POPUP "&C2"
+    BEGIN
+        MENUITEM "Dummy",                       701
+    END
+    POPUP "&C3"
+    BEGIN
+        MENUITEM "Dummy",                       702
+    END
+    POPUP "&C4"
+    BEGIN
+        MENUITEM "Dummy",                       703
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "About Blades Scenario Editor", 1500
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDC_BOA3DEDITOR ACCELERATORS 
+BEGIN
+    "^O",           1,                      ASCII,  NOINVERT
+    "^X",           101,                    ASCII,  NOINVERT
+    "^C",           102,                    ASCII,  NOINVERT
+    "^V",           103,                    ASCII,  NOINVERT
+    "^S",           2,                      ASCII,  NOINVERT
+    "^T",           201,                    ASCII,  NOINVERT
+    "^R",           202,                    ASCII,  NOINVERT
+    "^Q",           6,                      ASCII,  NOINVERT
+    VK_TAB,         1609,                   VIRTKEY, CONTROL, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+800 DIALOG  10, 10, 516, 211
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,448,410,31,10,WS_GROUP
+    LTEXT           "6_0",2,329,48,125,32
+    LTEXT           "6_0",3,329,110,125,16
+    LTEXT           "1_63",4,398,169,62,16
+    LTEXT           "~Create a new scenario:",5,28,20,194,14
+    LTEXT           "What is the file name for your new scenario? (max. length 20 characters, letters only) |  Examples: thorham, dragonq",
+                    6,30,90,292,56
+    LTEXT           "What is the name of your new scenario? (max. length 49 characters) |   Examples: 'Hammer of Thor', 'Dragon's Quest'",
+                    7,30,46,292,40
+    LTEXT           "0_5",8,332,169,62,16
+    LTEXT           "*Start with surface terrain",9,30,149,177,15
+    LTEXT           "2_0",10,211,152,38,15
+END
+
+801 DIALOG  10, 10, 467, 392
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,281,268,31,10,WS_GROUP
+    LTEXT           "6_0",2,281,117,75,16
+    LTEXT           "6_0",3,281,143,75,16
+    LTEXT           "+",4,27,46,405,124
+    LTEXT           "+",5,27,179,405,172
+    LTEXT           "0_5",6,305,361,62,16
+    LTEXT           "1_63",7,371,361,60,15
+    LTEXT           "~How big is your scenario?",8,24,24,278,17
+    LTEXT           "~Size of Outdoors:",9,31,50,158,18
+    LTEXT           "The outdoors for your scenario can have up to 100 48x48 sections. Note, however, that more than 50 sections may be a bit too large.",
+                    10,42,70,377,39
+    LTEXT           "Your scenario will start with one 48x48 town. You can add more small, medium, and large towns once the scenario is created.",
+                    11,31,191,383,52
+    LTEXT           "*Width of outdoors (0...50)",12,89,118,181,15
+    LTEXT           "*Height of outdoors (0...50)",13,89,143,181,15
+    LTEXT           "~Place a starter town?",14,31,246,235,16
+    LTEXT           "If this option is selected, Town number 0 in your scenario is 'Warrior's Grove,' a predesigned town with shops, inns, etc. This is a GREAT place to start for beginner scenario designers, and lets you put off designing characters.",
+                    15,42,263,383,53
+    LTEXT           "*Include starter town",16,91,321,134,15
+    LTEXT           "2_0",17,229,324,38,15
+END
+
+803 DIALOG  10, 10, 444, 387
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,579,523,31,10,WS_GROUP
+    LTEXT           "6_0",2,158,98,43,16
+    LTEXT           "6_0",3,211,98,43,16
+    LTEXT           "6_0",4,264,98,43,16
+    LTEXT           "6_0",5,158,122,243,47
+    LTEXT           "6_0",6,158,177,243,47
+    LTEXT           "6_0",7,158,232,243,22
+    LTEXT           "6_0",8,168,266,44,16
+    LTEXT           "6_0",9,279,266,44,16
+    LTEXT           "1_63",10,348,352,54,16
+    LTEXT           "2_0",11,156,303,23,14
+    LTEXT           "2_0",12,156,320,23,14
+    LTEXT           "2_0",13,156,337,23,14
+    LTEXT           "2_0",14,156,354,32,15
+    LTEXT           "*High",15,219,267,53,15
+    LTEXT           "*Level range:   Low  ",16,26,267,135,14
+    LTEXT           "*Scenario Name",17,26,231,121,17
+    LTEXT           "*Rating:",18,26,299,54,14
+    LTEXT           "*Everyone",19,83,299,46,15
+    LTEXT           "*Teen",20,83,316,46,15
+    LTEXT           "*Mature",21,83,333,46,15
+    LTEXT           "*Adult",22,83,350,64,16
+    LTEXT           "This is where you can define the various pieces of information the user will see when deciding whether or not to play your scenario. The meanings of all these fields are given in the documentation.",
+                    23,27,41,372,53
+    LTEXT           "~Scenario Details",24,27,24,256,17
+    LTEXT           "*Version number:",25,26,99,120,14
+    LTEXT           "*Credits:",26,26,120,120,14
+    LTEXT           "*Description, Part 1:",27,26,176,120,14
+END
+
+804 DIALOG  10, 10, 555, 583
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,369,337,31,10,WS_GROUP
+    LTEXT           "6_0",2,33,134,463,59
+    LTEXT           "6_0",3,33,200,463,59
+    LTEXT           "6_0",4,33,266,463,59
+    LTEXT           "6_0",5,33,332,463,59
+    LTEXT           "6_0",6,33,398,463,59
+    LTEXT           "6_0",7,33,464,463,59
+    LTEXT           "6_0",8,387,76,70,16
+    LTEXT           "1_63",9,439,536,61,16
+    LTEXT           "0_5",10,373,536,63,16
+    LTEXT           "~Scenario Icon/Intro",11,26,27,256,17
+    LTEXT           "You can select a graphic the user sees when seeing this part of the intro. Give the resource number for a graphic which you provide. If you are not providing a custom graphic for this, leave this at -1.",
+                    12,26,46,313,64
+    LTEXT           "~Introductory text:",13,26,114,136,15
+    LTEXT           "*Graphic to display:",14,344,56,149,14
+    LTEXT           "*Text number (0..2):",15,273,114,136,15
+    LTEXT           "*a",16,412,114,46,15
+END
+
+805 DIALOG  10, 10, 545, 172
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,369,337,31,10,WS_GROUP
+    LTEXT           "6_0",2,387,76,70,16
+    LTEXT           "1_63",3,430,127,61,16
+    LTEXT           "0_5",4,364,127,62,16
+    LTEXT           "~Scenario Label Picture",5,26,27,256,17
+    LTEXT           "You can select what icon the user sees when selecting your scenario. Give the number of a graphics resource that contains a 64x64 icon. If you don't know what to enter, the icons available are listed in the documentation.",
+                    6,26,46,313,64
+    LTEXT           "*Scenario icon number:",7,344,56,149,14
+END
+
+810 DIALOG  10, 10, 521, 434
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
+    LTEXT           "6_0",2,120,148,67,16
+    LTEXT           "6_0",3,120,176,67,16
+    LTEXT           "6_0",4,120,204,67,16
+    LTEXT           "6_0",5,120,232,67,16
+    LTEXT           "6_0",6,120,260,67,16
+    LTEXT           "6_0",7,120,288,67,16
+    LTEXT           "6_0",8,120,316,67,16
+    LTEXT           "6_0",9,120,344,67,16
+    LTEXT           "6_0",10,120,372,67,16
+    LTEXT           "6_0",11,120,400,67,16
+    LTEXT           "6_0",12,232,148,40,16
+    LTEXT           "6_0",13,232,176,40,16
+    LTEXT           "6_0",14,232,204,40,16
+    LTEXT           "6_0",15,232,232,40,16
+    LTEXT           "6_0",16,232,260,40,16
+    LTEXT           "6_0",17,232,288,40,16
+    LTEXT           "6_0",18,232,316,40,16
+    LTEXT           "6_0",19,232,344,40,16
+    LTEXT           "6_0",20,232,372,40,16
+    LTEXT           "6_0",21,232,400,40,16
+    LTEXT           "6_0",22,318,148,40,16
+    LTEXT           "6_0",23,318,176,40,16
+    LTEXT           "6_0",24,318,204,40,16
+    LTEXT           "6_0",25,318,232,40,16
+    LTEXT           "6_0",26,318,260,40,16
+    LTEXT           "6_0",27,318,288,40,16
+    LTEXT           "6_0",28,318,316,40,16
+    LTEXT           "6_0",29,318,344,40,16
+    LTEXT           "6_0",30,318,372,40,16
+    LTEXT           "6_0",31,318,400,40,16
+    LTEXT           "1_63",32,397,403,67,16
+    LTEXT           "~Variable Town Entry",33,24,24,256,17
+    LTEXT           "When the party enters a town, you can have the exact town entered vary, depending on circumstances. To do this, specify a town number below, and the Stuff Done flag to add to the town number when that town is entered.",
+                    34,24,43,439,40
+    LTEXT           "Leave the town at -1 for this to have no effect. For more information on how this works, see the documentation.",
+                    35,24,86,439,27
+    LTEXT           "*Town entered",36,105,120,100,14
+    LTEXT           "*Stuff Done Flag to add X",37,209,114,96,25
+    LTEXT           "*Stuff Done Flag to add Y",38,303,114,96,25
+END
+
+812 DIALOG  10, 10, 588, 385
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
+    LTEXT           "6_0",2,49,204,39,16
+    LTEXT           "6_0",3,49,232,39,16
+    LTEXT           "6_0",4,49,260,39,16
+    LTEXT           "6_0",5,49,288,39,16
+    LTEXT           "6_0",6,49,316,39,16
+    LTEXT           "6_0",7,285,204,39,16
+    LTEXT           "6_0",8,285,232,39,16
+    LTEXT           "6_0",9,285,260,39,16
+    LTEXT           "6_0",10,285,288,39,16
+    LTEXT           "6_0",11,285,316,39,16
+    LTEXT           "6_0",12,168,204,39,16
+    LTEXT           "6_0",13,168,232,39,16
+    LTEXT           "6_0",14,168,260,39,16
+    LTEXT           "6_0",15,168,288,39,16
+    LTEXT           "6_0",16,168,316,39,16
+    LTEXT           "6_0",17,404,204,39,16
+    LTEXT           "6_0",18,404,232,39,16
+    LTEXT           "6_0",19,404,260,39,16
+    LTEXT           "6_0",20,404,288,39,16
+    LTEXT           "6_0",21,404,316,39,16
+    LTEXT           "6_0",22,386,129,42,17
+    LTEXT           "1_63",23,478,350,63,16
+    LTEXT           "0_5",24,412,350,62,16
+    LTEXT           "0_3",25,89,350,75,16
+    LTEXT           "0_2",26,27,350,62,16
+    LTEXT           "*",27,187,131,46,14
+    LTEXT           "*(Leave this at -1 for no shortcut.)",28,253,150,227,14
+    LTEXT           "~Item Placement Shortcuts",29,26,18,256,17
+    LTEXT           "You can design shortcuts for automatic placement of items in towns. When editing towns, if you select the Place Automatic Items menu item, the edit will randomly place items you specify in terrain types you specify.",
+                    30,26,37,439,40
+    LTEXT           "Enter the terrain type to get the items, the numbers of the items to place, and the percentage chance (0-100) that the item is places there. For more details, see the documentation.",
+                    31,26,82,439,41
+    LTEXT           "*Item shortcut number:",32,26,131,155,14
+    LTEXT           "*Terrain type number:",33,245,131,136,14
+    LTEXT           "*Number of item to place:",34,26,170,98,26
+    LTEXT           "*Chance of placing: (0-100%)",35,141,170,119,26
+    LTEXT           "*Number of item to place:",36,262,170,99,26
+    LTEXT           "*Chance of placing: (0-100%)",37,377,170,119,26
+    LTEXT           "2_0",38,191,154,26,13
+    LTEXT           "*Items are always property:",39,26,150,155,14
+    LTEXT           "0_109",40,434,126,63,16
+    LTEXT           "0_109",41,94,201,63,13
+    LTEXT           "0_109",42,94,229,63,13
+    LTEXT           "0_109",43,94,257,63,13
+    LTEXT           "0_109",44,94,286,63,13
+    LTEXT           "0_109",45,94,314,63,13
+    LTEXT           "0_109",46,330,201,63,13
+    LTEXT           "0_109",47,330,229,63,13
+    LTEXT           "0_109",48,330,257,63,13
+    LTEXT           "0_109",49,330,286,63,13
+    LTEXT           "0_109",50,330,314,63,13
+END
+
+820 DIALOG  10, 10, 530, 386
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,279,223,31,10,WS_GROUP
+    LTEXT           "1_63",2,407,352,75,16
+    LTEXT           "~Select:",3,29,23,256,17
+    LTEXT           "0_2",4,28,352,62,16
+    LTEXT           "0_3",5,90,352,75,16
+    LTEXT           "0_5",6,341,352,62,16
+    LTEXT           "*",7,27,46,200,13
+    LTEXT           "2_0",8,230,48,23,14
+    LTEXT           "*",9,27,61,200,13
+    LTEXT           "2_0",10,230,63,23,14
+    LTEXT           "*",11,27,76,200,13
+    LTEXT           "2_0",12,230,78,23,14
+    LTEXT           "*",13,27,91,200,13
+    LTEXT           "2_0",14,230,93,23,14
+    LTEXT           "*",15,27,106,200,13
+    LTEXT           "2_0",16,230,108,23,14
+    LTEXT           "*",17,27,121,200,13
+    LTEXT           "2_0",18,230,123,23,14
+    LTEXT           "*",19,27,136,200,13
+    LTEXT           "2_0",20,230,138,23,14
+    LTEXT           "*",21,27,151,200,13
+    LTEXT           "2_0",22,230,153,23,14
+    LTEXT           "*",23,27,166,200,13
+    LTEXT           "2_0",24,230,168,23,14
+    LTEXT           "*",25,27,181,200,13
+    LTEXT           "2_0",26,230,183,23,14
+    LTEXT           "*",27,27,196,200,13
+    LTEXT           "2_0",28,230,198,23,14
+    LTEXT           "*",29,27,211,200,13
+    LTEXT           "2_0",30,230,213,23,14
+    LTEXT           "*",31,27,226,200,13
+    LTEXT           "2_0",32,230,228,23,14
+    LTEXT           "*",33,27,241,200,13
+    LTEXT           "2_0",34,230,243,23,14
+    LTEXT           "*",35,27,256,200,13
+    LTEXT           "2_0",36,230,258,23,14
+    LTEXT           "*",37,27,271,200,13
+    LTEXT           "2_0",38,230,273,23,14
+    LTEXT           "*",39,27,286,200,13
+    LTEXT           "2_0",40,230,288,23,14
+    LTEXT           "*",41,27,301,200,13
+    LTEXT           "2_0",42,230,303,23,14
+    LTEXT           "*",43,27,316,200,13
+    LTEXT           "2_0",44,230,318,23,14
+    LTEXT           "*",45,27,331,200,13
+    LTEXT           "2_0",46,230,333,23,14
+    LTEXT           "*",47,255,46,201,14
+    LTEXT           "2_0",48,459,48,23,14
+    LTEXT           "*",49,255,61,201,14
+    LTEXT           "2_0",50,459,63,23,14
+    LTEXT           "*",51,255,76,201,14
+    LTEXT           "2_0",52,459,78,23,14
+    LTEXT           "*",53,255,91,201,14
+    LTEXT           "2_0",54,459,93,23,14
+    LTEXT           "*",55,255,106,201,14
+    LTEXT           "2_0",56,459,108,23,14
+    LTEXT           "*",57,255,121,201,14
+    LTEXT           "2_0",58,459,123,23,14
+    LTEXT           "*",59,255,136,201,14
+    LTEXT           "2_0",60,459,138,23,14
+    LTEXT           "*",61,255,151,201,14
+    LTEXT           "2_0",62,459,153,23,14
+    LTEXT           "*",63,255,166,201,14
+    LTEXT           "2_0",64,459,168,23,14
+    LTEXT           "*",65,255,181,201,14
+    LTEXT           "2_0",66,459,183,23,14
+    LTEXT           "*",67,255,196,201,14
+    LTEXT           "2_0",68,459,198,23,14
+    LTEXT           "*",69,255,211,201,14
+    LTEXT           "2_0",70,459,213,23,14
+    LTEXT           "*",71,255,226,201,14
+    LTEXT           "2_0",72,459,228,23,14
+    LTEXT           "*",73,255,241,201,14
+    LTEXT           "2_0",74,459,243,23,14
+    LTEXT           "*",75,255,256,201,14
+    LTEXT           "2_0",76,459,258,23,14
+    LTEXT           "*",77,255,271,201,14
+    LTEXT           "2_0",78,459,273,23,14
+    LTEXT           "*",79,255,286,201,14
+    LTEXT           "2_0",80,459,288,23,14
+    LTEXT           "*",81,255,301,201,14
+    LTEXT           "2_0",82,459,303,23,14
+    LTEXT           "*",83,255,316,201,14
+    LTEXT           "2_0",84,459,318,23,14
+    LTEXT           "*",85,255,331,201,14
+    LTEXT           "2_0",86,459,333,23,14
+END
+
+825 DIALOG  10, 10, 391, 150
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,371,138,31,10,WS_GROUP
+    LTEXT           "6_0",2,183,90,75,16
+    LTEXT           "1_63",3,285,116,62,16
+    LTEXT           "~Set Special Number:",4,24,29,256,17
+    LTEXT           "Which special should be called when this space is entered? (Should be in the range 10 to 99.)",
+                    5,24,48,323,35
+    LTEXT           "Special node:",6,94,90,84,16
+    LTEXT           "0_5",7,219,116,62,16
+END
+
+828 DIALOG  10, 10, 325, 103
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,371,138,31,10,WS_GROUP
+    LTEXT           "6_0",2,115,49,75,16
+    LTEXT           "1_63",3,217,72,62,16
+    LTEXT           "~How Many?",4,22,23,256,17
+END
+
+829 DIALOG  10, 10, 337, 159
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,371,138,31,10,WS_GROUP
+    LTEXT           "6_0",2,26,46,270,67
+    LTEXT           "1_63",3,229,122,62,16
+    LTEXT           "~How Many?",4,23,22,256,17
+END
+
+830 DIALOG  10, 10, 360, 241
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,479,423,31,10,WS_GROUP
+    LTEXT           "6_0",2,118,103,152,16
+    LTEXT           "1_63",3,243,207,62,16
+    LTEXT           "~Create New Town",4,28,24,256,17
+    LTEXT           "*Town name:",5,28,104,84,14
+    LTEXT           "*Town size:",6,28,129,77,14
+    LTEXT           "*Large (64x64)",7,123,129,139,14
+    LTEXT           "*Medium (48x48)",8,123,146,139,14
+    LTEXT           "*Small (32x32)",9,123,163,139,14
+    LTEXT           "2_0",10,281,130,23,14
+    LTEXT           "2_0",11,281,147,23,14
+    LTEXT           "2_0",12,281,164,23,14
+    LTEXT           "*Creating town number:",13,28,46,147,14
+    LTEXT           "*",14,179,46,33,14
+    LTEXT           "0_5",15,177,207,62,16
+    LTEXT           "Note: Your new town will be tacked onto the end of your current town list.",
+                    16,44,67,260,28
+    LTEXT           "*On surface?",17,28,182,139,14
+    LTEXT           "2_0",18,206,185,23,14
+END
+
+832 DIALOG  10, 10, 624, 566
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,434,337,31,10,WS_GROUP
+    LTEXT           "6_0",2,127,70,151,16
+    LTEXT           "6_0",3,196,191,78,16
+    LTEXT           "6_0",4,165,244,76,16
+    LTEXT           "6_0",5,165,268,76,16
+    LTEXT           "6_0",6,165,292,76,16
+    LTEXT           "6_0",7,165,316,76,16
+    LTEXT           "6_0",8,165,340,76,16
+    LTEXT           "6_0",9,435,67,135,16
+    LTEXT           "6_0",10,510,94,60,16
+    LTEXT           "6_0",11,510,123,60,16
+    LTEXT           "6_0",12,510,148,60,16
+    LTEXT           "6_0",13,510,172,60,16
+    LTEXT           "6_0",14,510,196,60,16
+    LTEXT           "6_0",15,510,220,60,16
+    LTEXT           "6_0",16,510,244,60,16
+    LTEXT           "6_0",17,510,279,60,16
+    LTEXT           "6_0",18,392,412,39,16
+    LTEXT           "6_0",19,442,412,33,16
+    LTEXT           "6_0",20,392,436,39,16
+    LTEXT           "6_0",21,442,436,33,16
+    LTEXT           "6_0",22,392,460,39,16
+    LTEXT           "6_0",23,442,460,33,16
+    LTEXT           "6_0",24,392,484,39,16
+    LTEXT           "6_0",25,442,484,33,16
+    LTEXT           "6_0",26,514,412,33,16
+    LTEXT           "6_0",27,514,436,33,16
+    LTEXT           "6_0",28,514,460,33,16
+    LTEXT           "6_0",29,514,484,33,16
+    LTEXT           "1_63",30,505,538,63,16
+    LTEXT           "0_5",31,443,538,62,16
+    LTEXT           "2_0",32,192,169,32,15
+    LTEXT           "2_0",33,271,99,23,14
+    LTEXT           "2_0",34,271,116,23,14
+    LTEXT           "2_0",35,271,133,23,14
+    LTEXT           "2_0",36,271,150,22,15
+    LTEXT           "*Y",37,446,392,34,15
+    LTEXT           "*Special State",38,490,392,88,15
+    LTEXT           "Exit town location and special state: (these are the locations the party ends up at outdoors and the special state called if they leave in the given direction. Leave at -1 for the regular location to be used.)",
+                    39,299,321,276,64
+    LTEXT           "Out of town floor (-1 is default, means to just use whatever floor is at the edge)",
+                    40,299,266,201,45
+    LTEXT           "*Currently unused.",41,299,243,204,17
+    LTEXT           "*Currently unused.",42,300,220,203,15
+    LTEXT           "Basic Wall Types: |600 - Smooth stone with trim |601 - Stone blocks |602 -Dirt |603 - Rough stone |604 - Vahnatai |605 - Wood |614 - Underground cliff (walls only) |616 - Surface cliff (walls only) ",
+                    43,21,363,135,152
+    LTEXT           "Basic Cliff Types: |650 - Dirt  |651 - Stone |652 - Old Wall |653 - Dark Dirt |655 - Smooth Marble |657 - Surface cliff |658 - Underground cliff|",
+                    44,157,363,142,151
+    LTEXT           "For a full list of wall and cliff types, see the editor documentation.",
+                    45,21,528,278,32
+    LTEXT           "*APPEARANCE SETTINGS",46,23,222,206,15
+    LTEXT           "*Wall 1 height",47,23,269,135,14
+    LTEXT           "*Wall 2 sheet",48,23,293,135,14
+    LTEXT           "*Wall 2 height",49,23,316,135,14
+    LTEXT           "*Cliff sheet",50,23,341,135,14
+    LTEXT           "*Wall 1 sheet",51,23,245,135,14
+    LTEXT           "*BASIC SETTINGS",52,23,44,162,18
+    LTEXT           "*X",53,400,392,35,15
+    LTEXT           "*Top",54,326,413,49,15
+    LTEXT           "*Left",55,327,437,49,15
+    LTEXT           "*Bottom",56,327,460,53,15
+    LTEXT           "*Right",57,328,485,49,15
+    LTEXT           "*ADVANCED SETTINGS",58,299,44,160,17
+    LTEXT           "*Background sound (-1 for none, 0 for outdoors)",59,299,
+                    118,207,29
+    LTEXT           "*Beam type (0 - no beams, 1 - damage, 2 - impassable)",
+                    60,299,88,204,29
+    LTEXT           "*Town is hidden",61,299,197,200,14
+    LTEXT           "*Town kill day",62,299,149,200,14
+    LTEXT           "*Town kill prevent event",63,299,167,200,27
+    LTEXT           "*Creature respawn chance",64,23,192,169,15
+    LTEXT           "*Town script:",65,299,68,120,14
+    LTEXT           "*Town name:",66,23,71,98,16
+    LTEXT           "*Town is on surface",67,23,169,164,15
+    LTEXT           "*Gets dark 10x faster",68,95,133,166,13
+    LTEXT           "*Lighting:",69,23,99,63,14
+    LTEXT           "*Fully Lit",70,95,99,164,14
+    LTEXT           "*Dark",71,95,116,164,14
+    LTEXT           "*Totally dark (no light)",72,95,150,164,15
+    LTEXT           "~Edit Town Details",73,23,23,256,17
+END
+
+835 DIALOG  10, 10, 536, 310
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
+    LTEXT           "6_0",2,160,108,39,16
+    LTEXT           "6_0",3,160,136,39,16
+    LTEXT           "6_0",4,160,164,39,16
+    LTEXT           "6_0",5,160,192,39,16
+    LTEXT           "6_0",6,160,220,39,16
+    LTEXT           "6_0",7,160,248,39,16
+    LTEXT           "6_0",8,225,108,39,16
+    LTEXT           "6_0",9,225,136,39,16
+    LTEXT           "6_0",10,225,164,39,16
+    LTEXT           "6_0",11,225,192,39,16
+    LTEXT           "6_0",12,225,220,39,16
+    LTEXT           "6_0",13,225,248,39,16
+    LTEXT           "6_0",14,290,108,39,16
+    LTEXT           "6_0",15,290,136,39,16
+    LTEXT           "6_0",16,290,164,39,16
+    LTEXT           "6_0",17,290,192,39,16
+    LTEXT           "6_0",18,290,220,39,16
+    LTEXT           "6_0",19,290,248,39,16
+    LTEXT           "6_0",20,355,108,39,16
+    LTEXT           "6_0",21,355,136,39,16
+    LTEXT           "6_0",22,355,164,39,16
+    LTEXT           "6_0",23,355,192,39,16
+    LTEXT           "6_0",24,355,220,39,16
+    LTEXT           "6_0",25,355,248,39,16
+    LTEXT           "There can be four different types of groups that appear. A -1 means no monster there. Leave everything at -1 for no wandering monsters in the town/dungeon.",
+                    26,27,48,461,34
+    LTEXT           "~Town wandering monsters",27,28,28,256,17
+    LTEXT           "*Group 1",28,152,86,58,14
+    LTEXT           "*Group 2",29,217,86,58,14
+    LTEXT           "*Group 3",30,280,86,58,14
+    LTEXT           "*Group 4",31,343,86,58,14
+    LTEXT           "*Monster 1",32,27,109,109,14
+    LTEXT           "*Monster 2",33,27,137,109,14
+    LTEXT           "*Monster 3",34,27,165,109,14
+    LTEXT           "*Monster 4",35,27,193,119,14
+    LTEXT           "*Monster 5",36,27,221,109,14
+    LTEXT           "*Monster 6",37,27,249,119,14
+    LTEXT           "1_63",38,422,272,63,17
+    LTEXT           "0_109",39,148,272,62,17
+    LTEXT           "0_109",40,213,272,63,17
+    LTEXT           "0_109",41,278,272,63,17
+    LTEXT           "0_109",42,343,272,63,17
+END
+
+837 DIALOG  10, 10, 576, 571
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,600,336,31,10,WS_GROUP
+    LTEXT           "6_0",2,171,194,164,16
+    LTEXT           "6_0",3,44,259,89,16
+    LTEXT           "6_0",4,148,259,70,16
+    LTEXT           "6_0",5,44,284,89,16
+    LTEXT           "6_0",6,148,284,70,16
+    LTEXT           "6_0",7,194,310,72,16
+    LTEXT           "6_0",8,194,334,72,16
+    LTEXT           "6_0",9,194,358,72,16
+    LTEXT           "6_0",10,194,382,72,16
+    LTEXT           "6_0",11,194,406,72,16
+    LTEXT           "6_0",12,194,430,72,16
+    LTEXT           "6_0",13,276,511,67,16
+    LTEXT           "6_0",14,276,535,67,16
+    LTEXT           "6_0",15,418,211,72,16
+    LTEXT           "6_0",16,418,235,72,16
+    LTEXT           "6_0",17,418,259,72,16
+    LTEXT           "6_0",18,418,283,72,16
+    LTEXT           "6_0",19,418,307,72,16
+    LTEXT           "6_0",20,418,331,72,16
+    LTEXT           "6_0",21,418,355,72,16
+    LTEXT           "6_0",22,418,379,72,16
+    LTEXT           "6_0",23,418,403,72,16
+    LTEXT           "6_0",24,418,427,72,16
+    LTEXT           "*Day For Appear/Disappear:",25,40,511,221,15
+    LTEXT           "*Event Creature Linked To (-1 - none)",26,40,535,223,17
+    LTEXT           "2_0",27,327,136,23,14
+    LTEXT           "2_0",28,327,152,23,14
+    LTEXT           "2_0",29,462,136,23,14
+    LTEXT           "2_0",30,462,152,23,14
+    LTEXT           "1_63",31,454,536,69,16
+    LTEXT           "0_5",32,388,536,62,16
+    LTEXT           "0_109",33,318,105,75,16
+    LTEXT           "0_109",34,229,256,75,16
+    LTEXT           "0_109",35,229,280,75,16
+    LTEXT           "0_109",36,283,480,75,16
+    LTEXT           "*",37,416,36,50,15
+    LTEXT           "+",38,156,109,155,15
+    LTEXT           "+",39,44,484,229,15
+    LTEXT           "~Edit Placed Creature",40,25,30,138,17
+    LTEXT           "*Creature script:",41,34,195,120,14
+    LTEXT           "*Memory Cells",42,352,191,109,14
+    LTEXT           "*Extra Items",43,34,219,183,14
+    LTEXT           "*Personality",44,34,310,143,14
+    LTEXT           "Enter the information for this monster/townsperson. You only need to worry about the personality if this is not a hostile monster. ",
+                    45,25,53,480,33
+    LTEXT           "*Creature number:",46,288,36,126,15
+    LTEXT           "~Creature type:",47,34,109,115,15
+    LTEXT           "*Creature starting attitude:",48,34,131,169,15
+    LTEXT           "~Creature Appearance Type:",49,33,461,187,15
+    LTEXT           "*Character ID",50,34,335,144,14
+    LTEXT           "*BASIC TRAITS",51,25,90,120,14
+    LTEXT           "*ADVANCED TRAITS",52,24,173,120,14
+    LTEXT           "*Chance",53,41,238,90,14
+    LTEXT           "*Item Type",54,144,238,90,14
+    LTEXT           "*Hidden Class",55,34,358,143,14
+    LTEXT           "*Act at distance",56,34,383,144,14
+    LTEXT           "*Unique NPC",57,34,407,144,14
+    LTEXT           "*Reserved, Don't Use",58,34,431,144,14
+    LTEXT           "*Cell 0",59,361,212,50,14
+    LTEXT           "*Cell 1",60,361,236,50,14
+    LTEXT           "*Cell 2",61,361,260,50,14
+    LTEXT           "*Cell 3",62,361,284,50,14
+    LTEXT           "*Cell 4",63,361,309,50,14
+    LTEXT           "*Cell 5",64,361,333,50,14
+    LTEXT           "*Cell 6",65,361,357,50,14
+    LTEXT           "*Cell 7",66,361,381,50,14
+    LTEXT           "*Cell 8",67,361,405,50,14
+    LTEXT           "*Cell 9",68,361,428,50,14
+END
+
+839 DIALOG  10, 10, 521, 526
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
+    LTEXT           "6_0",2,231,67,153,16
+    LTEXT           "6_0",3,231,91,153,16
+    LTEXT           "6_0",4,231,115,153,16
+    LTEXT           "6_0",5,231,139,153,16
+    LTEXT           "6_0",6,231,163,153,16
+    LTEXT           "6_0",7,231,187,153,16
+    LTEXT           "6_0",8,231,211,153,16
+    LTEXT           "6_0",9,231,235,153,16
+    LTEXT           "6_0",10,232,259,153,16
+    LTEXT           "6_0",11,232,283,153,16
+    LTEXT           "6_0",12,232,307,153,16
+    LTEXT           "6_0",13,232,331,153,16
+    LTEXT           "6_0",14,232,355,153,16
+    LTEXT           "6_0",15,232,379,153,16
+    LTEXT           "6_0",16,232,403,153,16
+    LTEXT           "6_0",17,232,427,153,16
+    LTEXT           "1_63",18,379,487,79,16
+    LTEXT           "0_5",19,314,487,65,16
+    LTEXT           "Descriptive message",20,229,47,140,14
+    LTEXT           "*",21,27,67,200,15
+    LTEXT           "*",22,27,91,200,15
+    LTEXT           "*",23,27,115,200,15
+    LTEXT           "*",24,27,139,200,15
+    LTEXT           "*",25,27,163,200,15
+    LTEXT           "*",26,27,187,200,15
+    LTEXT           "*",27,27,211,200,15
+    LTEXT           "*",28,27,235,200,15
+    LTEXT           "*",29,27,259,200,15
+    LTEXT           "*",30,27,283,200,15
+    LTEXT           "*",31,27,307,200,15
+    LTEXT           "*",32,27,331,200,15
+    LTEXT           "*",33,27,356,200,15
+    LTEXT           "*",34,27,380,200,15
+    LTEXT           "*",35,27,404,200,15
+    LTEXT           "*",36,27,428,200,15
+    LTEXT           "Enter the descriptions for each of the special town rectangles you may have made, or press the delete button to remove them.",
+                    37,30,449,428,36
+    LTEXT           "  ",38,320,27,18,16
+    LTEXT           "~Town area descriptions",39,26,27,256,17
+    LTEXT           "Rectangle:",40,27,47,111,14
+    LTEXT           "0_53",41,390,63,66,23
+    LTEXT           "0_53",42,390,87,66,23
+    LTEXT           "0_53",43,390,111,66,23
+    LTEXT           "0_53",44,390,135,66,23
+    LTEXT           "0_53",45,390,159,66,23
+    LTEXT           "0_53",46,390,183,66,23
+    LTEXT           "0_53",47,390,207,66,23
+    LTEXT           "0_53",48,390,231,66,23
+    LTEXT           "0_53",49,390,255,66,23
+    LTEXT           "0_53",50,390,279,66,23
+    LTEXT           "0_53",51,390,303,66,23
+    LTEXT           "0_53",52,390,327,66,23
+    LTEXT           "0_53",53,390,351,66,23
+    LTEXT           "0_53",54,390,375,66,23
+    LTEXT           "0_53",55,390,399,66,23
+    LTEXT           "0_53",56,390,423,66,23
+END
+
+840 DIALOG  10, 10, 454, 146
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,283,273,31,10,WS_GROUP
+    LTEXT           "6_0",2,27,52,332,16
+    LTEXT           "0_5",3,282,104,61,16
+    LTEXT           "~Enter this area's description:",4,22,24,232,17
+    LTEXT           "1_63",5,347,104,62,16
+    LTEXT           "Max. length: 30 characters. To edit this later, select Edit Area Descriptions from Town/Outdoor menu.",
+                    6,22,78,242,42
+END
+
+841 DIALOG  10, 10, 368, 209
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,279,223,31,10,WS_GROUP
+    LTEXT           "6_0",2,194,137,52,16
+    LTEXT           "1_63",3,248,170,75,16
+    LTEXT           "~Importing a zone",4,20,23,175,17
+    LTEXT           "What zone do you wish to import?",5,20,132,162,27
+    LTEXT           "Enter a zone number and hit OK, and you will be asked to select a campaign file. The zone with that number in the selected campaign will then be loaded in over the current zone.",
+                    6,20,44,301,54
+    LTEXT           "0_5",7,182,170,62,16
+    LTEXT           "Warning: This will write over the zone currently in memory.",
+                    8,20,100,300,30
+END
+
+850 DIALOG  10, 10, 538, 341
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,283,250,31,10,WS_GROUP
+    LTEXT           "6_0",2,257,72,145,16
+    LTEXT           "6_0",3,257,96,145,16
+    LTEXT           "6_0",4,257,120,145,16
+    LTEXT           "6_0",5,257,144,145,16
+    LTEXT           "6_0",6,257,168,145,16
+    LTEXT           "6_0",7,257,192,145,16
+    LTEXT           "6_0",8,257,216,145,16
+    LTEXT           "6_0",9,257,240,145,16
+    LTEXT           "1_63",10,419,305,65,16
+    LTEXT           "0_5",11,353,305,62,16
+    LTEXT           "Descriptive message",12,262,50,133,14
+    LTEXT           "*",13,37,72,212,15
+    LTEXT           "*",14,37,96,212,15
+    LTEXT           "*",15,37,120,212,15
+    LTEXT           "*",16,37,144,212,15
+    LTEXT           "*",17,37,168,212,15
+    LTEXT           "*",18,37,192,212,15
+    LTEXT           "*",19,37,216,212,15
+    LTEXT           "*",20,37,240,212,15
+    LTEXT           "Enter the descriptions for each of the special outdoor rectangles you may have made, or press the delete button to remove them. Maximum length: 30 characters.",
+                    21,37,262,446,37
+    LTEXT           "   ",22,317,27,21,18
+    LTEXT           "~Outdoor area descriptions",23,32,29,256,17
+    LTEXT           "Rectangle",24,33,50,111,14
+    LTEXT           "0_53",25,411,68,71,23
+    LTEXT           "0_53",26,411,92,71,23
+    LTEXT           "0_53",27,411,116,71,23
+    LTEXT           "0_53",28,411,140,71,23
+    LTEXT           "0_53",29,411,164,71,23
+    LTEXT           "0_53",30,411,188,71,23
+    LTEXT           "0_53",31,411,212,71,23
+    LTEXT           "0_53",32,411,236,71,23
+END
+
+851 DIALOG  10, 10, 349, 213
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,329,223,31,10,WS_GROUP
+    LTEXT           "6_0",2,139,66,151,16
+    LTEXT           "6_0",3,139,90,151,16
+    LTEXT           "6_0",4,160,151,78,16
+    LTEXT           "*Section name:",5,22,68,101,14
+    LTEXT           "*Coordinates:",6,22,44,87,14
+    LTEXT           "*",7,114,44,127,14
+    LTEXT           "2_0",8,132,116,23,14
+    LTEXT           "*On Surface: ",9,22,116,101,14
+    LTEXT           "1_63",10,232,184,63,16
+    LTEXT           "*Section script:",11,22,92,109,14
+    LTEXT           "~Outdoors Details",12,22,21,256,17
+    LTEXT           "*Region number: (leave at 0 if you don't know what this is)",
+                    13,22,136,127,47
+END
+
+852 DIALOG  10, 10, 632, 467
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,343,284,31,10,WS_GROUP
+    LTEXT           "6_0",2,371,94,50,17
+    LTEXT           "6_0",3,371,118,50,17
+    LTEXT           "6_0",4,371,142,50,17
+    LTEXT           "6_0",5,371,166,50,17
+    LTEXT           "6_0",6,371,190,50,17
+    LTEXT           "6_0",7,371,214,50,17
+    LTEXT           "6_0",8,371,238,50,17
+    LTEXT           "6_0",9,242,264,46,16
+    LTEXT           "6_0",10,242,288,46,17
+    LTEXT           "6_0",11,242,313,46,17
+    LTEXT           "6_0",12,451,274,39,16
+    LTEXT           "6_0",13,499,274,39,16
+    LTEXT           "6_0",14,451,308,39,16
+    LTEXT           "6_0",15,499,308,39,16
+    LTEXT           "6_0",16,451,337,39,16
+    LTEXT           "6_0",17,451,362,39,16
+    LTEXT           "6_0",18,499,362,39,16
+    LTEXT           "6_0",19,451,388,39,16
+    LTEXT           "0_5",20,441,417,62,16
+    LTEXT           "1_63",21,507,417,63,16
+    LTEXT           "0_2",22,33,417,62,16
+    LTEXT           "0_3",23,95,417,75,16
+    LTEXT           "0_109",24,301,91,63,23
+    LTEXT           "0_109",25,301,115,63,23
+    LTEXT           "0_109",26,301,139,63,23
+    LTEXT           "0_109",27,301,163,63,23
+    LTEXT           "0_109",28,301,187,63,23
+    LTEXT           "0_109",29,301,211,63,23
+    LTEXT           "0_109",30,301,235,63,23
+    LTEXT           "+",31,150,96,145,14
+    LTEXT           "+",32,150,120,145,14
+    LTEXT           "+",33,150,144,145,14
+    LTEXT           "+",34,150,168,145,14
+    LTEXT           "+",35,150,192,145,14
+    LTEXT           "+",36,150,216,145,14
+    LTEXT           "+",37,150,240,145,14
+    LTEXT           "2_0",38,220,344,29,14
+    LTEXT           "2_0",39,220,368,29,14
+    LTEXT           "2_0",40,220,392,30,15
+    LTEXT           "*",41,407,31,35,14
+    LTEXT           "*Random Move Chance",42,302,389,136,15
+    LTEXT           "*Start location",43,302,363,122,14
+    LTEXT           "*Check every turn",44,32,392,165,14
+    LTEXT           "Encounter is forced |(Party fights it right away)",45,
+                    32,363,182,27
+    LTEXT           "Move types: |0 - seek party |1 - no move |2 - random move |3 - follow roads |4 - flee party |+10 - always stays within 10 spaces of starting spot",
+                    46,430,138,154,119
+    LTEXT           "Move type",47,302,338,120,15
+    LTEXT           "Stuff done flag set to 1 when defeated",48,302,301,141,
+                    31
+    LTEXT           "Stuff done flag to eliminate encounter",49,302,267,141,
+                    31
+    LTEXT           "*Script State When Fled",50,32,314,203,15
+    LTEXT           "*Script State When Beaten",51,32,289,203,15
+    LTEXT           "*Script State When Met",52,32,265,203,14
+    LTEXT           "~Outdoor Wandering Encounter:",53,31,31,234,14
+    LTEXT           "*Encounter number:",54,277,31,127,14
+    LTEXT           "*Number:",55,368,72,113,14
+    LTEXT           "*Type:",56,150,72,113,14
+    LTEXT           "*Hostile 1",57,32,96,113,14
+    LTEXT           "~Monsters in encounter:",58,31,50,191,17
+    LTEXT           "*Hostile 2",59,32,120,113,14
+    LTEXT           "*Hostile 3",60,32,144,113,14
+    LTEXT           "*Hostile 4",61,32,168,113,14
+    LTEXT           "*Friendly 1",62,32,192,113,14
+    LTEXT           "*Friendly 2",63,32,216,113,14
+    LTEXT           "*Friendly 3",64,32,240,113,14
+    LTEXT           "*Party can't evade",65,32,343,165,18
+END
+
+854 DIALOG  10, 10, 273, 202
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,283,273,31,10,WS_GROUP
+    LTEXT           "1_63",2,165,165,61,16
+    LTEXT           "0_5",3,99,165,62,16
+    LTEXT           "~Choose An Outdoor Section",4,26,22,185,16
+    LTEXT           "Select the outdoor section you want to load.",5,44,44,
+                    178,30
+    LTEXT           "*World width:",6,44,80,111,14
+    LTEXT           "*",7,162,79,37,14
+    LTEXT           "+",8,118,117,75,16
+    LTEXT           "*World height:",9,44,95,111,14
+    LTEXT           "*",10,162,95,37,14
+    LTEXT           "+",11,118,142,75,16
+    LTEXT           "0_7",12,53,113,27,23
+    LTEXT           "0_6",13,82,113,27,23
+    LTEXT           "0_7",14,53,138,27,23
+    LTEXT           "0_6",15,82,138,27,23
+END
+
+855 DIALOG  10, 10, 259, 131
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
+    LTEXT           "6_0",2,77,71,62,16
+    LTEXT           "1_63",3,152,95,58,16
+    LTEXT           "0_5",4,86,95,62,16
+    LTEXT           "~Pick Town to Edit:",5,25,19,167,17
+    LTEXT           "Enter the number of the town you want to edit next:",6,
+                    25,38,185,28
+END
+
+856 DIALOG  10, 10, 284, 149
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
+    LTEXT           "6_0",2,92,85,62,16
+    LTEXT           "1_63",3,179,109,58,16
+    LTEXT           "0_5",4,113,109,62,16
+    LTEXT           "~Entrance to what town?",5,23,20,167,17
+    LTEXT           "What town do you want the party to end up in when they walk into this rectangle?",
+                    6,23,39,213,42
+END
+
+857 DIALOG  10, 10, 401, 230
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,392,238,31,10,WS_GROUP
+    LTEXT           "6_0",2,227,123,64,17
+    LTEXT           "6_0",3,227,149,64,17
+    LTEXT           "6_0",4,227,175,64,17
+    LTEXT           "1_63",5,302,201,58,16
+    LTEXT           "0_5",6,236,201,62,16
+    LTEXT           "~Change Terrain Randomly",7,29,30,167,17
+    LTEXT           "Select a terrain type and another terrain type to turn it into. Also give a percentage chance of changing it (0 - 100). Automatic corrections (like adjusting cave walls) will not be made to these changes.",
+                    8,29,49,286,67
+    LTEXT           "0_109",9,297,121,63,16
+    LTEXT           "0_109",10,297,147,63,16
+    LTEXT           "*Change this terrain type:",11,29,125,164,13
+    LTEXT           "*To this terrain type:",12,29,151,164,13
+    LTEXT           "*Chance of changing: (0 - 100)",13,29,177,193,13
+END
+
+858 DIALOG  10, 10, 340, 80
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_29",1,211,55,66,20
+    LTEXT           "0_91",2,145,55,62,20
+    LTEXT           "0_134",3,79,55,62,20
+    LTEXT           "Save changes to your scenario before loading a new one?",
+                    4,20,18,256,32
+END
+
+859 DIALOG  10, 10, 340, 92
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_29",1,212,70,66,20
+    LTEXT           "0_91",2,146,70,62,20
+    LTEXT           "0_134",3,80,70,62,20
+    LTEXT           "Do you save the changes to this town/outdoor section before loading a new one?",
+                    4,21,22,257,47
+END
+
+860 DIALOG  10, 10, 341, 91
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,249,74,66,20
+    LTEXT           "0_5",2,183,74,62,20
+    LTEXT           "The Scenario Editor is about to create your new scenario, which will be ready for editing. This can take a little while ... be patient.",
+                    3,22,27,292,41
+END
+
+861 DIALOG  10, 10, 341, 91
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,210,70,66,20
+    LTEXT           "All of the items in this town are now not considered property, and can be taken by the party with no difficulty.",
+                    2,19,22,257,47
+END
+
+862 DIALOG  10, 10, 341, 91
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,216,58,66,20
+    LTEXT           "0_5",2,150,58,62,20
+    LTEXT           "Do you want to erase all items in this town?",3,26,25,
+                    258,32
+END
+
+863 DIALOG  10, 10, 329, 140
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,225,101,66,20
+    LTEXT           "0_5",2,159,101,62,20
+    LTEXT           "This places random items in this town. Certain terrain types will randomly get relevant items. To set which items are placed on what terrain types, select Edit Item Placement Shortcuts from the Scenario menu.",
+                    3,22,18,270,81
+END
+
+864 DIALOG  10, 10, 358, 221
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,229,203,66,20
+    LTEXT           "0_5",2,164,203,65,20
+    LTEXT           "You are about to choose the party's outdoor starting location. When the party starts the scenario and leaves the town they start in, this is the section they will start in.",
+                    3,24,23,270,54
+    LTEXT           "To set the town the party starts in, load the correct town and use the Set Starting Location option in the Town menu.",
+                    4,24,78,268,39
+    LTEXT           "Now select the location you want the party to start at. Note: If the town the party starts in gives a specific destination for then they leave town, that will override the specific location you give.",
+                    5,24,119,266,81
+END
+
+865 DIALOG  10, 10, 355, 125
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,226,102,66,20
+    LTEXT           "0_5",2,160,102,62,20
+    LTEXT           "You are about to delete the last town in your campaign's zone list (so if you have 10 zones in your scenario, the tenth will disappear). This change will immediately be saved and can't be undone.",
+                    3,23,18,271,66
+    LTEXT           "Are you sure you want to do this?",4,23,86,268,14
+END
+
+866 DIALOG  10, 10, 357, 108
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,228,89,66,20
+    LTEXT           "0_5",2,162,89,62,20
+    LTEXT           "Do you want a list of all the floor, terrain, monster, and item types in your scenario to be put in a file called 'Scenario data'? You can then print out this file to act as a handy reference while designing your scenario.",
+                    3,22,21,271,66
+END
+
+867 DIALOG  10, 10, 337, 165
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,227,123,66,20
+    LTEXT           "0_5",2,162,123,65,20
+    LTEXT           "You are about to choose the party's starting location. When the party starts the scenario, they will start in this town at the location you select.",
+                    3,24,23,270,54
+    LTEXT           "Be sure that you leave enough space around the starting location for a party of four people.",
+                    4,24,78,268,39
+END
+
+868 DIALOG  10, 10, 355, 119
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,253,92,66,20
+    LTEXT           "5_716",2,6,6,36,36
+    LTEXT           "This is not the correct password. Select Load Scenario again to try again.",
+                    3,49,6,272,28
+    LTEXT           "If you have forgotten your password, Spiderweb Software, Inc. will, for a $10 fee, reset your password. Look in the Order Form to find out how to contact them.",
+                    4,49,36,268,53
+END
+
+869 DIALOG  10, 10, 301, 78
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_29",1,213,62,66,20
+    LTEXT           "0_91",2,147,62,62,20
+    LTEXT           "0_83",3,81,62,62,20
+    LTEXT           "Do you want to save changes to your scenario before quitting?",
+                    4,22,25,256,32
+END
+
+870 DIALOG  10, 10, 356, 71
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,228,49,66,20
+    LTEXT           "You can't place a sign or special encounter at the edge of an outdoor section.",
+                    2,21,18,272,28
+END
+
+871 DIALOG  10, 10, 329, 140
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,225,101,66,20
+    LTEXT           "0_5",2,159,101,62,20
+    LTEXT           "This reloads your custom scenario data script. Any changes or error fixes you have made will take effect. Note that, if you have introduced an error, you will no longer be able to edit this scenario. It is a good idea to save first.",
+                    3,22,18,270,81
+END
+
+872 DIALOG  10, 10, 285, 157
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
+    LTEXT           "6_0",2,98,99,62,16
+    LTEXT           "1_63",3,185,129,58,16
+    LTEXT           "0_5",4,119,129,62,16
+    LTEXT           "~Give Rectangle What Height?",5,29,26,217,17
+    LTEXT           "What height would you like all the spaces in this rectangle to be? (0-99)",
+                    6,29,45,213,42
+END
+
+873 DIALOG  10, 10, 329, 140
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,225,101,66,20
+    LTEXT           "0_5",2,159,101,62,20
+    LTEXT           "In Blades of Avernum, certain wall configurations look better then others. This command modifies your walls to make them look cleaner. For more information on what actually happens, consult the editor documentation",
+                    3,22,18,270,81
+END
+
+874 DIALOG  10, 10, 383, 185
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,274,146,66,20
+    LTEXT           "Your scenario has been created in its own directory in the same directory as the Blades of Avernum Editor application. All scripts necessary to enable your scenario to run have also been copied over.",
+                    2,22,27,318,64
+    LTEXT           "To load your scenario and begin to edit it, select Open from the File menu. To play your scenario, drag the folder it's in into the Blades of Avernum Scenarios folder.",
+                    3,22,92,318,51
+END
+
+875 DIALOG  10, 10, 382, 169
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,274,130,66,20
+    LTEXT           "The scenario editor encountered an error trying to create your scenario. Make sure there wasn't a scenario of the same name where you were trying to create it. Also make sure your hard drive has enough free space.",
+                    2,22,27,318,66
+    LTEXT           "If you continue to have problems, you may want to redownload and reinstall the editor.",
+                    3,22,94,318,35
+END
+
+876 DIALOG  10, 10, 402, 403
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,302,363,66,20
+    LTEXT           "0_5",2,236,363,62,20
+    LTEXT           "Select a Blades of Exile scenario you wish to import. This editor will create a folder and, inside that folder, a new scenario file. It will then translate, as best it can, your old scenario into a scenario that will work in the new system.",
+                    3,22,18,341,65
+    LTEXT           "There are several things to bear in mind about this process.",
+                    4,22,84,337,36
+    LTEXT           "First, Blades of Avernum does not use scenario passwords. You don't need a password to import an old scenario.",
+                    5,39,122,313,45
+    LTEXT           "Second, all special encounters and dialogue are now handled through scripts. This editor will translate your old data into new scripts. However, this translation will require some testing and adaption on your part.",
+                    6,39,168,313,67
+    LTEXT           "Third, because Blades of Avernum is very different from Blades of Exile, a bit of work will be needed on each town and outdoor section to get it to work with the new system. This feature DOES NOT result in a finished, playable scenario.",
+                    7,38,236,313,67
+    LTEXT           "For more information on differences between the two systems and things you will need to do to complete the adaption, consult the documentation. If you're ready, you can now select a scenario file.",
+                    8,22,305,329,52
+END
+
+877 DIALOG  10, 10, 341, 91
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,216,58,66,20
+    LTEXT           "0_5",2,150,58,62,20
+    LTEXT           "Do you want to erase all special encounters in this town?",
+                    3,26,25,258,32
+END
+
+878 DIALOG  10, 10, 341, 91
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,216,58,66,20
+    LTEXT           "0_5",2,150,58,62,20
+    LTEXT           "Do you want to erase all creatures in this town?",3,26,
+                    25,258,32
+END
+
+970 DIALOG  10, 10, 368, 145
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_0",1,196,107,70,20
+    LTEXT           "*",2,8,107,70,20
+    LTEXT           "  ",3,274,10,12,9
+    LTEXT           "= ",4,8,8,257,90
+END
+
+971 DIALOG  10, 10, 309, 246
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_0",1,214,229,70,20
+    LTEXT           "*",2,21,229,70,20
+    LTEXT           "  ",3,267,7,15,14
+    LTEXT           "= ",4,21,25,257,91
+    LTEXT           "= ",5,21,124,257,98
+END
+
+972 DIALOG  10, 10, 339, 201
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_0",1,219,153,70,20
+    LTEXT           "*",2,25,151,70,20
+    LTEXT           "*",3,285,18,18,18
+    LTEXT           "= ",4,25,51,257,92
+    LTEXT           "*",5,287,84,14,19
+    LTEXT           "+",6,25,22,257,19
+END
+
+973 DIALOG  10, 10, 342, 299
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_0",1,224,255,70,20
+    LTEXT           "*",2,26,255,70,20
+    LTEXT           "  ",3,286,26,18,17
+    LTEXT           "= ",4,26,56,257,87
+    LTEXT           "= ",5,26,153,257,93
+    LTEXT           "+",6,26,26,257,19
+END
+
+986 DIALOG  10, 10, 503, 279
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "0_63",1,403,247,65,20
+    LTEXT           "5_716",2,6,6,36,36
+    LTEXT           "The Blades of Exile Scenario Editor can be a tricky program to use. It has lots of options and a lot of features. Fortunately, it also comes with very comprehensive online documentation.",
+                    3,50,22,413,44
+    LTEXT           "To get to this documentation, run the program Blades Editor Documentation. This file contains the full instructions for the editor, ready to be printed out.",
+                    4,50,67,412,40
+    LTEXT           "Of special importance is the section 'How to Make a Simple Scenario.  It describes, in exact, step-by-step detail, how to make a simple scenario with dungeons, monsters, and treasure. This section will give you a quick, easy start.",
+                    5,50,108,412,53
+    LTEXT           "Once you've mastered the basics, using this section, skim through the documentation. Unfortunately, this is not a program you will be able to get the best use out of without using the instructions.",
+                    6,50,162,418,40
+    LTEXT           "Finally, if you're stuck and need ideas, go to http://www.spidweb.com. There is a Scenario Editor forum there, which has all kinds of hints, tips, and answers for better scenario design.",
+                    7,50,203,418,41
+    LTEXT           "BLADES OF EXILE - GETTING STARTED",8,50,4,265,16
+END
+
+990 DIALOG  10, 10, 340, 92
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_29",1,212,70,66,20
+    LTEXT           "0_91",2,146,70,62,20
+    LTEXT           "0_134",3,80,70,62,20
+    LTEXT           "Do you save the change to this outdoor section and load the one you moved into?",
+                    4,21,22,257,47
+END
+
+991 DIALOGEX 10, 10, 301, 360
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "Button",1,229,331,58,10,WS_GROUP
+    LTEXT           "1_63",2,221,290,62,16
+    LTEXT           "0_5",3,155,290,62,16
+    LTEXT           "~Change Outdoor Size",4,26,22,163,16
+    LTEXT           "~Warning:  If you decrease the size on any side, those sectors will be lost!",
+                    5,46,44,255,32
+    LTEXT           "Old",6,145,79,26,16
+    LTEXT           "New",7,192,79,38,16
+    LTEXT           "*World width:",8,62,96,102,16
+    LTEXT           "*World height:",9,62,116,102,16
+    LTEXT           "0_7",10,110,160,27,16
+    LTEXT           "0_6",11,139,160,27,16
+    LTEXT           "+",12,169,163,34,16
+    LTEXT           "0_7",13,58,198,27,16
+    LTEXT           "0_6",14,29,198,27,16
+    LTEXT           "+",15,88,201,34,16
+    LTEXT           "0_7",16,110,235,27,16
+    LTEXT           "0_6",17,139,235,27,16
+    LTEXT           "+",18,169,238,34,16
+    LTEXT           "0_7",19,190,198,27,16
+    LTEXT           "0_6",20,219,198,27,16
+    LTEXT           "+",21,249,201,34,16
+    LTEXT           "N",22,150,186,21,16
+    LTEXT           "W",23,133,201,23,16
+    LTEXT           "S",24,151,215,26,16
+    LTEXT           "E",25,166,201,20,16
+    LTEXT           "*",26,146,96,35,16
+    LTEXT           "*",27,146,116,35,16
+    LTEXT           "*",28,193,96,35,16
+    LTEXT           "*",29,193,116,35,16
+    LTEXT           "*New sectors are on surface?",30,26,266,189,16
+    LTEXT           "2_0",31,208,269,23,16
+    LTEXT           "Add/subtract sectors in these directions:",32,26,140,
+                    275,16
+END
+
+1000 DIALOG  10, 10, 500, 321
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "0_63",1,403,288,65,20
+    LTEXT           "5_716",2,6,6,36,36
+    LTEXT           "If you want other people to play your scenario, it is vitally important that you test it. Otherwise, lots of people might waste lots of hours playing a scenairo that is unwinnable or otherwise doesn't work.",
+                    3,50,22,413,52
+    LTEXT           "To run your scenario, copy it into the Blades of Exile Scenarios folder and start it using the Custom Scenario button on the game title screen. Play from your scenario from start to finish, and, if possible, have friends play it too.",
+                    4,50,75,414,54
+    LTEXT           "When testing your scenario, one useful feature is debug mode. While playing the game, type 'D'. This will put you in Debug Mode. Monsters will no longer move or attack you, and you will be able to play much faster.",
+                    5,50,130,412,53
+    LTEXT           "When you make a change in a town, before testing it, be sure to leave the town and type '>'. This causes the game to forget everything you've done in that town. If you don't do this, your corrections may not be remembered properly.",
+                    6,50,184,417,54
+    LTEXT           "Finally, if you edit your scenario while playing in it, whenever you save a change go back to the game and reload your save file. Otherwise, the game may not read the scenario data properly and crash.",
+                    7,50,239,418,41
+    LTEXT           "BLADES OF EXILE - TESTING YOUR SCENARIO",8,50,4,312,16
+END
+
+1001 DIALOG  10, 10, 501, 321
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "0_63",1,403,284,65,20
+    LTEXT           "5_716",2,6,6,36,36
+    LTEXT           "When you've completed your scenario, you probably want to give other people the chance to play through it. It's a big kick letting other people run around in your own fantasy world, get stuck at your puzzles, and kill your creations.",
+                    3,50,22,413,56
+    LTEXT           "The easiest way to release a scenario is to send it over to Spiderweb Software. Go to www.spidweb.com. There's a scenario upload area there. Alternately, mail it to us on disk (PO Box 85659, Seattle, WA 98145).",
+                    4,50,79,414,54
+    LTEXT           "Before you send a scenario, however, be sure to read the License Agreement (in the file Blades of Exile License). It says a lot of big no-no's and describes your (and our) rights for your scenario.",
+                    5,50,134,412,40
+    LTEXT           "Also look for information on the Blades of Exile Scenario Contest. Your scenario, if really good, could win you products or a hefty chunk of money. If you think your scenario is good enough, be sure to send it in!",
+                    6,50,175,418,54
+    LTEXT           "Finally, if your scenario is really, really good, we might like to sell it as a stand-alone. If we're interested, you can actually make money from your work! To take a shot at this, just send us your scenario before releasing it.",
+                    7,50,230,418,52
+    LTEXT           "BLADES OF EXILE - DISTRIBUTING YOUR SCENARIO",8,50,4,
+                    312,16
+END
+
+1002 DIALOG  10, 10, 502, 239
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "0_63",1,401,205,65,20
+    LTEXT           "5_716",2,6,6,36,36
+    LTEXT           "Anyone can make a scenario. But, do you have what it takes to make a REAL scenario? An edge of your seat, top of the line, major suspense blockbuster? If you think so, prove it! Enter the Blades of Exile Scenario Design Contest!",
+                    3,50,22,413,56
+    LTEXT           "Why enter? Well, look at the prizes! First prize - $500. Second Prize - $300. Third prize - $200. Fourth through Tenth Place - Free copies of Spiderweb Software's games. ",
+                    4,50,79,411,41
+    LTEXT           "To get the full facts (and solid advice) on the contest, read the file 'Scenario Design Contest'. The deadline for entries is November 1, 1998 (good scenario design takes time). ",
+                    5,50,121,412,40
+    LTEXT           "Finally, if you're reading this too late to take part, be sure to drop by www.spidweb.com. If this contest gets good entries, we'll be sure to immediately hold another one right afterwards.",
+                    6,50,162,417,40
+    LTEXT           "THE BLADES OF EXILE SCENARIO DESIGN CONTEST!",7,50,4,
+                    312,16
+END
+
+1062 DIALOG  10, 10, 518, 388
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,411,349,61,20
+    LTEXT           "Blades of Avernum Editor v1.0 |  Copyright 2004, Spiderweb Software, Inc., All rights reserved.",
+                    2,22,24,425,51
+    LTEXT           "Blades of Avernum is $25 shareware. The hint book is $10 ($7 with game registration). To find out how to order, select 'How To Order' on the title screen.",
+                    3,22,230,449,50
+    LTEXT           "Comments and questions? The creators of Blades of Avernum want to hear them. Send them to:",
+                    4,22,281,371,32
+    LTEXT           "E-Mail: spidweb@spiderwebsoftware.com |WWW: http://www.spiderwebsoftware.com",
+                    5,32,314,353,53
+    LTEXT           "Blades of Avernum is brought to you by Spiderweb Software - |   _Where our aberrations become your reality._ |_Avernum and Spiderweb Software are trademarks of Spiderweb Software.",
+                    6,22,162,451,67
+    LTEXT           "CREDITS: |   Concept, Design, Programming: Jeff Vogel |   Icon Design: Andrew Hunter (Wormius@aol.com) |   Assistant Design: Mariann Krizsan (krizsan@spidweb.com)|   Business Manager: Linda Strout",
+                    7,22,78,439,83
+END
+
+1070 DIALOG  10, 10, 319, 155
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "Go for it!",1,103,64,41,10,WS_GROUP
+    PUSHBUTTON      "Exit",100,59,64,42,10,WS_GROUP
+    LTEXT           "The Blades of Avernum editor looks best when the monitor is set to thousands of colors. With the current monitor settings, the editor may not work.",
+                    3,10,7,276,66
+    LTEXT           "It might work with less colors, or it might not work at all. Do you wish to try?",
+                    4,10,74,276,49
+END
+
+1071 DIALOG  10, 10, 312, 121
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "Yes",1,108,41,31,10,WS_GROUP
+    PUSHBUTTON      "Exit",100,61,41,42,10,WS_GROUP
+    PUSHBUTTON      "Run As Is",3,9,41,50,10,WS_GROUP
+    LTEXT           "The Blades of Avernum Editor runs best when the monitor is set to thousands of colors. Would you like your monitor set to Thousands of Colors?",
+                    4,8,9,265,66
+END
+
+IDD_DIALOG1 DIALOGEX 0, 0, 186, 77
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Not found ""Data"" folder"
+FONT 11, "MS UI Gothic", 400, 0, 0x80
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,129,56,50,14
+    LTEXT           "Please select ""Blades of Avernum.exe"" application under ""Blades of Avernum"" folder.\n\n""Blades of Avernum"" folder will be found under ""Program Files"" on the C drive.",
+                    IDC_STATIC,7,7,172,46
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 70
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    1201                    "always here (unless town dead)"
+    1202                    "here at time t unless town dead"
+    1203                    "disappear at time t"
+    1204                    "here if event not done by time t"
+    1205                    "gone if event not done by time t"
+    1206                    "here if event happened"
+    1207                    "gone if event happened"
+    1208                    "here on day 0-2 of every 9 days"
+    1209                    "here on day 3-5 of every 9 days"
+    1210                    "here on day 6-8 of every 9 days"
+    1211                    "here if and only if town dead"
+END
+
+STRINGTABLE 
+BEGIN
+    2701                    "Strength"
+    2703                    "Dexterity"
+END
+
+STRINGTABLE 
+BEGIN
+    2705                    "Intelligence"
+    2707                    "Endurance"
+    2709                    "Melee Weapons"
+    2711                    "Spears"
+    2713                    "Javelins"
+    2715                    "Slings"
+    2717                    "Armor Use"
+    2719                    "Berzerker"
+END
+
+STRINGTABLE 
+BEGIN
+    2721                    "Hardiness"
+    2723                    "Defense"
+    2725                    "Roman Training"
+    2727                    "Riflery"
+    2729                    "Druidism"
+    2731                    "Health Circle"
+    2733                    "War Circle"
+    2735                    "Beast Circle"
+END
+
+STRINGTABLE 
+BEGIN
+    2737                    "Craft Circle"
+    2739                    "Spirit Circle"
+    2741                    "First Aid"
+    2743                    "Herbcraft"
+    2745                    "Tool Use"
+    2747                    "Faerie Lore"
+    2749                    "Woodscraft"
+    2751                    "Barter"
+END
+
+STRINGTABLE 
+BEGIN
+    2753                    "Luck"
+    2755                    "Health"
+    2757                    "Spell Energy"
+    2759                    "Poison Resistance"
+    2761                    "Magic Resistance"
+    2763                    "Willpower"
+    2765                    "Rune Reading"
+    2767                    "Item Lore"
+END
+
+STRINGTABLE 
+BEGIN
+    2769                    "Alchemy"
+END
+
+STRINGTABLE 
+BEGIN
+    3001                    "Welcome to Exile III: Ruined World. These windows will pop up occasionally to explain what is going on. If they annoy you, they can be turned off in the Preferences screen (access from Options menu)."
+    3002                    "In general, you can get help by clicking on the '?' buttons or typing '?'. For now, you should get equipment, explore this fort, and get your orders. Press the hand buttons (or type 'g') to pick up the nearby items."
+    3005                    "Everyone responds to 'Look', 'Name', and 'Job' (use the buttons at the bottom). To ask about something people mention, click on the word (click on 'Demon' to ask about demons). Certain people respond to 'Buy' and 'Sell', which puts you in shopping mode. "
+    3006                    "Shortcuts: To get previous response, press the Back button (or hit space). You can press any of the bottom buttons by typing the first letter in the word. Hit Record to write notes in journal, and hit Bye (or type Escape) to stop talking."
+    3007                    "To cast a spell, first click on the number of the person to cast (to the upper left). Then click on the button by the spell to cast (hit Space to see other spells). Finally, if it's a spell cast on a party member, click on the correct Target button."
+END
+
+STRINGTABLE 
+BEGIN
+    3008                    "Shortcut: Typing the letter after a spell picks the spell, and typing '1'-'6' picks a caster. Option clicking a spell button brings up a spell description. Finally, you can often cast spells faster using the Mage Spells and Priest spells menus."
+    3009                    "This menu always contains all the spells an active PC can cast. Click on the name of a PC to make him/her active. Then select a spell from this menu to cast. Then, if you need to pick someone to cast the spell on, a window will come up for you to do so."
+    3010                    "This is where you improve a character's skills when creating or training him/her. Press the '+' button to buy a skill, and the '-' button to undo the choice. The Cancel button undoes your work, and Keep keeps your choices."
+    3011                    "Option-click the buttons by a skill to get a description of the skill and advice on how much to buy. When training a character, you need both gold and skill points (which you get by killing things and getting experience)."
+    3012                    "This menu contains the monsters you have magically obtained information about. To make a monster appear here, cast Scry Monster on it."
+    3020                    "Sometimes, outdoors or in stores, you will find ingredients to make alchemical potions, using recipes you buy from sages in town. To make a potion, select an active PC by clicking on his/her name or typing '1'-'6'. Then access this window."
+    3021                    "To make a potion, click the appropriate button. The character needs a high enough alchemy skill and the right ingredient. For a full description of all potions, select Alchemy & Poison from the Library menu."
+    3022                    "Here is where you edit your party before beginning the game. You start with 6 pre-fabricated characters. To replace them with characters of your own, hit the delete button and then click on the 'Hit here to Create' button. "
+    3023                    "Press a PCs name to rename it, the Race button to edit his/her race and advantages/disadvantages, the Graphic button to pick a new graphic, and the Train button to adjust the character's starting skills. When ready to start the game, Press Done."
+END
+
+STRINGTABLE 
+BEGIN
+    3024                    "You don't have enough gold on you to buy this skill. The cost to buy a level of a skill is the number after the slash in parentheses. Skills you can buy have the numbers given in red."
+    3025                    "You don't have enough skill points on you to buy this skill. The number of skill pts. to buy a level of a skill is the number before the slash in parentheses. To get skill points, kill enough monsters to gain a level."
+    3026                    "Here, you can spend your hard earned cash on miscellaneous goodies. To select a character to do the buying, click on the character's name (or type '1' - '6'). Click on the name of an item or type 'a'-'h' to buy something."
+    3027                    "To get info on an item (if available) click on the little 'I' button to the right of the item's name. Finally, when through shopping, hit Escape or click on the done button."
+    3028                    "One of your characters has just become dumbfounded. This takes your ability to cast spells. You lose higher level spells first, then lower level spells. To remove this, cast Restore Mind or visit a healer. Dumbfounding is permanent until cured."
+    3029                    "One of your characters has just become diseased. This slowly, gradually causes a wide variety of damaging effects. Healers and certain priest spells can cure disease, or it slowly fades over time."
+    3030                    "One of your characters has just magically made to fall asleep. He/she will eventually wake up, or an Awaken or Hyperactivity spell can hasten the process."
+    3031                    "One of your characters has just been covered with webs. This will slow the character down in combat and make his/her fighting much less effective. To clean off the webs, pause repeatedly (click on the PC or type '5' on the keypad)."
+    3032                    "One of your characters has just been paralyzed. He/she will not be able to move for quite some time. This can be cured by the spell Cure Paralysis or by going to a healer. This is a pretty nasty effect."
+    3033                    "One of your characters has just been poisoned. This character will take damage every few moves until the poison wears off. Several priest spells cure poison."
+    3034                    "One of your characters has just been blessed. This PC will be better in combat, and he/she will be protected from the attacks of others. The effects of blessing are cumulative: blessing a PC twice is well over twice as affecting as blessing it once."
+    3035                    "One of your characters has just been slowed/hasted. A slowed PC loses one out of every two turns in combat. A hasted PC gets twice the action points in combat. Both effects wear off fairly quickly."
+    3036                    "From here, you can select which nearby items to pick up. Click an item (or type 'a'-'h') to pick it up. To have someone else pick stuff up, click the appropriate button at the bottom (or type '1'-'6')."
+    3037                    "If no hostile monsters are near, you can pick up everything nearby. Otherwise, you can only grab adjacent items. Dressers, desks, and other things can have items inside them. Stand next to them and look at them to search inside."
+    3038                    "Each character can only carry so many stones worth of stuff, and you are trying to pick up too much. Increasing a character's strength increases the weight you can carry."
+    3039                    "Some spells are cast on another character in your party. You tried to select a spell without also selecting someone to cast it on. Try again, but this time, after picking the spell, use the buttons to the right of the character's names to pick a target."
+END
+
+STRINGTABLE 
+BEGIN
+    3040                    "Wearing armor with a total encumbrance of more that 1 spoils any mage spell you try to cast in combat. High defense skill sometimes prevents this from happening, but it will only go so far. If any single item has encumb. higher than 2, spells always fail."
+    3041                    "One of your characters just learned a new magical spell. Before you can cast it, however, you need to get enough spell points and a Mage (or Priest) Spells skill as high as the level of the spell."
+    3042                    "This person has looked over your items and maybe offered to buy some of them. Click on the 'Sell' button to sell it, for the amount to the right of the button. Some people only try to buy certain sorts of items."
+    3043                    "Merchants will only buy items that have been identified. If you want to sell something, you may need to find a sage to identify it (such as Habecker in Fort Emergence)."
+    3044                    "This character will, for a fee, identify some of your items whose nature is, as yet, unknown to you. Click on the 'ID' button by the item to get it identified."
+    3045                    "This merchant has offered to magically improve one of your weapons. Click on the 'Ench' button by the weapon to pay for this service. You can only augment identified weapons that aren't magic already."
+    3047                    "You have just discovered a secret passage! All sorts of walls (incl. cave walls) can have secret passages in them. To find them, walk into the wall. Sometimes, you can also move through things that aren't walls..."
+    3048                    "You have just entered combat mode! To start using a weapon, click on that weapon's name. Your characters will now move one at a time ... to attack a bad guy, walk into it. For more information on combat mechanics, type '?'."
+    3049                    "When fighting early in the game, when you're still weak, rely heavily on magical spells (make sure to have a character with Mage Spells skill of 3). Your melee people won't be strong for a while. Hit the 'End' button to leave combat."
+    3050                    "You've just brought up the list of your Special Items. Each has an 'Info' button. Some (such as maps) have a 'Use' button to activate them. Others (such as keys) are used automatically when you can use them (such as when you find the correct door)."
+    3051                    "You can now get a regular job. Click the 'Take' button to accept it. Doing the job gets you a reward. Warning - if you don't do the job in time, this person won't give you any new jobs for a while. You can have a maximum of 4 jobs."
+    3052                    "This is the inventory page where you can see what jobs you currently have. You get jobs from people in the major surface cities; they're a good way to earn some easy money."
+    3053                    "You have just made this town angry at you, by stealing something or damaging a friendly person with a weapon or a damaging spell (like Shockwave). If you leave and visit other towns for a while, they'll stop being mad at you."
+    3054                    "You have just reached a special encounter. Many special encounters are marked by white spots. Others are invisible, and activated by stepping on them or by searching the right spot. Special stuff can be hidden in all terrain types."
+    3055                    "At the Preferences window, you can select options to speed up the game, change how the game window is positioned, turn the sound on and off, and make the game easier or harder."
+END
+
+STRINGTABLE 
+BEGIN
+    3056                    "You are now creating a new character. First you can choose its race and advantages/disadvantages (choose carefully - these cannot be changed later). Then you can assign it skills, a graphic, and a name."
+    3057                    "You've just written what this person just said down in your talking journal. To review it later, select See Talking Notes from the Options menu."
+    3058                    "You've just written what this special encounter says down in your adventure journal. To review it later, select See Encounter Notes from the Options menu."
+    3059                    "One of your characters has just been cursed. That character will function worse in combat, be hit more easily, and take more damage from blows for a while. Curses wear off fairly quickly."
+    3060                    "You have mounted a horse.  A horse doubles your speed when moving outdoors: you'll spend much less time moving from town to town and will have an easier time evading monsters. To dismount, pause (by clicking on your party or hitting '5' on the keypad)."
+    3061                    "You have just boarded a boat. Steer the boat onto land to get out. Certain boats can pass over lava. When using a boat outdoors, you can enter towns on the shore by steering the boat into them."
+    3062                    "This command bring up a map of the area you're in. Generally, maps of dungeons and the outdoors will be remembered. However, if a town undergoes some sort of major change, you'll lose your map for that town."
+    3063                    "Your health is a measure of how much punishment you can take before dying - the more the better. Whenever you get hit, you lose some health. Taking damage when your health is down to 0 will kill you."
+    3064                    "Your spell points are what you expend to cast spells. Each spell drains away some of your spell points. Time and rest restore them. When creating a character, you get 3 bonus spell points for every level of Mage and Priest Spells skill you buy."
+END
+
+STRINGTABLE 
+BEGIN
+    3301                    "Can cast everywhere."
+    3302                    "Combat only."
+    3303                    "Town only."
+    3304                    "Town and outdoor only."
+    3305                    "Town & combat only."
+    3306                    "Outdoor only."
+    3307                    "                                                                                                                                                      "
+    3308                    "Mage Spells"
+    3309                    "Priest Spells"
+    3310                    "Exile III was created on a PowerMac 6100 using CodeWarrior, development system of the Gods. It is written in C. Plain, ordinary C."
+    3311                    "Many thanks to Comedy Central, for providing many hours of bliss during those late night programming binges. The Daily Show added meaning to my lame life."
+END
+
+STRINGTABLE 
+BEGIN
+    3312                    "This fine program was brought to you by coffee. _Coffee - it's what's for dinner._"
+    3313                    "No Vahnatai were harmed during the making of Exile III: Ruined World."
+    3314                    "Exile III: Ruined World is a work of fiction. Any similarity between its characters and persons living or dead is coincidental. Unless, of course, it isn't."
+    3315                    "Thirty Helens Agree: Honesty is the best policy."
+    3316                    "This will be the last Exile game for a long, long time. Please don't be mad."
+    3317                    "Over 200 double tall iced lattes were consumed during the making of Exile III: Ruined World. Chemical dependence can be your friend too!"
+    3318                    "Many thanks to all the fine role-playing games that preceded the Exile series, for providing many wonderful ideas to steal."
+    3319                    "Some groups listened to while coding Exile III: Silly Wizard, Patti Rothberg, The Chieftains, Pearl Jam, Nirvana, Indigo Girls, Nine Inch Nails, Tori Amos, Everclear, REM, Smashing Pumpkins, Enya, Green Day, Sheryl Crow, Jethro Tull, and Janis."
+    3320                    "Some other things listened to while coding Exile III: Lots of They Might Be Giants, the Rent Cast Album, Oasis, Uncle Bonsai and the Electric Bonsai Band, Joan Osborne, more Joan Osborne, and even more Joan Osborne."
+    3321                    "A friendly warning. If you leave a message on Spiderweb Software, Inc's answering machine, don't leave a phone number or E-mail address, and mumble your name, please don't be surprised if I don't get back to you."
+    3322                    "Tips for aspiring programmers: Buy Macintosh Programming Techniques, by Dan Parks Sydow, and Tricks of the Mac Game Programming Gurus, by several people. You can't go wrong."
+END
+
+STRINGTABLE 
+BEGIN
+    3601                    "When below 4, the health the character gains at each level will be sharply reduced. Also, more strength enables you to carry more stuff."
+    3602                    "Before a character does ANY fighting or fires any missiles, this skill should be at least 3."
+    3603                    "If the character is going to cast spells, make this skill at least 4. If not, ignore it."
+    3604                    "Edged weapons are the most common."
+    3605                    "Bashing weapons are common and cheap."
+    3606                    "Pole weapons are, in general, the most expensive, the most rare, and the most powerful."
+    3607                    "Thrown missiles are common and many are magical. Also, this skill is cheap. However, thrown weapons cannot be poisoned."
+    3608                    "Bows are expensive, and so is this skill. However, poisoned arrows are extremely powerful."
+    3609                    "Buy a few levels for anyone in heavy armor."
+    3610                    "Try to start with at least one character with level three in this."
+    3611                    "Try to start with at least one character with level three in this."
+    3612                    "Spread this around the party. Don't buy more than 25 points total (over the whole game)."
+    3613                    "Have only one character buy this, but get a lot. Alchemy is very useful."
+    3614                    "Expensive, but very useful. Knowing what items are when trapped deep in a dungeon can save your life."
+    3615                    "Traps are deadly in Exile. Have only one character buy this, but get a lot."
+END
+
+STRINGTABLE 
+BEGIN
+    3616                    "Not necessary, but very useful. Unlock Door spells are expensive, and bashing is slow, damaging, and very unreliable."
+    3617                    "Wait on this. It's very effective when your level is high."
+    3618                    "You really only need 3-4 levels of this. More helps, but not too much."
+    3619                    "Although it costs no gold, hold off on buying this until your level is high. Luck can help A LOT, but at low levels other things help more."
+END
+
+STRINGTABLE 
+BEGIN
+    3650                    "Drinking many, many cups of espresso  often greatly heightens one's Exile III: Ruined World experience."
+    3651                    "Be sure to look for Exile: Escape From the Pit and Exile II: Crystal Souls, the hot predecessors to Exile III: Ruined World."
+    3652                    "Low on gold? Go to Krizsan, Shayder, or any other large surface city, and look for the jobs dispatcher. It's a great way to earn extra money!"
+    3653                    "Low on gold? Read the Exile III documentation. The Hints on Getting Started section has a plethora of hints for finding loot."
+    3654                    "Having trouble reaching somewhere? Walk into the walls/barriers/trees/whatever is in your way. Some things have secret doors or entrances."
+    3655                    "Casting repeated blesses multiplies the effect. Two bless spells on somebody are more than twice as powerful as one."
+    3656                    "In small towns, most people have nothing to say. However, the innkeepers, anyone in shops, and anyone not a guard or a townsperson will generally have something useful to tell you."
+    3657                    "It's all fun and games until someone loses an eye."
+    3658                    "Moving too slowly never makes it impossible to finish the game. The things you need will always be there. However, moving too slow can make finishing the game harder. Take time to look around, but not too much."
+    3659                    "Get some horses as soon as possible. Traveling outdoors is slow and you'll use up a lot of food without them."
+    3660                    "Items need to be identified before you can sell them. Fellows, in the city of Krizsan, will identify items cheaply. Also, there are people in plenty of other towns who will perform this service."
+    3661                    "Move Mountains and Dispel Barrier are very useful spells. Haste will save your party from many a nasty fight."
+    3662                    "Can't cast a mage spell you've learned? Make sure your Mage Spells skill is up to at least the level of the spell. Then make sure you're not dumbfounded (Restore Mind cures this). Then make sure you have enough spell points."
+    3663                    "The Exile III Editor can help you out in a lot of nasty situations, even when it's unregistered. Take a look!"
+END
+
+STRINGTABLE 
+BEGIN
+    3664                    "Someone important not there? The friendly people in the town suddenly mad at you and you're not sure why? You may have clipped them with Mass Charm or Shockwave. Visit a few other towns and return, and you'll have been forgiven."
+    3665                    "Low on gold? Many towns have odd jobs available. For example, someone in Krizsan has a certain interest in unicorns."
+    3666                    "Visit Anaximander, in Fort Emergence, whenever you think you've done something interesting. He has much useful information."
+    3667                    "Visit the Tower of Magi whenever you complete a major quest. Anaximander will tell you where to go. You can get lovely rewards!"
+    3668                    "Have a tip, bug report, question, or comment? Send it to SpidWeb@aol.com."
+    3669                    "Make sure everyone has a strength of at least 3. Make sure mages have plenty of intelligence. Make sure everyone who does a lot of melee combat has a high dexterity."
+    3670                    "Some dungeon trips are long, and require lots of healing and endurance. It is at these times that Alchemy can be very useful."
+    3671                    "Met the Anama? You can win the game whether or not you join them. Joining them makes it a bit harder, though."
+    3672                    "Do not taunt Happy Fun Ball."
+    3673                    "To cast spells quickly, click on his/her name on the upper right, and select the spell from the Mage Spells or Priest Spells menu."
+    3674                    "To make a character active (and see its inventory) quickly, type '1'-'6'."
+    3675                    "Sometimes you'll find a place where you know there's a dungeon, but you can't see or enter it. That's because someone somewhere else needs to tell you where it is. Go talk to people in towns."
+    3676                    "You don't need to destroy all the plagues of monsters on the surface to win the game. If you get totally stuck, move on."
+    3677                    "In each of the five major cities on the surface, there's someone who can tell you about a major artifact you can find. If you want to find it, be thorough in your questioning."
+    3678                    "Game too slow? Look in the Preferences menu. There are several options to speed things up."
+    3679                    "Have to go through a dungeon, but you keep getting killed? Stock up on potions. Buy scrolls. Learn alchemy. Go in, kill a bunch of monsters, and leave to rest (if you can)."
+END
+
+STRINGTABLE 
+BEGIN
+    3680                    "One nice shortcut: typing capital 'M' has whoever cast your last mage spell cast it again. 'P' works the same way for priest spells."
+    3681                    "Beware when using the Long Rest feature in dungeons. Monsters are taking advantage of those pauses to get reinforcements."
+    3682                    "When launching Exile III, you can hold the space bar down to do a limited launch. This eliminates the opening fades and music, and sometimes makes the game go faster. "
+END
+
+STRINGTABLE 
+BEGIN
+    3901                    "Alchemy and Poison"
+    3902                    "22"
+    3903                    "Alchemy can be incredibly useful. Potions can give you the added boost you may need to get through a long grueling dungeon, and you cannot raise the dead without the right concoction."
+END
+
+STRINGTABLE 
+BEGIN
+    3904                    "You need three things to make a potion:|1. High alchemy skill. When a character tries to make a potion, his/her alchemy skill must be above a certain level. The higher above that level, the better the chance for success."
+    3905                    "2. The right ingredient. Ingredients are usually found at special encounters outdoors, and regenerate themselves after a time. Generally, the person who teaches a recipe tells you what plant it needs."
+    3906                    "3. The recipe. These are usually bought in towns. You only need to buy each recipe once for the entire party."
+    3907                    "When you have all these things, go into a town and click on the blue bottle button. Pick the PC with the highest alchemy skill to make the potion. Hope."
+    3908                    "Here is a list of the alchemical concoctions, with min. skill to make:|Weak Poison|  Min. Skill - 1|Need toadstools or spider glands. The lowest level poison."
+    3909                    "Weak Curing|  Min. Skill - 1|Need comfrey root. Cures poison somewhat."
+    3910                    "Weak Healing|  Min. Skill - 2|Need comfrey root. Provides mild healing."
+    3911                    "Medium Poison|  Min. Skill - 4|Need toadstools or spider glands. A stronger poison."
+    3912                    "Medium Curing Potion|  Min. Skill - 5|Need glowing nettle. A decent antidote for poison."
+    3913                    "Medium Healing Potion|  Min. Skill - 5|Need glowing nettle. Quality healing."
+    3914                    "Strong Poison|  Min. Skill - 5|Need crypt shrooms or asp fangs. Powerful stuff."
+    3915                    "Graymold Salve|  Min. Skill - ???|???"
+    3916                    "Resurrection Balm|  Min. Skill - 8|Need ember flowers. Necessary to cast Raise Dead or Resurrection."
+    3917                    "Weak Energy Potion|  Min. Skill - 10|Need crypt shrooms. Restores some of your spell points."
+    3918                    "Strong Healing Potion|  Min. Skill - 10|Need ember flowers. Provides excellent healing."
+    3919                    "Killer Poison|  Min. Skill - 12|Need asptongue mold. The strongest poison."
+END
+
+STRINGTABLE 
+BEGIN
+    3920                    "One of the most useful things you can make with alchemy is poison, a powerful weapon in the magic-poor world of Exile."
+    3921                    "Many monsters are immune to magic and fire. However, not many are poison-resistant. This makes poison an excellent mage-killer."
+    3922                    "To poison a weapon, use it during combat. Your hand-to-hand weapon (the first one, if two are equipped) or arrows will become poisoned. Each time you attack, the level of poison decreases."
+    3923                    "Don't poison a weapon too long before combat. Its effectiveness decreases with time. Also, switching weapons makes the poison disappear."
+    3924                    "Poisoning an already poisoned weapon doesn't do much good. The weapon gets the maximum poison level of the poison being added or the poison already there, no more."
+END
+
+STRINGTABLE 
+BEGIN
+    6001                    "No special ability"
+    6002                    "Poison"
+    6003                    "Curse/Weaken Ray"
+    6004                    "Stoning Ray"
+    6005                    "Slow Hit"
+    6006                    "Throw Web"
+    6007                    "Disease Hit"
+    6008                    "Charm Ray"
+    6009                    "Sleep Hit"
+    6010                    "Sleep Ray"
+    6011                    "Paral Hit"
+    6012                    "Paral Ray"
+    6013                    "Acid Hit"
+    6014                    "Anti-Spell Ray"
+    6015                    "Confuse Ray"
+END
+
+STRINGTABLE 
+BEGIN
+    6016                    "Terrify Ray"
+    6017                    "Throw Rock"
+    6018                    "Breathe Fire"
+    6019                    "Breathe Cold"
+    6020                    "Breathe Acid"
+    6021                    "Fire Touch"
+    6022                    "Cold Touch"
+    6023                    "Drain Touch"
+    6024                    "Cold, Drain Touch"
+    6025                    "Invisible"
+    6026                    "Guard"
+    6027                    "Radiate Fire"
+    6028                    "Radiate Cold"
+    6029                    "Radiate Null Fields"
+    6030                    "Divide"
+    6031                    "Fire Ray"
+END
+
+STRINGTABLE 
+BEGIN
+    6050                    "No ability"
+    6051                    "Radiate fire fields"
+    6052                    "Radiate ice fields"
+    6053                    "Radiate shock fields"
+    6054                    "Radiate antimagic fields"
+    6055                    "Radiate sleep fields"
+    6056                    "Radiate stink clouds"
+    6057                    "Unused"
+    6058                    "Unused"
+    6059                    "Unused"
+    6060                    "Summon (%5 chance)"
+    6061                    "Summon (%20 chance)"
+    6062                    "Summon (%50 chance)"
+    6063                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    6064                    "Unused"
+    6065                    "Death triggers scen. special"
+END
+
+STRINGTABLE 
+BEGIN
+    6080                    "Unused"
+    6081                    "Percentage chance (1-100%)"
+    6082                    "Percentage chance (1-100%)"
+    6083                    "Percentage chance (1-100%)"
+    6084                    "Percentage chance (1-100%)"
+    6085                    "Percentage chance (1-100%)"
+    6086                    "Percentage chance (1-100%)"
+    6087                    "Unused"
+    6088                    "Unused"
+    6089                    "Unused"
+    6090                    "Number of creature to summon"
+    6091                    "Number of creature to summon"
+    6092                    "Number of creature to summon"
+    6093                    "Unused"
+    6094                    "Unused"
+    6095                    "Number of special to call"
+END
+
+STRINGTABLE 
+BEGIN
+    6130                    "Hits/Swings"
+    6131                    "Claws"
+    6132                    "Bites"
+    6133                    "Slimes"
+    6134                    "Hits/Punches"
+    6135                    "Stings"
+    6136                    "Clubs"
+    6137                    "Burns"
+    6138                    "Harms"
+    6139                    "Stabs"
+END
+
+STRINGTABLE 
+BEGIN
+    6150                    "Human"
+    6151                    "Humanoid"
+    6152                    "Nephil"
+    6153                    "Slith"
+    6154                    "Giant"
+    6155                    "Reptile"
+    6156                    "Beast"
+    6157                    "Demon"
+    6158                    "Undead"
+    6159                    "Bug"
+END
+
+STRINGTABLE 
+BEGIN
+    6160                    "Slime"
+    6161                    "Stone"
+    6162                    "Special"
+    6163                    "Vahnatai"
+END
+
+STRINGTABLE 
+BEGIN
+    6301                    "None"
+    6302                    "Change when step on"
+    6303                    "Does fire damage"
+END
+
+STRINGTABLE 
+BEGIN
+    6304                    "Does cold damage"
+    6305                    "Does magical damage"
+    6306                    "Poison land"
+    6307                    "Diseased land"
+    6308                    "Crumbling terrain"
+    6309                    "Lockable terrain"
+    6310                    "Unlockable terrain"
+    6311                    "Unlockable/bashable"
+    6312                    "Is a sign"
+    6313                    "Call local special"
+    6314                    "Call scenario special"
+    6315                    "Is a container"
+    6316                    "Waterfall"
+    6317                    "Conveyor (north)"
+    6318                    "Conveyor (east)"
+    6319                    "Conveyor (south)"
+END
+
+STRINGTABLE 
+BEGIN
+    6320                    "Conveyor (west)"
+    6321                    "Blocked to monsters"
+    6322                    "Town entrance"
+    6323                    "Can be used"
+    6324                    "Call special when used"
+END
+
+STRINGTABLE 
+BEGIN
+    6340                    "Unused"
+    6341                    "What to change to?"
+    6342                    "Amount of damage done"
+    6343                    "Amount of damage done"
+    6344                    "Amount of damage done"
+    6345                    "Strength (1-8)"
+    6346                    "Strength (1-8)"
+    6347                    "Terrain to change to"
+    6348                    "Terrain to change to when locked"
+    6349                    "Terrain to change to when unlocked"
+    6350                    "Terrain to change to when unlocked"
+    6351                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    6352                    "Number of special to call"
+    6353                    "Number of special to call"
+    6354                    "Unused"
+    6355                    "Unused"
+    6356                    "Unused"
+    6357                    "Unused"
+    6358                    "Unused"
+    6359                    "Unused"
+    6360                    "Unused"
+    6361                    "Terrain type if hidden"
+    6362                    "Terrain to change to when used"
+    6363                    "Number of scenario spec. to call"
+END
+
+STRINGTABLE 
+BEGIN
+    6380                    "Unused"
+    6381                    "Number of sound (200 - no sound)"
+    6382                    "Damage multiplier"
+    6383                    "Damage multiplier"
+END
+
+STRINGTABLE 
+BEGIN
+    6384                    "Damage multiplier"
+    6385                    "Percentage chance (1-100)"
+    6386                    "Percentage chance (1-100)"
+    6387                    "Unused"
+    6388                    "Unused"
+    6389                    "Difficulty (0-10)"
+    6390                    "Difficulty (0-10)"
+    6391                    "Unused"
+    6392                    "Unused"
+    6393                    "Unused"
+    6394                    "Unused"
+    6395                    "Unused"
+    6396                    "Unused"
+    6397                    "Unused"
+    6398                    "Unused"
+    6399                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    6400                    "Unused"
+    6401                    "Unused"
+    6402                    "Number of sound (200 - no sound)"
+    6403                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    6601                    "No Special"
+    6602                    "Set Flag"
+    6603                    "Increment Flag"
+    6604                    "Display Message"
+    6605                    "Secret Passage"
+    6606                    "Display Small Message"
+    6607                    "Flip Flag"
+END
+
+STRINGTABLE 
+BEGIN
+    6608                    "Out Block"
+    6609                    "Town Block"
+    6610                    "Combat Block"
+    6611                    "Looking Block"
+    6612                    "Can't Enter"
+    6614                    "Start General Timer"
+    6615                    "Play a Sound"
+    6619                    "Major Event Has Occured"
+    6620                    "Forced Give"
+    6621                    "Buy Items of Type"
+    6622                    "Call Global Special"
+END
+
+STRINGTABLE 
+BEGIN
+    6624                    "Copy Flag"
+    6625                    "Sever Seal Block"
+    6626                    "Have a Rest"
+    6627                    "Wandering will fight"
+    6628                    "Call Hardcode"
+END
+
+STRINGTABLE 
+BEGIN
+    6651                    "Give Item"
+    6652                    "Give Special Item"
+    6653                    "One-Time Do Nothing"
+    6654                    "One-Time and Set"
+    6655                    "One-Time Text Message"
+END
+
+STRINGTABLE 
+BEGIN
+    6656                    "Display Dialog (Dialog pic)"
+    6657                    "Display Dialog (Terrain pic)"
+    6658                    "Display Dialog (Monster pic)"
+    6659                    "Give Item (Dialog pic)"
+    6660                    "Give Item (Terrain pic)"
+    6661                    "Give Item (Monster pic)"
+    6662                    "One-Time Place Outdoor Enc."
+    6663                    "One-Time Place Town Enc."
+    6664                    "Trap"
+END
+
+STRINGTABLE 
+BEGIN
+    6681                    "Select a PC"
+    6682                    "Do Damage"
+    6683                    "Affect Health"
+    6684                    "Affect Spell Points"
+    6685                    "Affect Experience"
+    6686                    "Affect Skill Points"
+    6687                    "Kill/Raise Dead"
+END
+
+STRINGTABLE 
+BEGIN
+    6688                    "Affect Poison"
+    6689                    "Affect Slow/Haste"
+    6690                    "Affect Invulnerability"
+    6691                    "Affect Magic Resistance"
+    6692                    "Affect Webs"
+    6693                    "Affect Disease"
+    6694                    "Affect Sanctuary"
+    6696                    "Affect Dumbfounding"
+    6697                    "Affect Sleep"
+    6698                    "Affect Paralysis"
+    6699                    "Affect Statistic"
+    6700                    "Give Spell"
+    6702                    "Affect Gold"
+    6703                    "Affect Food"
+END
+
+STRINGTABLE 
+BEGIN
+    6704                    "Affect Alchemy"
+    6707                    "Affect Featherfall"
+END
+
+STRINGTABLE 
+BEGIN
+    6731                    "Stuff Done Flag?"
+    6732                    "Town Number?"
+    6733                    "Random Number?"
+    6734                    "Have Special Item?"
+    6735                    "Stuff Done Compare?"
+END
+
+STRINGTABLE 
+BEGIN
+    6736                    "Terrain this type? (town)"
+    6737                    "Terrain this type? (out)"
+    6738                    "Has gold?"
+    6739                    "Has food?"
+    6740                    "Item Class on Space?"
+    6741                    "Have Item With Class?"
+    6742                    "Equipped Item With Class?"
+    6743                    "Has Gold? (+ take)"
+    6744                    "Has Food? (+ take)"
+    6745                    "Item Class on Space? (+ take)"
+    6746                    "Have Item W. Class? (+ take)"
+    6747                    "Equip Item W. Class? (+ take)"
+    6748                    "Pers. Here? (can be dead)"
+    6749                    "Any Barrels?"
+    6750                    "Any Crates?"
+    6751                    "Phase Reached?"
+END
+
+STRINGTABLE 
+BEGIN
+    6752                    "Has Advantage?"
+    6753                    "Roman?"
+    6754                    "Has Enough of Stat?"
+    6755                    "Text Response?"
+    6756                    "Stuff Done Equal?"
+    6757                    "Floor This Type (town)"
+    6758                    "Floor This Type (out)"
+    6759                    "Personality in Pty, alive?"
+END
+
+STRINGTABLE 
+BEGIN
+    6771                    "Town Hostile"
+    6772                    "Change Terrain"
+    6773                    "Swap Terrain"
+    6774                    "Transform Terrain"
+    6775                    "Move Party"
+    6776                    "Hit Space"
+    6777                    "Explosion on Space"
+    6778                    "Lock Space"
+    6779                    "Unlock Space"
+    6780                    "Do sfx Burst"
+    6781                    "Make Wandering Monster"
+    6782                    "Place a Monster"
+    6783                    "Destroy Monster"
+END
+
+STRINGTABLE 
+BEGIN
+    6784                    "Destroy All Monsters"
+    6785                    "Generic Lever"
+    6786                    "Generic Portal"
+    6787                    "Generic Button"
+    6788                    "Generic Stairway"
+    6789                    "Lever"
+    6790                    "Portal"
+    6791                    "Stairway"
+    6792                    "Relocate Outdoors"
+    6793                    "Place Item"
+    6794                    "Split Party"
+    6795                    "Reunite Party"
+    6796                    "Start General Timer"
+    6797                    "Start Town Dialogue"
+    6798                    "Change Floor"
+    6799                    "Swap Floor"
+END
+
+STRINGTABLE 
+BEGIN
+    6800                    "Set Height"
+    6801                    "Change Rectangle Floor"
+    6802                    "Swap Rectangle Floor"
+    6803                    "Change Rectangle Height"
+    6808                    "Place Fire Barrier"
+    6809                    "Place Force Barrier"
+    6810                    "Cleanse Rectangle"
+    6811                    "Place SFX"
+    6812                    "Place Barrels, Etc."
+    6813                    "Move Items"
+    6814                    "Destroy Items"
+    6815                    "Change Rectange Terrain"
+END
+
+STRINGTABLE 
+BEGIN
+    6816                    "Swap Rectangle Terrain"
+    6817                    "Transform Rectangle Terrain"
+    6818                    "Lock Rectangle"
+    6819                    "Unlock Rectangle"
+    6826                    "Make Outdoor Wandering"
+    6827                    "Change Out Terrain"
+    6828                    "Place Outdoor Encounter"
+    6829                    "Outdoor Move Party"
+    6830                    "Outdoor Store"
+    6831                    "Place Outdoor Encounter"
+END
+
+STRINGTABLE 
+BEGIN
+    6832                    "Outdoor Dialogue"
+END
+
+STRINGTABLE 
+BEGIN
+    6902                    "Flaming Weapon"
+    6903                    "Ice Weapon"
+    6904                    "Undead Slayer"
+    6905                    "Human Slayer"
+    6906                    "Slith Slayer"
+    6907                    "Acidic Weapon"
+    6908                    "Giant Slayer"
+    6909                    "Poisoned Weapon"
+    6910                    "Demon Slayer"
+    6911                    "Slow Target"
+END
+
+STRINGTABLE 
+BEGIN
+    6931                    "Protection"
+    6932                    "Full Protection"
+    6933                    "Fire Protection"
+    6934                    "Cold Protection"
+    6935                    "Poison Protection"
+    6936                    "Magic Protection"
+    6937                    "Acid Protection"
+    6938                    "Skill"
+    6939                    "Strength"
+    6940                    "Dexterity"
+    6941                    "Intelligence"
+    6942                    "Endurance"
+    6943                    "Luck"
+END
+
+STRINGTABLE 
+BEGIN
+    6944                    "Spell Points"
+    6945                    "Accuracy"
+    6946                    "Thieving"
+    6947                    "Giant Strength"
+    6948                    "Better mage"
+    6949                    "Better priest"
+    6950                    "Prot. From Petrify"
+    6951                    "Regenerate"
+    6952                    "Free Action"
+    6953                    "Speed"
+    6954                    "Protection from Undead"
+    6955                    "Cause disease"
+    6958                    "Grief"
+    6959                    "Hardcode"
+END
+
+STRINGTABLE 
+BEGIN
+    6960                    "Bartering"
+    6961                    "Greater Knowledge"
+    6971                    "Cure User"
+    6972                    "Shield User"
+    6973                    "Poison User"
+    6974                    "Speed User"
+    6975                    "Add Invulnerability"
+END
+
+STRINGTABLE 
+BEGIN
+    6976                    "Add Magic Res."
+    6978                    "Cure Disease"
+    6979                    "Sanct. & Martyr's Shield"
+    6980                    "Cure Mind Stuff For All"
+    6981                    "Cure Acid"
+    6982                    "Bliss"
+    6983                    "Restoring"
+    6984                    "Beast"
+    6985                    "Add Experience"
+    6986                    "Add Skill Pts."
+    6987                    "Healing"
+    6988                    "Add Spell Points"
+    6989                    "Doom"
+    6990                    "Light"
+    6991                    "Featherfall"
+END
+
+STRINGTABLE 
+BEGIN
+    6992                    "Add Drunk"
+    6993                    "Hardcode (take charge)"
+    6994                    "Hardcode (no charge)"
+    6995                    "Add Shielding"
+    6996                    "Add Berzerk"
+    6997                    "Divine Touch"
+    6998                    "Resistance"
+    6999                    "Add Flying"
+    7000                    "Add Hovering Feet"
+    7001                    "Acid User"
+END
+
+STRINGTABLE 
+BEGIN
+    7011                    "Bolt of Fire"
+    7012                    "Call Beast"
+    7013                    "Bind Foe"
+    7014                    "Slow"
+    7015                    "Ice Lances"
+    7016                    "Create Illusions"
+    7017                    "Far Sight"
+    7018                    "Lightning Spray"
+    7019                    "Dispel Barrier"
+    7020                    "Summon Aid"
+    7021                    "Fireblast"
+    7022                    "Repel Spirit"
+    7023                    "Summon Shade"
+END
+
+STRINGTABLE 
+BEGIN
+    7024                    "Control Foes"
+    7025                    "Spray Acid"
+    7027                    "Paralysis"
+    7028                    "Web Spell"
+    7029                    "Strengthen Target"
+    7032                    "Piercing Sight"
+    7033                    "Bitter Loss"
+    7034                    "Ravage Life"
+    7036                    "Hardcode (charge, combat)"
+    7039                    "Withering"
+END
+
+STRINGTABLE 
+BEGIN
+    7051                    "Toadstools"
+    7052                    "Healing"
+    7053                    "Spiritual"
+    7054                    "Energetic"
+    7055                    "Balm of Life"
+END
+
+STRINGTABLE 
+BEGIN
+    7056                    "Lockpicks"
+    7057                    "First Aid"
+    7058                    "Graymold"
+    7059                    "Mandrake"
+    7071                    "Lightning"
+END
+
+STRINGTABLE 
+BEGIN
+    7072                    "Slay Undead"
+    7073                    "Slay Demon"
+    7074                    "Acid"
+END
+
+STRINGTABLE 
+BEGIN
+    7501                    "Alchemy and Poison"
+    7502                    "27"
+    7503                    "Alchemy can be incredibly useful. Potions can give you the added boost you may need to get through a long grueling dungeon, and you cannot raise the dead without the right concoction."
+END
+
+STRINGTABLE 
+BEGIN
+    7504                    "You need three things to make a potion:|1. High alchemy skill. When a character tries to make a potion, his/her alchemy skill must be above a certain level. The higher above that level, the better the chance for success."
+    7505                    "2. The right ingredient. Ingredients are usually found at special encounters outdoors, and regenerate themselves after a time. Generally, the person who teaches a recipe tells you what plant it needs."
+    7506                    "3. The recipe. These are usually bought in towns. You only need to buy each recipe once for the entire party."
+    7507                    "When you have all these things, go into a town and click on the blue bottle button. Pick the PC with the highest alchemy skill to make the potion. Hope."
+    7508                    "Here is a list of the alchemical concoctions, with min. skill to make: |Weak Curing |  Min. Skill - 1 |Need holly. Cures poison somewhat."
+    7509                    "Weak Healing |  Min. Skill - 1 |Need comfrey root. Provides mild healing.|"
+    7510                    "Weak Poison |  Min. Skill - 1 |Need holly or spider glands. The lowest level poison."
+    7511                    "Weak Speed |  Min. Skill - 3 |Need comfrey root and wormgrass. Hastes drinker."
+    7512                    "Medium Poison |  Min. Skill - 3 |Need wormgrass or spider glands. A stronger poison."
+    7513                    "Medium Healing Potion |  Min. Skill - 4 |Need glowing nettle. Quality healing."
+    7514                    "Strong Curing Potion |  Min. Skill - 5 |Need glowing nettle. A decent antidote for poison."
+    7515                    "Medium Speed |  Min. Skill - 5 |Need glowing nettle and wormgrass. Hastes drinker a lot."
+    7516                    "Graymold Salve |  Min. Skill - 7 |Need graymold. Cures disease of all sorts."
+    7517                    "Weak Energy Potion |  Min. Skill - 9 |Need wormgrass and glowing nettle. Restores some of your spell points."
+    7518                    "Potion of Clarity |  Min. Skill - 9 |Need graymold and holly. Cures dumbfounding."
+    7519                    "Strong Poison |  Min. Skill - 10 |Need holly and wormgrass. Powerful stuff."
+END
+
+STRINGTABLE 
+BEGIN
+    7520                    "Strong Healing Potion |  Min. Skill - 12 |Need graymold and comfrey root. Provides excellent healing."
+    7521                    "Killer Poison |  Min. Skill - 12 |Need mandrake root. The strongest poison."
+    7522                    "Resurrection Balm |  Min. Skill - 9 |Need ember flowers. Necessary to cast Raise Dead or Resurrection."
+    7523                    "Medium Power Potion |  Min. Skill - 14 |Need mandrake root and wormgrass. Restores a fair amount of spell points."
+    7524                    "Knowledge Brew |  Min. Skill - 19 |Legend says it is possible to make this incredibly potent concoction. However, the secret has been long lost."
+    7525                    "One of the most useful things you can make with alchemy is poison, a powerful weapon in the magic-poor world of Exile."
+    7526                    "Many monsters are immune to magic and fire. However, not many are poison-resistant. This makes poison an excellent mage-killer."
+    7527                    "To poison a weapon, use it during combat. Your hand-to-hand weapon (the first one, if two are equipped) or arrows will become poisoned. Each time you attack, the level of poison decreases."
+    7528                    "Don't poison a weapon too long before combat. It's effectiveness decreases with time. Also, switching weapons makes the poison disappear."
+    7529                    "Poisoning an already poisoned weapon doesn't do much good. The weapon gets the maximum poison level of the poison being added or the poison already there, no more."
+END
+
+STRINGTABLE 
+BEGIN
+    9001                    "Unused"
+    9002                    "Value to change to"
+    9003                    "Increase/Decrease by"
+    9004                    "Unused"
+    9005                    "Unused"
+    9006                    "Unused"
+    9007                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9008                    "0 - can enter, 1 - no enter"
+    9009                    "0 - can enter, 1 - no enter"
+    9010                    "0 - can enter, 1 - no enter"
+    9011                    "Unused"
+    9012                    "0 - can enter, 1 - no enter"
+    9013                    "Number of moves to set forward"
+    9014                    "Number of moves to set the timer"
+    9015                    "Which sound"
+    9016                    "Horse to set (0 .. 29)"
+    9017                    "Boat to set (0 .. 29)"
+    9018                    "Town to show/hide"
+    9019                    "Number of Special Event (0 .. 9)"
+    9020                    "Item To Give"
+    9021                    "Item Class to Take Away"
+    9022                    "Usused"
+    9023                    "Value to change the 10 flags to"
+END
+
+STRINGTABLE 
+BEGIN
+    9024                    "Flag to change to Part A"
+    9025                    "Unused"
+    9026                    "Number of moves that pass"
+    9027                    "0 - no attack, 1 - attack"
+    9028                    "Number of hardcode to call"
+END
+
+STRINGTABLE 
+BEGIN
+    9051                    "Item to give"
+    9052                    "Num. of spec. item to give (0 .. 49)"
+    9053                    "Unused"
+    9054                    "Unused"
+    9055                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9056                    "Label of 2nd button (-1 - no button)"
+    9057                    "Label of 2nd button (-1 - no button)"
+    9058                    "Label of 2nd button (-1 - no button)"
+    9059                    "Item to give"
+    9060                    "Item to give"
+    9061                    "Item to give"
+    9062                    "Special outdoor enc. to place (0 .. 3)"
+    9063                    "Spec. enc. code to activate (0 .. 10)"
+    9064                    "Type of trap (see docs. for list)"
+END
+
+STRINGTABLE 
+BEGIN
+    9081                    "0 - only living, 1 - any PC"
+    9082                    "Number of dice"
+    9083                    "Amount"
+    9084                    "Amount"
+    9085                    "Amount (0 .. 100)"
+    9086                    "Amount (0 .. 10)"
+    9087                    "0 - dead, 1 - dust,  2- stoned"
+END
+
+STRINGTABLE 
+BEGIN
+    9088                    "Amount (0 .. 8)"
+    9089                    "Amount (0 .. 8)"
+    9090                    "Amount (0 .. 8)"
+    9091                    "Amount (0 .. 8)"
+    9092                    "Amount (0 .. 8)"
+    9093                    "Amount (0 .. 8)"
+    9094                    "Amount (0 .. 8)"
+    9095                    "Amount (0 .. 8)"
+    9096                    "Amount (0 .. 7)"
+    9097                    "Amount (0 .. 8)"
+    9098                    "Amount (0 .. 5000)"
+    9099                    "Amount (0 .. 10)"
+    9100                    "Which Spell (0 .. 31, see docs)"
+    9101                    "Which Spell (0 .. 31, see docs)"
+    9102                    "Amount (0 .. 25000)"
+    9103                    "Amount (0 .. 25000)"
+END
+
+STRINGTABLE 
+BEGIN
+    9104                    "Which Recipe (0 .. 19)"
+    9105                    "Amount (0 .. 250)"
+    9106                    "Amount (0 .. 250)"
+    9107                    "Amount (0 .. 250)"
+END
+
+STRINGTABLE 
+BEGIN
+    9131                    "If at least this value ..."
+    9132                    "If in this town ..."
+    9133                    "If random # (1 - 100) less than ..."
+    9134                    "If has spec. item ..."
+    9135                    "Stuff Done flag 2 Part A"
+END
+
+STRINGTABLE 
+BEGIN
+    9136                    "X coordinate of space"
+    9137                    "X coordinate of space"
+    9138                    "If party has this much gold ..."
+    9139                    "If party has this much food ..."
+    9140                    "X coordinate of space"
+    9141                    "If has item of this special class ..."
+    9142                    "If has equipped item of this special ..."
+    9143                    "If party has this much gold ..."
+    9144                    "If party has this much food ..."
+    9145                    "X coordinate of space"
+    9146                    "If has item of this special class ..."
+    9147                    "If has equipped item of this class ..."
+    9148                    "If this day has been reached ..."
+    9149                    "Unused"
+    9150                    "Unused"
+    9151                    "If this phase has been reached ..."
+END
+
+STRINGTABLE 
+BEGIN
+    9152                    "If have this advantage"
+    9153                    "Unused"
+    9154                    "If the party has this sum ..."
+    9155                    "Number of a SCENARIO special message"
+    9156                    "If flag has this value ..."
+    9157                    "If floor this type ..."
+    9158                    "If floor this type ..."
+    9159                    "If this char_flag here ..."
+END
+
+STRINGTABLE 
+BEGIN
+    9171                    "Unused"
+    9172                    "X coordinate of space"
+    9173                    "X coordinate of space"
+    9174                    "X coordinate of space"
+    9175                    "X coordinate of space"
+    9176                    "X coordinate of space"
+    9177                    "X coordinate of space"
+    9178                    "X coordinate of space"
+    9179                    "X coordinate of space"
+    9180                    "X coordinate of space"
+    9181                    "Unused"
+    9182                    "X coordinate of space to place"
+    9183                    "Type of creature to remove"
+END
+
+STRINGTABLE 
+BEGIN
+    9184                    "0 - all, 1 - friendly, 2 - hostile"
+    9185                    "Unused"
+    9186                    "X coordinate to telep. to"
+    9187                    "Unused"
+    9188                    "X coordinate to go to "
+    9189                    "Unused"
+    9190                    "X coordinate to telep. to"
+    9191                    "X coordinate to place at"
+    9192                    "X coordinate of outdoor section"
+    9193                    "X coordinate to place at"
+    9194                    "X coordinate to place lone PC at"
+    9195                    "0 - no sound, 1 - teleport sound"
+    9196                    "Number of moves until event"
+END
+
+STRINGTABLE 
+BEGIN
+    9201                    "Top of rectangle"
+    9202                    "Top of rectangle"
+    9203                    "Top of rectangle"
+    9204                    "Top of rectangle"
+    9205                    "Top of rectangle"
+    9206                    "Top of rectangle"
+    9207                    "Top of rectangle"
+    9208                    "Top of rectangle"
+    9209                    "Top of rectangle"
+    9210                    "Top of rectangle"
+    9211                    "Top of rectangle"
+    9212                    "Top of rectangle"
+    9213                    "Top of rectangle"
+    9214                    "Top of rectangle"
+    9215                    "Top of rectangle"
+END
+
+STRINGTABLE 
+BEGIN
+    9216                    "Top of rectangle"
+    9217                    "Top of rectangle"
+    9218                    "Top of rectangle"
+    9219                    "Top of rectangle"
+    9226                    "Unused"
+    9227                    "X coordinate of space"
+    9228                    "Number of special encounter (0 .. 3)"
+    9229                    "X coordinate of space"
+    9230                    "Number of first item in store"
+END
+
+STRINGTABLE 
+BEGIN
+    9301                    "Unused"
+    9302                    "Unused"
+    9303                    "0 - increase, 1 - decrease"
+    9304                    "Unused"
+    9305                    "Unused"
+    9306                    "Unused"
+    9307                    "Unused"
+    9308                    "Unused"
+    9309                    "Unused"
+    9310                    "Unused"
+    9311                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9312                    "Unused"
+    9313                    "Unused"
+    9314                    "Special to call when timer runs out"
+    9315                    "Unused"
+    9316                    "Unused"
+    9317                    "Unused"
+    9318                    "0 - town hidden, 1 - town visible"
+    9319                    "Unused"
+    9320                    "Unused"
+    9321                    "Special to call if no items taken"
+    9322                    "Unused"
+    9323                    "Unused"
+    9324                    "Flag to change to Part B"
+    9325                    "Special if not casting ritual"
+    9326                    "Health and spell pts. to give"
+    9327                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9328                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9351                    "Amount of gold to give"
+    9352                    "0 - give item, 1 - take away"
+    9353                    "Unused"
+    9354                    "Unused"
+    9355                    "Unused"
+    9356                    "Special if button 2 pressed"
+    9357                    "Special if button 2 pressed"
+    9358                    "Special if button 2 pressed"
+    9359                    "Amount of gold to give"
+END
+
+STRINGTABLE 
+BEGIN
+    9360                    "Amount of gold to give"
+    9361                    "Amount of gold to give"
+    9362                    "Unused"
+    9363                    "Unused"
+    9364                    "Trap severity (0 .. 3)"
+END
+
+STRINGTABLE 
+BEGIN
+    9381                    "Special if Cancel button pressed"
+    9382                    "Number of 'sides' on dice"
+    9383                    "0 - raise, 1 - lower"
+    9384                    "0 - raise, 1 - lower"
+    9385                    "0 - raise, 1 - lower"
+    9386                    "0 - raise, 1 - lower"
+    9387                    "0 - raise dead, 1 - hurt"
+    9388                    "0 - cure, 1 - inflict"
+    9389                    "0 - cure, 1 - inflict"
+    9390                    "0 - cure, 1 - inflict"
+    9391                    "0 - cure, 1 - inflict"
+END
+
+STRINGTABLE 
+BEGIN
+    9392                    "0 - cure, 1 - inflict"
+    9393                    "0 - cure, 1 - inflict"
+    9394                    "0 - adds, 1 - removes"
+    9395                    "0 - blesses, 1 - curses"
+    9396                    "0 - cure, 1 - inflict"
+    9397                    "0 - cure, 1 - inflict"
+    9398                    "0 - cure, 1 - inflict"
+    9399                    "0 - increase, 1 - decrease"
+    9400                    "Unused"
+    9401                    "Unused"
+    9402                    "0 - increase, 1 - decrease"
+    9403                    "0 - increase, 1 - decrease"
+    9404                    "Unused"
+    9405                    "Unused"
+    9406                    "Unused"
+    9407                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9431                    "Call this special ..."
+    9432                    "Call this special ..."
+    9433                    "Call this special ..."
+    9434                    "Call this special ..."
+    9435                    "Stuff Done flag 2 Part B"
+    9436                    "Y coordinate of space"
+    9437                    "Y coordinate of space"
+    9438                    "Call this special ..."
+    9439                    "Call this special ..."
+END
+
+STRINGTABLE 
+BEGIN
+    9440                    "Y coordinate of space"
+    9441                    "Call this special ..."
+    9442                    "Call this special ..."
+    9443                    "Call this special ..."
+    9444                    "Call this special ..."
+    9445                    "Y coordinate of space"
+    9446                    "Call this special ..."
+    9447                    "Call this special ..."
+    9448                    "Call this special ..."
+    9449                    "If any barrels, call this special ..."
+    9450                    "If any crates, call this special ..."
+    9451                    "And this event didn't happen before it ..."
+    9452                    "If have this adv., call this ..."
+    9453                    "If Roman, call this ..."
+    9454                    "Call this special ..."
+    9455                    "If answer matches, call this special ..."
+END
+
+STRINGTABLE 
+BEGIN
+    9456                    "Call this special ..."
+    9457                    "Call this special ..."
+    9458                    "Call this special ..."
+    9459                    "Call this special ..."
+    9471                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9472                    "Y coordinate of space"
+    9473                    "Y coordinate of space"
+    9474                    "Y coordinate of space"
+    9475                    "Y coordinate of space"
+    9476                    "Y coordinate of space"
+    9477                    "Y coordinate of space"
+    9478                    "Y coordinate of space"
+    9479                    "Y coordinate of space"
+    9480                    "Y coordinate of space"
+    9481                    "Unused"
+    9482                    "Y coordinate of space to place"
+    9483                    "Unused"
+    9484                    "Unused"
+    9485                    "If Pulled, call this special ..."
+    9486                    "Y coordinate to telep. to"
+    9487                    "If Pushed, call this special ..."
+END
+
+STRINGTABLE 
+BEGIN
+    9488                    "Y coordinate to go to"
+    9489                    "If Pulled, call this special ..."
+    9490                    "Y coordinate to telep. to"
+    9491                    "Y coordinate to place at"
+    9492                    "Y coordinate of outdoor section"
+    9493                    "Y coordinate to place at"
+    9494                    "Y coordinate to place lone PC at"
+    9495                    "Unused"
+    9496                    "Call this special when time runs out ..."
+    9497                    "Dialogue picture"
+    9501                    "Left of rectangle"
+    9502                    "Left of rectangle"
+    9503                    "Left of rectangle"
+END
+
+STRINGTABLE 
+BEGIN
+    9504                    "Left of rectangle"
+    9505                    "Left of rectangle"
+    9506                    "Left of rectangle"
+    9507                    "Left of rectangle"
+    9508                    "Left of rectangle"
+    9509                    "Left of rectangle"
+    9510                    "Left of rectangle"
+    9511                    "Left of rectangle"
+    9512                    "Left of rectangle"
+    9513                    "Left of rectangle"
+    9514                    "Left of rectangle"
+    9515                    "Left of rectangle"
+    9516                    "Left of rectangle"
+    9517                    "Left of rectangle"
+    9518                    "Left of rectangle"
+    9519                    "Left of rectangle"
+END
+
+STRINGTABLE 
+BEGIN
+    9526                    "Unused"
+    9527                    "Y coordinate of space"
+    9528                    "Unused"
+    9529                    "Y coordinate of space"
+    9530                    "Store type (see docs. for list)"
+    9532                    "Dialogue picture"
+END
+
+STRINGTABLE 
+BEGIN
+    9601                    "Unused"
+    9602                    "Unused"
+    9603                    "Unused"
+    9604                    "Unused"
+    9605                    "Unused"
+    9606                    "Unused"
+    9607                    "Unused"
+    9608                    "Unused"
+    9609                    "Unused"
+    9610                    "Unused"
+    9611                    "Unused"
+    9612                    "Unused"
+    9613                    "Unused"
+    9614                    "Unused"
+    9615                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9616                    "0 - not property, 1 - becomes property"
+    9617                    "0 - not property, 1 - becomes property"
+    9618                    "Unused"
+    9619                    "Unused"
+    9620                    "Unused"
+    9621                    "Amount to pay for each item"
+    9622                    "Unused"
+    9623                    "Unused"
+    9624                    "Unused"
+    9625                    "Unused"
+    9626                    "Unused"
+    9627                    "Unused"
+    9628                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9651                    "Amount of food to give"
+    9652                    "Unused"
+    9653                    "Unused"
+    9654                    "Unused"
+    9655                    "Unused"
+    9656                    "Label of 3rd button (-1 - no button)"
+    9657                    "Label of 3rd button (-1 - no button)"
+    9658                    "Label of 3rd button (-1 - no button)"
+    9659                    "Amount of food to give"
+    9660                    "Amount of food to give"
+    9661                    "Amount of food to give"
+    9662                    "Unused"
+    9663                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9664                    "Penalty (0 .. 100, higher is harder)"
+END
+
+STRINGTABLE 
+BEGIN
+    9681                    "Unused"
+    9682                    "Amount of extra damage"
+    9683                    "Unused"
+    9684                    "Unused"
+    9685                    "Unused"
+    9686                    "Unused"
+    9687                    "Unused"
+    9688                    "Unused"
+    9689                    "Unused"
+    9690                    "Unused"
+    9691                    "Unused"
+    9692                    "Unused"
+    9693                    "Unused"
+    9694                    "Unused"
+    9695                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9696                    "Unused"
+    9697                    "Unused"
+    9698                    "Unused"
+    9699                    "Stat. to adjust (see docs. for list)"
+    9700                    "Unused"
+    9701                    "Unused"
+    9702                    "Unused"
+    9703                    "Unused"
+    9704                    "Unused"
+    9705                    "Unused"
+    9706                    "Unused"
+    9707                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9731                    "If less than this ..."
+    9732                    "Unused"
+    9733                    "Unused"
+    9734                    "Unused"
+    9735                    "Unused"
+    9736                    "If space is this terrain type ..."
+    9737                    "If space is this terrain type ..."
+    9738                    "Unused"
+    9739                    "Unused"
+    9740                    "If item of this class on space ..."
+    9741                    "Unused"
+    9742                    "Unused"
+    9743                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9744                    "Unused"
+    9745                    "If item of this class on space ..."
+    9746                    "Unused"
+    9747                    "Unused"
+    9748                    "Unused"
+    9749                    "Unused"
+    9750                    "Unused"
+    9751                    "Unused"
+    9752                    "Unused"
+    9753                    "Unused"
+    9754                    "Stat to sum"
+    9755                    "Number of a SCENARIO special message"
+    9756                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9771                    "Unused"
+    9772                    "Terrain to change to"
+    9773                    "Swap this terrain ..."
+    9774                    "Unused"
+    9775                    "0 - Just move, 1 - Teleport"
+END
+
+STRINGTABLE 
+BEGIN
+    9776                    "Damage to inflict (0 .. 1000)"
+    9777                    "Damage to inflict (0 .. 1000)"
+    9778                    "Unused"
+    9779                    "Unused"
+    9780                    "0 - fire, 1 - elec., 2 - telep."
+    9781                    "Unused"
+    9782                    "Number of creature to place"
+    9783                    "Unused"
+    9784                    "Unused"
+    9785                    "Unused"
+    9786                    "Unused"
+    9787                    "Unused"
+    9788                    "Number of town to place party in"
+    9789                    "Unused"
+    9790                    "Unused"
+    9791                    "Number of town to place party in"
+END
+
+STRINGTABLE 
+BEGIN
+    9792                    "X coordinate inside section "
+    9793                    "Item to place"
+    9794                    "0 - no telep. noise, 1 - play telep. noise"
+    9795                    "Unused"
+    9796                    "Unused"
+    9801                    "Bottom of rectangle"
+    9802                    "Bottom of rectangle"
+    9803                    "Bottom of rectangle"
+    9804                    "Bottom of rectangle"
+    9805                    "Bottom of rectangle"
+    9806                    "Bottom of rectangle"
+    9807                    "Bottom of rectangle"
+END
+
+STRINGTABLE 
+BEGIN
+    9808                    "Bottom of rectangle"
+    9809                    "Bottom of rectangle"
+    9810                    "Bottom of rectangle"
+    9811                    "Bottom of rectangle"
+    9812                    "Bottom of rectangle"
+    9813                    "Bottom of rectangle"
+    9814                    "Bottom of rectangle"
+    9815                    "Bottom of rectangle"
+    9816                    "Bottom of rectangle"
+    9817                    "Bottom of rectangle"
+    9818                    "Bottom of rectangle"
+    9819                    "Bottom of rectangle"
+END
+
+STRINGTABLE 
+BEGIN
+    9826                    "Unused"
+    9827                    "Terrain to change to"
+    9828                    "Unused"
+    9829                    "Unused"
+    9830                    "Number of items in store (1 .. 40)"
+    9831                    "X coord of enc."
+END
+
+STRINGTABLE 
+BEGIN
+    9901                    "Unused"
+    9902                    "Unused"
+    9903                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9904                    "Unused"
+    9905                    "Unused"
+    9906                    "Unused"
+    9907                    "Unused"
+    9908                    "Unused"
+    9909                    "Unused"
+    9910                    "Unused"
+    9911                    "Unused"
+    9912                    "Unused"
+    9913                    "Unused"
+    9914                    "Unused"
+    9915                    "Unused"
+    9916                    "Unused"
+    9917                    "Unused"
+    9918                    "Unused"
+    9919                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9920                    "Special if item not given"
+    9921                    "Unused"
+    9922                    "Unused"
+    9923                    "Unused"
+    9924                    "Unused"
+    9925                    "Unused"
+    9926                    "Unused"
+    9927                    "Unused"
+    9928                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9951                    "Special if item not given"
+END
+
+STRINGTABLE 
+BEGIN
+    9952                    "Unused"
+    9953                    "Unused"
+    9954                    "Unused"
+    9955                    "Unused"
+    9956                    "Special if button 3 pressed"
+    9957                    "Special if button 3 pressed"
+    9958                    "Special if button 3 pressed"
+    9959                    "Special if item IS taken"
+    9960                    "Special if item IS taken"
+    9961                    "Special if item IS taken"
+    9962                    "Unused"
+    9963                    "Unused"
+    9964                    "Unused"
+    9965                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9981                    "Unused"
+    9982                    "Type of damage (for list, see docs.)"
+    9983                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    9984                    "Unused"
+    9985                    "Unused"
+    9986                    "Unused"
+    9987                    "Unused"
+    9988                    "Unused"
+    9989                    "Unused"
+    9990                    "Unused"
+    9991                    "Unused"
+    9992                    "Unused"
+    9993                    "Unused"
+    9994                    "Unused"
+    9995                    "Unused"
+    9996                    "Unused"
+    9997                    "Unused"
+    9998                    "Unused"
+    9999                    "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    10000                   "Unused"
+    10001                   "Unused"
+    10002                   "Unused"
+    10003                   "Unused"
+    10004                   "Unused"
+    10005                   "Unused"
+    10006                   "Unused"
+    10007                   "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    10031                   "Call this special ..."
+END
+
+STRINGTABLE 
+BEGIN
+    10032                   "Unused"
+    10033                   "Unused"
+    10034                   "Unused"
+    10035                   "Call this special is 2nd flag lower ..."
+    10036                   "Call this special ..."
+    10037                   "Call this special ..."
+    10038                   "Unused"
+    10039                   "Unused"
+    10040                   "Call this special ..."
+    10041                   "Unused"
+    10042                   "Unused"
+    10043                   "Unused"
+    10044                   "Unused"
+    10045                   "Call this special ..."
+    10046                   "Unused"
+    10047                   "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    10048                   "Unused"
+    10049                   "Unused"
+    10050                   "Unused"
+    10051                   "Call this special ..."
+    10052                   "Unused"
+    10053                   "Unused"
+    10054                   "Unused"
+    10055                   "If answer matches, call this special ..."
+    10056                   "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    10071                   "Unused"
+    10072                   "Unused"
+    10073                   "With this terrain ..."
+    10074                   "Unused"
+    10075                   "Unused"
+    10076                   "Unused"
+    10077                   "Type of damage (for list, see docs.)"
+    10078                   "Unused"
+    10079                   "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    10080                   "Unused"
+    10081                   "Unused"
+    10082                   "0 - don't force, 1 - force"
+    10083                   "Unused"
+    10084                   "Unused"
+    10085                   "Unused"
+    10086                   "Unused"
+    10087                   "Unused"
+    10088                   "What text? (see docs, 0 - up, 1 - down)"
+    10089                   "Unused"
+    10090                   "Unused"
+    10091                   "If 1, always change level."
+    10092                   "Y coordinate inside section "
+    10093                   "Unused"
+    10094                   "Unused"
+    10095                   "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    10096                   "Unused"
+    10101                   "Right of rectangle"
+    10102                   "Right of rectangle"
+    10103                   "Right of rectangle"
+    10104                   "Right of rectangle"
+    10105                   "Right of rectangle"
+    10106                   "Right of rectangle"
+    10107                   "Right of rectangle"
+    10108                   "Right of rectangle"
+    10109                   "Right of rectangle"
+    10110                   "Right of rectangle"
+    10111                   "Right of rectangle"
+END
+
+STRINGTABLE 
+BEGIN
+    10112                   "Right of rectangle"
+    10113                   "Right of rectangle"
+    10114                   "Right of rectangle"
+    10115                   "Right of rectangle"
+    10116                   "Right of rectangle"
+    10117                   "Right of rectangle"
+    10118                   "Right of rectangle"
+    10119                   "Right of rectangle"
+    10126                   "Unused"
+    10127                   "Floor type to change to"
+END
+
+STRINGTABLE 
+BEGIN
+    10128                   "Unused"
+    10129                   "Unused"
+    10130                   "Cost adjust (0 .. 6, lower = cheaper)"
+    10131                   "Y coord of enc."
+END
+
+STRINGTABLE 
+BEGIN
+    10501                   "Scen name"
+    10502                   "Who wrote 1 "
+    10503                   "Who wrote 2"
+    10504                   "Contact info"
+    10511                   "Begin journal strs"
+END
+
+STRINGTABLE 
+BEGIN
+    10560                   "End journal strs"
+    10561                   "Unused Special Item"
+    10563                   "Unused Special Item"
+    10565                   "Unused Special Item"
+    10567                   "Unused Special Item"
+    10569                   "Unused Special Item"
+    10571                   "Unused Special Item"
+    10573                   "Unused Special Item"
+    10575                   "Unused Special Item"
+END
+
+STRINGTABLE 
+BEGIN
+    10577                   "Unused Special Item"
+    10579                   "Unused Special Item"
+    10581                   "Unused Special Item"
+    10583                   "Unused Special Item"
+    10585                   "Unused Special Item"
+    10587                   "Unused Special Item"
+    10589                   "Unused Special Item"
+    10591                   "Unused Special Item"
+END
+
+STRINGTABLE 
+BEGIN
+    10593                   "Unused Special Item"
+    10595                   "Unused Special Item"
+    10597                   "Unused Special Item"
+    10599                   "Unused Special Item"
+    10601                   "Unused Special Item"
+    10603                   "Unused Special Item"
+    10605                   "Unused Special Item"
+    10607                   "Unused Special Item"
+END
+
+STRINGTABLE 
+BEGIN
+    10609                   "Unused Special Item"
+    10611                   "Unused Special Item"
+    10613                   "Unused Special Item"
+    10615                   "Unused Special Item"
+    10617                   "Unused Special Item"
+    10619                   "Unused Special Item"
+    10621                   "Unused Special Item"
+    10623                   "Unused Special Item"
+END
+
+STRINGTABLE 
+BEGIN
+    10625                   "Unused Special Item"
+    10627                   "Unused Special Item"
+    10629                   "Unused Special Item"
+    10631                   "Unused Special Item"
+    10633                   "Unused Special Item"
+    10635                   "Unused Special Item"
+    10637                   "Unused Special Item"
+    10639                   "Unused Special Item"
+END
+
+STRINGTABLE 
+BEGIN
+    10641                   "Unused Special Item"
+    10643                   "Unused Special Item"
+    10645                   "Unused Special Item"
+    10647                   "Unused Special Item"
+    10649                   "Unused Special Item"
+    10651                   "Unused Special Item"
+    10653                   "Unused Special Item"
+    10655                   "Unused Special Item"
+END
+
+STRINGTABLE 
+BEGIN
+    10657                   "Unused Special Item"
+    10659                   "Unused Special Item"
+    10660                   "End special item descs"
+    10661                   "*Begin special strs"
+    10662                   "*"
+    10663                   "*"
+    10664                   "*"
+    10665                   "*"
+    10666                   "*"
+    10667                   "*"
+    10668                   "*"
+    10669                   "*"
+    10670                   "*"
+    10671                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    10672                   "*"
+    10673                   "*"
+    10674                   "*"
+    10675                   "*"
+    10676                   "*"
+    10677                   "*"
+    10678                   "*"
+    10679                   "*"
+    10680                   "*"
+    10681                   "*"
+    10682                   "*"
+    10683                   "*"
+    10684                   "*"
+    10685                   "*"
+    10686                   "*"
+    10687                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    10688                   "*"
+    10689                   "*"
+    10690                   "*"
+    10691                   "*"
+    10692                   "*"
+    10693                   "*"
+    10694                   "*"
+    10695                   "*"
+    10696                   "*"
+    10697                   "*"
+    10698                   "*"
+    10699                   "*"
+    10700                   "*"
+    10701                   "*"
+    10702                   "*"
+    10703                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    10704                   "*"
+    10705                   "*"
+    10706                   "*"
+    10707                   "*"
+    10708                   "*"
+    10709                   "*"
+    10710                   "*"
+    10711                   "*"
+    10712                   "*"
+    10713                   "*"
+    10714                   "*"
+    10715                   "*"
+    10716                   "*"
+    10717                   "*"
+    10718                   "*"
+    10719                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    10720                   "*"
+    10721                   "*"
+    10722                   "*"
+    10723                   "*"
+    10724                   "*"
+    10725                   "*"
+    10726                   "*"
+    10727                   "*"
+    10728                   "*"
+    10729                   "*"
+    10730                   "*"
+    10731                   "*"
+    10732                   "*"
+    10733                   "*"
+    10734                   "*"
+    10735                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    10736                   "*"
+    10737                   "*"
+    10738                   "*"
+    10739                   "*"
+    10740                   "*"
+    10741                   "*"
+    10742                   "*"
+    10743                   "*"
+    10744                   "*"
+    10745                   "*"
+    10746                   "*"
+    10747                   "*"
+    10748                   "*"
+    10749                   "*"
+    10750                   "*"
+    10751                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    10752                   "*"
+    10753                   "*"
+    10754                   "*"
+    10755                   "*"
+    10756                   "*"
+    10757                   "*"
+    10758                   "*"
+    10759                   "*"
+    10760                   "*End special strs"
+    10761                   "From here on, reserved for furute use"
+END
+
+STRINGTABLE 
+BEGIN
+    10801                   "Town name"
+    10802                   "Rectangle 1"
+    10803                   "Rectangle 2"
+    10804                   "Rectangle 3"
+    10805                   "Rectangle 4"
+    10806                   "Rectangle 5"
+    10807                   "Rectangle 6"
+    10808                   "Rectangle 7"
+    10809                   "Rectangle 8"
+    10810                   "Rectangle 9"
+    10811                   "Rectangle 10"
+    10812                   "Rectangle 11"
+    10813                   "Rectangle 12"
+    10814                   "Rectangle 13"
+    10815                   "Rectangle 14"
+END
+
+STRINGTABLE 
+BEGIN
+    10816                   "Rectangle 15"
+    10817                   "Rectangle 16"
+    10818                   "Comment 1"
+    10819                   "Comment 2"
+    10820                   "Comment 3"
+    10821                   "*Begin special strs"
+    10822                   "*"
+    10823                   "*"
+    10824                   "*"
+    10825                   "*"
+    10826                   "*"
+    10827                   "*"
+    10828                   "*"
+    10829                   "*"
+    10830                   "*"
+    10831                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    10832                   "*"
+    10833                   "*"
+    10834                   "*"
+    10835                   "*"
+    10836                   "*"
+    10837                   "*"
+    10838                   "*"
+    10839                   "*"
+    10840                   "*"
+    10841                   "*"
+    10842                   "*"
+    10843                   "*"
+    10844                   "*"
+    10845                   "*"
+    10846                   "*"
+    10847                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    10848                   "*"
+    10849                   "*"
+    10850                   "*"
+    10851                   "*"
+    10852                   "*"
+    10853                   "*"
+    10854                   "*"
+    10855                   "*"
+    10856                   "*"
+    10857                   "*"
+    10858                   "*"
+    10859                   "*"
+    10860                   "*"
+    10861                   "*"
+    10862                   "*"
+    10863                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    10864                   "*"
+    10865                   "*"
+    10866                   "*"
+    10867                   "*"
+    10868                   "*"
+    10869                   "*"
+    10870                   "*"
+    10871                   "*"
+    10872                   "*"
+    10873                   "*"
+    10874                   "*"
+    10875                   "*"
+    10876                   "*"
+    10877                   "*"
+    10878                   "*"
+    10879                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    10880                   "*"
+    10881                   "*"
+    10882                   "*"
+    10883                   "*"
+    10884                   "*"
+    10885                   "*"
+    10886                   "*"
+    10887                   "*"
+    10888                   "*"
+    10889                   "*"
+    10890                   "*"
+    10891                   "*"
+    10892                   "*"
+    10893                   "*"
+    10894                   "*"
+    10895                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    10896                   "*"
+    10897                   "*"
+    10898                   "*"
+    10899                   "*"
+    10900                   "*"
+    10901                   "*"
+    10902                   "*"
+    10903                   "*"
+    10904                   "*"
+    10905                   "*"
+    10906                   "*"
+    10907                   "*"
+    10908                   "*"
+    10909                   "*"
+    10910                   "*"
+    10911                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    10912                   "*"
+    10913                   "*"
+    10914                   "*"
+    10915                   "*"
+    10916                   "*"
+    10917                   "*"
+    10918                   "*"
+    10919                   "*"
+    10920                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    11101                   "Area name"
+    11102                   "Rectangle 1"
+    11103                   "Rectangle 2"
+END
+
+STRINGTABLE 
+BEGIN
+    11104                   "Rectangle 3"
+    11105                   "Rectangle 4"
+    11106                   "Rectangle 5"
+    11107                   "Rectangle 6"
+    11108                   "Rectangle 7"
+    11109                   "Rectangle 8"
+    11110                   "Comment"
+    11111                   "*Begin special strs"
+    11112                   "*"
+    11113                   "*"
+    11114                   "*"
+    11115                   "*"
+    11116                   "*"
+    11117                   "*"
+    11118                   "*"
+    11119                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    11120                   "*"
+    11121                   "*"
+    11122                   "*"
+    11123                   "*"
+    11124                   "*"
+    11125                   "*"
+    11126                   "*"
+    11127                   "*"
+    11128                   "*"
+    11129                   "*"
+    11130                   "*"
+    11131                   "*"
+    11132                   "*"
+    11133                   "*"
+    11134                   "*"
+    11135                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    11136                   "*"
+    11137                   "*"
+    11138                   "*"
+    11139                   "*"
+    11140                   "*"
+    11141                   "*"
+    11142                   "*"
+    11143                   "*"
+    11144                   "*"
+    11145                   "*"
+    11146                   "*"
+    11147                   "*"
+    11148                   "*"
+    11149                   "*"
+    11150                   "*"
+    11151                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    11152                   "*"
+    11153                   "*"
+    11154                   "*"
+    11155                   "*"
+    11156                   "*"
+    11157                   "*"
+    11158                   "*"
+    11159                   "*"
+    11160                   "*"
+    11161                   "*"
+    11162                   "*"
+    11163                   "*"
+    11164                   "*"
+    11165                   "*"
+    11166                   "*"
+    11167                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    11168                   "*"
+    11169                   "*"
+    11170                   "*"
+    11171                   "*"
+    11172                   "*"
+    11173                   "*"
+    11174                   "*"
+    11175                   "*"
+    11176                   "*"
+    11177                   "*"
+    11178                   "*"
+    11179                   "*"
+    11180                   "*"
+    11181                   "*"
+    11182                   "*"
+    11183                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    11184                   "*"
+    11185                   "*"
+    11186                   "*"
+    11187                   "*"
+    11188                   "*"
+    11189                   "*"
+    11190                   "*"
+    11191                   "*"
+    11192                   "*"
+    11193                   "*"
+    11194                   "*"
+    11195                   "*"
+    11196                   "*"
+    11197                   "*"
+    11198                   "*"
+    11199                   "*"
+END
+
+STRINGTABLE 
+BEGIN
+    11200                   "*End of special strs"
+    11209                   "From here on, reserved for future use"
+END
+
+STRINGTABLE 
+BEGIN
+    12001                   "Regular speech"
+    12002                   "Unused"
+    12003                   "Unused"
+    12004                   "Unused"
+    12005                   "Unused"
+    12006                   "First part of response ..."
+    12007                   "Second part of response ..."
+    12008                   "Response depends on flag"
+    12009                   "Stuff Done flag Pt. A"
+    12010                   "Stuff Done flag Pt. B"
+    12011                   "Value to compare to"
+    12012                   "Unused"
+    12013                   "Response if less than or equal to"
+    12014                   "Response if greater than"
+    12015                   "Set flag to 1"
+END
+
+STRINGTABLE 
+BEGIN
+    12016                   "Stuff Done flag Pt. A"
+    12017                   "Stuff Done flag Pt. B"
+    12018                   "Unused"
+    12019                   "Quest num (>100 -> turn off)"
+    12020                   "If flag wasn't 1."
+    12021                   "If flag was 1."
+    12022                   "Inn"
+    12023                   "Cost of Inn"
+    12024                   "Quality of Inn (0 .. 3)"
+    12025                   "Move party to X"
+    12026                   "Move party to Y"
+    12027                   "Response if can afford it ..."
+    12028                   "Response if not enough money ..."
+    12029                   "Change stuff done flag"
+    12030                   "Stuff Done flag Pt. A"
+    12031                   "Stuff Done flag Pt. B"
+END
+
+STRINGTABLE 
+BEGIN
+    12032                   "What to change to"
+    12033                   "Quest num (>100 -> turn off)"
+    12034                   "First part of response ..."
+    12035                   "Second part of response ..."
+    12036                   "A Particular Day?"
+    12037                   "If this day class has been reached ..."
+    12038                   "Unused"
+    12039                   "Unused"
+    12040                   "Unused"
+    12041                   "Respond with this ..."
+    12042                   "Otherwise respond with this ..."
+    12043                   "Depends on town"
+    12044                   "Town to check"
+    12045                   "Unused"
+    12046                   "Unused"
+    12047                   "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    12048                   "Response if in this town ..."
+    12049                   "Otherwise respond ..."
+    12050                   "Buy Items"
+    12051                   "Cost adjustment (0 .. 6)"
+    12052                   "Number of shop"
+    12053                   "Sell adjustment (0 best .. 6)"
+    12054                   "Unused"
+    12055                   "Name of shop"
+    12056                   "Unused"
+    12057                   "Mage Spell Shop"
+    12058                   "Cost adjustment (0 .. 6)"
+    12059                   "Number of first spell in shop"
+    12060                   "Total number of spells in shop"
+    12061                   "Level of spells (1-3)"
+    12062                   "Name of shop"
+    12063                   "Shop Desc Text"
+END
+
+STRINGTABLE 
+BEGIN
+    12064                   "Priest Spell Shop"
+    12065                   "Cost adjustment (0 .. 6)"
+    12066                   "Number of first spell in shop"
+    12067                   "Total number of spells in shop"
+    12068                   "Level of spells (1-3)"
+    12069                   "Name of shop"
+    12070                   "Shop Desc Text"
+    12071                   "Affect Reputation"
+    12072                   "Stuff Done flag Pt. A"
+    12073                   "Stuff Done flag Pt. B"
+    12074                   "Amount to change by"
+    12075                   "Unused"
+    12076                   "Text if triggered once."
+    12077                   "Text if triggered later."
+    12078                   "Alchemy Shop"
+    12079                   "Cost adjustment (0 .. 6)"
+END
+
+STRINGTABLE 
+BEGIN
+    12080                   "Number of first recipe in shop"
+    12081                   "Total number of recipes in shop"
+    12082                   "Unused"
+    12083                   "Name of shop"
+    12084                   "Description"
+    12085                   "Healer"
+    12086                   "Cost adjustment (0 .. 6)"
+    12087                   "Unused"
+    12088                   "Unused"
+    12089                   "Unused"
+    12090                   "Name of healer"
+    12091                   "Description"
+    12092                   "Introductory Dialogue"
+    12093                   "Unused"
+    12094                   "Unused"
+    12095                   "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    12096                   "Unused"
+    12097                   "Text first time met"
+    12098                   "Text for all later times"
+    12099                   "Response Depends on Race"
+    12100                   "Race to check for (1 - neph, 2 - slith)"
+    12101                   "Unused"
+    12102                   "Unused"
+    12103                   "Unused"
+    12104                   "Text if race present"
+    12105                   "Text if race not present"
+    12106                   "Toggle a Quest"
+    12107                   "Quest num (>100 -> turn off)"
+    12108                   "Unused"
+    12109                   "Unused"
+    12110                   "Unused"
+    12111                   "First part of response ..."
+END
+
+STRINGTABLE 
+BEGIN
+    12112                   "Second part of response ..."
+    12113                   "Identify Items"
+    12114                   "Cost to identify"
+    12115                   "Unused"
+    12116                   "Unused"
+    12117                   "Unused"
+    12118                   "Person identifying items says:"
+    12119                   "Unused"
+    12120                   "Unused"
+    12121                   "Unused"
+    12122                   "Unused"
+    12123                   "Unused"
+    12124                   "Unused"
+    12125                   "Unused"
+    12126                   "Unused"
+    12127                   "Pay For Response"
+END
+
+STRINGTABLE 
+BEGIN
+    12128                   "Amount of gold taken"
+    12129                   "Amount of drunkenness"
+    12130                   "Unused"
+    12131                   "Unused"
+    12132                   "Response if party has gold"
+    12133                   "Response if they don't"
+    12134                   "Buy response, Change Flag"
+    12135                   "Amount of gold taken"
+    12136                   "Stuff Done Flag, Pt. A"
+    12137                   "Stuff Done Flag, Pt. B"
+    12138                   "Change flag to"
+    12139                   "Response if party has gold"
+    12140                   "Response if they don't"
+    12141                   "Buy Boat"
+    12142                   "Cost of Boat"
+    12143                   "Number of first boat sold"
+END
+
+STRINGTABLE 
+BEGIN
+    12144                   "Total number of boats sold"
+    12145                   "Unused"
+    12146                   "Response if party has gold"
+    12147                   "Response if they don't"
+    12148                   "Unused"
+    12149                   "Cost of Horse"
+    12150                   "Number of first horse sold"
+    12151                   "Total number of horses sold"
+    12152                   "Unused"
+    12153                   "Response if party has gold"
+    12154                   "Response if they don't"
+    12155                   "Buy Special Item"
+    12156                   "Number of item being sold"
+    12157                   "Cost of item"
+    12158                   "Unused"
+    12159                   "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    12160                   "Response if party buys it"
+    12161                   "Response if party can't afford it"
+    12162                   "Job Board"
+    12163                   "Which One (0 .. 5)"
+    12164                   "Unused"
+    12165                   "Unused"
+    12166                   "Unused"
+    12167                   "Name of Job Place"
+    12168                   "Unused"
+    12169                   "Special Hardcode"
+    12170                   "Which one?"
+    12171                   "Unused"
+    12172                   "Unused"
+    12173                   "Unused"
+    12174                   "Chunk of Text 1"
+    12175                   "Chunk of Text 2"
+END
+
+STRINGTABLE 
+BEGIN
+    12176                   "Force Conversation End"
+    12177                   "Unused"
+    12178                   "Unused"
+    12179                   "Unused"
+    12180                   "Unused"
+    12181                   "First part of response"
+    12182                   "Second part of response"
+    12183                   "Hostile Conversation End"
+    12184                   "Unused"
+    12185                   "Unused"
+    12186                   "Unused"
+    12187                   "Unused"
+    12188                   "First part of response"
+    12189                   "Second part of response"
+    12190                   "Town Hostile Conv. End"
+    12191                   "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    12192                   "Unused"
+    12193                   "Unused"
+    12194                   "Unused"
+    12195                   "First part of response"
+    12196                   "Second part of response"
+    12197                   "Eliminate Creature"
+    12198                   "Reputation to give"
+    12199                   "XP to give"
+    12200                   "Unused"
+    12201                   "Unused"
+    12202                   "First part of response"
+    12203                   "Second part of response"
+    12204                   "Unused"
+    12205                   "Number of town special node to call"
+    12206                   "Unused"
+    12207                   "Unused"
+END
+
+STRINGTABLE 
+BEGIN
+    12208                   "Unused"
+    12209                   "First part of response (if no other response given in special)"
+    12210                   "Second part of response (if no other response given in special)"
+    12211                   "Unused"
+    12212                   "Number of scenario special node to call"
+    12213                   "Unused"
+    12214                   "Unused"
+    12215                   "Unused"
+    12216                   "First part of response (if no other response given in special)"
+    12217                   "Second part of response (if no other response given in special)"
+END
+
+#endif    // ニュートラル (既定) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 日本語 resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // 日本語 resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
