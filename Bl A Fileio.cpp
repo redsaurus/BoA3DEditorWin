@@ -14,6 +14,7 @@
 // Just FYI.
 
 #include "stdafx.h"
+#include <cctype>
 /*
 #include <Windows.h>
 #include <stdio.h>
@@ -409,7 +410,7 @@ bool init_directories_with_user_input( char * boaFolder )
 	anOfn.lpstrTitle = "Select \"Blades of Avernum.exe\" application under \"Blades of Avernum\" folder";
 	anOfn.Flags = OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_LONGNAMES | OFN_NONETWORKBUTTON;
 
-	if ( GetOpenFileName( &anOfn ) == NULL )
+	if ( GetOpenFileName( &anOfn ) == 0 ) //according to MSDN function returns 0, not NULL if user doesn't click OK
 		return false;
 
 	char anDrv[ 8 ];
@@ -2205,7 +2206,7 @@ void port_boe_out_data()
 					current_section_on_surface = TRUE;
 			}
 	for (i = 0; i < 18; i++) 
-		if ((boe_outdoor.special_locs[i].x > 0) && (boe_outdoor.special_locs[i].y > 0) && (boe_outdoor.special_id[i] >= 0)) {
+		if ((boe_outdoor.special_locs[i].x > 0) && (boe_outdoor.special_locs[i].y > 0)) {
 			current_terrain.special_rects[i].left = current_terrain.special_rects[i].right = boe_outdoor.special_locs[i].x;
 			current_terrain.special_rects[i].top = current_terrain.special_rects[i].bottom = boe_outdoor.special_locs[i].y;
 			current_terrain.spec_id[i] = boe_outdoor.special_id[i] + 10;		
