@@ -79,6 +79,9 @@ short hill_c_heights[12][4] = {{1,1,0,0},{0,1,0,0},{0,1,1,0},
 extern scenario_data_type scenario;
 extern town_record_type town;
 extern big_tr_type t_d;
+big_tr_type clipboard;
+RECT clipboardSize;
+Boolean dataOnClipboard=false;
 extern outdoor_record_type current_terrain;
 extern scen_item_data_type scen_data;
 // extern short borders[4][50];
@@ -151,6 +154,9 @@ typedef struct corner_and_sight_on_space *temp_space_info_ptr;
 short recursive_depth = 0; // used for recursive hill/terrain correcting function
 short recursive_hill_up_depth = 0;
 short recursive_hill_down_depth = 0;
+
+linkedList undo;
+linkedList redo;
 
 short store_control_value = 0;
 
@@ -1671,7 +1677,7 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				break;		
 			
 		case 70:
-				create_new_ter_script("blank",spot_hit,NULL);
+				create_new_ter_script("dummy",spot_hit,NULL);
 				reset_drawing_mode(); 				
 				break;
 				
@@ -1719,7 +1725,7 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				if (editing_town == TRUE) {
 					for (i = 0; i < NUM_TOWN_PLACED_SPECIALS; i++) {
 						if (town.spec_id[i] == kNO_TOWN_SPECIALS) {
-							town.spec_id[i] = (unsigned char)edit_special_num(/* 0,*/ i);
+							town.spec_id[i] = (unsigned char)edit_special_num(/* 0,*/ i+10);
 							town.special_rects[i].top = (short)working_rect.top;
 							town.special_rects[i].left = (short)working_rect.left;
 							town.special_rects[i].bottom =(short)working_rect.bottom;
@@ -1737,7 +1743,7 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				if (editing_town == FALSE) {
 					for (i = 0; i < 30; i++)
 						if (current_terrain.spec_id[i] == kNO_OUT_SPECIALS) {
-							current_terrain.spec_id[i] = edit_special_num(/* 0,*/ i);
+							current_terrain.spec_id[i] = edit_special_num(/* 0,*/ i+10);
 							current_terrain.special_rects[i].top = (short)working_rect.top;
 							current_terrain.special_rects[i].left = (short)working_rect.left;
 							current_terrain.special_rects[i].bottom = (short)working_rect.bottom;
@@ -1839,27 +1845,30 @@ void swap_terrain()
 	change_ter(&a,&b,&c);
 	if (a < 0) return;
 	
-	for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++)
+	for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++){
 		for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) {
 			if (current_drawing_mode > 0) {
 				ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
 				if ((ter == a) && (get_ran(1,1,100) <= c)) {
 					if (editing_town == TRUE)
 						t_d.terrain[i][j] = b;
-						else current_terrain.terrain[i][j] = b;
-					}
+					else
+						current_terrain.terrain[i][j] = b;
+					appendChangeToLatestStep(new drawingChange(i,j,b,a,2));
 				}
-				else {
-					ter = (editing_town == TRUE) ? t_d.floor[i][j] : current_terrain.floor[i][j];
-					if ((ter == a) && (get_ran(1,1,100) <= c)) {
-						if (editing_town == TRUE)
-							t_d.floor[i][j] = (unsigned char)b;
-							else current_terrain.floor[i][j] = (unsigned char)b;
-						}
-				
-					}
 			}
-
+			else{
+				ter = (editing_town == TRUE) ? t_d.floor[i][j] : current_terrain.floor[i][j];
+				if ((ter == a) && (get_ran(1,1,100) <= c)) {
+					if (editing_town == TRUE)
+						t_d.floor[i][j] = (unsigned char)b;
+					else
+						current_terrain.floor[i][j] = (unsigned char)b;
+					appendChangeToLatestStep(new drawingChange(i,j,b,a,1));
+				}
+			}
+		}
+	}
 }
 
 void set_new_terrain(short selected_terrain)
@@ -2057,6 +2066,7 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 			
 			case 'M':
 				hintbook_mode = !hintbook_mode;
+				small_any_drawn = FALSE;
 				draw_terrain();
 				break;
 				
@@ -2388,6 +2398,170 @@ void change_circle_terrain(location center,short radius,short terrain_type,short
 			}
 }
 
+//changes height within the circle of given radius and center with probability that any given space is changed
+void change_circle_height(location center,short radius,short lower_or_raise,short probability)
+// prob is 0 - 20, 0 no, 20 always
+{
+	location l;
+	short i,j;
+	for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++){
+		for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) {
+			l.x = i;
+			l.y = j;
+			if ((dist(center,l) <= radius) && (get_ran(1,1,20) <= probability))
+				change_height(l,lower_or_raise);
+		}
+	}
+}
+
+//This is a scan-line flood-fill algorithm to replace all connected spaces of old_floor with new_floor
+//squares that touch corners are not considered connected
+int flood_fill_floor(short new_floor, short old_floor, int x, int y)
+{
+	int minx=x, maxx=x;
+	if(floors_match(new_floor,old_floor))
+		return(-1);
+	short i,max_size=((editing_town == TRUE) ? max_dim[town_type] : 48);
+	//start at the seed point and move right to find one end of the line
+	for (i = x; i < max_size; i++){
+		if(editing_town){
+			if(!floors_match(t_d.floor[i][y],old_floor)){
+				maxx=i-1;
+				break;
+			}
+		}
+		else if(!floors_match(current_terrain.floor[i][y],old_floor)){
+			maxx=i-1;
+			break;
+		}
+	}
+	//if we went all the way to the edge of the zone without finding the end, the end must be the edge
+	if((i==max_size) && maxx==x)
+		maxx=max_size-1;
+	//start at the seed point again and move left to find the other end of the line
+	for (i = x; i>=0; i--){
+		if(editing_town){
+			if(!floors_match(t_d.floor[i][y],old_floor)){
+				minx=i+1;
+				break;
+			}
+		}
+		else if(!floors_match(current_terrain.floor[i][y],old_floor)){
+			minx=i+1;
+			break;
+		}
+	}
+	//set the edge of the zone to be the end if we couldn't find the end
+	if(i==-1 && minx==x)
+		minx=0;
+	//fill the line
+	location l;
+	l.y=y;
+	for(i=minx; i<=maxx;i++){
+		l.x=i;
+		set_terrain(l,new_floor);
+	}
+	//fill connected spaces in the row above
+	if(y>0){
+		for(i=minx; i<=maxx;i++){
+			if(editing_town && floors_match(t_d.floor[i][y-1],old_floor)){
+				if(flood_fill_floor(new_floor,old_floor,i,y-1)>=maxx)
+					break;//if the recursive call filled farther out than the
+				//end of the current line, we know we don't need to check any farther
+			}
+			else if(floors_match(current_terrain.floor[i][y-1],old_floor)){
+				if(flood_fill_floor(new_floor,old_floor,i,y-1)>=maxx)
+					break;
+			}
+		}
+	}
+	//fill connected spaces in the row below
+	if(y<(max_size-1)){
+		for(i=minx; i<=maxx;i++){
+			if(editing_town && floors_match(t_d.floor[i][y+1],old_floor)){
+				if(flood_fill_floor(new_floor,old_floor,i,y+1)>=maxx)
+					break;
+			}
+			else if(floors_match(current_terrain.floor[i][y+1],old_floor)){
+				if(flood_fill_floor(new_floor,old_floor,i,y+1)>=maxx)
+					break;
+			}
+		}
+	}
+	//return the farthest exent of this scan line; this value is used to
+	//optimize the recursion, and can be ignored by any other functions
+	//that call this one
+	return(maxx);
+}
+
+int flood_fill_terrain(short new_terrain, short old_terrain, int x, int y)
+{
+	int minx=x, maxx=x;
+	if(new_terrain==old_terrain)
+		return(-1);
+	short i,max_size=((editing_town == TRUE) ? max_dim[town_type] : 48);
+	for (i = x; i < max_size; i++){
+		if(editing_town){
+			if(t_d.terrain[i][y]!=old_terrain){
+				maxx=i-1;
+				break;
+			}
+		}
+		else if(current_terrain.terrain[i][y]!=old_terrain){
+			maxx=i-1;
+			break;
+		}
+	}
+	if((i==max_size) && maxx==x)
+		maxx=max_size-1;
+	for (i = x; i>=0; i--){
+		if(editing_town){
+			if(t_d.terrain[i][y]!=old_terrain){
+				minx=i+1;
+				break;
+			}
+		}
+		else if(current_terrain.terrain[i][y]!=old_terrain){
+			minx=i+1;
+			break;
+		}
+	}
+	if(i==-1 && minx==x)
+		minx=0;
+	for(i=minx; i<=maxx;i++){
+		if(editing_town)
+			t_d.terrain[i][y]=new_terrain;
+		else
+			current_terrain.terrain[i][y]=new_terrain;
+		appendChangeToLatestStep(new drawingChange(i,y,new_terrain,old_terrain,2));
+	}
+	if(y>0){
+		for(i=minx; i<=maxx;i++){
+			if(editing_town && t_d.terrain[i][y-1]==old_terrain){
+				if(flood_fill_terrain(new_terrain,old_terrain,i,y-1)>=maxx)
+					break;
+			}
+			else if(current_terrain.terrain[i][y-1]==old_terrain){
+				if(flood_fill_terrain(new_terrain,old_terrain,i,y-1)>=maxx)
+					break;
+			}
+		}
+	}
+	if(y<(max_size-1)){
+		for(i=minx; i<=maxx;i++){
+			if(editing_town && t_d.terrain[i][y+1]==old_terrain){
+				if(flood_fill_terrain(new_terrain,old_terrain,i,y+1)>=maxx)
+					break;
+			}
+			else if(current_terrain.terrain[i][y+1]==old_terrain){
+				if(flood_fill_terrain(new_terrain,old_terrain,i,y+1)>=maxx)
+					break;
+			}
+		}
+	}
+	return(maxx);
+}
+
 void change_rect_terrain(RECT r,short terrain_type,short probability,Boolean hollow)
 // prob is 0 - 20, 0 no, 20 always
 {
@@ -2406,6 +2580,80 @@ void change_rect_terrain(RECT r,short terrain_type,short probability,Boolean hol
 			}
 }
 
+//this function just copies the indicated rectangular area of the current zone onto the clipboard
+void copy_rect_terrain(RECT r)
+{
+	short i,j;
+	for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++){
+		for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) {
+			if ((i >= r.left) && (i <= r.right) && (j >= r.top) && (j <= r.bottom)){
+				if(editing_town){
+					clipboard.terrain[i-r.left][j-r.top]=t_d.terrain[i][j];
+					clipboard.floor[i-r.left][j-r.top]=t_d.floor[i][j];
+					clipboard.height[i-r.left][j-r.top]=t_d.height[i][j];
+				}
+				else{
+					clipboard.terrain[i-r.left][j-r.top]=current_terrain.terrain[i][j];
+					clipboard.floor[i-r.left][j-r.top]=current_terrain.floor[i][j];
+					clipboard.height[i-r.left][j-r.top]=current_terrain.height[i][j];
+				}
+			}
+		}
+	}
+	dataOnClipboard=true;
+	clipboardSize.top=0;
+	clipboardSize.left=0;
+	clipboardSize.bottom=r.bottom-r.top;
+	clipboardSize.right=r.right-r.left;
+}
+
+void paste_terrain(location l,Boolean option_hit,Boolean alt_hit,Boolean ctrl_hit)
+{
+	/*command - option_hit
+	option - alt_hit
+	control - ctrl_hit*/
+	if(!dataOnClipboard)
+		return;
+	short i,j,x,y;
+	Boolean pasteF = (!option_hit && !alt_hit && !ctrl_hit) || alt_hit;
+	Boolean pasteT = (!option_hit && !alt_hit && !ctrl_hit) || ctrl_hit;
+	Boolean pasteH = (!option_hit && !alt_hit && !ctrl_hit) || option_hit;
+	for (i = l.x; (i < ((editing_town == TRUE) ? max_dim[town_type] : 48)) && (i<=(l.x+clipboardSize.right)); i++){
+		for (j = l.y; (j < ((editing_town == TRUE) ? max_dim[town_type] : 48)) && (j<=(l.y+clipboardSize.bottom)); j++) {
+			x = i-l.x;
+			y = j-l.y;
+			if(editing_town){
+				if(pasteT){
+					appendChangeToLatestStep(new drawingChange(i,j,clipboard.terrain[x][y],t_d.terrain[i][j],2));
+					t_d.terrain[i][j]=clipboard.terrain[i-l.x][j-l.y];
+				}
+				if(pasteF){
+					appendChangeToLatestStep(new drawingChange(i,j,clipboard.floor[x][y],t_d.floor[i][j],1));
+					t_d.floor[i][j]=clipboard.floor[i-l.x][j-l.y];
+				}
+				if(pasteH){
+					appendChangeToLatestStep(new drawingChange(i,j,clipboard.height[x][y],t_d.height[i][j],3));
+					t_d.height[i][j]=clipboard.height[i-l.x][j-l.y];
+				}
+			}
+			else{
+				if(pasteF){
+					appendChangeToLatestStep(new drawingChange(i,j,clipboard.terrain[x][y],current_terrain.terrain[i][j],2));
+					current_terrain.terrain[i][j]=clipboard.terrain[x][y];
+				}
+				if(pasteT){
+					appendChangeToLatestStep(new drawingChange(i,j,clipboard.floor[x][y],current_terrain.floor[i][j],1));
+					current_terrain.floor[i][j]=clipboard.floor[x][y];
+				}
+				if(pasteH){
+					appendChangeToLatestStep(new drawingChange(i,j,clipboard.height[i-l.x][j-l.y],current_terrain.height[i][j],3));
+					current_terrain.height[i][j]=clipboard.height[x][y];
+				}
+			}
+		}
+	}
+}
+
 void set_terrain(location l,short terrain_type)
 {
 	short i,j,which_sign = -1;
@@ -2418,21 +2666,31 @@ void set_terrain(location l,short terrain_type)
 		return ;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return ;
+	short old_terrain;
 	
 	if (current_drawing_mode == 0) {
-		if (editing_town == TRUE)
+		if (editing_town == TRUE){
+			old_terrain = t_d.floor[i][j];
 			t_d.floor[i][j] = (unsigned char)terrain_type;
-			else current_terrain.floor[i][j] = (unsigned char)terrain_type;
-
-
 		}
-		else {
-			if (editing_town == TRUE)
-				t_d.terrain[i][j] = terrain_type;
-				else current_terrain.terrain[i][j] = terrain_type;
-			}
+		else{
+			old_terrain = current_terrain.floor[i][j];
+			current_terrain.floor[i][j] = (unsigned char)terrain_type;
+		}
+	}
+	else {
+		if (editing_town == TRUE){
+			old_terrain = t_d.terrain[i][j];
+			t_d.terrain[i][j] = terrain_type;
+		}
+		else{
+			old_terrain = current_terrain.terrain[i][j];
+			current_terrain.terrain[i][j] = terrain_type;
+		}
+	}
 			
 	l2 = l;
+	appendChangeToLatestStep(new drawingChange(i,j,terrain_type,old_terrain,current_drawing_mode==0?1:2));
 	 
 	//if (editing_town == FALSE) {
 		adjust_space(l);
@@ -2457,34 +2715,37 @@ void set_terrain(location l,short terrain_type)
 		//}
 		
 	// now handle placing signs
+	if(current_drawing_mode>0){//if we just placed a floor, it can't be a sign
 	Boolean sign_error_received = FALSE;
 	ter_info = scen_data.scen_ter_types[terrain_type];
 	if (ter_info.special == 39) { // town mode, is a sign
 		if (editing_town == TRUE) { /// it's a sign
-			for (i = 0; i < 15; i++) // find is this sign has already been assigned
+			for (i = 0; i < 15; i++){ // find is this sign has already been assigned
 				if (which_sign < 0) {
 					if ((town.sign_locs[i].x == l.x) && (town.sign_locs[i].y == l.y))
 						which_sign = i;
-					}
+				}
+			}
 			if (which_sign < 0) { // if not assigned, pick a new sign
-				for (i = 0; i < 15; i++) 
+				for (i = 0; i < 15; i++){
 					if ((town.sign_locs[i].x > 64) || (town.sign_locs[i].x < 0) )
 						which_sign = i;
 				}
+			}
 				
 			if (which_sign >= 0) {
 				town.sign_locs[which_sign] = l;
 				edit_sign(which_sign);
 				sign_error_received = FALSE;
-				}
-				else {
-					if (sign_error_received == FALSE) {
-						give_error("Towns can have at most 15 signs. Outdoor sections can have at most 8. When the party looks at this sign, they will get no message.","",0);
-						sign_error_received = TRUE;
-						}
-					}
-			mouse_button_held = FALSE;
 			}
+			else {
+				if (sign_error_received == FALSE) {
+					give_error("Towns can have at most 15 signs. Outdoor sections can have at most 8. When the party looks at this sign, they will get no message.","",0);
+					sign_error_received = TRUE;
+				}
+			}
+			mouse_button_held = FALSE;
+		}
 		if (editing_town == FALSE) { // outdoor mode, it's a sign
 			for (i = 0; i < 8; i++) // find is this sign has already been assigned
 				if (which_sign < 0) {
@@ -2513,34 +2774,37 @@ void set_terrain(location l,short terrain_type)
 		}
 		else { // not a sign, so delete any signs placed here
 			if (editing_town == TRUE) {
-				for (i = 0; i < 15; i++) // find is this spot has a sign attached to it, and erase it
+				for (i = 0; i < 15; i++){ // find is this spot has a sign atrtached to it, and erase it
 					if ((town.sign_locs[i].x == l.x) && (town.sign_locs[i].y == l.y)) {
 						town.sign_locs[i].x = kINVAL_LOC_XY;	town.sign_locs[i].y = kINVAL_LOC_XY;
 						town.sign_text[i][0] = 0;
-						}
+					}
 				}
+			}
 			if (editing_town == FALSE) {
-				for (i = 0; i < 8; i++) // find is this spot has a sign atrtached to it, and erase it
+				for (i = 0; i < 8; i++){ // find is this spot has a sign atrtached to it, and erase it
 					if ((current_terrain.sign_locs[i].x == l.x) && (current_terrain.sign_locs[i].y == l.y)) {
 						current_terrain.sign_locs[i].x = kINVAL_LOC_XY;	current_terrain.sign_locs[i].y = kINVAL_LOC_XY;
 						current_terrain.sign_text[i][0] = 0;
-						}
+					}
 				}
-			
 			}
+		}
+	}
 			
 	// now do placing scripts if placing terrain
 	if ((editing_town) && (current_drawing_mode > 0)) {
-		for (short i = 0; i < NUM_TER_SCRIPTS; i++) 
+		for (short i = 0; i < NUM_TER_SCRIPTS; i++){ 
 			if ((town.ter_scripts[i].exists) && (same_point(l,town.ter_scripts[i].loc))) {
 				town.ter_scripts[i].exists = FALSE;
 				check_selected_item_number();
-				}
+			}
+		}
 		if (strlen(scen_data.scen_ter_types[t_d.terrain[l.x][l.y]].default_script) > 0) {
 			create_new_ter_script(scen_data.scen_ter_types[t_d.terrain[l.x][l.y]].default_script,l,NULL);
 			mouse_button_held = FALSE;
-			}
 		}
+	}
 
 // q_3DModStart
 	if(cur_viewing_mode == 11 && editing_town)
@@ -2612,13 +2876,12 @@ Boolean town_fix_grass_rocks(location l)
 	  			else new_ter_to_place += 34;
 			}
 
-		t_d.floor[i][j] = (unsigned char)new_ter_to_place; 				
+			t_d.floor[i][j] = (unsigned char)new_ter_to_place; 				
 	  	}
 
-	if (store_ter == t_d.floor[l.x][l.y])
-		return FALSE;
-		else return TRUE;
-
+	if (store_ter != t_d.floor[l.x][l.y])
+		appendChangeToLatestStep(new drawingChange(i,j,t_d.floor[i][j],store_ter,1));
+	return(store_ter != t_d.floor[i][j]);
 }
 
 Boolean out_fix_grass_rocks(location l)
@@ -2688,10 +2951,9 @@ Boolean out_fix_grass_rocks(location l)
 		current_terrain.floor[i][j] = (unsigned char)new_ter_to_place; 				
 	  	}
 
-	if (store_ter == current_terrain.floor[l.x][l.y])
-		return FALSE;
-		else return TRUE;
-
+	if (store_ter != current_terrain.floor[l.x][l.y])
+		appendChangeToLatestStep(new drawingChange(i,j,current_terrain.floor[i][j],store_ter,1));
+	return(store_ter != current_terrain.floor[i][j]);
 }
 
 Boolean town_fix_rocks_water(location l)
@@ -2762,10 +3024,9 @@ Boolean town_fix_rocks_water(location l)
 		t_d.floor[i][j] = (unsigned char)new_ter_to_place; 
 		}
 
-	if (store_ter == t_d.floor[l.x][l.y])
-		return FALSE;
-		else return TRUE;
-
+	if(store_ter!=t_d.floor[i][j])
+		appendChangeToLatestStep(new drawingChange(i,j,t_d.floor[i][j],store_ter,1));
+	return(store_ter != t_d.floor[i][j]);
 }
 
 Boolean out_fix_rocks_water(location l)
@@ -2828,18 +3089,17 @@ Boolean out_fix_rocks_water(location l)
 
 			}
 
-		if (translated_to_cave) {
-	  		if (new_ter_to_place == 23)
-	  			new_ter_to_place = 57;
-	  			else new_ter_to_place += 34;
-			}
-		current_terrain.floor[i][j] = (unsigned char)new_ter_to_place; 
+	if (translated_to_cave) {
+  		if (new_ter_to_place == 23)
+  			new_ter_to_place = 57;
+  			else new_ter_to_place += 34;
 		}
+		current_terrain.floor[i][j] = (unsigned char)new_ter_to_place; 
+	}
 
-	if (store_ter == current_terrain.floor[l.x][l.y])
-		return FALSE;
-		else return TRUE;
-
+	if(store_ter!=current_terrain.floor[i][j])
+		appendChangeToLatestStep(new drawingChange(i,j,current_terrain.floor[i][j],store_ter,1));
+	return(store_ter != current_terrain.floor[i][j]);
 }
 
 Boolean town_fix_hills(location l)
@@ -2848,6 +3108,8 @@ Boolean town_fix_hills(location l)
 	short cur_height;
 	short i,j;
 	short corner_heights[4] = {0,0,0,0}; // 0 - nw, 1 - sw se ne
+	int lx = l.x;
+	int ly = l.y;
 
 	if ((l.x < 0) || (l.y > max_dim[town_type] - 1) || (l.y < 0) || (l.y > max_dim[town_type] - 1))
 		return FALSE;
@@ -2910,10 +3172,9 @@ Boolean town_fix_hills(location l)
 			else if ((t_d.terrain[l.x][l.y] >= 74) && (t_d.terrain[l.x][l.y] <= 121))
 				t_d.terrain[l.x][l.y] = 0;
 
-	if (store_ter == t_d.terrain[l.x][l.y])
-		return FALSE;
-		else return TRUE;
-
+	if(store_ter != t_d.terrain[lx][ly])
+		appendChangeToLatestStep(new drawingChange(lx,ly,t_d.terrain[lx][ly],store_ter,2));
+	return(store_ter != t_d.terrain[lx][ly]);
 }
 
 Boolean out_fix_hills(location l)
@@ -2922,6 +3183,8 @@ Boolean out_fix_hills(location l)
 	short cur_height;
 	short i,j;
 	short corner_heights[4] = {0,0,0,0}; // 0 - nw, 1 - sw se ne
+	int lx = l.x;
+	int ly = l.y;
 
 	if ((l.x < 0) || (l.y > 47) || (l.y < 0) || (l.y > 47))
 		return FALSE;
@@ -2984,10 +3247,9 @@ Boolean out_fix_hills(location l)
 			else if ((current_terrain.terrain[l.x][l.y] >= 74) && (current_terrain.terrain[l.x][l.y] <= 121))
 				current_terrain.terrain[l.x][l.y] = 0;
 
-	if (store_ter == current_terrain.terrain[l.x][l.y])
-		return FALSE;
-		else return TRUE;
-
+	if(store_ter != current_terrain.terrain[lx][ly])
+		appendChangeToLatestStep(new drawingChange(lx,ly,current_terrain.terrain[lx][ly],store_ter,2));
+	return(store_ter != current_terrain.terrain[lx][ly]);
 }
 
 
@@ -3126,11 +3388,13 @@ void change_height(location l,short lower_or_raise)
 		return ;
 		
 	if (editing_town == TRUE) {
+		appendChangeToLatestStep(new drawingChange(i,j,minmax(1,100,(lower_or_raise == 0) ? (t_d.height[i][j] - 1) : (t_d.height[i][j] + 1)),t_d.height[i][j],3));
 		t_d.height[i][j] = (unsigned char)minmax(1,100,(lower_or_raise == 0) ? (t_d.height[i][j] - 1) : (t_d.height[i][j] + 1));
-		}
+	}
 	if (editing_town == FALSE) {
+		appendChangeToLatestStep(new drawingChange(i,j,minmax(1,100,(lower_or_raise == 0) ? (current_terrain.height[i][j] - 1) : (current_terrain.height[i][j] + 1)),current_terrain.height[i][j],3));
 		current_terrain.height[i][j] = (unsigned char)minmax(1,100,(lower_or_raise == 0) ? (current_terrain.height[i][j] - 1) : (current_terrain.height[i][j] + 1));
-		}
+	}
 		
 	if (needed_change == TRUE) {
 		adjust_space_height(l,lower_or_raise);
@@ -3164,8 +3428,7 @@ void change_height(location l,short lower_or_raise)
 		l.y++;
 		l.x--;
 		adjust_space(l);
-		}
-
+	}
 }
 
 void adjust_space_height(location l,short lower_or_raise)
@@ -3174,7 +3437,8 @@ void adjust_space_height(location l,short lower_or_raise)
 		return;
 	if (lower_or_raise == 0)
 		adjust_space_height_lower(l);
-		else adjust_space_height_raise(l);
+	else
+		adjust_space_height_raise(l);
 }
 
 void adjust_space_height_lower(location l)
@@ -3219,7 +3483,9 @@ void recursive_adjust_space_height_lower(location l)
 	if (old_height != height) {
 		if (editing_town == TRUE)
 			t_d.height[i][j] = (unsigned char)height;
-			else current_terrain.height[i][j] = (unsigned char)height;
+		else
+			current_terrain.height[i][j] = (unsigned char)height;
+		appendChangeToLatestStep(new drawingChange(i,j,height,old_height,3));
 		//if (editing_town == TRUE)
 		//	else out_fix_hills(l);
 		recursive_hill_down_depth++;
@@ -3284,7 +3550,9 @@ void recursive_adjust_space_height_raise(location l)
 	if (old_height != height) {
 		if (editing_town == TRUE)
 			t_d.height[i][j] = (unsigned char)height;
-			else current_terrain.height[i][j] = (unsigned char)height;
+		else
+			current_terrain.height[i][j] = (unsigned char)height;
+		appendChangeToLatestStep(new drawingChange(i,j,height,old_height,3));
 		//if (editing_town == TRUE)
 		//	else out_fix_hills(l);
 		
@@ -3379,7 +3647,6 @@ void shut_down_menus(/* short mode */)
 	}
 			
 }
-
 
 Boolean save_check(short which_dlog)
 {
@@ -3533,7 +3800,7 @@ void cut_selected_instance()
 	if (selected_item_number < 0) {
 		beep();
 		return;
-		}		
+	}		
 	copy_selected_instance();	
 	delete_selected_instance();		
 	set_all_items_containment();
@@ -3542,44 +3809,40 @@ void cut_selected_instance()
 
 void paste_selected_instance(location create_loc)
 {					
-
-
 	// select creature
 	if (copied_creature.number >= 0) {
 		create_new_creature(copied_creature.number,create_loc,&copied_creature);
-		}
+	}
 
 	// select ter script
 	if (copied_ter_script.exists) {
 		create_new_ter_script("dummyname",create_loc,&copied_ter_script);
-		}
+	}
 
 	// select item
 	if (copied_item.which_item >= 0) {
 		create_new_item(copied_item.which_item,create_loc,FALSE,&copied_item);
-		}					
+	}					
 	set_all_items_containment();
 }
 
 // looks to make sur ethat the selected item is still legal. If not, undoes it.
 void check_selected_item_number()
 {
-
-
 	// select creature
 	if ((selected_item_number >= 7000) && (selected_item_number < 7000 + NUM_TOWN_PLACED_CREATURES) && (town.creatures[selected_item_number % 1000].exists() == FALSE)) {
 		selected_item_number = -1;
-		}
+	}
 
 	// select ter script
 	if ((selected_item_number >= 9000) && (selected_item_number < 9000 + NUM_TER_SCRIPTS) && (town.ter_scripts[selected_item_number % 1000].exists == FALSE)) {
 		selected_item_number = -1;
-		}
+	}
 
 	// select item
 	if ((selected_item_number >= 11000) && (selected_item_number < 11000 + NUM_TOWN_PLACED_ITEMS) && (town.preset_items[selected_item_number % 1000].exists() == FALSE)) {
 		selected_item_number = -1;
-		}	
+	}	
 	set_all_items_containment();
 }
 
@@ -3617,7 +3880,7 @@ void shift_selected_instance(short dx,short dy)
 			return;
 		
 		town.ter_scripts[selected_item_number % 1000].loc = current_loc;
-		}
+	}
 
 	// select item
 	if ((selected_item_number >= 11000) && (selected_item_number < 11000 + NUM_TOWN_PLACED_ITEMS) && (town.preset_items[selected_item_number % 1000].exists())) {
@@ -3631,7 +3894,7 @@ void shift_selected_instance(short dx,short dy)
 		
 		town.preset_items[selected_item_number % 1000].item_loc = current_loc;
 		shift_item_locs(current_loc);
-		}			
+	}			
 		
 	set_all_items_containment();		
 }
@@ -3647,8 +3910,8 @@ void create_navpoint(location spot_hit)
 		if (town.waypoints[i].x < 0) {
 			town.waypoints[i] = spot_hit;
 			return;
-			}
 		}
+	}
 }
 
 void delete_navpoint(location spot_hit)
@@ -3658,8 +3921,8 @@ void delete_navpoint(location spot_hit)
 		if (same_point(town.waypoints[i],spot_hit)) {
 			town.waypoints[i].x = kINVAL_LOC_XY;	town.waypoints[i].y = kINVAL_LOC_XY;
 			return;
-			}
 		}
+	}
 }
 
 
@@ -3984,12 +4247,49 @@ void set_rect_height(RECT r)
 	h = get_a_number(872,0,0,99);
 	if ((h < 1) || (h > 100))
 		return;
-	for (i = (short)r.left; i < (short)r.right + 1; i++)
+	for (i = (short)r.left; i < (short)r.right + 1; i++){
 		for (j = (short)r.top; j < (short)r.bottom + 1; j++) {
-			if (editing_town == TRUE)
-				t_d.height[i][j] = (unsigned char)h;		
-				else current_terrain.height[i][j] = (unsigned char)h;
+			if (editing_town == TRUE){
+				appendChangeToLatestStep(new drawingChange(i,j,h,t_d.height[i][j],3));
+				t_d.height[i][j] = (unsigned char)h;
 			}
+			else{
+				appendChangeToLatestStep(new drawingChange(i,j,h,current_terrain.height[i][j],3));
+				current_terrain.height[i][j] = (unsigned char)h;
+			}
+		}
+	}
+}
+
+void add_rect_height(RECT r)
+{
+	short i,j,h, newh;
+	
+	h = get_a_number(880,0,-99,99);
+	if ((h < -100) || (h > 100))
+		return;
+	for (i = r.left; i < r.right + 1; i++){
+		for (j = r.top; j < r.bottom + 1; j++) {
+			if (editing_town){
+				newh = t_d.height[i][j] + h;
+				if(newh<0)
+					newh=0;
+				else if(newh>99)
+					newh=99;
+				appendChangeToLatestStep(new drawingChange(i,j,newh,t_d.height[i][j],3));
+				t_d.height[i][j] = newh;
+			}
+			else if(!editing_town){
+				newh = current_terrain.height[i][j] + h;
+				if(newh<0)
+					newh=0;
+				else if(newh>99)
+					newh=99;
+				appendChangeToLatestStep(new drawingChange(i,j,newh,current_terrain.height[i][j],3));
+				current_terrain.height[i][j] = newh;
+			}
+		}
+	}
 }
 
 // put a bit of terrain down without doing redrawing or anything odd and without drawing anything
@@ -4018,8 +4318,8 @@ void transform_walls(RECT working_rect)
 			
 			if ((ter >= 2) && (ter <= 37))
 				new_ter = ter + 36;
-				else if ((ter >= 38) && (ter <= 73))
-					new_ter = ter - 36;
+			else if ((ter >= 38) && (ter <= 73))
+				new_ter = ter - 36;
 			
 			if (editing_town == TRUE)
 				t_d.terrain[i][j] = new_ter;
@@ -4082,12 +4382,12 @@ void place_bounding_walls(RECT working_rect)
 						shy_put_terrain(i,j + 1,2);
 					if (ft[3] == TRUE) 
 						shy_put_terrain(i + 1,j,3);
-					}
+				}
 				else if ((ft[2] == TRUE) && (ft[1] == TRUE)) {
 					new_ter = 7;
 					if (ft[3] == TRUE) 
 						shy_put_terrain(i + 1,j,3);					
-					}
+				}
 				else if ((ft[2] == TRUE) && (ft[3] == TRUE))
 					new_ter = 8;
 				else if ((ft[0] == TRUE) && (ft[3] == TRUE))
@@ -4096,26 +4396,27 @@ void place_bounding_walls(RECT working_rect)
 					new_ter = 2;
 					if (ft[2] == TRUE) 
 						shy_put_terrain(i,j + 1,2);					
-					}
+				}
 				else if (ft[1] == TRUE) {
 					new_ter = 3;
 					if (ft[3] == TRUE) 
 						shy_put_terrain(i + 1,j,3);					
-					}
+				}
 				else if (ft[2] == TRUE) {
 					new_ter = 4;
-					}
+				}
 				else if (ft[3] == TRUE) {
 					new_ter = 5;
-					}
-				
+				}
+				if(new_ter!=ter)
+					appendChangeToLatestStep(new drawingChange(i,j,new_ter,ter,2));
 				if (editing_town == TRUE)
 					t_d.terrain[i][j] = new_ter;
-					else  current_terrain.terrain[i][j] = new_ter;
-				}
+				else 
+					current_terrain.terrain[i][j] = new_ter;
+			}
 		}
 }
-
 
 Boolean is_wall(short x, short y)
 {
@@ -5497,5 +5798,167 @@ Boolean is_wall_drawn(outdoor_record_type *drawing_terrain, short sector_offset_
 		(scen_data.scen_ter_types[wall_terrain].see_block[2] == 1 && get_see_in(sector_offset_x,sector_offset_y,x,y + 1) == TRUE) ||
 		(scen_data.scen_ter_types[wall_terrain].see_block[3] == 1 && get_see_in(sector_offset_x,sector_offset_y,x + 1,y) == TRUE)
 	);
+}
+
+//undo system functions
+
+//This should not be called directly except by appendChangeToLatestStep
+//Calls from the editing functions to register undo steps should go to 
+//appendChangeToLatestStep and lockLatestStep
+void pushNewUndoStep()
+{
+	undo.push(new drawingUndoStep());
+	purgeRedo();
+}
+
+//should only be called by redo
+//adds an entire undo step to the undo stack. During editing undo steps 
+//should be accumulated using appendChangeToLatestStep.
+void pushUndoStep(drawingUndoStep* s)
+{
+	undo.push(s);
+}
+
+//retrieves the most recent undo step and removes it from the undo stack. 
+//This should only be called by undo()
+drawingUndoStep* popUndoStep()
+{
+	if(undo.size()==0)
+		return(NULL);
+	return((drawingUndoStep*)(undo.pop()));
+}
+
+//Adds a change to the most recent undo step. If there is no step in the stack, or the most recent 
+//step is locked, a new step which contains the indicated change is created, and pushed onto the stack. 
+//Operations should call appendChangeToLatestStep repeatedly to accumulate changes and then call lockLatestStep 
+//when the set of changes is complete. This forces a new step to be begun when the next changes are registered. 
+//When the user selects the undo command the most recent undo step should include all of the logically related 
+//changes; that is all of the changes that have been registered since the last call to lockLatestStep
+void appendChangeToLatestStep(drawingChange* c)
+{
+	if(undo.size()==0 || ((drawingUndoStep*)(undo.itemAtIndex(0)))->locked)
+		pushNewUndoStep();
+	((drawingUndoStep*)(undo.itemAtIndex(0)))->appendChange(c);
+}
+
+//locks the most recent undo step, so that any new changes, even if they are of a matching type 
+//will be forced to go to a new step which can be undone seperately
+void lockLatestStep()
+{
+	if(undo.size()==0)
+		return;
+	((drawingUndoStep*)(undo.itemAtIndex(0)))->locked=TRUE;
+}
+
+//should be called every time a new zone is loaded
+//Otherwise the user could still undo changes made in other zones, but they would be undone 
+//in the _current_ zone, which would make a mess and serve no purpose. Therefore existing undo steps
+//must be invalidated and removed by calling this function when the zone is switched.
+void purgeUndo()
+{
+	while(undo.size()>0){
+		drawingUndoStep* temp = (drawingUndoStep*)undo.pop();
+		delete temp;
+	}
+}
+
+//This is the actual undo operation that should be called when the user wants to undo editing changes
+void performUndo()
+{
+	if(undo.size()==0){//there are no steps to undo; complain
+		beep();
+		return;
+	}
+	drawingUndoStep* s = popUndoStep();
+	//actually perform the operations to reverse whatever was done
+	for(int i=0; i<s->numChanges(); i++){
+		drawingChange* c = s->getChange(i);
+		if(editing_town){
+			if(c->type==1)
+				t_d.floor[c->x][c->y]=c->oldval;
+			else if(c->type==2)
+				t_d.terrain[c->x][c->y]=c->oldval;
+			else if(c->type==3)
+				t_d.height[c->x][c->y]=c->oldval;
+		}
+		else{
+			if(c->type==1)
+				current_terrain.floor[c->x][c->y]=c->oldval;
+			else if(c->type==2)
+				current_terrain.terrain[c->x][c->y]=c->oldval;
+			else if(c->type==3)
+				current_terrain.height[c->x][c->y]=c->oldval;
+		}
+	}
+	//add this step to the redo list so that it can be un-undone
+	s->invert();
+	pushRedoStep(s);
+	redraw_screen();
+}
+
+//adds a redo step to the redo stack. Should only be called by undo()
+void pushRedoStep(drawingUndoStep* s)
+{
+	redo.push(s);
+}
+
+drawingUndoStep* popRedoStep()
+{
+	if(redo.size()==0)
+		return(NULL);
+	return((drawingUndoStep*)(redo.pop()));
+}
+
+//should be called every time a new zone is loaded _and_ every time the user executes an editing operation
+//redo steps need to be invalidated for the same reason as undo steps when the zone is switched, 
+//but should also be invalidated whenever the user makes a new editing change. For example, suppose
+//the user opens a file, places a tree, and then undoes the drawing operation. At this point there 
+//will be no undo steps, and one redo step to redraw the tree. Suppose the user then places a wall on the 
+//same spot. Then, if the redo steps are not purged, there will be one undo step, to remove the wall again, 
+//and the redo step to re-place the tree will still remain. If the user then selects Redo, the wall will be 
+//replaced with the tree, which makes no sense. Instead, as soon as the wall is added, the redo steps should
+//be purged to eliminate nonsensical redo operations. However, if the user undoes one or more operations 
+//without doing anything else, the redo steps must not be purged, in order to allow the user to move freely
+//back and forth through the recorded states. 
+void purgeRedo()
+{
+	while(redo.size()>0){
+		drawingUndoStep* temp = (drawingUndoStep*)redo.pop();
+		delete temp;
+	}
+}
+
+//This is the actual redo operation that should be called when the user wants to redo editing changes that were undone
+void performRedo()
+{
+	if(redo.size()==0){//there are no steps to redo; complain
+		beep();
+		return;
+	}
+	drawingUndoStep* s = popRedoStep();
+	//actually perform the operations to reverse whatever was undone
+	for(int i=0; i<s->numChanges(); i++){
+		drawingChange* c = s->getChange(i);
+		if(editing_town){
+			if(c->type==1)
+				t_d.floor[c->x][c->y]=c->oldval;
+			else if(c->type==2)
+				t_d.terrain[c->x][c->y]=c->oldval;
+			else if(c->type==3)
+				t_d.height[c->x][c->y]=c->oldval;
+		}
+		else{
+			if(c->type==1)
+				current_terrain.floor[c->x][c->y]=c->oldval;
+			else if(c->type==2)
+				current_terrain.terrain[c->x][c->y]=c->oldval;
+			else if(c->type==3)
+				current_terrain.height[c->x][c->y]=c->oldval;
+		}
+	}
+	//add this step to the redo list so that it can be undone again
+	s->invert();
+	s->locked = TRUE;//don't let this step accumulate any more changes than it has
+	pushUndoStep(s);
 }
 // q_3DModEnd
