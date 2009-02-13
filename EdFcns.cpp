@@ -2032,27 +2032,27 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 				break;
 				
 			case 'E': // edit sign
-				set_string("Edit sign","Select sign to edit");
-				set_cursor(7);
-				overall_mode = 59;
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][1].left;
+				pass_point.y = 6 + palette_buttons[3][1].top;
+    			handle_action(pass_point,wParam,-1);
 			break;		
 				
 			case 'F':  // find-replace terrain
-				swap_terrain();
-				need_redraw = TRUE;
-				mouse_button_held = FALSE;
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][2].left;
+				pass_point.y = 6 + palette_buttons[2][2].top;
+    			handle_action(pass_point,wParam,-1);
 			break;		
 			
 			case 'G': // Erase special
-							set_string("Erase Special Encouter","");
-							overall_mode = 49;
-							set_cursor(4);
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][2].left;
+				pass_point.y = 6 + palette_buttons[6][2].top;
+    			handle_action(pass_point,wParam,-1);
 			break;		
 			
 			case 'H': // Set special
-							set_string("Edit Special Encouter","");
-							overall_mode = 50;
-							set_cursor(7);
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][2].left;
+				pass_point.y = 6 + palette_buttons[7][2].top;
+    			handle_action(pass_point,wParam,-1);
 			break;		
 			
 			case 'M':
@@ -2061,27 +2061,21 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 				break;
 				
 			case 'N': // place spec enc
-							set_string("Create Special Encouter","Select rectangle for encounter");
-							mode_count = 2;
-							set_cursor(5);
-							overall_mode = 16;
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][2].left;
+				pass_point.y = 6 + palette_buttons[5][2].top;
+    			handle_action(pass_point,wParam,-1);
 			break;		
 			
-			case 'P': // place, edit terrain script
-							if (editing_town == FALSE) {
-								set_string("Place Terrain Script","Only in towns.");
-								break;
-								}
-							set_string("Place Terrain Script","");
-							overall_mode = 70;
-							set_cursor(7);
+			case 'P': // place terrain script
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][2].left;
+				pass_point.y = 6 + palette_buttons[3][2].top;
+    			handle_action(pass_point,wParam,-1);
 			break;		
 			
 			case 'Q': // hollow rectangle
-							overall_mode = 11;
-							mode_count = 2;
-							set_cursor(5);
-								set_string("Fill rectangle (hollow)","Select upper left corner");
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][0].left;
+				pass_point.y = 6 + palette_buttons[6][0].top;
+    			handle_action(pass_point,wParam,-1);
 			break;					
 			
 
@@ -2112,6 +2106,12 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 					set_cursor(0);
 					overall_mode = 0;
 			break;
+
+			case 'U':
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[aaa][bbb].left;
+				pass_point.y = 6 + palette_buttons[aaa][bbb].top;
+    			handle_action(pass_point,wParam,-1);
+			break; 
 				
 			case 'W':
 				set_string("Swap walls 1 <--> 2","Select rectangle to set");
@@ -2123,53 +2123,52 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 			case ' ':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][1].left;
 				pass_point.y = 6 + palette_buttons[1][1].top;
-
 				handle_action(pass_point,wParam,-1);
 				break; 
 
-			case '1':
+			case '!':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][4].left;
 				pass_point.y = 6 + palette_buttons[0][4].top;
     			handle_action(pass_point,wParam,-1);
     			aaa = 0;
     			bbb = 4;
 			break; 
-			case '2':
+			case '@':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][4].left;
 				pass_point.y = 6 + palette_buttons[1][4].top;
     			handle_action(pass_point,wParam,-1);
     			aaa = 1;
     			bbb = 4;
 			break; 
-			case '3':
+			case '#':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][4].left;
 				pass_point.y = 6 + palette_buttons[2][4].top;
     			handle_action(pass_point,wParam,-1);
     			aaa = 2;
     			bbb = 4;
 			break; 
-			case '4':
+			case '$':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][4].left;
 				pass_point.y = 6 + palette_buttons[3][4].top;
     			handle_action(pass_point,wParam,-1);
     			aaa = 3;
     			bbb = 4;
 			break; 
-			case '5':
+			case '%':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][4].left;
 				pass_point.y = 6 + palette_buttons[4][4].top;
     			handle_action(pass_point,wParam,-1);
     			aaa = 4;
     			bbb = 4;
 			break; 
-			case '6':
+			case '^':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][4].left;
 				pass_point.y = 6 + palette_buttons[5][4].top;
     			handle_action(pass_point,wParam,-1);
     			aaa = 5;
     			bbb = 4;
 			break; 
-			case '8':
+			case '*':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][4].left;
 				pass_point.y = 6 + palette_buttons[7][4].top;
     			handle_action(pass_point,wParam,-1);
@@ -2177,11 +2176,6 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
     			bbb = 4;
 			break; 
 				
-			case '9':
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[aaa][bbb].left;
-				pass_point.y = 6 + palette_buttons[aaa][bbb].top;
-    			handle_action(pass_point,wParam,-1);
-			break; 
 												
 // q_3DModStart
 			case VK_TAB:	// '\t':
@@ -2519,7 +2513,7 @@ void set_terrain(location l,short terrain_type)
 		}
 		else { // not a sign, so delete any signs placed here
 			if (editing_town == TRUE) {
-				for (i = 0; i < 15; i++) // find is this spot has a sign atrtached to it, and erase it
+				for (i = 0; i < 15; i++) // find is this spot has a sign attached to it, and erase it
 					if ((town.sign_locs[i].x == l.x) && (town.sign_locs[i].y == l.y)) {
 						town.sign_locs[i].x = kINVAL_LOC_XY;	town.sign_locs[i].y = kINVAL_LOC_XY;
 						town.sign_text[i][0] = 0;
