@@ -2004,6 +2004,7 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 		{
 			case 'M':
 				hintbook_mode = !hintbook_mode;
+				small_any_drawn = FALSE;
 				draw_terrain();
 				break;
 			case '1': case '2': case '3': case '4': case '5': 
