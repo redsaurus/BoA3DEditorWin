@@ -151,6 +151,9 @@ short recursive_depth = 0; // used for recursive hill/terrain correcting functio
 short recursive_hill_up_depth = 0;
 short recursive_hill_down_depth = 0;
 
+linkedList undo;
+linkedList redo;
+
 short store_control_value = 0;
 
 
@@ -5361,5 +5364,167 @@ Boolean is_wall_drawn(outdoor_record_type *drawing_terrain, short sector_offset_
 		(scen_data.scen_ter_types[wall_terrain].see_block[2] == 1 && get_see_in(sector_offset_x,sector_offset_y,x,y + 1) == TRUE) ||
 		(scen_data.scen_ter_types[wall_terrain].see_block[3] == 1 && get_see_in(sector_offset_x,sector_offset_y,x + 1,y) == TRUE)
 	);
+}
+
+//undo system functions
+
+//This should not be called directly except by appendChangeToLatestStep
+//Calls from the editing functions to register undo steps should go to 
+//appendChangeToLatestStep and lockLatestStep
+void pushNewUndoStep()
+{
+	undo.push(new drawingUndoStep());
+	purgeRedo();
+}
+
+//should only be called by redo
+//adds an entire undo step to the undo stack. During editing undo steps 
+//should be accumulated using appendChangeToLatestStep.
+void pushUndoStep(drawingUndoStep* s)
+{
+	undo.push(s);
+}
+
+//retrieves the most recent undo step and removes it from the undo stack. 
+//This should only be called by undo()
+drawingUndoStep* popUndoStep()
+{
+	if(undo.size()==0)
+		return(NULL);
+	return((drawingUndoStep*)(undo.pop()));
+}
+
+//Adds a change to the most recent undo step. If there is no step in the stack, or the most recent 
+//step is locked, a new step which contains the indicated change is created, and pushed onto the stack. 
+//Operations should call appendChangeToLatestStep repeatedly to accumulate changes and then call lockLatestStep 
+//when the set of changes is complete. This forces a new step to be begun when the next changes are registered. 
+//When the user selects the undo command the most recent undo step should include all of the logically related 
+//changes; that is all of the changes that have been registered since the last call to lockLatestStep
+void appendChangeToLatestStep(drawingChange* c)
+{
+	if(undo.size()==0 || ((drawingUndoStep*)(undo.itemAtIndex(0)))->locked)
+		pushNewUndoStep();
+	((drawingUndoStep*)(undo.itemAtIndex(0)))->appendChange(c);
+}
+
+//locks the most recent undo step, so that any new changes, even if they are of a matching type 
+//will be forced to go to a new step which can be undone seperately
+void lockLatestStep()
+{
+	if(undo.size()==0)
+		return;
+	((drawingUndoStep*)(undo.itemAtIndex(0)))->locked=TRUE;
+}
+
+//should be called every time a new zone is loaded
+//Otherwise the user could still undo changes made in other zones, but they would be undone 
+//in the _current_ zone, which would make a mess and serve no purpose. Therefore existing undo steps
+//must be invalidated and removed by calling this function when the zone is switched.
+void purgeUndo()
+{
+	while(undo.size()>0){
+		drawingUndoStep* temp = (drawingUndoStep*)undo.pop();
+		delete temp;
+	}
+}
+
+//This is the actual undo operation that should be called when the user wants to undo editing changes
+void performUndo()
+{
+	if(undo.size()==0){//there are no steps to undo; complain
+		beep();
+		return;
+	}
+	drawingUndoStep* s = popUndoStep();
+	//actually perform the operations to reverse whatever was done
+	for(int i=0; i<s->numChanges(); i++){
+		drawingChange* c = s->getChange(i);
+		if(editing_town){
+			if(c->type==1)
+				t_d.floor[c->x][c->y]=c->oldval;
+			else if(c->type==2)
+				t_d.terrain[c->x][c->y]=c->oldval;
+			else if(c->type==3)
+				t_d.height[c->x][c->y]=c->oldval;
+		}
+		else{
+			if(c->type==1)
+				current_terrain.floor[c->x][c->y]=c->oldval;
+			else if(c->type==2)
+				current_terrain.terrain[c->x][c->y]=c->oldval;
+			else if(c->type==3)
+				current_terrain.height[c->x][c->y]=c->oldval;
+		}
+	}
+	//add this step to the redo list so that it can be un-undone
+	s->invert();
+	pushRedoStep(s);
+	redraw_screen();
+}
+
+//adds a redo step to the redo stack. Should only be called by undo()
+void pushRedoStep(drawingUndoStep* s)
+{
+	redo.push(s);
+}
+
+drawingUndoStep* popRedoStep()
+{
+	if(redo.size()==0)
+		return(NULL);
+	return((drawingUndoStep*)(redo.pop()));
+}
+
+//should be called every time a new zone is loaded _and_ every time the user executes an editing operation
+//redo steps need to be invalidated for the same reason as undo steps when the zone is switched, 
+//but should also be invalidated whenever the user makes a new editing change. For example, suppose
+//the user opens a file, places a tree, and then undoes the drawing operation. At this point there 
+//will be no undo steps, and one redo step to redraw the tree. Suppose the user then places a wall on the 
+//same spot. Then, if the redo steps are not purged, there will be one undo step, to remove the wall again, 
+//and the redo step to re-place the tree will still remain. If the user then selects Redo, the wall will be 
+//replaced with the tree, which makes no sense. Instead, as soon as the wall is added, the redo steps should
+//be purged to eliminate nonsensical redo operations. However, if the user undoes one or more operations 
+//without doing anything else, the redo steps must not be purged, in order to allow the user to move freely
+//back and forth through the recorded states. 
+void purgeRedo()
+{
+	while(redo.size()>0){
+		drawingUndoStep* temp = (drawingUndoStep*)redo.pop();
+		delete temp;
+	}
+}
+
+//This is the actual redo operation that should be called when the user wants to redo editing changes that were undone
+void performRedo()
+{
+	if(redo.size()==0){//there are no steps to redo; complain
+		beep();
+		return;
+	}
+	drawingUndoStep* s = popRedoStep();
+	//actually perform the operations to reverse whatever was undone
+	for(int i=0; i<s->numChanges(); i++){
+		drawingChange* c = s->getChange(i);
+		if(editing_town){
+			if(c->type==1)
+				t_d.floor[c->x][c->y]=c->oldval;
+			else if(c->type==2)
+				t_d.terrain[c->x][c->y]=c->oldval;
+			else if(c->type==3)
+				t_d.height[c->x][c->y]=c->oldval;
+		}
+		else{
+			if(c->type==1)
+				current_terrain.floor[c->x][c->y]=c->oldval;
+			else if(c->type==2)
+				current_terrain.terrain[c->x][c->y]=c->oldval;
+			else if(c->type==3)
+				current_terrain.height[c->x][c->y]=c->oldval;
+		}
+	}
+	//add this step to the redo list so that it can be undone again
+	s->invert();
+	s->locked = TRUE;//don't let this step accumulate any more changes than it has
+	pushUndoStep(s);
 }
 // q_3DModEnd

@@ -1290,6 +1290,18 @@ BEGIN
                     25,258,32
 END
 
+880 DIALOG  10, 10, 285, 157
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
+    LTEXT           "6_0",2,98,99,62,16
+    LTEXT           "1_63",3,185,129,58,16
+    LTEXT           "0_5",4,119,129,62,16
+    LTEXT           "~Add What Height to Rectangle?",5,29,26,217,17
+    LTEXT           "What height would you like to add to all spaces in this rectangle? (-99-99)",
+                    6,29,45,213,42
+END
+
 970 DIALOG  10, 10, 368, 145
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN

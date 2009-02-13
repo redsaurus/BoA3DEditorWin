@@ -1390,7 +1390,8 @@ Boolean create_basic_scenario(char *scen_name_short,char *scen_name_with_ext,cha
 // import a blades scenario
 
 // import an outdoor section from other scenario
-void import_boa_town()
+// returns true if the import completed without error
+bool import_boa_town()
 {
 	short i,j, which_town;
 	long len,len_to_jump = 0,store;
@@ -1402,7 +1403,7 @@ void import_boa_town()
 	
 	which_town = pick_import_town(841 /*,0 */);
 	if (which_town < 0)
-		return;
+		return(false);
 
 	ofn.hwndOwner = mainPtr;
 	ofn.lpstrFile = import_file_path; // full path and file name
@@ -1410,24 +1411,25 @@ void import_boa_town()
 	ofn.Flags = 0;
 
 	if (GetOpenFileName(&ofn) == 0)
-		return;
+		return(false);
 	if (NULL == (file_id = fopen(import_file_path, "rb"))) {
 		oops_error(28);
 		SysBeep(/* 2 */);
-		return;
-		}	
+		return(false);
+	}	
 
 	
 	len = (long) kSizeOfScenario_data_type;
 	if ((error = FSRead(file_id, &len, (char *) &temp_scenario)) != 0){
-		FSClose(file_id); oops_error(201); return;
-		}
+		FSClose(file_id); oops_error(201); 
+        return(false);
+	}
 
 	if (temp_scenario.scenario_platform() < 0) {
 		FSClose(file_id);
 		give_error("This file is not a legitimate Blades of Avernum scenario.","",0);
-		return;
-		}
+		return(false);
+	}
 	
 	temp_scenario.port();
 		
@@ -1435,14 +1437,14 @@ void import_boa_town()
 		give_error("The town number you picked is too high. The scenario you selected doesn't have enough towns.",
 			"",0);
 		FSClose(file_id);
-		return;
-		}
+		return(false);
+	}
 	if (temp_scenario.town_size[which_town] != scenario.town_size[cur_town]) {
 		give_error("You must import a town of the same size/type as the current one.",
 			"",0);
 		FSClose(file_id);
-		return;
-		}
+		return(false);
+	}
 
 	len_to_jump = 0;
 
@@ -1450,12 +1452,13 @@ void import_boa_town()
 	len_to_jump += store;
 
 	store = 0;
-	for (i = 0; i < which_town; i++)
+	for (i = 0; i < which_town; i++){
 		switch (temp_scenario.town_size[i]) {
 			case 0: store += kSizeOfBig_tr_type + kSizeOfTown_record_type; break;
 			case 1: store += kSizeOfAve_tr_type + kSizeOfTown_record_type; break;
 			case 2: store += kSizeOfTiny_tr_type + kSizeOfTown_record_type; break;
-			}
+		}
+	}
 	len_to_jump += store;
 	
 	error = SetFPos (file_id, 3, len_to_jump);
@@ -1508,10 +1511,15 @@ void import_boa_town()
 		}
 
 	error = FSClose(file_id);
-	if (error != 0) {FSClose(file_id);oops_error(207); return;}
+	if(error != 0) {
+ 		FSClose(file_id);
+		oops_error(207);
+		return(false);
+	}
+	return(true);
 }
 
-void import_boa_outdoors()
+bool import_boa_outdoors()
 {
 	long len,len_to_jump = 0,store;
 	FILE *file_id;
@@ -1527,29 +1535,29 @@ void import_boa_outdoors()
 	ofn.Flags = 0;
 
 	if (GetOpenFileName(&ofn) == 0)
-		return;
+		return(false);
 	if (NULL == (file_id = fopen(import_file_path, "rb"))) {
 		oops_error(28);
 		SysBeep(/* 2 */);
-		return;
-		}	
+		return(false);
+	}	
 	
 	len = (long) kSizeOfScenario_data_type;
 	if ((error = FSRead(file_id, &len, (char *) &temp_scenario)) != 0){
-		FSClose(file_id); oops_error(301); return;
-		}
+		FSClose(file_id); oops_error(301); return(false);
+	}
 	if (temp_scenario.scenario_platform() < 0) {
 		give_error("This file is not a legitimate Blades of Avernum scenario.","",0);
-		return;
-		}
+		return(false);
+	}
 	
 	temp_scenario.port();
 
 	location dummy_loc = {0,0};
 	short which_section = pick_out(dummy_loc,temp_scenario.out_width,temp_scenario.out_height);
 	if (which_section < 0) {
-		FSClose(file_id); return;
-		}
+		FSClose(file_id); return(false);
+	}
 	location spot_hit = {(t_coord)(which_section / 100), (t_coord)(which_section % 100)};
 	which_section = spot_hit.y * temp_scenario.out_width + spot_hit.x;
 	
@@ -1568,7 +1576,8 @@ void import_boa_outdoors()
 	current_terrain.port();
 
 	error = FSClose(file_id);
-	if (error != 0) {FSClose(file_id);oops_error(307); return;}
+	if (error != 0) {FSClose(file_id);oops_error(307); return(false);}
+	return(true);
 }
 
 // Variables for importing and porting old scenarios

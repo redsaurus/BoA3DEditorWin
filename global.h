@@ -1213,7 +1213,258 @@ typedef struct {
 	
 // end BoE records
 
+//undo system data types
+	
+//The printable class was made the parent of a number of other classes 
+//for debugging purposes. These other classes override the print() 
+//function to print a description of themselves to the standard output.
+class printable{
+public:
+	virtual void print()
+	{
+		printf("printable!");
+	}
+	virtual ~printable(){}
+};
 
+//A listNode is a wrapper object so that items can be stored in a 
+//linkedList. It should not be needed except by the linkedList class.
+class listNode: public printable{
+public:
+	listNode* next;
+	void* data;
+	
+	listNode():next(NULL), data(NULL)
+	{}
+	listNode(listNode* n, void* d):next(n), data(d)
+	{}
+	void print()
+	{
+		printf("listnode with data=%p and next=%p",data,next);
+	}
+};
+
+//This is a linked list class mostly intended for use as a stack,
+//items are added and removed using the push() and pop() functions
+//However, it can also be accessed like an array; fetching the item
+//at an arbitrary index. This is normally a slow operation on a 
+//linked list, so this class caches the address of the most recently
+//accessed item, allowing that item or the item after it to be retrieved 
+//in constant time. This means that iterating through the elements of 
+//the list in order is must faster than it would otherwise be. 
+//And CFArray is EVIL! EVIL!!!
+class linkedList: public printable{
+private:
+	listNode* start;
+	int numItems;
+	listNode* currentItem;
+	int indexOfCurrentItem;
+public:
+		linkedList()
+	{
+			start=NULL;
+			numItems=0;
+			currentItem=NULL;
+			indexOfCurrentItem=-1;
+	}
+	~linkedList()
+	{
+		this->clear();
+	}
+	int size()
+	{
+		return(numItems);
+	}
+	void push(void* newItem)
+	{
+		listNode* temp = new listNode(start,newItem);
+		start=temp;
+		currentItem=start;
+		indexOfCurrentItem=0;
+		numItems++;
+	}
+	void* pop()
+	{
+		if(start == NULL)
+			return(NULL);
+		listNode* temp = start;
+		start = temp->next;
+		currentItem=start;
+		if(start==NULL)
+			indexOfCurrentItem=-1;
+		else
+			indexOfCurrentItem=0;
+		void* data = temp->data;
+		delete temp;
+		numItems--;
+		return(data);
+	}
+	void* itemAtIndex(int i)
+	{
+		if(i<0 || i>=numItems)
+			return(NULL);
+		if(indexOfCurrentItem>=0){//we have a cached index, test if it's useful
+			if(i==indexOfCurrentItem)//the caller wants the item at the cached index
+				return(currentItem->data);
+			if(i==(indexOfCurrentItem+1)){//the caller wants the next item after the cached index
+				currentItem=currentItem->next;
+				indexOfCurrentItem++;
+				return(currentItem->data);
+			}
+		}
+		//the user wants an item we can't get to easily from the cached position, so find it the hard way
+		indexOfCurrentItem=0;
+		currentItem=start;
+		while(indexOfCurrentItem<i){
+			currentItem=currentItem->next;
+			indexOfCurrentItem++;
+		}
+		if(indexOfCurrentItem!=i){//something must have gone wrong; bail out
+			currentItem=NULL;
+			indexOfCurrentItem=-1;
+			return(NULL);
+		}
+		return(currentItem->data);
+	}
+	void clear()
+	{
+		if(numItems==0)
+			return;
+		currentItem=start;
+		while(currentItem!=NULL){
+			listNode* temp=currentItem;
+			currentItem=currentItem->next;
+			delete temp;
+		}
+		numItems=0;
+		indexOfCurrentItem=-1;
+		start=NULL;
+	}
+	void print()
+	{
+		printf("linkedList: there are %i nodes\n",numItems);
+		listNode* temp=start;
+		int i=0;
+		while(temp!=NULL){
+			printf("node %i: &[i]=%p, i=\n",i,temp);
+			temp->print();
+			printf("\n");
+			temp=temp->next;
+			i++;
+		}
+	}
+};
+
+//a drawing change object represents a change in one of the floor, terrain 
+//or hieght at a single space in the current zone. Both the new and old
+//floor/terrain/height values are stored so that the operation can be undone
+//or redone. The invert function reverses the old and new values so that a 
+//change stored for undo purposes is usable for redo purposes
+class drawingChange: public printable{
+public:
+	short x;
+	short y;
+	short newval;
+	short oldval;
+	short type;
+	//-1 = null step
+	//0 = nothing, needs to be set
+	//1 = floor change
+	//2 = terrain change
+	//3 = height change
+	
+	drawingChange(short xloc, short yloc, short nval, short oval, short t):x(xloc), y(yloc), newval(nval), oldval(oval), type(t)
+	{}
+	void invert()
+	{
+		short temp=oldval;
+		oldval=newval;
+		newval=temp;
+	}
+	void print()
+	{
+		printf("change of type %i at (%i,%i) from %i to %i",type,x,y,oldval,newval);
+	}
+};
+
+//A drawingUndoStep object stores a set of related changes to the current zone 
+//which should be undone or redone as a group changes are registered using the 
+//appendChange functions. The invert function can be used to invert all of the 
+//changes stored so that the undo step becomes usable as a redo step. 
+class drawingUndoStep: public printable{
+public:
+	Boolean locked;
+	linkedList changes;
+	drawingUndoStep()
+	{
+		changes = linkedList();
+		locked=FALSE;
+	}
+	~drawingUndoStep()
+	{
+		this->clear();
+	}
+	bool collapseChange(drawingChange* c)
+	{
+		for(int i=0; i<changes.size(); i++){
+			drawingChange* temp = ((drawingChange*)(changes.itemAtIndex(i)));
+			if((temp->x == c->x) && (temp->y == c->y) && (temp->type == c->type)){
+				temp->newval=c->newval;
+				return(true);
+			}
+		}
+		return(false);
+	}
+	bool appendChange(int x,int y, int newval, int oldval, int type)
+	{
+		if(locked)
+			return(false);
+		drawingChange* c = new drawingChange(x,y,newval,oldval,type);
+		changes.push(&c);
+		return(true);
+	}
+	bool appendChange(drawingChange* c)
+	{
+		if(locked)
+			return(false);
+		if(collapseChange(c)){
+			delete(c);
+			return(true);
+		}
+		changes.push(c);
+		return(true);
+	}
+	void clear()
+	{
+		changes.clear();
+	}
+	void invert()
+	{
+		for(int i=0; i<changes.size(); i++)
+			((drawingChange*)(changes.itemAtIndex(i)))->invert();
+	}
+	drawingChange* getChange(int i)
+	{
+		return((drawingChange*)(changes.itemAtIndex(i)));
+	}
+	int numChanges()
+	{
+		return(changes.size());
+	}
+	void print()
+	{
+		printf("drawingUndoStep:");
+		printf("%i changes in this step.\n",changes.size());
+		for(int i=0; i<changes.size(); i++){
+			printf("\t");
+			((drawingChange*)(changes.itemAtIndex(i)))->print();
+			printf("\n");
+		}
+		printf("linked list dump:\n");
+		changes.print();
+	}
+};
+//end undo system types
 			
 
 typedef struct {
@@ -1261,12 +1512,12 @@ void save_change_to_outdoor_size(short plus_north,short plus_west,short plus_sou
 void load_town(short which_town);
 void start_data_dump();
 Boolean create_basic_scenario(char *scen_name_short,char *scen_name_with_ext,char *scen_full_name,short out_width,short out_height,short on_surface,Boolean use_warriors_grove);
-void import_boa_town();
+bool import_boa_town();
 void EdSysBeep( /* short duration */ );
 void get_name_of_current_scenario(char *name);
 void init_warriors_grove();
 void import_blades_of_exile_scenario();
-void import_boa_outdoors();
+bool import_boa_outdoors();
 short FSRead(FILE *file_id, long *len, char *data);
 short FSClose(FILE *file_id);
 
@@ -1326,6 +1577,17 @@ short get_sw_corner(short sector_offset_x, short sector_offset_y, short x, short
 short get_se_corner(short sector_offset_x, short sector_offset_y, short x, short y);
 short get_ne_corner(short sector_offset_x, short sector_offset_y, short x, short y);
 void set_up_corner_and_sight_map();
+void pushNewUndoStep();
+void pushUndoStep(drawingUndoStep* s);
+drawingUndoStep* popUndoStep();
+void appendChangeToLatestStep(drawingChange* c);
+void lockLatestStep();
+void purgeUndo();
+void performUndo();
+void pushRedoStep(drawingUndoStep* s);
+drawingUndoStep* popRedoStep();
+void purgeRedo();
+void performRedo();
 // q_3DModEnd
 void clear_selected_copied_objects();
 void reset_drawing_mode();
