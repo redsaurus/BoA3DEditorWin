@@ -31,7 +31,7 @@ const RECT kRect3DEditScrn = {
 // scroll speed limit: duration / cycle
 const DWORD kScrollLimitTime = 100;		// msec
 
-// Gloabl varialbes
+// Global variables
 
 	// border rects order: top, left, bottom, right //
 RECT border_rect[4];
@@ -55,7 +55,8 @@ RECT left_text_lines[10];
 RECT right_text_lines[5];
 
 location spot_hit;
-
+short aaa = 0;
+short bbb = 0;
 short current_floor_drawn = 0;
 short current_terrain_drawn = 0;
 
@@ -73,7 +74,7 @@ short hill_c_heights[12][4] = {{1,1,0,0},{0,1,0,0},{0,1,1,0},
 								{1,0,0,1},{1,0,0,0},{1,1,0,1},
 								{1,1,1,0},{0,1,1,1},{1,0,1,1}};
 
-// external gloabal variables
+// external global variables
 
 extern scenario_data_type scenario;
 extern town_record_type town;
@@ -150,9 +151,6 @@ typedef struct corner_and_sight_on_space *temp_space_info_ptr;
 short recursive_depth = 0; // used for recursive hill/terrain correcting function
 short recursive_hill_up_depth = 0;
 short recursive_hill_down_depth = 0;
-
-linkedList undo;
-linkedList redo;
 
 short store_control_value = 0;
 
@@ -869,6 +867,8 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							mode_count = (editing_town == TRUE) ? 6 : 4;
 							set_cursor(7);
 							set_string("Place 1st spawn point","");
+							aaa = 5;
+							bbb = 1;
 							break;		
 						case 106: // make town entrance
 							if (editing_town == TRUE) {
@@ -986,11 +986,15 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							set_string("Place a Waypoint","");
 							set_cursor(7);
 							overall_mode = 57;
+							aaa = 2;
+							bbb = 3;
 							break;		
 						case 303: // Delete Waypoint
 							set_string("Delete Waypoint","");
 							set_cursor(7);
 							overall_mode = 58;
+							aaa = 3;
+							bbb = 3;
 							break;		
 						case 304: 
 							set_string("Place north entrance","Select entrance location");
@@ -1013,7 +1017,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							overall_mode = 33;
 							break;
 
-						case 400: // Make Spot Blocke
+						case 400: // Make Spot Blocked
 							set_string("Make Spot Blocked","Select location");
 							overall_mode = 61;
 							set_cursor(0);
@@ -1031,7 +1035,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 						case 403: 
 							set_string("Place barrel","Select location");
 							overall_mode = 64;
-							set_cursor(0);
+							set_cursor(10);
 							break;		
 						case 404: 
 							set_string("Place fire barrier","Select location");
@@ -1055,41 +1059,57 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							set_string("Place small blood stain","Select stain location");
 							overall_mode = 68; mode_count = 0;
 							set_cursor(0);
+							aaa = 0;
+							bbb = 5;
 							break;
 						case 501: 
 							set_string("Place ave. blood stain","Select stain location");
 							overall_mode = 68; mode_count = 1;
 							set_cursor(0);
+							aaa = 1;
+							bbb = 5;
 							break;
 						case 502: 
 							set_string("Place large blood stain","Select stain location");
 							overall_mode = 68; mode_count = 2;
 							set_cursor(0);
+							aaa = 2;
+							bbb = 5;
 							break;
 						case 503: 
 							set_string("Place small slime pool","Select slime location");
 							overall_mode = 68; mode_count = 3;
 							set_cursor(0);
+							aaa = 3;
+							bbb = 5;
 							break;
 						case 504: 
 							set_string("Place large slime pool","Select slime location");
 							overall_mode = 68; mode_count = 4;
 							set_cursor(0);
+							aaa = 4;
+							bbb = 5;
 							break;
 						case 505: 
 							set_string("Place dried blood","Select dried blood location");
 							overall_mode = 68; mode_count = 5;
 							set_cursor(0);
+							aaa = 5;
+							bbb = 5;
 							break;
 						case 506: 
 							set_string("Place bones","Select bones location");
 							overall_mode = 68; mode_count = 6;
 							set_cursor(0);
+							aaa = 6;
+							bbb = 5;
 							break;
 						case 507: 
 							set_string("Place rocks","Select rocks location");
 							overall_mode = 68; mode_count = 7;					
 							set_cursor(0);
+							aaa = 7;
+							bbb = 5;
 							break;
 		
 					
@@ -1651,7 +1671,7 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				break;		
 			
 		case 70:
-				create_new_ter_script("dummy",spot_hit,NULL);
+				create_new_ter_script("blank",spot_hit,NULL);
 				reset_drawing_mode(); 				
 				break;
 				
@@ -1992,7 +2012,8 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	char chr;
 	chr = (char) wParam;
 	store_ter = current_terrain_type;
-
+	Boolean need_redraw = FALSE, option_hit = FALSE, right_click = FALSE;
+	extern short selected_item_number;
 // q_3DModStart
 //	Boolean shift_key = FALSE;
 //	Boolean option_hit = FALSE;		// Need to arrange on the option modifier key - R-CTRL ?
@@ -2002,21 +2023,69 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 
 	switch(chr)
 		{
+			
+			case 'A':
+				set_string("Place bounding walls","");
+				mode_count = 2;
+				set_cursor(5);
+				overall_mode = 19;
+				break;
+				
+			case 'E': // edit sign
+				set_string("Edit sign","Select sign to edit");
+				set_cursor(7);
+				overall_mode = 59;
+			break;		
+				
+			case 'F':  // find-replace terrain
+				swap_terrain();
+				need_redraw = TRUE;
+				mouse_button_held = FALSE;
+			break;		
+			
+			case 'G': // Erase special
+							set_string("Erase Special Encouter","");
+							overall_mode = 49;
+							set_cursor(4);
+			break;		
+			
+			case 'H': // Set special
+							set_string("Edit Special Encouter","");
+							overall_mode = 50;
+							set_cursor(7);
+			break;		
+			
 			case 'M':
 				hintbook_mode = !hintbook_mode;
-				small_any_drawn = FALSE;
 				draw_terrain();
 				break;
-			case '1': case '2': case '3': case '4': case '5': 
-				if (kill_next_win_char)
-					break;
 				
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[chr - '9' + 1][4].left;
-				pass_point.y = 6 + palette_buttons[chr - '9' + 1][4].top;
-				handle_action(pass_point,wParam,-1);
-				break;
+			case 'N': // place spec enc
+							set_string("Create Special Encouter","Select rectangle for encounter");
+							mode_count = 2;
+							set_cursor(5);
+							overall_mode = 16;
+			break;		
+			
+			case 'P': // place, edit terrain script
+							if (editing_town == FALSE) {
+								set_string("Place Terrain Script","Only in towns.");
+								break;
+								}
+							set_string("Place Terrain Script","");
+							overall_mode = 70;
+							set_cursor(7);
+			break;		
+			
+			case 'Q': // hollow rectangle
+							overall_mode = 11;
+							mode_count = 2;
+							set_cursor(5);
+								set_string("Fill rectangle (hollow)","Select upper left corner");
+			break;					
+			
 
-			case 'R':
+			case 'R': // full rectangle
 				if (current_drawing_mode == 2) {
 					pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][0].left;
 					pass_point.y = 6 + palette_buttons[5][0].top;
@@ -2030,13 +2099,90 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 				handle_action(pass_point,wParam,-1);
 				break; 
 
+			case 'S':
+				if (editing_town) {
+					set_string("Select/edit placed object","Select object to edit");
+					set_cursor(7);
+					overall_mode = 40;
+					}
+				break;
+			
+			case 'T':
+					selected_item_number = -1;                 
+					set_cursor(0);
+					overall_mode = 0;
+			break;
+				
+			case 'W':
+				set_string("Swap walls 1 <--> 2","Select rectangle to set");
+				mode_count = 2;
+				set_cursor(5);
+				overall_mode = 18;
+				break;
+				
 			case ' ':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][1].left;
 				pass_point.y = 6 + palette_buttons[1][1].top;
 
 				handle_action(pass_point,wParam,-1);
 				break; 
-			
+
+			case '1':
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][4].left;
+				pass_point.y = 6 + palette_buttons[0][4].top;
+    			handle_action(pass_point,wParam,-1);
+    			aaa = 0;
+    			bbb = 4;
+			break; 
+			case '2':
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][4].left;
+				pass_point.y = 6 + palette_buttons[1][4].top;
+    			handle_action(pass_point,wParam,-1);
+    			aaa = 1;
+    			bbb = 4;
+			break; 
+			case '3':
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][4].left;
+				pass_point.y = 6 + palette_buttons[2][4].top;
+    			handle_action(pass_point,wParam,-1);
+    			aaa = 2;
+    			bbb = 4;
+			break; 
+			case '4':
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][4].left;
+				pass_point.y = 6 + palette_buttons[3][4].top;
+    			handle_action(pass_point,wParam,-1);
+    			aaa = 3;
+    			bbb = 4;
+			break; 
+			case '5':
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][4].left;
+				pass_point.y = 6 + palette_buttons[4][4].top;
+    			handle_action(pass_point,wParam,-1);
+    			aaa = 4;
+    			bbb = 4;
+			break; 
+			case '6':
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][4].left;
+				pass_point.y = 6 + palette_buttons[5][4].top;
+    			handle_action(pass_point,wParam,-1);
+    			aaa = 5;
+    			bbb = 4;
+			break; 
+			case '8':
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][4].left;
+				pass_point.y = 6 + palette_buttons[7][4].top;
+    			handle_action(pass_point,wParam,-1);
+    			aaa = 7;
+    			bbb = 4;
+			break; 
+				
+			case '9':
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[aaa][bbb].left;
+				pass_point.y = 6 + palette_buttons[aaa][bbb].top;
+    			handle_action(pass_point,wParam,-1);
+			break; 
+												
 // q_3DModStart
 			case VK_TAB:	// '\t':
 //				if (option_hit != 0) {
@@ -2053,42 +2199,34 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 				break;
 // q_3DModEnd
 
-			case 'S':
-				if (editing_town) {
-					set_string("Select/edit placed object","Select object to edit");
-					set_cursor(7);
-					overall_mode = 40;
-					}
-				break;
-			
-			case 'W':
-				set_string("Swap walls 1 <--> 2","Select rectangle to set");
-				mode_count = 2;
-				set_cursor(5);
-				overall_mode = 18;
-				break;
-			
-			case 'A':
-				set_string("Place bounding walls","");
-				mode_count = 2;
-				set_cursor(5);
-				overall_mode = 19;
-				break;
 					
 			default:
 				Boolean ctrl = control_key_down();
-				if ((chr == 12) && (ctrl)) {
-					if (editing_town)
-						handle_town_menu(1);
-						else handle_outdoor_menu(1);
-					break;
-					}
+				// Ctrl + D = outdoor/town details
 				if ((chr == 4) && (ctrl)) {
 					if (editing_town)
 						handle_town_menu(2);
 						else handle_outdoor_menu(2);
 					break;
-					}
+				}
+				// Ctrl + L = load new zone
+				if ((chr == 12) && (ctrl)) {
+					if (editing_town)
+						handle_town_menu(1);
+						else handle_outdoor_menu(1);
+					break;
+				}
+
+					
+//        MENUITEM "&Copy\tCtrl+C",               102					
+// 			Ctrl + D = outdoor/town details
+// 			Ctrl + L = load new zone
+//        MENUITEM "&Open Scenario\tCtrl+O",      1
+//        MENUITEM "&Quit\tCtrl+Q",               6
+//        MENUITEM "&Save Scenario\tCtrl+S",      2
+//        MENUITEM "&Paste\tCtrl+V",              103
+//        MENUITEM "&Cut\tCtrl+X",                101
+		
 				if ((chr >= 97) && (chr <= 122)) {
 					if (current_drawing_mode == 0) { // use shortcut keys, if editing floor
 						for (i = 0; i < 256; i++) {
@@ -5365,167 +5503,5 @@ Boolean is_wall_drawn(outdoor_record_type *drawing_terrain, short sector_offset_
 		(scen_data.scen_ter_types[wall_terrain].see_block[2] == 1 && get_see_in(sector_offset_x,sector_offset_y,x,y + 1) == TRUE) ||
 		(scen_data.scen_ter_types[wall_terrain].see_block[3] == 1 && get_see_in(sector_offset_x,sector_offset_y,x + 1,y) == TRUE)
 	);
-}
-
-//undo system functions
-
-//This should not be called directly except by appendChangeToLatestStep
-//Calls from the editing functions to register undo steps should go to 
-//appendChangeToLatestStep and lockLatestStep
-void pushNewUndoStep()
-{
-	undo.push(new drawingUndoStep());
-	purgeRedo();
-}
-
-//should only be called by redo
-//adds an entire undo step to the undo stack. During editing undo steps 
-//should be accumulated using appendChangeToLatestStep.
-void pushUndoStep(drawingUndoStep* s)
-{
-	undo.push(s);
-}
-
-//retrieves the most recent undo step and removes it from the undo stack. 
-//This should only be called by undo()
-drawingUndoStep* popUndoStep()
-{
-	if(undo.size()==0)
-		return(NULL);
-	return((drawingUndoStep*)(undo.pop()));
-}
-
-//Adds a change to the most recent undo step. If there is no step in the stack, or the most recent 
-//step is locked, a new step which contains the indicated change is created, and pushed onto the stack. 
-//Operations should call appendChangeToLatestStep repeatedly to accumulate changes and then call lockLatestStep 
-//when the set of changes is complete. This forces a new step to be begun when the next changes are registered. 
-//When the user selects the undo command the most recent undo step should include all of the logically related 
-//changes; that is all of the changes that have been registered since the last call to lockLatestStep
-void appendChangeToLatestStep(drawingChange* c)
-{
-	if(undo.size()==0 || ((drawingUndoStep*)(undo.itemAtIndex(0)))->locked)
-		pushNewUndoStep();
-	((drawingUndoStep*)(undo.itemAtIndex(0)))->appendChange(c);
-}
-
-//locks the most recent undo step, so that any new changes, even if they are of a matching type 
-//will be forced to go to a new step which can be undone seperately
-void lockLatestStep()
-{
-	if(undo.size()==0)
-		return;
-	((drawingUndoStep*)(undo.itemAtIndex(0)))->locked=TRUE;
-}
-
-//should be called every time a new zone is loaded
-//Otherwise the user could still undo changes made in other zones, but they would be undone 
-//in the _current_ zone, which would make a mess and serve no purpose. Therefore existing undo steps
-//must be invalidated and removed by calling this function when the zone is switched.
-void purgeUndo()
-{
-	while(undo.size()>0){
-		drawingUndoStep* temp = (drawingUndoStep*)undo.pop();
-		delete temp;
-	}
-}
-
-//This is the actual undo operation that should be called when the user wants to undo editing changes
-void performUndo()
-{
-	if(undo.size()==0){//there are no steps to undo; complain
-		beep();
-		return;
-	}
-	drawingUndoStep* s = popUndoStep();
-	//actually perform the operations to reverse whatever was done
-	for(int i=0; i<s->numChanges(); i++){
-		drawingChange* c = s->getChange(i);
-		if(editing_town){
-			if(c->type==1)
-				t_d.floor[c->x][c->y]=c->oldval;
-			else if(c->type==2)
-				t_d.terrain[c->x][c->y]=c->oldval;
-			else if(c->type==3)
-				t_d.height[c->x][c->y]=c->oldval;
-		}
-		else{
-			if(c->type==1)
-				current_terrain.floor[c->x][c->y]=c->oldval;
-			else if(c->type==2)
-				current_terrain.terrain[c->x][c->y]=c->oldval;
-			else if(c->type==3)
-				current_terrain.height[c->x][c->y]=c->oldval;
-		}
-	}
-	//add this step to the redo list so that it can be un-undone
-	s->invert();
-	pushRedoStep(s);
-	redraw_screen();
-}
-
-//adds a redo step to the redo stack. Should only be called by undo()
-void pushRedoStep(drawingUndoStep* s)
-{
-	redo.push(s);
-}
-
-drawingUndoStep* popRedoStep()
-{
-	if(redo.size()==0)
-		return(NULL);
-	return((drawingUndoStep*)(redo.pop()));
-}
-
-//should be called every time a new zone is loaded _and_ every time the user executes an editing operation
-//redo steps need to be invalidated for the same reason as undo steps when the zone is switched, 
-//but should also be invalidated whenever the user makes a new editing change. For example, suppose
-//the user opens a file, places a tree, and then undoes the drawing operation. At this point there 
-//will be no undo steps, and one redo step to redraw the tree. Suppose the user then places a wall on the 
-//same spot. Then, if the redo steps are not purged, there will be one undo step, to remove the wall again, 
-//and the redo step to re-place the tree will still remain. If the user then selects Redo, the wall will be 
-//replaced with the tree, which makes no sense. Instead, as soon as the wall is added, the redo steps should
-//be purged to eliminate nonsensical redo operations. However, if the user undoes one or more operations 
-//without doing anything else, the redo steps must not be purged, in order to allow the user to move freely
-//back and forth through the recorded states. 
-void purgeRedo()
-{
-	while(redo.size()>0){
-		drawingUndoStep* temp = (drawingUndoStep*)redo.pop();
-		delete temp;
-	}
-}
-
-//This is the actual redo operation that should be called when the user wants to redo editing changes that were undone
-void performRedo()
-{
-	if(redo.size()==0){//there are no steps to redo; complain
-		beep();
-		return;
-	}
-	drawingUndoStep* s = popRedoStep();
-	//actually perform the operations to reverse whatever was undone
-	for(int i=0; i<s->numChanges(); i++){
-		drawingChange* c = s->getChange(i);
-		if(editing_town){
-			if(c->type==1)
-				t_d.floor[c->x][c->y]=c->oldval;
-			else if(c->type==2)
-				t_d.terrain[c->x][c->y]=c->oldval;
-			else if(c->type==3)
-				t_d.height[c->x][c->y]=c->oldval;
-		}
-		else{
-			if(c->type==1)
-				current_terrain.floor[c->x][c->y]=c->oldval;
-			else if(c->type==2)
-				current_terrain.terrain[c->x][c->y]=c->oldval;
-			else if(c->type==3)
-				current_terrain.height[c->x][c->y]=c->oldval;
-		}
-	}
-	//add this step to the redo list so that it can be undone again
-	s->invert();
-	s->locked = TRUE;//don't let this step accumulate any more changes than it has
-	pushUndoStep(s);
 }
 // q_3DModEnd
