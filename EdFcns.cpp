@@ -3609,7 +3609,7 @@ void shut_down_menus()
 		EnableMenuItem(menu,2,MF_GRAYED | MF_BYCOMMAND);
 		//EnableMenuItem(menu,3,MF_GRAYED | MF_BYCOMMAND);
 
-		for (short i = 101; i < 105; i++)
+		for (short i = 101; i < 108; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 201; i < 220; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
@@ -3641,11 +3641,13 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
-	
+		
 		EnableMenuItem(menu,101,MF_ENABLED | MF_BYCOMMAND);
 		EnableMenuItem(menu,102,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu,103,MF_ENABLED | MF_BYCOMMAND);
 		EnableMenuItem(menu,104,MF_ENABLED | MF_BYCOMMAND);
+		EnableMenuItem(menu,105,MF_ENABLED | MF_BYCOMMAND);
+		EnableMenuItem(menu,106,MF_ENABLED | MF_BYCOMMAND);
+		EnableMenuItem(menu,107,MF_ENABLED | MF_BYCOMMAND);
 	}
 	else {
 		for (short i = 301; i < 318; i++)
@@ -3656,11 +3658,13 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-
-		EnableMenuItem(menu,101,MF_GRAYED | MF_BYCOMMAND);
-		EnableMenuItem(menu,102,MF_GRAYED | MF_BYCOMMAND);
-		EnableMenuItem(menu,103,MF_GRAYED | MF_BYCOMMAND);
-		EnableMenuItem(menu,104,MF_GRAYED | MF_BYCOMMAND);	
+		
+		EnableMenuItem(menu,101,MF_ENABLED | MF_BYCOMMAND);
+		EnableMenuItem(menu,102,MF_ENABLED | MF_BYCOMMAND);
+		EnableMenuItem(menu,104,MF_GRAYED | MF_BYCOMMAND);
+		EnableMenuItem(menu,105,MF_GRAYED | MF_BYCOMMAND);
+		EnableMenuItem(menu,106,MF_GRAYED | MF_BYCOMMAND);
+		EnableMenuItem(menu,107,MF_GRAYED | MF_BYCOMMAND);	
 	}
 }
 

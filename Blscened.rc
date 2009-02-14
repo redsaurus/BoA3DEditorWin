@@ -78,10 +78,13 @@ BEGIN
     END
     POPUP "&Edit"
     BEGIN
-        MENUITEM "&Cut\tCtrl+X",                101
-        MENUITEM "&Copy\tCtrl+C",               102
-        MENUITEM "&Paste\tCtrl+V",              103
-        MENUITEM "Clear",                       104
+    	MENUITEM "&Undo\tCtrl+Z",               101
+        MENUITEM "&Redo\tCtrl+Y",               102
+    	MENUITEM SEPARATOR
+        MENUITEM "&Cut\tCtrl+X",                104
+        MENUITEM "&Copy\tCtrl+C",               105
+        MENUITEM "&Paste\tCtrl+V",              106
+        MENUITEM "Clear",                       107
     END
     POPUP "&Scenario"
     BEGIN

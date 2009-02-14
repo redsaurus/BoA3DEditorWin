@@ -431,6 +431,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 
 	case WM_LBUTTONUP:
 		mouse_button_held = FALSE;
+		lockLatestStep();
 		break;
 
 /*
@@ -638,56 +639,49 @@ void handle_file_menu(int item_hit)
 {
 	switch (item_hit) {
 		case 1: // open
-// q_3DModStart
 			if (change_made_town || change_made_outdoors) {
 				if (save_check(858) == FALSE)
 					break;							
 			}
-// q_3DModEnd
 			load_campaign();
 			if (file_is_loaded) {
 				update_item_menu();
+				purgeUndo();
+				purgeRedo();
 				redraw_screen();
 				shut_down_menus(/* 0 */);
-				}
+			}
 			break;
 		case 2: // save
 			//modify_lists();
 			save_campaign();
 			break;
 		case 3: // new scen
-// q_3DModStart
 			if ((file_is_loaded) &&  (change_made_town || change_made_outdoors)) {
 				give_error("You need to save the changes made to your scenario before you can create a new scenario.",
 					"",0);
 				return;
 			}
-// q_3DModEnd
 			build_scenario();
 			redraw_screen();
 			break;
 		case 4: // import blades
-// q_3DModStart
 			if ((file_is_loaded) && (change_made_town || change_made_outdoors)) {
 				give_error("You need to save the changes made to your scenario before you can import a Blades of Exile scenario.",
 					"",0);
 				return;
 			}
-// q_3DModEnd
 			if (fancy_choice_dialog(876,0) == 2)
 				break;
 			import_blades_of_exile_scenario();
 			break;
-
 		case 6: // quit
 			if (save_check(869) == FALSE)
 				break;
 			force_game_end = TRUE;
 			break;
-		}
+	}
 }
-
-
 
 void handle_campaign_menu(int item_hit)
 {
@@ -702,6 +696,8 @@ void handle_campaign_menu(int item_hit)
 			//set_string("Drawing mode","");
 			DrawMenuBar(mainPtr);
 			reset_drawing_mode();
+			purgeUndo();
+			purgeRedo();
 			redraw_screen();
 			break;
 		case 2: // outdoor section
@@ -715,28 +711,28 @@ void handle_campaign_menu(int item_hit)
 			clear_selected_copied_objects();
 			DrawMenuBar(mainPtr);
 			reset_drawing_mode();
+			purgeUndo();
+			purgeRedo();
 			redraw_screen();
 			break;
 		case 3: // new town
-// q_3DModStart
 			if (change_made_town || change_made_outdoors) {
 				give_error("You need to save the changes made to your scenario before you can add a new town.",
 					"",0);
 				return;
-				}
-// q_3DModEnd
+			}
 			if (scenario.num_towns >= 199) {
 				give_error("You have reached the limit of 200 zones you can have in one campaign.",
 					"",0);
 				return;
-				}
+			}
 			new_town();
 			reset_drawing_mode();
 			cen_x = max_dim[town_type] / 2; cen_y = max_dim[town_type] / 2;
+			purgeUndo();
+			purgeRedo();
 			redraw_screen();
-// q_3DModStart
 			change_made_town = TRUE;
-// q_3DModEnd
 			break;
 		case 5: // basic scen data
 			edit_scen_details();
@@ -769,48 +765,42 @@ void handle_campaign_menu(int item_hit)
 		case 13: // Clean Up Walls
 			if (fancy_choice_dialog(873,0) == 2)
 				break;
-			clean_walls(); 
+			clean_walls();
 			redraw_screen();
-// q_3DModStart
 			change_made_town = TRUE;
-// q_3DModEnd
 			break;
 		case 14: //   Import Town
 			clear_selected_copied_objects();
-			import_boa_town();
-// q_3DModStart
-			change_made_town = TRUE;
-// q_3DModEnd
-			redraw_screen();
+			if(import_boa_town()){
+				change_made_town = TRUE;
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
+			}
 			break;
 		case 15: //   Import Outdoor Section
 			clear_selected_copied_objects();
-			import_boa_outdoors();
-// q_3DModStart
-			change_made_outdoors = TRUE;
-// q_3DModEnd
-			redraw_screen();
+			if(import_boa_outdoors()){
+				change_made_outdoors = TRUE;
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
+			}
 			break;
 		case 16: //   Set Variable Town Entry
 			edit_add_town();
-// q_3DModStart
 			change_made_town = TRUE;
-// q_3DModEnd
 			break;
 		case 17: //   Edit Item Placement Shortcuts
 			edit_item_placement();
-// q_3DModStart
 			change_made_town = TRUE;
-// q_3DModEnd
 			break;
 		case 18: //   Delete Last Town
-// q_3DModStart
 			if (change_made_town || change_made_outdoors) {
 				give_error("You need to save the changes made to your scenario before you can delete a town.",
 					"",0);
 				return;
 			}
-// q_3DModEnd
 			if (scenario.num_towns == 1) {
 				give_error("You can't delete the last town in a scenario. All scenarios must have at least 1 town.",
 					"",0);
@@ -821,14 +811,13 @@ void handle_campaign_menu(int item_hit)
 					"",0);
 				return;
 			}
-
 			if (fancy_choice_dialog(865,0) == 1) {
 				delete_last_town();
 				clear_selected_copied_objects();
+				purgeUndo();
+				purgeRedo();
 				redraw_screen();
-// q_3DModStart
 				change_made_town = TRUE;
-// q_3DModEnd
 			}
 			break;
 		case 19: //   Write Scenario Data to Text File
@@ -836,8 +825,6 @@ void handle_campaign_menu(int item_hit)
 				start_data_dump();
 			}
 			break;
-
-// q_3DModStart
 		case 20: //   Change Outdoor Size
 			if (change_made_town || change_made_outdoors) {
 				give_error("You need to save the changes made to your scenario before you can change the outdoor size.",
@@ -846,13 +833,12 @@ void handle_campaign_menu(int item_hit)
 			}
 			if(change_outdoor_size()) {
 				reset_drawing_mode();
+				purgeUndo();
+				purgeRedo();
 				redraw_screen();
 			}
 			break;
-// q_3DModEnd
-
 		}
-
 }
 
 void handle_town_menu(int item_hit)
@@ -861,25 +847,23 @@ void handle_town_menu(int item_hit)
 
 	switch (item_hit) {
 		case 1: // laod new town
-// q_3DModStart
 			if (change_made_town == TRUE) {
 				if (save_check(859) == FALSE)
 					break;							
 			}
-// q_3DModEnd
 			x =  get_a_number(855,cur_town,0,scenario.num_towns - 1);
 			if (x >= 0) {
 				load_town( x );
 				clear_selected_copied_objects();
 				set_up_terrain_buttons();
-// q_3DModStart
-				change_made_town = FALSE; 
-// q_3DModEnd
+				change_made_town = FALSE;
 				cen_x = max_dim[town_type] / 2; cen_y = max_dim[town_type] / 2;
 				reset_drawing_mode();
 				reset_small_drawn();
+				purgeUndo();
+				purgeRedo();
 				redraw_screen();
-				}
+			}
 			break;
 // q_3DModStart
 		case 2: edit_town_details(); change_made_town = TRUE; break; // Town Details
@@ -913,26 +897,20 @@ void handle_town_menu(int item_hit)
 		case 11: if (fancy_choice_dialog(863,0) == 2)
 					break;
 				place_items_in_town();
-// q_3DModStart
 				change_made_town = TRUE; 
-// q_3DModEnd
 				redraw_screen();
 				 break; // add random
 		case 12: for (i = 0; i < 144; i++)
 					town.preset_items[i].properties = town.preset_items[i].properties & 253;
 				fancy_choice_dialog(861,0);
 				draw_terrain();
-// q_3DModStart
 				change_made_town = TRUE; 
-// q_3DModEnd
 				break; // set not prop
 		case 13: for (i = 0; i < 144; i++)
 					town.preset_items[i].properties = town.preset_items[i].properties | 2;
 				fancy_choice_dialog(877,0);
 				draw_terrain();
-// q_3DModStart
 				change_made_town = TRUE; 
-// q_3DModEnd
 				break; // set  prop
 		case 14:
 			if (fancy_choice_dialog(862,0) == 2)
@@ -940,9 +918,7 @@ void handle_town_menu(int item_hit)
 			for (i = 0; i < 144; i++)
 				town.preset_items[i].which_item = -1;
 			draw_terrain();
-// q_3DModStart	extra
 			change_made_town = TRUE; 
-// q_3DModEnd
 			redraw_screen();
 			break; // clear all items
 
@@ -952,9 +928,7 @@ void handle_town_menu(int item_hit)
 			for (i = 0; i < 80; i++)
 				town.creatures[i].number = -1;
 			draw_terrain();
-// q_3DModStart
 			change_made_town = TRUE; 
-// q_3DModEnd
 			redraw_screen();
 			break;
 		case 17: // clear special encs
@@ -964,9 +938,7 @@ void handle_town_menu(int item_hit)
 				town.spec_id[x] = kNO_TOWN_SPECIALS;
 				SetMacRect(&town.special_rects[x],-1,-1,-1,-1);
 				}
-// q_3DModStart
 			change_made_town = TRUE; 
-// q_3DModEnd
 			redraw_screen();
 			break;	
 
@@ -979,27 +951,24 @@ void handle_outdoor_menu(int item_hit)
 				
 	switch (item_hit) {
 		case 1: // load new
-// q_3DModStart
 			if (change_made_outdoors == TRUE) {
 				if (save_check(859) == FALSE)
 					break;
 			}
-// q_3DModEnd
 			x = pick_out(cur_out,scenario.out_width,scenario.out_height);
 			if (x >= 0) {
 				location spot_hit = {(t_coord)(x / 100),(t_coord)(x % 100)};
 				clear_selected_copied_objects();
-// q_3DModStart
 			//	load_outdoors(spot_hit,0);
-// q_3DModEnd
 				load_outdoor_and_borders(spot_hit);
 				set_up_terrain_buttons();
 				cen_x = 24; cen_y = 24;
 				reset_drawing_mode();
+				purgeUndo();
+				purgeRedo();
 				redraw_screen();
-// q_3DModStart
 				change_made_outdoors = FALSE;
-				}
+			}
 			break;
 		case 2:							//Outdoor Details
 				outdoor_details();
@@ -1018,7 +987,6 @@ void handle_outdoor_menu(int item_hit)
 		case 6: frill_terrain(); change_made_outdoors = TRUE; break;
 		case 7: unfrill_terrain(); change_made_outdoors = TRUE; break;
 		case 8: edit_out_strs(); change_made_outdoors = TRUE; break; //Edit Area Descriptions
-// q_3DModEnd
 		case 10: 					//Set Starting Location
 			if (fancy_choice_dialog(864,0) == 2)
 				return;
@@ -1026,33 +994,33 @@ void handle_outdoor_menu(int item_hit)
 			overall_mode = 71;
 			set_cursor(7);
 			break;
-
-
 		}
 }
 
 void handle_edit_menu(int item_hit)
 {   
 	switch (item_hit) {
-		case 1: // cut
+		case 1: // undo
+			performUndo();
+			break;
+		case 2: // redo
+			performRedo();
+			break;	
+		case 4: // cut
 			cut_selected_instance();
-// q_3DModStart
 			if(editing_town)
 				change_made_town = TRUE;
 			else
 				change_made_outdoors = TRUE;
-// q_3DModEnd
 			break;
-		case 2: // copy
+		case 5: // copy
 			copy_selected_instance();
-// q_3DModStart
 			if(editing_town)
 				change_made_town = TRUE;
 			else
 				change_made_outdoors = TRUE;
-// q_3DModEnd
 			break;
-		case 3: // paste
+		case 6: // paste
 
 			if ((copied_creature.exists() == FALSE) && (copied_item.exists() == FALSE) && (copied_ter_script.exists == FALSE)) {
 				beep();
@@ -1062,21 +1030,13 @@ void handle_edit_menu(int item_hit)
 			set_cursor(7);
 			overall_mode = 48;			
 			break;
-		case 4: // clear
+		case 7: // clear
 			delete_selected_instance();
-// q_3DModStart
 			if(editing_town)
 				change_made_town = TRUE;
 			else
 				change_made_outdoors = TRUE;
-// q_3DModEnd
-			break;
-		case 5: // undo
-             performUndo();     
-		break;
-		case 6: // redo
-            performRedo();
-    	break;	
+			break;	
 		}
 	draw_main_screen();		
 }
