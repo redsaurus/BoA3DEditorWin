@@ -55,8 +55,7 @@ RECT left_text_lines[10];
 RECT right_text_lines[5];
 
 location spot_hit;
-short aaa = 0;
-short bbb = 0;
+bool object_sticky_draw;
 short current_floor_drawn = 0;
 short current_terrain_drawn = 0;
 
@@ -208,6 +207,7 @@ void shift_item_locs(location spot_hit);
 void create_town_entry(RECT rect_hit);
 void edit_town_entry(location spot_hit);
 void set_rect_height(RECT r);
+void add_rect_height(RECT r);
 void shy_put_terrain(short i,short j,short ter);
 void transform_walls(RECT working_rect);
 Boolean is_not_darkness_floor(short i,short j); 
@@ -791,7 +791,17 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 					play_sound(34);
 					switch (i + 100 * j) {
 						case 0: // regular drawing mode
-							reset_drawing_mode();
+							//pre-emptive support for creature and item placement modes
+							if(current_drawing_mode==3){
+								overall_mode = 46;
+								object_sticky_draw = shift_key;
+							}
+							else if(current_drawing_mode==4){
+								overall_mode = 47;
+								object_sticky_draw = shift_key;
+							}
+							else
+								reset_drawing_mode();
 							break;					
 						case 1: // paintbrush 1
 							set_string("Paintbrush (large)","");
@@ -813,11 +823,11 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							overall_mode = 4;
 							set_cursor(3);
 							break;					
-						case 5: // set height rectangle
+						case 5: // set/add height rectangle
 							set_string("Set Height","Select rectangle to set");
 							mode_count = 2;
 							set_cursor(5);
-							overall_mode = 20;
+							overall_mode = (shift_key?24:20); //if shift is on, add height
 							need_redraw = TRUE;
 							break;					
 						case 6: case 7: // empty, full rectangle
@@ -873,8 +883,6 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							mode_count = (editing_town == TRUE) ? 6 : 4;
 							set_cursor(7);
 							set_string("Place 1st spawn point","");
-							aaa = 5;
-							bbb = 1;
 							break;		
 						case 106: // make town entrance
 							if (editing_town == TRUE) {
@@ -992,15 +1000,11 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							set_string("Place a Waypoint","");
 							set_cursor(7);
 							overall_mode = 57;
-							aaa = 2;
-							bbb = 3;
 							break;		
 						case 303: // Delete Waypoint
 							set_string("Delete Waypoint","");
 							set_cursor(7);
 							overall_mode = 58;
-							aaa = 3;
-							bbb = 3;
 							break;		
 						case 304: 
 							set_string("Place north entrance","Select entrance location");
@@ -1026,31 +1030,37 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 						case 400: // Make Spot Blocked
 							set_string("Make Spot Blocked","Select location");
 							overall_mode = 61;
+							object_sticky_draw = shift_key;
 							set_cursor(0);
 							break;		
 						case 401: 
 							set_string("Place web","Select location");
 							overall_mode = 62;
+							object_sticky_draw = shift_key;
 							set_cursor(0);
 							break;		
 						case 402: 
 							set_string("Place crate","Select location");
 							overall_mode = 63;
+							object_sticky_draw = shift_key;
 							set_cursor(0);
 							break;		
 						case 403: 
 							set_string("Place barrel","Select location");
 							overall_mode = 64;
+							object_sticky_draw = shift_key;
 							set_cursor(10);
 							break;		
 						case 404: 
 							set_string("Place fire barrier","Select location");
 							overall_mode = 65;
+							object_sticky_draw = shift_key;
 							set_cursor(0);
 							break;
 						case 405: 
 							set_string("Place force barrier","Select location");
 							overall_mode = 66;
+							object_sticky_draw = shift_key;
 							set_cursor(0);
 							break;		
 						case 406: 
@@ -1058,64 +1068,57 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 						case 407: 
 							set_string("Clear space","Select space to clear");
 							overall_mode = 67;
+							object_sticky_draw = shift_key;
 							set_cursor(4);
 							break;
 
 						case 500: 
 							set_string("Place small blood stain","Select stain location");
 							overall_mode = 68; mode_count = 0;
+							object_sticky_draw = shift_key;
 							set_cursor(0);
-							aaa = 0;
-							bbb = 5;
 							break;
 						case 501: 
 							set_string("Place ave. blood stain","Select stain location");
 							overall_mode = 68; mode_count = 1;
+							object_sticky_draw = shift_key;
 							set_cursor(0);
-							aaa = 1;
-							bbb = 5;
 							break;
 						case 502: 
 							set_string("Place large blood stain","Select stain location");
 							overall_mode = 68; mode_count = 2;
+							object_sticky_draw = shift_key;
 							set_cursor(0);
-							aaa = 2;
-							bbb = 5;
 							break;
 						case 503: 
 							set_string("Place small slime pool","Select slime location");
 							overall_mode = 68; mode_count = 3;
+							object_sticky_draw = shift_key;
 							set_cursor(0);
-							aaa = 3;
-							bbb = 5;
 							break;
 						case 504: 
 							set_string("Place large slime pool","Select slime location");
 							overall_mode = 68; mode_count = 4;
+							object_sticky_draw = shift_key;
 							set_cursor(0);
-							aaa = 4;
-							bbb = 5;
 							break;
 						case 505: 
 							set_string("Place dried blood","Select dried blood location");
 							overall_mode = 68; mode_count = 5;
+							object_sticky_draw = shift_key;
 							set_cursor(0);
-							aaa = 5;
-							bbb = 5;
 							break;
 						case 506: 
 							set_string("Place bones","Select bones location");
 							overall_mode = 68; mode_count = 6;
+							object_sticky_draw = shift_key;
 							set_cursor(0);
-							aaa = 6;
-							bbb = 5;
 							break;
 						case 507: 
 							set_string("Place rocks","Select rocks location");
-							overall_mode = 68; mode_count = 7;					
+							overall_mode = 68; mode_count = 7;
+							object_sticky_draw = shift_key;					
 							set_cursor(0);
-							aaa = 7;
-							bbb = 5;
 							break;
 		
 					
@@ -1303,7 +1306,7 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 // q_3DModEnd
 
 	short i;
-				short x;
+	short x;
 	short item_to_try;
 
 	if ((editing_town == TRUE) && 
@@ -1489,11 +1492,27 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 	
 		case 46: // 46 - placing creature
 				create_new_creature(mode_count,spot_hit,NULL);
-				reset_drawing_mode(); 
+				if(current_drawing_mode==3){
+					if(!object_sticky_draw){
+						set_string("Select/edit placed object","Select object to edit");
+						set_cursor(7);
+						overall_mode = 40;
+					}
+				}
+				else
+					reset_drawing_mode(); 
 				break;		
 		case 47: // 47 - placing item
 				create_new_item(mode_count,spot_hit,FALSE,NULL);
-				reset_drawing_mode(); 
+				if(current_drawing_mode==4){
+					if(!object_sticky_draw){
+						set_string("Select/edit placed object","Select object to edit");
+						set_cursor(7);
+						overall_mode = 40;
+					}
+				}
+				else
+					reset_drawing_mode(); 
 				break;		
 		case 48: // 48 - pasting instance
 				paste_selected_instance(spot_hit);
@@ -1633,27 +1652,33 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				break;		
 		case 61: // 61 - blocked spot
 				make_blocked(spot_hit.x,spot_hit.y);
-				reset_drawing_mode(); 
+				if(!object_sticky_draw)
+					reset_drawing_mode(); 
 				break;		
 		case 62: // 62-66 - barrels, atc
 				make_web(spot_hit.x,spot_hit.y); 
-				reset_drawing_mode(); 
+				if(!object_sticky_draw)
+					reset_drawing_mode(); 
 				break;		
 		case 63: // 62-66 - barrels, atc
 				make_crate(spot_hit.x,spot_hit.y);
-				reset_drawing_mode(); 
+				if(!object_sticky_draw)
+					reset_drawing_mode(); 
 				break;		
 		case 64: // 62-66 - barrels, atc
 				make_barrel(spot_hit.x,spot_hit.y);
-				reset_drawing_mode(); 
+				if(!object_sticky_draw)
+					reset_drawing_mode(); 
 				break;		
 		case 65: // 62-66 - barrels, atc
 				make_fire_barrier(spot_hit.x,spot_hit.y);
-				reset_drawing_mode(); 
+				if(!object_sticky_draw)
+					reset_drawing_mode(); 
 				break;		
 		case 66: // 62-66 - barrels, atc
 				make_force_barrier(spot_hit.x,spot_hit.y);
-				reset_drawing_mode(); 
+				if(!object_sticky_draw)
+					reset_drawing_mode(); 
 				break;		
 		case 67: // 67 - clean space
 				take_blocked(spot_hit.x,spot_hit.y); 
@@ -1664,33 +1689,39 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				take_web(spot_hit.x,spot_hit.y); 
 				for (i = 0; i < 8; i++)
 					take_sfx(spot_hit.x,spot_hit.y,i);
-				reset_drawing_mode(); 
+				if(!object_sticky_draw)
+					reset_drawing_mode(); 
 				break;		
 		case 68: // 68 - place different floor stains
 				make_sfx(spot_hit.x,spot_hit.y,mode_count);
-				reset_drawing_mode(); 
+				if(!object_sticky_draw)
+					reset_drawing_mode(); 
 				break;		
 
 		case 69: //edit town entrance
 				edit_town_entry(spot_hit);
-				reset_drawing_mode(); 
+				if(!object_sticky_draw)
+					reset_drawing_mode(); 
 				break;		
 			
 		case 70:
 				create_new_ter_script("dummy",spot_hit,NULL);
-				reset_drawing_mode(); 				
+				if(!object_sticky_draw)
+					reset_drawing_mode(); 				
 				break;
 				
 		case 71: //set outdoor start pt
 				scenario.what_outdoor_section_start_in = cur_out;
 				scenario.start_where_in_outdoor_section = spot_hit;
-				reset_drawing_mode(); 
+				if(!object_sticky_draw)
+					reset_drawing_mode(); 
 				break;		
 
 		case 72: //set town start pt
 				scenario.start_in_what_town = cur_town;
 				scenario.what_start_loc_in_town = spot_hit;
-				reset_drawing_mode(); 
+				if(!object_sticky_draw)
+					reset_drawing_mode(); 
 				break;		
 
 		}
@@ -1772,6 +1803,9 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				break;
 			case 20: // 20 - set height rectangle
 				set_rect_height(working_rect);
+				break;
+			case 24: // 24 - add height rectangle
+				add_rect_height(working_rect);
 				break;
 			case 21: // 21 - place text rectangle
 				x = 0;
@@ -2112,12 +2146,6 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 					set_cursor(0);
 					overall_mode = 0;
 			break;
-
-			case 'U':
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[aaa][bbb].left;
-				pass_point.y = 6 + palette_buttons[aaa][bbb].top;
-    			handle_action(pass_point,wParam,-1);
-			break; 
 				
 			case 'W':
 				set_string("Swap walls 1 <--> 2","Select rectangle to set");
@@ -2136,50 +2164,36 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][4].left;
 				pass_point.y = 6 + palette_buttons[0][4].top;
     			handle_action(pass_point,wParam,-1);
-    			aaa = 0;
-    			bbb = 4;
 			break; 
 			case '@':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][4].left;
 				pass_point.y = 6 + palette_buttons[1][4].top;
     			handle_action(pass_point,wParam,-1);
-    			aaa = 1;
-    			bbb = 4;
 			break; 
 			case '#':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][4].left;
 				pass_point.y = 6 + palette_buttons[2][4].top;
     			handle_action(pass_point,wParam,-1);
-    			aaa = 2;
-    			bbb = 4;
 			break; 
 			case '$':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][4].left;
 				pass_point.y = 6 + palette_buttons[3][4].top;
     			handle_action(pass_point,wParam,-1);
-    			aaa = 3;
-    			bbb = 4;
 			break; 
 			case '%':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][4].left;
 				pass_point.y = 6 + palette_buttons[4][4].top;
     			handle_action(pass_point,wParam,-1);
-    			aaa = 4;
-    			bbb = 4;
 			break; 
 			case '^':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][4].left;
 				pass_point.y = 6 + palette_buttons[5][4].top;
     			handle_action(pass_point,wParam,-1);
-    			aaa = 5;
-    			bbb = 4;
 			break; 
 			case '*':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][4].left;
 				pass_point.y = 6 + palette_buttons[7][4].top;
     			handle_action(pass_point,wParam,-1);
-    			aaa = 7;
-    			bbb = 4;
 			break; 
 				
 												

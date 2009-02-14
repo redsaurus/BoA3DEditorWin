@@ -121,9 +121,10 @@ short overall_mode = 0;
 // 17 - town boundaries
 // 18 - swap wall types
 // 19 - add walls
-// 20 - set height rectangle
+// 20 - set height rectangle (absolute)
 // 21 - place text rectangle
 // 22 - outdoor only - town entrance
+// 24 - change height rectangle (delta)
 
 // regular select modes
 // 30 - place north entrance
