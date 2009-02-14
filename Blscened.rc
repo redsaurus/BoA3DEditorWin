@@ -78,8 +78,8 @@ BEGIN
     END
     POPUP "&Edit"
     BEGIN
-    	MENUITEM "&Undo\tCtrl+Z",               101
-        MENUITEM "&Redo\tCtrl+Y",               102
+    	MENUITEM "&Undo",               101
+        MENUITEM "&Redo",               102
     	MENUITEM SEPARATOR
         MENUITEM "&Cut\tCtrl+X",                104
         MENUITEM "&Copy\tCtrl+C",               105
@@ -214,9 +214,9 @@ END
 IDC_BOA3DEDITOR ACCELERATORS 
 BEGIN
     "^O",           1,                      ASCII,  NOINVERT
-    "^X",           101,                    ASCII,  NOINVERT
-    "^C",           102,                    ASCII,  NOINVERT
-    "^V",           103,                    ASCII,  NOINVERT
+    "^X",           104,                    ASCII,  NOINVERT
+    "^C",           105,                    ASCII,  NOINVERT
+    "^V",           106,                    ASCII,  NOINVERT
     "^S",           2,                      ASCII,  NOINVERT
     "^T",           201,                    ASCII,  NOINVERT
     "^R",           202,                    ASCII,  NOINVERT

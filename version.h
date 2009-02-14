@@ -1,1 +1,1 @@
-#define kVersion "Build0039"
+#define kVersion "Build 40"

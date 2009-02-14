@@ -2230,14 +2230,6 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 						else handle_outdoor_menu(1);
 					break;
 				}
-				// Ctrl + Y = redo
-				if ((chr == 25) && (ctrl)) 
-						handle_edit_menu(6);
-					break;
-				// Ctrl + Z = undo
-				if ((chr == 26) && (ctrl)) 
-						handle_edit_menu(5);
-					break;
 
 					
 //        MENUITEM "&Copy\tCtrl+C",               102					
