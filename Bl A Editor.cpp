@@ -1032,9 +1032,7 @@ void handle_outdoor_menu(int item_hit)
 }
 
 void handle_edit_menu(int item_hit)
-{
-    void performRedo();
-    void performUndo();     
+{   
 	switch (item_hit) {
 		case 1: // cut
 			cut_selected_instance();
