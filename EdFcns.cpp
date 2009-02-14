@@ -3299,7 +3299,6 @@ short get_height(short x, short y,short out_or_town)
 }
 
 // does boundary check and returns 0 if off world
-/*
 short adjust_get_ter(short x, short y,short out_or_town)
 {
 	if (x < 0) return 0;
@@ -3310,8 +3309,6 @@ short adjust_get_ter(short x, short y,short out_or_town)
 	
 	return (editing_town) ? t_d.terrain[x][y] : current_terrain.terrain[x][y];
 }
-*/
-
 
 //starting function for recursive cleaning
 void adjust_space(location l)
