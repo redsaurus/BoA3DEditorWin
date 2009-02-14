@@ -315,7 +315,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		0,
 		0,
 		772,
-		595,
+		601,
 		NULL,
 		NULL,
 		hInstance,
