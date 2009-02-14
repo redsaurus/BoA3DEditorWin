@@ -1497,7 +1497,7 @@ typedef struct {
 // BL A Editor
 void handle_town_menu(int item_hit);
 void handle_outdoor_menu(int item_hit);
-
+void handle_edit_menu(int item_hit);
 // Bl A Fileio
 bool file_initialize();
 void save_campaign();

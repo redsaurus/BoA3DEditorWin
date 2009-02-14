@@ -2023,12 +2023,8 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	store_ter = current_terrain_type;
 	Boolean need_redraw = FALSE, option_hit = FALSE, right_click = FALSE;
 	extern short selected_item_number;
-// q_3DModStart
-//	Boolean shift_key = FALSE;
-//	Boolean option_hit = FALSE;		// Need to arrange on the option modifier key - R-CTRL ?
-
 	bool ctrl_key = (GetKeyState( VK_CONTROL ) & 0x8000) != 0;	// check MSB for current key state
-// q_3DModEnd
+
 
 	switch(chr)
 		{
@@ -2220,6 +2216,14 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 						else handle_outdoor_menu(1);
 					break;
 				}
+				// Ctrl + Y = redo
+				if ((chr == 25) && (ctrl)) 
+						handle_edit_menu(6);
+					break;
+				// Ctrl + Z = undo
+				if ((chr == 26) && (ctrl)) 
+						handle_edit_menu(5);
+					break;
 
 					
 //        MENUITEM "&Copy\tCtrl+C",               102					

@@ -1032,6 +1032,8 @@ void handle_outdoor_menu(int item_hit)
 
 void handle_edit_menu(int item_hit)
 {
+    void performRedo();
+    void performUndo();     
 	switch (item_hit) {
 		case 1: // cut
 			cut_selected_instance();
@@ -1070,6 +1072,12 @@ void handle_edit_menu(int item_hit)
 				change_made_outdoors = TRUE;
 // q_3DModEnd
 			break;
+		case 5: // undo
+             performUndo();     
+		break;
+		case 6: // redo
+            performRedo();
+    	break;	
 		}
 	draw_main_screen();		
 }
