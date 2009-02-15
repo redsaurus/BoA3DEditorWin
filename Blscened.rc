@@ -214,6 +214,8 @@ END
 IDC_BOA3DEDITOR ACCELERATORS 
 BEGIN
     "^O",           1,                      ASCII,  NOINVERT
+    "^Z",           101,                    ASCII,  NOINVERT
+    "^Y",           102,                    ASCII,  NOINVERT
     "^X",           104,                    ASCII,  NOINVERT
     "^C",           105,                    ASCII,  NOINVERT
     "^V",           106,                    ASCII,  NOINVERT
