@@ -1819,6 +1819,7 @@ void init_warriors_grove()
 }
 
 // data for Blades of Exile porting
+
 void import_blades_of_exile_scenario()
 {
 	short i,j;
@@ -2215,7 +2216,7 @@ void port_boe_out_data()
 					current_section_on_surface = TRUE;
 			}
 	for (i = 0; i < 18; i++) 
-		if ((boe_outdoor.special_locs[i].x > 0) && (boe_outdoor.special_locs[i].y > 0)) {
+		if ((boe_outdoor.special_locs[i].x > 0) && (boe_outdoor.special_locs[i].y > 0) && (boe_outdoor.special_id[i] >= 0)) {
 			current_terrain.special_rects[i].left = current_terrain.special_rects[i].right = boe_outdoor.special_locs[i].x;
 			current_terrain.special_rects[i].top = current_terrain.special_rects[i].bottom = boe_outdoor.special_locs[i].y;
 			current_terrain.spec_id[i] = boe_outdoor.special_id[i] + 10;		
@@ -2383,8 +2384,8 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 			town.special_rects[i].left = town.special_rects[i].right = boe_town.special_locs[i].x;
 			town.special_rects[i].top = town.special_rects[i].bottom = boe_town.special_locs[i].y;
 			
-			if (is_mac_scen == FALSE)
-				alter_rect(&town.special_rects[i]);
+//			if (is_mac_scen == FALSE)
+//				alter_rect(&town.special_rects[i]);
 				
 			town.spec_id[i] = boe_town.spec_id[i] + 10;
 			}
@@ -2497,7 +2498,18 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 			// this creature will get the basicnpc script, so set the flags appropriately
 			if (boe_big_town.creatures[i].mobile == 0)
 				town.creatures[i].memory_cells[0] = (boe_big_town.creatures[i].number == 12) ? 1 : 2;
-			
+				
+			if (boe_big_town.creatures[i].spec1 >= 300)
+				town.creatures[i].memory_cells[1] = 0;
+			else town.creatures[i].memory_cells[1] = boe_big_town.creatures[i].spec1;
+			if (boe_big_town.creatures[i].spec2 >= 30)
+				town.creatures[i].memory_cells[2] = 0;
+			else town.creatures[i].memory_cells[2] = boe_big_town.creatures[i].spec2;
+			if (boe_big_town.creatures[i].special_on_kill >= 256)
+				town.creatures[i].memory_cells[4] = 0;
+			else town.creatures[i].memory_cells[4] = boe_big_town.creatures[i].special_on_kill + 10;
+				
+		
 			}
 			
 	for (i = 0; i < town_size; i++)
@@ -2600,7 +2612,7 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 								case 127: case 144: case 159:
 									t_d.terrain[i][j] = 10 + wall_adj; 
 									door_script.memory_cells[0] = 15;
-									create_new_ter_script("door",door_script.loc,&door_script);
+									create_new_ter_script("magicdoor",door_script.loc,&door_script);
 									break; // m locked door
 								case 128: case 145: case 160:
 									t_d.terrain[i][j] = 10 + wall_adj; 
@@ -3154,28 +3166,29 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 	
 	add_short_string_to_file(file_id,"beginstate ",node_num + 10,";");
 
-	// handle messages
+	// handle messages for one shots
 	if ((node->type >= 50) && (node->type <= 62) &&
 	  (node->sd1 >= 0) && (node->sd2 >= 0)) {
 		add_big_string_to_file(file_id,"\tif (get_flag(",node->sd1,",",node->sd2,") == 250)",-999,"");
 			add_string(file_id,"\t\tend();");
 		}
-		
+
+		if (node->type >= 0)
+					handle_messages(file_id,node_type,node->m1,node->m2);		
+					
 	switch (node->type) {
 		case 0:
 			break;
 		case 1: // set_flag
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",",node->ex1a,");");
 			break;
 		case 2: // inc_flag
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			if (node->ex1b == 0)
 				add_big_string_to_file(file_id,"\tinc_flag(",node->sd1,",",node->sd2,",",node->ex1a,");");
 				else add_big_string_to_file(file_id,"\tinc_flag(",node->sd1,",",node->sd2,",",-1 * node->ex1a,");");
 			break;
 		case 3: // display mess
-			handle_messages(file_id,node_type,node->m1,node->m2);
+
 			break;
 		case 4: // secret door
 			add_string(file_id,"// OBSOLETE NODE: Secret door special encounters no longer supported. Manually");
@@ -3192,28 +3205,45 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				}
 			break;
 		case 6: // flip flag
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			add_big_string_to_file(file_id,"\tif (get_flag(",node->sd1,",",node->sd2,") == 0)",-999,"");
 			add_big_string_to_file(file_id,"\t\tset_flag(",node->sd1,",",node->sd2,",",1,");");
 			add_big_string_to_file(file_id,"\t\telse set_flag(",node->sd1,",",node->sd2,",",0,");");
 			break;
 		case 7: // out block
-			handle_messages(file_id,node_type,node->m1,node->m2);
-			if (node->ex1a > 0)
-				add_string(file_id,"\tif (is_outdoor()) {block_entry(1); end();}");
-				else add_string(file_id,"\tif (is_outdoor()) end();");
+			if (node->ex1a > 0) {
+				add_string(file_id,"\tif (is_outdoor()) {");
+				add_string(file_id,"\t\tblock_entry(1);");
+				add_string(file_id,"\t\t end();");				
+				add_string(file_id,"\t\t };");
+               }
+			else {
+                add_string(file_id,"\tif (is_outdoor())");
+				add_string(file_id,"\t\t end();");
+                }
 			break;
 		case 8: // town block
-			handle_messages(file_id,node_type,node->m1,node->m2);
-			if (node->ex1a > 0)
-				add_string(file_id,"\tif (is_town()) {block_entry(1); end();}");
-				else add_string(file_id,"\tif (is_town()) end();");
+			if (node->ex1a > 0) {
+				add_string(file_id,"\tif (is_town()) {");
+				add_string(file_id,"\t\tblock_entry(1);");
+				add_string(file_id,"\t\t end();");				
+				add_string(file_id,"\t\t };");								
+                }
+			else {
+                add_string(file_id,"\tif (is_town())");
+				add_string(file_id,"\t\t end();");				
+                }
 			break;
 		case 9: // combat block;
-			handle_messages(file_id,node_type,node->m1,node->m2);
-			if (node->ex1a > 0)
-				add_string(file_id,"\tif (is_combat()) {block_entry(1); end();}");
-				else add_string(file_id,"\tif (is_combat()) end();");
+			if (node->ex1a > 0) {
+				add_string(file_id,"\tif (is_combat()) {");
+				add_string(file_id,"\t\tblock_entry(1);");
+				add_string(file_id,"\t\t end();");				
+				add_string(file_id,"\t\t };");								
+                }	
+			else {
+                add_string(file_id,"\tif (is_combat())");
+				add_string(file_id,"\t\t end();");				
+                }
 			break;
 		case 10: // looking block
 			add_string(file_id,"// OBSOLETE NODE: Special encounters caused by looking at/searching things");
@@ -3223,41 +3253,36 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 11: // can't enter
 			if (node->ex1a != 1)
 				add_string(file_id,"\tblock_entry(0);");
-				else {
-					handle_messages(file_id,node_type,node->m1,node->m2);
-					add_string(file_id,"\tblock_entry(1);");
-					}
+				else 		add_string(file_id,"\tblock_entry(1);");
 			break;
 		case 12: // change time
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			add_short_string_to_file(file_id,"\tset_ticks_forward(",node->ex1a,");");
 			break;
 		case 13:
 			add_string(file_id,"// OBSOLETE NODE: Timers are no longer used. Manually write scenario timers in the ");
 			add_string(file_id,"// scenario script.");
+			add_short_string_to_file(file_id,"//Number of moves = (",node->ex1a,");");			
+			add_short_string_to_file(file_id,"//Scenario state called: (",node->ex1b,");");						
 			break;
+			
 		case 14: // play sound
 			add_string(file_id,"// WARNING: Many sounds have changed from Blades of Exile.");
 			add_short_string_to_file(file_id,"\tplay_sound(",node->ex1a,");");
 			break;
 		case 15: // horse possession
-			handle_messages(file_id,node_type,node->m1,node->m2);
-			add_big_string_to_file(file_id,"\tset_horse_property(",node->ex1a,",",node->ex2a,"",-999,");");		
+			add_big_string_to_file(file_id,"\tset_horse_property(",node->ex1a,",",1 - node->ex2a,"",-999,");");		
 			break;
 		case 16: // boat possession
-			handle_messages(file_id,node_type,node->m1,node->m2);
-			add_big_string_to_file(file_id,"\tset_boat_property(",node->ex1a,",",node->ex2a,"",-999,");");		
+			add_big_string_to_file(file_id,"\tset_boat_property(",node->ex1a,",",1 - node->ex2a,"",-999,");");		
 			break;
 		case 17: // show hide town
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			add_big_string_to_file(file_id,"\tset_town_visibility(",node->ex1a,",",node->ex1b,"",-999,");");		
 			break;
 		case 18: // major event occured
-			handle_messages(file_id,node_type,node->m1,node->m2);
-			add_short_string_to_file(file_id,"\tset_event_happened(",node->ex1a,");");
+			add_short_string_to_file(file_id,"\tday_event_happened(",node->ex1a,") = what_day_of_scenario();");
 			break;
+			
 		case 19: // forced give
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			if (node->ex2b < 0) {
 				add_short_string_to_file(file_id,"\treward_give(",node->ex1a,");")	;	
 				}
@@ -3265,24 +3290,24 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 					add_short_string_to_file(file_id,"\tif (reward_give(",node->ex1a,") == FALSE)");			
 					add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");
 					}
+			add_string(file_id,"// Potential translation problems");
+					
 			break;
 		case 20: // buy items of type
 			add_big_string_to_file(file_id,"\tif (take_all_of_item_class(",node->ex1a,",",node->ex2a,"",-999,") > 0) ");		
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			if (node->ex1b >= 0) 
 				add_short_string_to_file(file_id,"\telse set_state_continue(",node->ex1b + 10,");");
+			add_string(file_id,"// Potential translation problems");				
 			break;
 		case 21: // global special
 			add_short_string_to_file(file_id,"\trun_scenario_script(",node->jumpto + 10,");");
 			node->jumpto = -1;
 			break;
 		case 22: // set many flags
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			for (short i = 0; i < 10; i++)
 				add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",i,",",node->ex1a,");");
 			break;
 		case 23: // copy flags
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			sprintf(temp_str1,"\tset_flag(%d,%d,get_flag(%d,%d));", (int)node->sd1, (int)node->sd2, (int)node->ex1a, (int)node->ex1b);
 			add_string(file_id,temp_str1);
 			break;
@@ -3290,10 +3315,12 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"// OBSOLETE NODE: Special encounters caused by Ritual of Sanctification");
 			add_string(file_id,"// are now handled in terrain scripts. When a ritual is used, nearby terrain ");
 			add_string(file_id,"// scripts have the state SANCTIFICATION_STATE called.");
+			add_short_string_to_file(file_id,"// Sanctification calls state: (",node->jumpto + 10,");");			
+			add_short_string_to_file(file_id,"// Otherwise: (",node->ex1b + 10,");");						
 			break;
 		case 25: // have rest
 			add_string(file_id,"\trevive_party();");
-			add_short_string_to_file(file_id,"\tset_ticks_forward(",node->ex1b,");");
+			add_short_string_to_file(file_id,"\tset_ticks_forward(",node->ex1a,");");
 			break;
 		case 26: // wandering will fight
 			if (node->ex1a == 0)
@@ -3313,7 +3340,8 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\t\t}");
 			if (node->ex2b >= 0) {
 				add_short_string_to_file(file_id,"\t\telse set_state_continue(",node->ex2b + 10,");");
-				}
+								}
+			add_string(file_id,"// Potential translation problems");								
 			break;
 		case 51: // give spec item
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
@@ -3436,7 +3464,9 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			if (node->ex2b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");
 			add_string(file_id,"\t\t}");
+			add_string(file_id,"// Potential translation problems");			
 			break;
+			
 		case 61: // place outdoor enc
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
 				add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",",250,");");
@@ -3446,12 +3476,14 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 62: // place town enc
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
 				add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",",250,");");
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			add_short_string_to_file(file_id,"\tactivate_hidden_group(",node->ex1a,");");
 			break;
 		case 63: // trap
 			add_string(file_id,"// OBSOLETE NODE: Traps are now handled by terrain type scripts.");
 			add_string(file_id,"// Use the predefined script trap.txt.");
+			add_short_string_to_file(file_id,"// Trap type = (",node->ex1a,");");			
+			add_short_string_to_file(file_id,"// Trap severity, 0 thru 3, = (",node->ex1b,");");			
+			add_short_string_to_file(file_id,"// Trap disarming penalty, 0 thru 100, = (",node->ex2a,");");									
 			break;
 
 		case 80: // select pc 
@@ -3469,7 +3501,6 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88: case 89: 
 		case 90: case 92: case 93: case 94: case 95: case 96: case 97: case 98: case 99: 
 		case 100: 
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			add_string(file_id,"\tj = get_selected_pc();");		
 			add_string(file_id,"\t// Note that if run_select_a_pc hasn't been called then j is -1 and");		
 			add_string(file_id,"\t//   effect happens on whole party.");		
@@ -3551,17 +3582,19 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				case 98: // stat
 					add_string(file_id,"// OBSOLETE VALUE WARNING: Many statistics have changed between");
 					add_string(file_id,"// BoE and BoA. Make sure you're adjusting right statistic.");
-					add_short_string_to_file(file_id,"\t\t\tif (get_ran(1,0,100) < ",node->pic,");");
+					add_short_string_to_file(file_id,"\t\t\tif (get_ran(1,0,100) < ",node->pic,")");
 					add_big_string_to_file(file_id,"\t\t\t\talter_stat(i,",node->ex2a,",",
 					  ((node->ex1b == 0) ? 1 : -1) * node->ex1a,"",-999,");");
 					break;
 				case 99: // mage spell
 					add_big_string_to_file(file_id,"\t\t\tchange_spell_level(i,0,",
 					 node->ex1a,",1",-999,"",-999,");");
+					add_string(file_id,"// Potential translation problems");								 
 					break;
 				case 100: // priest spell
 					add_big_string_to_file(file_id,"\t\t\tchange_spell_level(i,1,",
 					 node->ex1a,",1",-999,"",-999,");");
+					add_string(file_id,"// Potential translation problems");								 
 					break;
 				}
 
@@ -3570,22 +3603,29 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\t\t}");		
 			break;
 		case 101: // gold
+			handle_messages(file_id,node_type,node->m1,node->m2);
 			add_short_string_to_file(file_id,"\tchange_coins(", ((node->ex1b == 0) ? 1 : -1) * node->ex1a,");");
 			break;
 		case 102: // food
+			handle_messages(file_id,node_type,node->m1,node->m2);		
 			add_string(file_id,"// OBSOLETE NODE: Food works completely differently now.");
 			break;
 		case 103: // recipe
+			handle_messages(file_id,node_type,node->m1,node->m2);		
 			add_short_string_to_file(file_id,"\tgive_recipe(",node->ex1a,");");
+			add_string(file_id,"// Potential translation problems");						
 			break;
 		case 104: // stealth
+			handle_messages(file_id,node_type,node->m1,node->m2);		
 			add_string(file_id,"// OBSOLETE NODE: Stealth doesn't exist anymore.");
 			break;
 		case 105: // firewalk
+			handle_messages(file_id,node_type,node->m1,node->m2);		
 			add_big_string_to_file(file_id,"\tset_party_status(27,",
 			  ((node->ex1b == 0) ? -1 : 1) * node->ex1a,"",-999,"",-999,");");
 			break;
 		case 106: // flying
+			handle_messages(file_id,node_type,node->m1,node->m2);		
 			add_big_string_to_file(file_id,"\tset_party_status(25,",
 			  ((node->ex1b == 0) ? -1 : 1) * node->ex1a,"",-999,"",-999,");");
 			break;
@@ -3633,6 +3673,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");			
 				else add_string(file_id,"\t\tend();");			
+			add_string(file_id,"// Potential translation problems");							
 			break;
 		case 137: // has gold
 			add_short_string_to_file(file_id,"\tif (coins_amount() >= ",node->ex1a,")");
@@ -3659,7 +3700,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 141: // equip item of class
 			add_string(file_id,"\ti = 0;");
 			add_string(file_id,"\twhile (i < 4) {");
-			add_short_string_to_file(file_id,"\t\tif (char_has_item_of_class_equip(i,",node->ex1a,") > 0)");
+			add_short_string_to_file(file_id,"\t\tif (char_has_item_of_class_equip(i,",node->ex1a,",0) > 0)");
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\t\tset_state_continue(",node->ex1b + 10,");");			
 				else add_string(file_id,"\t\t\tend();");			
@@ -3677,7 +3718,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 		case 144: // item class on space, take
 			add_big_string_to_file(file_id,"\tif (item_of_class_on_spot(",
-			  node->ex1a,",",node->ex1b,",",node->ex2a,",1) > 0)");
+			  node->ex1a,",",node->ex1b,",",node->ex2a,") > 0)");
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");			
 				else add_string(file_id,"\t\tend();");			
@@ -3689,7 +3730,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				else add_string(file_id,"\t\tend();");			
 			break;
 		case 146: // equip item of class, take
-			add_short_string_to_file(file_id,"\tif (has_item_of_class_equip(",node->ex1a,",1) > 0)");
+			add_short_string_to_file(file_id,"\tif (char_has_item_of_class_equip(",node->ex1a,",1) > 0)");
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");			
 				else add_string(file_id,"\t\tend();");			
@@ -3732,6 +3773,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 151: case 152: // cave lore present
 			add_string(file_id,"// OBSOLETE NODE: Cave Lore and Woodsman Traits don't exist anymore.");
 			add_string(file_id,"//   Try checking to see if party has enough Nature Lore skill instead.");
+			add_short_string_to_file(file_id,"// set_state_continue(",node->ex1b + 10,");");						
 			break;
 		case 153: // enough mage lore
 			add_short_string_to_file(file_id,"\tif (get_skill_total(13) >= ",node->ex1a,")");
@@ -3773,25 +3815,28 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"// You will need to find a new value for this function.");
 			add_big_string_to_file(file_id,"\t// set_terrain(",
 			  node->ex1a,",",node->ex1b,",",node->ex2a,");");
+			add_string(file_id,"// Potential translation problems");										  
 			break;
 		case 172: // swap ter
 			add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
 			add_string(file_id,"// You will need to find a new value for this function.");
 			add_big_string_to_file(file_id,"\t// if (get_terrain(",
-			  node->ex1a,",",node->ex1b,") == ",node->ex2a,"))");
+			  node->ex1a,",",node->ex1b,") == ",node->ex2a,")");
 			add_big_string_to_file(file_id,"\t\t// set_terrain(",
 			  node->ex1a,",",node->ex1b,",",node->ex2b,");");
 			add_big_string_to_file(file_id,"\t// else if (get_terrain(",
-			  node->ex1a,",",node->ex1b,") == ",node->ex2b,"))");
+			  node->ex1a,",",node->ex1b,") == ",node->ex2b,")");
 			add_big_string_to_file(file_id,"\t\t\t// set_terrain(",
 			  node->ex1a,",",node->ex1b,",",node->ex2a,");");
+			add_string(file_id,"// Potential translation problems");										  
 			break;
 		case 173: // transform ter
 			add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
 			add_string(file_id,"// You will need to find a new value for this function. Also, the swap terrain");
 			add_string(file_id,"// values for the terrain types might work differently in BoA");
-			add_big_string_to_file(file_id,"\t// flip_terrain(",
-			  node->ex1a,",",node->ex1b,"",-999,");");
+			add_short_string_to_file(file_id,"\t// flip_terrain(",node->ex1a,",");
+			add_short_string_to_file(file_id,"  ",node->ex1b,");");			
+			add_string(file_id,"// Potential translation problems");										  
 			break;
 		case 174: // move party
 			add_big_string_to_file(file_id,"\tteleport_party(",
@@ -3809,6 +3854,9 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"// OBSOLETE NODE: Doors are handled completely differently in BoA.");
 			add_string(file_id,"//   You may need to use flip_terrain to change the doors, or send.");
 			add_string(file_id,"//   messages to the door scripts.");
+			add_short_string_to_file(file_id,"\t// flip_terrain(",node->ex1a,",");
+			add_short_string_to_file(file_id,"  ",node->ex1b,");");			
+			add_string(file_id,"// Potential translation problems");										  
 			break;
 
 		case 179: // sfx burst
@@ -3828,7 +3876,8 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\tmake_wandering_monst();");
 			break;
 		case 181: // place m
-			add_big_string_to_file(file_id,"\tplace_monster(",node->ex1a,",",node->ex1b,",",node->ex2a,");");			
+			add_big_string_to_file(file_id,"\tplace_monster(",node->ex1a,",",node->ex1b,",",node->ex2a,",0);");			
+			add_string(file_id,"// Potential translation problems");										  			
 			break;
 		case 182: // destroy m
 			add_string(file_id,"\ti = 6;");
@@ -3837,6 +3886,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\t\t\terase_char(i);");					
 			add_string(file_id,"\t\ti = i + 1;");					
 			add_string(file_id,"\t\t}");					
+			add_string(file_id,"// Potential translation problems");										  			
 			break;
 		case 183: // destroy all m
 			add_string(file_id,"\ti = 6;");
@@ -3859,7 +3909,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\treset_dialog_preset_options(2);");
 			add_string(file_id,"\tchoice = run_dialog(0);");
 			add_string(file_id,"\tif (choice == 2) {");
-			add_big_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b,"",-999,"",-999,");");			
+			add_big_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,"",-999,"",-999,");");			
 			add_string(file_id,"\t\t}");
 			break;
 		case 185: // portal
@@ -3890,6 +3940,12 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 188: // lever
 			add_string(file_id,"// OBSOLETE NODE: Levers are now handled by terrain scripts.");
 			add_string(file_id,"//   Look for examples of levers in the scenarios that come with Blades.");
+			add_string(file_id,"\treset_dialog_preset_options(2);");
+			add_string(file_id,"\tchoice = run_dialog(0);");
+			add_string(file_id,"\tif (choice == 2) {");
+			add_big_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,"",-999,"",-999,");");			
+			add_string(file_id,"\t\t}");
+			
 			break;
 		case 189: // portal
 			add_string(file_id,"\treset_dialog_preset_options(3);");
@@ -3937,7 +3993,8 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,temp_str1);
 			break;
 		case 192: // place item
-			add_big_string_to_file(file_id,"\t\tput_item_on_spot(",node->ex1a,",",node->ex1b,",",node->ex2a,"0);");			
+			add_big_string_to_file(file_id,"\t\tput_item_on_spot(",node->ex1a,",",node->ex1b,",",node->ex2a,"			);");			
+			add_string(file_id,"// Potential translation problems");										  						
 			break;
 		case 193: // split party
 			add_string(file_id,"\tblock_entry(1);");
@@ -3951,6 +4008,9 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"// OBSOLETE NODE: Timers are no longer used. Manually write scenario timers in the ");
 			add_string(file_id,"// scenario script. Pick a stuff done flag for the timer, set it to the number of turns");
 			add_string(file_id,"// for the timer, and have it be decreased 1 in state START_STATE in the scenario script.");
+			add_short_string_to_file(file_id,"// Number of moves = (",node->ex1a,");");			
+			add_short_string_to_file(file_id,"// Town state called: (",node->ex1b,");");						
+			
 			break;
 
 		case 200: case 201: case 202: case 203: case 204: case 205: case 206: case 207: case 208: case 209: 
@@ -4013,26 +4073,24 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				case 214: // change ter
 					add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
 					add_string(file_id,"// You will need to find a new value for this function.");
-					add_short_string_to_file(file_id,"\t\t\t//set_terrain(i,j",node->sd1,");");
+					add_short_string_to_file(file_id,"\t\t\t//set_terrain(i,j,",node->sd1,");");
+					add_string(file_id,"// Potential translation problems");										  											  					
 					break;
 				case 215: // swap ter
 					add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
 					add_string(file_id,"// You will need to find a new value for this function.");
-					add_big_string_to_file(file_id,"\t\t\t// if (get_terrain(i,j",
-					  -999,"", -999,") == ",node->sd1,"))");
-					add_big_string_to_file(file_id,"\t\t\t\t// set_terrain(i,j,",
-					 -999,"",-999,"",node->sd2,");");
-					add_big_string_to_file(file_id,"\t\t\t// else if (get_terrain(i,j",
-					  -999,"",-999,") == ",node->sd2,"))");
-					add_big_string_to_file(file_id,"\t\t\t\t\t// set_terrain(i,j,",
-					  -999,"",-999,"",node->sd1,");");
+					add_short_string_to_file(file_id,"\t// if (get_terrain(i,j) == ",node->sd1,")");
+					add_short_string_to_file(file_id,"\t\t// set_terrain(i,j,",node->sd2,");");
+					add_short_string_to_file(file_id,"\t// else if (get_terrain(i,j) == ",node->sd2,")");
+					add_short_string_to_file(file_id,"\t\t// set_terrain(i,j,",node->sd1,");");
+					add_string(file_id,"// Potential translation problems");										  											  
 					break;
 				case 216: // transform
 					add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
 					add_string(file_id,"// You will need to find a new value for this function. Also, the swap terrain");
 					add_string(file_id,"// values for the terrain types might work differently in BoA");
-					add_big_string_to_file(file_id,"\t// flip_terrain(i,j",
-					  -999,"",-999,"",-999,");");
+					add_string_to_file(file_id,"\t// flip_terrain(i,j);");
+					add_string(file_id,"// Potential translation problems");										  											  					
 					break;
 				}	
 
@@ -4076,6 +4134,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 	add_string(file_id,"break;");
 	add_cr(file_id);
 }
+
 
 /*
 	
