@@ -78,7 +78,7 @@ big_tr_type			t_d;
 outdoor_record_type current_terrain;
 scen_item_data_type scen_data;
 
-// outdoor boarder
+// outdoor border
 //	the first index 0:top, 1:right, 2:bottom, 3:left, the second index x(bottom, top) or y(left, right) coordinate
 // short borders[4][50];
 // unsigned char border_floor[4][50];

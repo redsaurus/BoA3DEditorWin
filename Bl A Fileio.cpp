@@ -2006,7 +2006,7 @@ void import_blades_of_exile_scenario()
 			char out_script_name[256];
 			char dummy_str[256];
 			trunc_str(current_terrain.name);
-			sprintf((char *) dummy_str,"o%d%d%s", (int)n, (int)m,current_terrain.name);
+			sprintf((char *) dummy_str,"o%d%d%s", (short)n, (short)m,current_terrain.name);
 			clean_str(dummy_str);
 			dummy_str[SCRIPT_NAME_LEN - 1] = 0;
 			strcpy(current_terrain.section_script,dummy_str);
@@ -2075,7 +2075,7 @@ void import_blades_of_exile_scenario()
 		char town_script_name[256];
 		char dummy_str[256];
 		trunc_str(town.town_name);
-		sprintf((char *) dummy_str,"t%d%s", (int)m,town.town_name);
+		sprintf((char *) dummy_str,"t%d%s", (short)m,town.town_name);
 		clean_str(dummy_str);
 		dummy_str[SCRIPT_NAME_LEN - 1] = 0;
 		strcpy(town.town_script,dummy_str);
@@ -2944,12 +2944,12 @@ void port_scenario_script(char *script_name,char *directory_id)
 	add_string(file_id,"// a save file is loaded.");
 	for (short i = 0; i < 50; i++)
 		if (same_string( boe_scen_text.scen_strs[60 + i * 2],"Unused Special Item") == FALSE) {
-			sprintf(new_line,"\tinit_special_item(%d,~%s~,~%s~);", (int)i,
+			sprintf(new_line,"\tinit_special_item(%d,~%s~,~%s~);", i,
 				boe_scen_text.scen_strs[60 + i * 2],
 				boe_scen_text.scen_strs[60 + i * 2 + 1]);
 			add_string(file_id,new_line);
 			if (boe_scenario.special_items[i] >= 10) {
-				sprintf(new_line,"\tchange_spec_item(%d,1);", (int)i);
+				sprintf(new_line,"\tchange_spec_item(%d,1);", i);
 				add_string(file_id,new_line);
 				}
 			if (boe_scenario.special_items[i] % 10 == 1) {
@@ -2965,16 +2965,16 @@ void port_scenario_script(char *script_name,char *directory_id)
 
 	for (short i = 0; i < 30; i++) 
 		if (boe_scenario.scen_boats[i].which_town >= 0) {
-			sprintf(new_line,"\tcreate_boat(%d,%d,%d,%d,%d)",(int)i,
-				(int)boe_scenario.scen_boats[i].which_town, (int)boe_scenario.scen_boats[i].boat_loc.x,
-				(int)boe_scenario.scen_boats[i].boat_loc.y, (int)boe_scenario.scen_boats[i].property);
+			sprintf(new_line,"\tcreate_boat(%d,%d,%d,%d,%d);", i,
+				boe_scenario.scen_boats[i].which_town, boe_scenario.scen_boats[i].boat_loc.x,
+				boe_scenario.scen_boats[i].boat_loc.y, boe_scenario.scen_boats[i].property);
 			add_string(file_id,new_line);
 			}
 	for (short i = 0; i < 30; i++) 
 		if (boe_scenario.scen_horses[i].which_town >= 0) {
-			sprintf(new_line,"\tcreate_horse(%d,%d,%d,%d,%d)", (int)i,
-				(int)boe_scenario.scen_horses[i].which_town, (int)boe_scenario.scen_horses[i].horse_loc.x,
-				(int)boe_scenario.scen_horses[i].horse_loc.y, (int)boe_scenario.scen_horses[i].property);
+			sprintf(new_line,"\tcreate_horse(%d,%d,%d,%d,%d);", i,
+				boe_scenario.scen_horses[i].which_town, boe_scenario.scen_horses[i].horse_loc.x,
+				boe_scenario.scen_horses[i].horse_loc.y, boe_scenario.scen_horses[i].property);
 			add_string(file_id,new_line);
 			}
 
@@ -3006,7 +3006,7 @@ void port_town_script(char *script_name,char *directory_id,short which_town)
 		}
 		
 	add_string(file_id,"// TOWN SCRIPT");
-	sprintf(str,"//    Town %d: %s", (int)which_town,town.town_name);
+	sprintf(str,"//    Town %d: %s", which_town,town.town_name);
 	add_string(file_id,str);
 	add_cr(file_id);
 	add_string(file_id,"// This is the special encounter script for this town.");
@@ -3073,7 +3073,7 @@ void port_town_dialogue_script(char *script_name,char *directory_id,short which_
 		}
 
 	add_string(file_id,"// TOWN DIALOGUE SCRIPT");
-	sprintf(str,"//    Town %d: %s", (int)which_town,town.town_name);
+	sprintf(str,"//    Town %d: %s", which_town,town.town_name);
 	add_string(file_id,str);
 	add_cr(file_id);
 	add_string(file_id,"// This is the dialogue for this town.");
@@ -3122,7 +3122,7 @@ void port_outdoor_script(char *script_name,char *directory_id,short sector_x,sho
 		}
 
 	add_string(file_id,"// OUTDOOR SECTION SCRIPT");
-	sprintf(str,"//    Section: X = %d, Y = %d", (int)sector_x, (int)sector_y);
+	sprintf(str,"//    Section: X = %d, Y = %d", sector_x, sector_y);
 	add_string(file_id,str);
 	add_cr(file_id);
 	add_string(file_id,"// This is the special encounter script for this town.");
@@ -3261,8 +3261,8 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 13:
 			add_string(file_id,"// OBSOLETE NODE: Timers are no longer used. Manually write scenario timers in the ");
 			add_string(file_id,"// scenario script.");
-			add_short_string_to_file(file_id,"//Number of moves = (",node->ex1a,");");			
-			add_short_string_to_file(file_id,"//Scenario state called: (",node->ex1b,");");						
+			add_short_string_to_file(file_id,"// Number of moves = (",node->ex1a,");");			
+			add_short_string_to_file(file_id,"// Scenario state called: (",node->ex1b,");");						
 			break;
 			
 		case 14: // play sound
@@ -3301,14 +3301,13 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 		case 21: // global special
 			add_short_string_to_file(file_id,"\trun_scenario_script(",node->jumpto + 10,");");
-			node->jumpto = -1;
 			break;
 		case 22: // set many flags
 			for (short i = 0; i < 10; i++)
 				add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",i,",",node->ex1a,");");
 			break;
 		case 23: // copy flags
-			sprintf(temp_str1,"\tset_flag(%d,%d,get_flag(%d,%d));", (int)node->sd1, (int)node->sd2, (int)node->ex1a, (int)node->ex1b);
+			sprintf(temp_str1,"\tset_flag(%d,%d,get_flag(%d,%d));", node->sd1, node->sd2, node->ex1a, node->ex1b);
 			add_string(file_id,temp_str1);
 			break;
 		case 24: // ritual of sanct
@@ -3332,7 +3331,6 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 		case 50: // give item
 			add_short_string_to_file(file_id,"\tif (reward_give(",node->ex1a,") > 0) {");	
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
 				add_big_string_to_file(file_id,"\t\tset_flag(",node->sd1,",",node->sd2,",",250,");");
 			if (node->ex1b > 0) 
@@ -3346,7 +3344,6 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 51: // give spec item
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
 				add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",",250,");");
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			add_big_string_to_file(file_id,"\tchange_spec_item(",node->ex1a,",",(node->ex1b == 0) ? 1 : -1,"",-999,");");			
 			break;
 		case 52: // one time do nothing
@@ -3356,7 +3353,6 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",",250,");");
 			break;
 		case 54: // one time do nothing and set
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
 				add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",",250,");");
 			break;
@@ -3370,20 +3366,17 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			if (node->m2 > 0) {
 				add_string(file_id,"\tadd_dialog_choice(0,~OK.~);");
 				if (node->ex1a >= 0) 
-					add_big_string_to_file(file_id,"\tadd_dialog_choice(",1,",~",-999,
-					  old_blades_button_strs[old_blades_available_dlog_buttons[node->ex1a]],-999,".~);");
+					add_big_string_to_file(file_id,"\tadd_dialog_choice(",1,",~",-999,old_blades_button_strs[old_blades_available_dlog_buttons[node->ex1a]],-999,".~);");
 				if (node->ex2a >= 0) 
-					add_big_string_to_file(file_id,"\tadd_dialog_choice(",2,",~",-999,
-					  old_blades_button_strs[old_blades_available_dlog_buttons[node->ex2a]],-999,".~);");
+					add_big_string_to_file(file_id,"\tadd_dialog_choice(",2,",~",-999,old_blades_button_strs[old_blades_available_dlog_buttons[node->ex2a]],-999,".~);");
 				}
 				else {
 					if (node->ex1a >= 0) 
-						add_big_string_to_file(file_id,"\tadd_dialog_choice(",0,",~",-999,
-						  old_blades_button_strs[old_blades_available_dlog_buttons[node->ex1a]],-999,".~);");
+						add_big_string_to_file(file_id,"\tadd_dialog_choice(",0,",~",-999,old_blades_button_strs[old_blades_available_dlog_buttons[node->ex1a]],-999,".~);");
 					if (node->ex2a >= 0) 
-						add_big_string_to_file(file_id,"\tadd_dialog_choice(",1,",~",-999,
-						  old_blades_button_strs[old_blades_available_dlog_buttons[node->ex2a]],-999,".~);");
+						add_big_string_to_file(file_id,"\tadd_dialog_choice(",1,",~",-999,old_blades_button_strs[old_blades_available_dlog_buttons[node->ex2a]],-999,".~);");
 					}
+				
 			add_string(file_id,"\tchoice = run_dialog(1);");
 			if (node->m2 > 0) {
 				if ((node->sd1 >= 0) && (node->sd2 >= 0)) { 
@@ -3470,7 +3463,6 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 61: // place outdoor enc
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
 				add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",",250,");");
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			add_short_string_to_file(file_id,"\tcreate_out_spec_enc(",node->ex1a,");");
 			break;
 		case 62: // place town enc
@@ -3513,87 +3505,98 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 					add_big_string_to_file(file_id,"\t\t\tdamage_char(i,r1 + ",node->ex2a,",",node->ex2b,"",-999,");");
 					break;
 				case 82: // change health
-					add_big_string_to_file(file_id,"\t\t\tchange_char_health(i,",
-					  ((node->ex1b == 0) ? 1 : -1) * node->ex1a,"",-999,"",-999,");");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t\t\tchange_char_health(i,",node->ex1a,");");
+					else 	add_short_string_to_file(file_id,"\t\t\tchange_char_health(i,-",node->ex1a,");");
 					break;
 				case 83: // change energy
-					add_big_string_to_file(file_id,"\t\t\tchange_char_energy(i,",
-					  ((node->ex1b == 0) ? 1 : -1) * node->ex1a,"",-999,"",-999,");");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t\t\tchange_char_energy(i,",node->ex1a,");");
+					else 	add_short_string_to_file(file_id,"\t\t\tchange_char_energy(i,-",node->ex1a,");");
 					break;
 				case 84: // change xp
-					add_big_string_to_file(file_id,"\t\t\tchange_char_xp(i,",
-					  ((node->ex1b == 0) ? 1 : -1) * node->ex1a,"",-999,"",-999,");");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t\t\tchange_char_xp(i,",node->ex1a,");");
+					else 	add_short_string_to_file(file_id,"\t\t\tchange_char_xp(i,-",node->ex1a,");");
 					break;
 				case 85: // change pc skill pts
-					add_big_string_to_file(file_id,"\t\t\tchange_pc_skill_pts(i,",
-					  ((node->ex1b == 0) ? 1 : -1) * node->ex1a,"",-999,"",-999,");");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t\t\tchange_pc_skill_pts(i,",node->ex1a,");");
+					else 	add_short_string_to_file(file_id,"\t\t\tchange_pc_skill_pts(i,-",node->ex1a,");");
 					break;
 				case 86: // kill
 					if (node->ex1b == 0)
 						add_string(file_id,"\t\trestore_pc(i);");		
-							else add_big_string_to_file(file_id,"\t\t\tkill_char(i,",
-					  	  	  node->ex1a + 2,"",-999,"",-999,",0);");
-
+							else add_short_string_to_file(file_id,"\t\t\tkill_char(i,",node->ex1a + 2,",0);");
 					break;
 				case 87: // poison
-					add_big_string_to_file(file_id,"\t\t\tset_char_status(i,0,",
-					  ((node->ex1b == 0) ? -1 : 1) * node->ex1a,",0,1",-999,"",-999,");");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,0,",node->ex1a,",0,1);");
+					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,0,-",node->ex1a,",0,1);");
 					break;
+					
 				case 88: // slow/haste
-					add_big_string_to_file(file_id,"\t\t\tset_char_status(i,3,",
-					  ((node->ex1b == 0) ? 1 : -1) * node->ex1a,",0,1",-999,"",-999,");");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,3,",node->ex1a,",0,1);");
+					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,3,-",node->ex1a,",0,1);");
 					break;
 				case 89: // invuln
-					add_big_string_to_file(file_id,"\t\t\tset_char_status(i,4,",
-					  ((node->ex1b == 0) ? 1 : -1) * node->ex1a,",0,1",-999,"",-999,");");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,4,",node->ex1a,",0,1);");
+					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,4,-",node->ex1a,",0,1);");
 					break;
 				case 90: // mr
-					add_big_string_to_file(file_id,"\t\t\tset_char_status(i,5,",
-					  ((node->ex1b == 0) ? 1 : -1) * node->ex1a,",0,1",-999,"",-999,");");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,5,",node->ex1a,",0,1);");
+					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,5,-",node->ex1a,",0,1);");
 					break;
 				case 91: // webs
-					add_big_string_to_file(file_id,"\t\t\tset_char_status(i,6,",
-					  ((node->ex1b == 0) ? -1 : 1) * node->ex1a,",0,1",-999,"",-999,");");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,6,",node->ex1a,",0,1);");
+					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,6,-",node->ex1a,",0,1);");
 					break;
 				case 92: // disease
-					add_big_string_to_file(file_id,"\t\t\tset_char_status(i,7,",
-					  ((node->ex1b == 0) ? -1 : 1) * node->ex1a,",0,1",-999,"",-999,");");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,7,",node->ex1a,",0,1);");
+					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,7,-",node->ex1a,",0,1);");
 					break;
 				case 93: // sanct
-					add_big_string_to_file(file_id,"\t\t\tset_char_status(i,14,",
-					  ((node->ex1b == 0) ? 1 : -1) * node->ex1a,",0,1",-999,"",-999,");");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,14,",node->ex1a,",0,1);");
+					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,14,-",node->ex1a,",0,1);");
 					break;
 				case 94: // curse/bless
-					add_big_string_to_file(file_id,"\t\t\tset_char_status(i,2,",
-					  ((node->ex1b == 0) ? 1 : -1) * node->ex1a,",0,1",-999,"",-999,");");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,2,",node->ex1a,",0,1);");
+					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,2,-",node->ex1a,",0,1);");
 					break;
 				case 95: // dumbfound
-					add_big_string_to_file(file_id,"\t\t\tset_char_status(i,13,",
-					  ((node->ex1b == 0) ? -1 : 1) * node->ex1a,",0,1",-999,"",-999,");");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,13,",node->ex1a,",0,1);");
+					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,13,-",node->ex1a,",0,1);");
 					break;
 				case 96: // sleep
-					add_big_string_to_file(file_id,"\t\t\tset_char_status(i,10,",
-					  ((node->ex1b == 0) ? -1 : 1) * node->ex1a,",0,1",-999,"",-999,");");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,10,",node->ex1a,",0,1);");
+					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,10,-",node->ex1a,",0,1);");
 					break;
 				case 97: // paral
-					add_big_string_to_file(file_id,"\t\t\tset_char_status(i,11,",
-					  ((node->ex1b == 0) ? -1 : 1) * node->ex1a,",0,1",-999,"",-999,");");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,11,",node->ex1a,",0,1);");
+					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,11,-",node->ex1a,",0,1);");
 					break;
 				case 98: // stat
 					add_string(file_id,"// OBSOLETE VALUE WARNING: Many statistics have changed between");
 					add_string(file_id,"// BoE and BoA. Make sure you're adjusting right statistic.");
 					add_short_string_to_file(file_id,"\t\t\tif (get_ran(1,0,100) < ",node->pic,")");
-					add_big_string_to_file(file_id,"\t\t\t\talter_stat(i,",node->ex2a,",",
-					  ((node->ex1b == 0) ? 1 : -1) * node->ex1a,"",-999,");");
+					add_big_string_to_file(file_id,"\t\t\t\talter_stat(i,",node->ex2a,",",((node->ex1b == 0) ? 1 : -1) * node->ex1a,");",-999,"  ");
 					break;
 				case 99: // mage spell
-					add_big_string_to_file(file_id,"\t\t\tchange_spell_level(i,0,",
-					 node->ex1a,",1",-999,"",-999,");");
+					add_short_string_to_file(file_id,"\t\tchange_spell_level(i,0,",node->ex1a,",1);");				
 					add_string(file_id,"// Potential translation problems");								 
 					break;
 				case 100: // priest spell
-					add_big_string_to_file(file_id,"\t\t\tchange_spell_level(i,1,",
-					 node->ex1a,",1",-999,"",-999,");");
+					add_short_string_to_file(file_id,"\t\tchange_spell_level(i,1,",node->ex1a,",1);");				
 					add_string(file_id,"// Potential translation problems");								 
 					break;
 				}
@@ -3603,42 +3606,32 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\t\t}");		
 			break;
 		case 101: // gold
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			add_short_string_to_file(file_id,"\tchange_coins(", ((node->ex1b == 0) ? 1 : -1) * node->ex1a,");");
 			break;
 		case 102: // food
-			handle_messages(file_id,node_type,node->m1,node->m2);		
 			add_string(file_id,"// OBSOLETE NODE: Food works completely differently now.");
 			break;
 		case 103: // recipe
-			handle_messages(file_id,node_type,node->m1,node->m2);		
 			add_short_string_to_file(file_id,"\tgive_recipe(",node->ex1a,");");
 			add_string(file_id,"// Potential translation problems");						
 			break;
 		case 104: // stealth
-			handle_messages(file_id,node_type,node->m1,node->m2);		
 			add_string(file_id,"// OBSOLETE NODE: Stealth doesn't exist anymore.");
 			break;
 		case 105: // firewalk
-			handle_messages(file_id,node_type,node->m1,node->m2);		
-			add_big_string_to_file(file_id,"\tset_party_status(27,",
-			  ((node->ex1b == 0) ? -1 : 1) * node->ex1a,"",-999,"",-999,");");
+			add_short_string_to_file(file_id,"\tset_party_status(27,",((node->ex1b == 0) ? -1 : 1) * node->ex1a,");");
 			break;
 		case 106: // flying
-			handle_messages(file_id,node_type,node->m1,node->m2);		
-			add_big_string_to_file(file_id,"\tset_party_status(25,",
-			  ((node->ex1b == 0) ? -1 : 1) * node->ex1a,"",-999,"",-999,");");
+			add_short_string_to_file(file_id,"\tset_party_status(25,",((node->ex1b == 0) ? -1 : 1) * node->ex1a,");");
 			break;
 			
 		case 130: // sdf?
 			if ((node->ex1a >= 0) && (node->ex1b >= 0)) {
-				add_big_string_to_file(file_id,"\tif (get_flag(",
-				  node->sd1,",",node->sd2,") >= ",node->ex1a,")");
+				add_big_string_to_file(file_id,"\tif (get_flag(",node->sd1,",",node->sd2,") >= ",node->ex1a,")");
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");			
 				}
 			if ((node->ex2a >= 0) && (node->ex2b >= 0)) {
-				add_big_string_to_file(file_id,"\tif (get_flag(",
-				  node->sd1,",",node->sd2,") < ",node->ex2a,")");
+				add_big_string_to_file(file_id,"\tif (get_flag(",node->sd1,",",node->sd2,") < ",node->ex2a,")");
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");			
 				}
 			break;
@@ -3661,15 +3654,14 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				else add_string(file_id,"\t\tend();");			
 			break;
 		case 134: // compare flags
-			sprintf(temp_str1,"\tif (get_flag(%d,%d) > get_flag(%d,%d))", (int)node->sd1, (int)node->sd2, (int)node->ex1a, (int)node->ex1b);
+			sprintf(temp_str1,"\tif (get_flag(%d,%d) > get_flag(%d,%d))", node->sd1, node->sd2, node->ex1a, node->ex1b);
 			add_string(file_id,temp_str1);
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");			
 				else add_string(file_id,"\t\tend();");			
 			break;
 		case 135: case 136: // ter is type
-			add_big_string_to_file(file_id,"\tif (get_terrain(",
-			  node->ex1a,",",node->ex1b,") == ",node->ex2a,")");
+			add_big_string_to_file(file_id,"\tif (get_terrain(",node->ex1a,",",node->ex1b,") == ",node->ex2a,")");
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");			
 				else add_string(file_id,"\t\tend();");			
@@ -3685,8 +3677,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"// OBSOLETE NODE: Food works completely differently now.");
 			break;
 		case 139: // item class on space
-			add_big_string_to_file(file_id,"\tif (item_of_class_on_spot(",
-			  node->ex1a,",",node->ex1b,",",node->ex2a,") > 0)");
+			add_big_string_to_file(file_id,"\tif (item_of_class_on_spot(",node->ex1a,",",node->ex1b,",",node->ex2a,") > 0)");
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");			
 				else add_string(file_id,"\t\tend();");			
@@ -3717,8 +3708,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\t\t}");
 			break;
 		case 144: // item class on space, take
-			add_big_string_to_file(file_id,"\tif (item_of_class_on_spot(",
-			  node->ex1a,",",node->ex1b,",",node->ex2a,") > 0)");
+			add_big_string_to_file(file_id,"\tif (item_of_class_on_spot(",node->ex1a,",",node->ex1b,",",node->ex2a,") > 0)");
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");			
 				else add_string(file_id,"\t\tend();");			
@@ -3761,8 +3751,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 150: // event happened
 			if (node->ex1b >= 0) {
 				add_short_string_to_file(file_id,"\tif (what_day_of_scenario() >= ",node->ex1a,")");
-				add_big_string_to_file(file_id,"\t\tif ((day_event_happened(",
-				  node->ex1b," < 0) || (day_event_happened(",node->ex1b,") > ",node->ex1a,"))");
+				add_big_string_to_file(file_id,"\t\tif ((day_event_happened(",node->ex1b," < 0) || (day_event_happened(",node->ex1b,") > ",node->ex1a,"))");
 				add_short_string_to_file(file_id,"\t\t\tset_state_continue(",node->ex2b + 10,");");			
 				}
 				else {
@@ -3787,21 +3776,19 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"//   (so CHEese counts the same as CHEESE or cheESE). ");
 			add_string(file_id,"\tget_text_response(~You Respond:~);");
 			if (node->ex1a >= 0) {
-				add_big_string_to_file(file_id,"\t\tcheck_text_response_match(~",
-				  -999,boe_scen_text.scen_strs[node->ex1a],-999,"~)",-999,";");
+				add_big_string_to_file(file_id,"\t\tcheck_text_response_match(~",-999,boe_scen_text.scen_strs[node->ex1a],-999,"~)",-999,";");
 				add_string(file_id,"\t\t if (got_text_match())");
 				add_short_string_to_file(file_id,"\t\t\tset_state_continue(",node->ex1b + 10,");");			
 				}
 			if (node->ex2a >= 0) {
-				add_big_string_to_file(file_id,"\t\tcheck_text_response_match(~",
-				  -999,boe_scen_text.scen_strs[node->ex2a],-999,"~)",-999,";");
+				add_big_string_to_file(file_id,"\t\tcheck_text_response_match(~",-999,boe_scen_text.scen_strs[node->ex2a],-999,"~)",-999,";");
 				add_string(file_id,"\t\t if (got_text_match())");
 				add_short_string_to_file(file_id,"\t\t\tset_state_continue(",node->ex2b + 10,");");			
 				}
 			break;
+			
 		case 155: // stuff done equal
-			add_big_string_to_file(file_id,"\tif (get_flag(",
-				  node->sd1,",",node->sd2,") == ",node->ex1a,")");
+			add_big_string_to_file(file_id,"\tif (get_flag(",node->sd1,",",node->sd2,") == ",node->ex1a,")");
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");			
 				else add_string(file_id,"\t\tend();");			
@@ -3813,21 +3800,16 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 171: // set ter
 			add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
 			add_string(file_id,"// You will need to find a new value for this function.");
-			add_big_string_to_file(file_id,"\t// set_terrain(",
-			  node->ex1a,",",node->ex1b,",",node->ex2a,");");
+			add_big_string_to_file(file_id,"\t// set_terrain(",node->ex1a,",",node->ex1b,",",node->ex2a,");");
 			add_string(file_id,"// Potential translation problems");										  
 			break;
 		case 172: // swap ter
 			add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
 			add_string(file_id,"// You will need to find a new value for this function.");
-			add_big_string_to_file(file_id,"\t// if (get_terrain(",
-			  node->ex1a,",",node->ex1b,") == ",node->ex2a,")");
-			add_big_string_to_file(file_id,"\t\t// set_terrain(",
-			  node->ex1a,",",node->ex1b,",",node->ex2b,");");
-			add_big_string_to_file(file_id,"\t// else if (get_terrain(",
-			  node->ex1a,",",node->ex1b,") == ",node->ex2b,")");
-			add_big_string_to_file(file_id,"\t\t\t// set_terrain(",
-			  node->ex1a,",",node->ex1b,",",node->ex2a,");");
+			add_big_string_to_file(file_id,"\t// if (get_terrain(",node->ex1a,",",node->ex1b,") == ",node->ex2a,")");
+			add_big_string_to_file(file_id,"\t\t// set_terrain(",node->ex1a,",",node->ex1b,",",node->ex2b,");");
+			add_big_string_to_file(file_id,"\t// else if (get_terrain(",node->ex1a,",",node->ex1b,") == ",node->ex2b,")");
+			add_big_string_to_file(file_id,"\t\t\t// set_terrain(",node->ex1a,",",node->ex1b,",",node->ex2a,");");
 			add_string(file_id,"// Potential translation problems");										  
 			break;
 		case 173: // transform ter
@@ -3839,15 +3821,14 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"// Potential translation problems");										  
 			break;
 		case 174: // move party
-			add_big_string_to_file(file_id,"\tteleport_party(",
-			  node->ex1a,",",node->ex1b,",",(node->ex2a == 0) ? 1 : 0,");");
+			add_big_string_to_file(file_id,"\tteleport_party(",node->ex1a,",",node->ex1b,",",(node->ex2a == 0) ? 1 : 0,");");
 			break;
 		case 175: // hit_space
-			sprintf(temp_str1,"\tdamage_near_loc(%d,%d,%d,0,%d);", (int)node->ex1a, (int)node->ex1b, (int)node->ex2a, (int)node->ex2b);
+			sprintf(temp_str1,"\tdamage_near_loc(%d,%d,%d,0,%d);", node->ex1a, node->ex1b, node->ex2a, node->ex2b);
 			add_string(file_id,temp_str1);
 			break;
 		case 176: // explode on space
-			sprintf(temp_str1,"\tdamage_near_loc(%d,%d,%d,%d,%d);", (int)node->ex1a, (int)node->ex1b, (int)node->ex2a, (int)node->pic, (int)node->ex2b);
+			sprintf(temp_str1,"\tdamage_near_loc(%d,%d,%d,%d,%d);", node->ex1a, node->ex1b, node->ex2a, node->pic, node->ex2b);
 			add_string(file_id,temp_str1);
 			break;
 		case 177: case 178: case 217: case 218: // unlock fcns
@@ -3860,15 +3841,15 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 
 		case 179: // sfx burst
-			sprintf(temp_str1,"\tput_boom_on_space(%d,%d,%d,1);", (int)node->ex1a, (int)node->ex1b, (int)node->ex2a);
+			sprintf(temp_str1,"\tput_boom_on_space(%d,%d,%d,1);", node->ex1a, node->ex1b, node->ex2a);
 			add_string(file_id,temp_str1);
-			sprintf(temp_str1,"\tput_boom_on_space(%d,%d,%d,1);", (int)node->ex1a, (int)node->ex1b, (int)node->ex2a);
+			sprintf(temp_str1,"\tput_boom_on_space(%d,%d,%d,1);", node->ex1a, node->ex1b, node->ex2a);
 			add_string(file_id,temp_str1);
-			sprintf(temp_str1,"\tput_boom_on_space(%d,%d,%d,1);", (int)node->ex1a, (int)node->ex1b, (int)node->ex2a);
+			sprintf(temp_str1,"\tput_boom_on_space(%d,%d,%d,1);", node->ex1a, node->ex1b, node->ex2a);
 			add_string(file_id,temp_str1);
-			sprintf(temp_str1,"\tput_boom_on_space(%d,%d,%d,1);", (int)node->ex1a, (int)node->ex1b, (int)node->ex2a);
+			sprintf(temp_str1,"\tput_boom_on_space(%d,%d,%d,1);", node->ex1a, node->ex1b, node->ex2a);
 			add_string(file_id,temp_str1);
-			sprintf(temp_str1,"\tput_boom_on_space(%d,%d,%d,1);", (int)node->ex1a, (int)node->ex1b, (int)node->ex2a);
+			sprintf(temp_str1,"\tput_boom_on_space(%d,%d,%d,1);", node->ex1a, node->ex1b, node->ex2a);
 			add_string(file_id,temp_str1);
 			add_string(file_id,"\trun_animation();");			
 			break;
@@ -3909,7 +3890,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\treset_dialog_preset_options(2);");
 			add_string(file_id,"\tchoice = run_dialog(0);");
 			add_string(file_id,"\tif (choice == 2) {");
-			add_big_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,"",-999,"",-999,");");			
+			add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");			
 			add_string(file_id,"\t\t}");
 			break;
 		case 185: // portal
@@ -3917,7 +3898,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\tchoice = run_dialog(0);");
 			add_string(file_id,"\tif (choice == 2) {");
 			add_string(file_id,"\t\tblock_entry(1);");
-			add_big_string_to_file(file_id,"\t\tteleport_party(",node->ex1a,",",node->ex1b,",",-999,"0);");			
+			add_big_string_to_file(file_id,"\t\tteleport_party(",node->ex1a,",",node->ex1b,",",0,");");			
 			add_string(file_id,"\t\tend();");
 			add_string(file_id,"\t\t}");
 			break;
@@ -3943,7 +3924,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\treset_dialog_preset_options(2);");
 			add_string(file_id,"\tchoice = run_dialog(0);");
 			add_string(file_id,"\tif (choice == 2) {");
-			add_big_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,"",-999,"",-999,");");			
+			add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");
 			add_string(file_id,"\t\t}");
 			
 			break;
@@ -3951,7 +3932,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\treset_dialog_preset_options(3);");
 			if (node->m1 < 0) {
 				add_string(file_id,"\t\tblock_entry(1);");
-				add_big_string_to_file(file_id,"\t\tteleport_party(",node->ex1a,",",node->ex1b,",",-999,"0);");			
+				add_big_string_to_file(file_id,"\t\tteleport_party(",node->ex1a,",",node->ex1b,",",0,");");			
 				add_string(file_id,"\t\tend();");
 				}
 				else {
@@ -3963,7 +3944,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 					add_string(file_id,"\tchoice = run_dialog(0);");
 					add_string(file_id,"\tif (choice == 2) {");
 					add_string(file_id,"\t\tblock_entry(1);");
-					add_big_string_to_file(file_id,"\t\tteleport_party(",node->ex1a,",",node->ex1b,",",-999,"0);");			
+					add_big_string_to_file(file_id,"\t\tteleport_party(",node->ex1a,",",node->ex1b,",",0,");");
 					add_string(file_id,"\t\tend();");
 					add_string(file_id,"\t\t}");
 					}
@@ -3989,7 +3970,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 					}
 			break;
 		case 191: // move outd
-			sprintf(temp_str1,"\tchange_outdoor_location(%d,%d,%d,%d);", (int)node->ex1a, (int)node->ex1b, (int)node->ex2a, (int)node->ex2b);
+			sprintf(temp_str1,"\tchange_outdoor_location(%d,%d,%d,%d);", node->ex1a, node->ex1b, node->ex2a, node->ex2b);
 			add_string(file_id,temp_str1);
 			break;
 		case 192: // place item
@@ -4089,7 +4070,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 					add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
 					add_string(file_id,"// You will need to find a new value for this function. Also, the swap terrain");
 					add_string(file_id,"// values for the terrain types might work differently in BoA");
-					add_string_to_file(file_id,"\t// flip_terrain(i,j);");
+					add_string_to_file(file_id,"\t flip_terrain(i,j);");
 					add_string(file_id,"// Potential translation problems");										  											  					
 					break;
 				}	
@@ -4103,26 +4084,28 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\tmake_wandering_monst();");
 			break;
 		case 226: // set ter
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
 			add_string(file_id,"// You will need to find a new value for this function.");
-			add_big_string_to_file(file_id,"\t// set_terrain(",
-			  node->ex1a,",",node->ex1b,",",node->ex2a,");");
+			add_big_string_to_file(file_id,"\t set_terrain(",node->ex1a,",",node->ex1b,",",node->ex2a,");");
 			break;
 		case 227: // out special
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			add_short_string_to_file(file_id,"\tcreate_out_spec_enc(",node->ex1a,");");			
 			break;
 		case 228: // out move
-			handle_messages(file_id,node_type,node->m1,node->m2);
 			add_string(file_id,"\tblock_entry(1);");
-			add_big_string_to_file(file_id,"\tout_move_party(",
-			  node->ex1a,",",node->ex1b,"",-999,");");
+			add_big_string_to_file(file_id,"\tout_move_party(",node->ex1a,",",node->ex1b,"",-999,");");
 			break;
 		case 229: // out store
 			add_string(file_id,"// OBSOLETE VALUE WARNING: Shops work very differently now.");
 			add_string(file_id,"// Use function begin_shop_mode(char name,char desc,short which_shop,short price_adjust,short sell_adjustment)");
+			add_short_string_to_file(file_id,"// Name of Store = (",node->m1,");");
+			add_short_string_to_file(file_id,"// Number of first item in store = (",node->ex1a,");");
+			add_short_string_to_file(file_id,"// Store type (see docs. for list) = (",node->ex1b,");");
+			add_short_string_to_file(file_id,"// Number of items in store (1 .. 40) = (",node->ex2a,");");
+			add_short_string_to_file(file_id,"// Cost adjust (0 .. 6, lower = cheaper) = (",node->ex2b,");");
+			
 			break;
+		   
 		
 		//case : //
 		//	break;
@@ -4297,8 +4280,8 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			add_string(file_id,"\tcode =");
 			if (boe_talk_data.talk_nodes[which_node].extras[1] > 0) {
 				sprintf(str3,"\t\tif ((what_day_of_scenario() >= %d) && ((day_event_happened(%d) < 0) || (day_event_happened(%d) >= %d)))",
-				  (int)boe_talk_data.talk_nodes[which_node].extras[0], (int)boe_talk_data.talk_nodes[which_node].extras[1],
-				  (int)boe_talk_data.talk_nodes[which_node].extras[1], (int)boe_talk_data.talk_nodes[which_node].extras[0]);
+				  boe_talk_data.talk_nodes[which_node].extras[0], boe_talk_data.talk_nodes[which_node].extras[1],
+				  boe_talk_data.talk_nodes[which_node].extras[1], boe_talk_data.talk_nodes[which_node].extras[0]);
 				add_string(file_id,str3);
 				}
 				else add_big_string_to_file(file_id,"\t\tif (what_day_of_scenario() >=",
@@ -4324,7 +4307,7 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			add_string(file_id,"\tcode =");
 			add_string(file_id,"//WARNING: Shops work differently now. You'll need to modify this.");
 			sprintf(str3,"\t\tbegin_shop_mode(~%s~,~Shop description here.~,0,%d,3);",str,
-				  (int)boe_talk_data.talk_nodes[which_node].extras[0]);
+				  boe_talk_data.talk_nodes[which_node].extras[0]);
 			add_string(file_id,str3);
 			add_string(file_id,"\tbreak;");
 			if (boe_talk_data.talk_nodes[which_node].type > 7)
@@ -4373,7 +4356,7 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 				add_big_string_to_file(file_id,"\ttext3 = ~",
 				  -999,str2,-999,"",-999,"~;");
 				sprintf(str3,"\taction = PAY %d %d %d %d;",
-				  -1,-1,-1, (int)boe_talk_data.talk_nodes[which_node].extras[0]);
+				  -1,-1,-1, boe_talk_data.talk_nodes[which_node].extras[0]);
 				add_string(file_id,str3);
 			break;
 		case 19: // buy response set flag
@@ -4386,8 +4369,8 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 				add_big_string_to_file(file_id,"\ttext5 = ~",
 				  -999,"You have already bought this.",-999,"",-999,"~;");
 				sprintf(str3,"\taction = PAY %d %d %d %d;",
-				  (int)boe_talk_data.talk_nodes[which_node].extras[1], (int)boe_talk_data.talk_nodes[which_node].extras[2],
-				  (int)boe_talk_data.talk_nodes[which_node].extras[3], (int)boe_talk_data.talk_nodes[which_node].extras[0]);
+				  boe_talk_data.talk_nodes[which_node].extras[1], boe_talk_data.talk_nodes[which_node].extras[2],
+				  boe_talk_data.talk_nodes[which_node].extras[3], boe_talk_data.talk_nodes[which_node].extras[0]);
 				add_string(file_id,str3);
 			break;
 		case 20: // ship shop
