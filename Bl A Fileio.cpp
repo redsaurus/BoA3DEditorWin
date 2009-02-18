@@ -1861,7 +1861,9 @@ void import_blades_of_exile_scenario()
 	// STEP 2 load all BoE scenario data
 	len = (long) sizeof(old_blades_scenario_data_type);
 	if ((error = FSRead(file_id, &len, (char *) &boe_scenario)) != 0){
-		FSClose(file_id); oops_error(301); return;
+		FSClose(file_id); 
+		oops_error(301); 
+		return;
 		}
 
 	// check if legit scenario and whether check mac or win
@@ -1886,7 +1888,9 @@ void import_blades_of_exile_scenario()
 
 	len = sizeof(old_blades_scen_item_data_type); // item data
 	if ((error = FSRead(file_id, &len, (char *) &boe_scen_data)) != 0) {
-		FSClose(file_id); oops_error(302); return;
+		FSClose(file_id); 
+		oops_error(302); 
+		return;
 		}
 	if (cur_scen_is_mac == TRUE)
 		boe_port_item_list();
@@ -1894,7 +1898,9 @@ void import_blades_of_exile_scenario()
 	for (i = 0; i < 270; i++) {
 		len = (long) (boe_scenario.scen_str_len[i]);
 		if ((len > 0) && ((error = FSRead(file_id, &len, (char *) &(boe_scen_text.scen_strs[i]))) != 0)) {
-			FSClose(file_id); oops_error(303); return;
+			FSClose(file_id); 
+			oops_error(303); 
+			return;
 			}
 		boe_scen_text.scen_strs[i][len] = 0;
 		}
@@ -1975,7 +1981,8 @@ void import_blades_of_exile_scenario()
 	scenario.port();
 	len = kSizeOfScenario_data_type; 
 	if ((error = FSWrite(new_scen_id, &len, (char *) &scenario)) != 0) 
-		{oops_error(307); return;}	
+		{oops_error(307); 
+		return;}	
 	scenario.port();
 		
 	// STEP 3 Load in old outdoor sections, one at a time, and port them.
@@ -1984,7 +1991,9 @@ void import_blades_of_exile_scenario()
 			// load outdoor terrain
 			len = (long) sizeof(old_blades_outdoor_record_type);
 			if ((error = FSRead(file_id, &len, (char *) &boe_outdoor)) != 0){
-				FSClose(file_id); oops_error(308); return;
+				FSClose(file_id); 
+				oops_error(308); 
+				return;
 				}
 			if (cur_scen_is_mac == TRUE)
 				boe_port_out(&boe_outdoor);
@@ -2019,7 +2028,8 @@ void import_blades_of_exile_scenario()
 			current_terrain.port();
 			len = kSizeOfOutdoor_record_type;
 			if ((error = FSWrite(new_scen_id, &len, (char *) &current_terrain)) != 0) 
-				{oops_error(309); return;}	
+				{oops_error(309); 
+				return;}	
 			current_terrain.port();
 			}
 
@@ -2027,7 +2037,10 @@ void import_blades_of_exile_scenario()
 	for (short m = 0; m < boe_scenario.num_towns; m++) {
 		len = sizeof(old_blades_town_record_type);
 		error = FSRead(file_id, &len , (char *) &boe_town);
-		if (error != 0) {FSClose(file_id);oops_error(310); return;}
+		if (error != 0) 
+		   {FSClose(file_id);oops_error(310); 
+		   return;
+		   }
 		if (cur_scen_is_mac == TRUE)
 			boe_port_town();
 		
@@ -2057,7 +2070,11 @@ void import_blades_of_exile_scenario()
 
 		len = sizeof(old_blades_talking_record_type);
 		error = FSRead(file_id, &len , (char *) &boe_talk_data);
-		if (error != 0) {FSClose(file_id);oops_error(312); return;}
+		if (error != 0) {
+		   		  FSClose(file_id);
+	 			  oops_error(312); 
+  				  return;
+				  }
 		if (cur_scen_is_mac == TRUE)
 			boe_port_talk_nodes();
 		
@@ -2095,7 +2112,9 @@ void import_blades_of_exile_scenario()
 		town.port();
 		len = kSizeOfTown_record_type;
 		if ((error = FSWrite(new_scen_id, &len, (char *) &town)) != 0) 
-			{oops_error(313); return;}	
+			{oops_error(313); 
+			return;
+			}
 		town.port();
 		
 		town_type = scenario.town_size[m];
@@ -2218,7 +2237,7 @@ void port_boe_out_data()
 					current_section_on_surface = TRUE;
 			}
 	for (i = 0; i < 18; i++) 
-		if ((boe_outdoor.special_locs[i].x > 0) && (boe_outdoor.special_locs[i].y > 0) && (boe_outdoor.special_id[i] >= 0)) {
+		if ((boe_outdoor.special_locs[i].x >= 0) && (boe_outdoor.special_locs[i].y >= 0) && (boe_outdoor.special_id[i] >= 0)) {
 			current_terrain.special_rects[i].left = current_terrain.special_rects[i].right = boe_outdoor.special_locs[i].x;
 			current_terrain.special_rects[i].top = current_terrain.special_rects[i].bottom = boe_outdoor.special_locs[i].y;
 			current_terrain.spec_id[i] = boe_outdoor.special_id[i] + 10;		
@@ -2427,7 +2446,8 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 				case 7: make_force_barrier(boe_town.preset_fields[i].field_loc.x,boe_town.preset_fields[i].field_loc.y); break;
 				case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 21: 
 					make_sfx(boe_town.preset_fields[i].field_loc.x,boe_town.preset_fields[i].field_loc.y,
-					  boe_town.preset_fields[i].field_type - 14); break;
+					  boe_town.preset_fields[i].field_type - 14); 
+			  		  break;
 				}
 			}
 
@@ -2501,13 +2521,13 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 			if (boe_big_town.creatures[i].mobile == 0)
 				town.creatures[i].memory_cells[0] = (boe_big_town.creatures[i].number == 12) ? 1 : 2;
 				
-			if (boe_big_town.creatures[i].spec1 >= 300)
+			if ((boe_big_town.creatures[i].spec1 < 0) || (boe_big_town.creatures[i].spec1 >= 300))
 				town.creatures[i].memory_cells[1] = 0;
 			else town.creatures[i].memory_cells[1] = boe_big_town.creatures[i].spec1;
-			if (boe_big_town.creatures[i].spec2 >= 30)
+			if ((boe_big_town.creatures[i].spec2 < 0) || (boe_big_town.creatures[i].spec2 >= 30))
 				town.creatures[i].memory_cells[2] = 0;
 			else town.creatures[i].memory_cells[2] = boe_big_town.creatures[i].spec2;
-			if (boe_big_town.creatures[i].special_on_kill >= 256)
+			if ((boe_big_town.creatures[i].special_on_kill < 0) || (boe_big_town.creatures[i].special_on_kill >= 256))
 				town.creatures[i].memory_cells[4] = 0;
 			else town.creatures[i].memory_cells[4] = boe_big_town.creatures[i].special_on_kill + 10;
 				
@@ -2537,14 +2557,11 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 				}
 				else if (boe_town.preset_items[i].item_code == 0) {
 					if (get_ran(1,0,100) < 8)
-						create_new_item(3,
-						  boe_town.preset_items[i].item_loc,boe_town.preset_items[i].property,NULL);
+						create_new_item(3,boe_town.preset_items[i].item_loc,boe_town.preset_items[i].property,NULL);
 						else if (get_ran(1,0,100) < 25)
-							create_new_item(2,
-							  boe_town.preset_items[i].item_loc,boe_town.preset_items[i].property,NULL);
+							create_new_item(2,boe_town.preset_items[i].item_loc,boe_town.preset_items[i].property,NULL);
 						else if (get_ran(1,0,100) < 101)
-							create_new_item(1,
-							  boe_town.preset_items[i].item_loc,boe_town.preset_items[i].property,NULL);
+							create_new_item(1,boe_town.preset_items[i].item_loc,boe_town.preset_items[i].property,NULL);
 					}
 			}
 
@@ -2653,7 +2670,9 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 													}
 											}
 									break;
-								default: t_d.terrain[i][j] = 2 + wall_adj; break;
+								default: 
+								 t_d.terrain[i][j] = 2 + wall_adj; 
+								 break;
 								}
 							}
 					}
@@ -3192,7 +3211,7 @@ void port_outdoor_script(char *script_name,char *directory_id,short sector_x,sho
 void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE *file_id,short node_type)
 {
 	char temp_str1[400];
-	
+	char new_line[500];	
 	add_short_string_to_file(file_id,"beginstate ",node_num + 10,";");
 
 
@@ -3227,11 +3246,13 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 5: // display small mess
 			if (node->m1 >= 0) {
 				get_bl_str(temp_str1,node_type,node->m1);
-				add_ishtrs_string_to_file(file_id,"\tprint_str("\",temp_str1,\"");");
+				sprintf(new_line,"\tprint_str(\"%s\");", temp_str1);
+				add_string(file_id,new_line);
 				}
 			if (node->m2 >= 0) {
 				get_bl_str(temp_str1,node_type,node->m2);
-				add_ishtrs_string_to_file(file_id,"\tprint_str("\",temp_str1,\"");");
+				sprintf(new_line,"\tprint_str(\"%s\");", temp_str1);
+				add_string(file_id,new_line);
 				}
 			break;
 		case 6: // flip flag
@@ -3390,23 +3411,32 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\treset_dialog();");
 			for (short i = 0; i < 6; i++) {
 				get_bl_str(temp_str1,node_type,node->m1 + i);
-				if (strlen(temp_str1) > 0)
-					add_big_string_to_file(file_id,"\tadd_dialog_str(",i,",",-999,temp_str1,-999,",0);");
+				if (strlen(temp_str1) > 0) {
+				sprintf(new_line,"\tadd_dialog_str(%d,\"%s\",0);", i, temp_str1);
+				add_string(file_id,new_line);
+				}
 				}
 			if (node->m2 > 0) {
 				add_string(file_id,"\tadd_dialog_choice(0,OK.);");
-				if (node->ex1a >= 0) 
-					add_ishtrs_string_to_file(file_id,"\tadd_dialog_choice(1,",old_blades_button_strs[old_blades_available_dlog_buttons[node->ex1a]],".);");
-				if (node->ex2a >= 0) 
-					add_ishtrs_string_to_file(file_id,"\tadd_dialog_choice(2,",old_blades_button_strs[old_blades_available_dlog_buttons[node->ex2a]],".);");
+				if (node->ex1a >= 0) {
+				sprintf(new_line,"\tadd_dialog_choice(1,\"%s\".);", old_blades_button_strs[old_blades_available_dlog_buttons[node->ex1a]]);
+				add_string(file_id,new_line);				
+				}
+				if (node->ex2a >= 0) {
+				sprintf(new_line,"\tadd_dialog_choice(2,\"%s\".);", old_blades_button_strs[old_blades_available_dlog_buttons[node->ex2a]]);
+				add_string(file_id,new_line);
+				}	
 				}
 				else {
-					if (node->ex1a >= 0) 
-						add_big_string_to_file(file_id,"\tadd_dialog_choice(",0,",",-999,old_blades_button_strs[old_blades_available_dlog_buttons[node->ex1a]],-999,".);");
-					if (node->ex2a >= 0) 
-						add_big_string_to_file(file_id,"\tadd_dialog_choice(",1,",",-999,old_blades_button_strs[old_blades_available_dlog_buttons[node->ex2a]],-999,".);");
+				if (node->ex1a >= 0) {
+					sprintf(new_line,"\tadd_dialog_choice(0,\"%s\".);", old_blades_button_strs[old_blades_available_dlog_buttons[node->ex1a]]);
+						add_string(file_id,new_line);
+				}
+				if (node->ex2a >= 0) {
+					sprintf(new_line,"\tadd_dialog_choice(1,\"%s\".);", old_blades_button_strs[old_blades_available_dlog_buttons[node->ex2a]]);
+						add_string(file_id,new_line);
 					}
-				
+					}
 			add_string(file_id,"\tchoice = run_dialog(1);");
 			if (node->m2 > 0) {
 				if ((node->sd1 >= 0) && (node->sd2 >= 0)) { 
@@ -3460,8 +3490,10 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\treset_dialog_preset_options(1);");
 			for (short i = 0; i < 6; i++) {
 				get_bl_str(temp_str1,node_type,node->m1 + i);
-				if (strlen(temp_str1) > 0)
-					add_big_string_to_file(file_id,"\tadd_dialog_str(",i,",",-999,temp_str1,-999,",0);");
+				if (strlen(temp_str1) > 0) {
+					sprintf(new_line,"\tadd_dialog_str(%d,\"%s\",0);", i, temp_str1);
+				add_string(file_id,new_line);
+				}
 				}
 			add_string(file_id,"\tchoice = run_dialog(1);");
 			add_string(file_id,"\tif (choice == 2) {");
@@ -3489,6 +3521,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\t\t}");
 			add_string(file_id,"// Potential translation problems");			
 			break;
+			
 			
 		case 61: // place outdoor enc
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
@@ -4002,7 +4035,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,temp_str1);
 			break;
 		case 192: // place item
-			add_big_string_to_file(file_id,"\t\tput_item_on_spot(",node->ex1a,",",node->ex1b,",",node->ex2a,"			);");			
+			add_big_string_to_file(file_id,"\t\tput_item_on_spot(",node->ex1a,",",node->ex1b,",",node->ex2a,");");			
 			add_string(file_id,"// Potential translation problems");										  						
 			break;
 		case 193: // split party
@@ -4168,14 +4201,11 @@ void port_dialogue_intro_text(short *current_dialogue_node,short which_slot,FILE
 	add_short_string_to_file(file_id,"\tnextstate = ",which_slot * 10 + 1,";");
 	add_string(file_id,"\tcondition = 1;");
 	
-	add_big_string_to_file(file_id,"\tquestion = ",
-	  -999,boe_scen_text.talk_strs[which_slot],-999,"",-999,";");
+	add_big_string_to_file(file_id,"\tquestion = \"",-999,boe_scen_text.talk_strs[which_slot],-999,"",-999,"\";");
 	get_bl_str(str,3,which_slot + 10);
-	add_big_string_to_file(file_id,"\ttext1 = ",
-	  -999,str,-999,"",-999,";");
+	add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 	get_bl_str(str,3,which_slot + 20);
-	add_big_string_to_file(file_id,"\ttext5 = ",
-	  -999,str,-999,"",-999,";");
+	add_big_string_to_file(file_id,"\ttext5 = \"",-999,str,-999,"",-999,"\";");
 	if (which_slot == 0)
 		add_string(file_id,"\taction = INTRO; // This line only does anything if the character has a personality set.");
 		else add_string(file_id,"\taction = INTRO;");
@@ -4196,32 +4226,30 @@ void port_dialogue_intro_text(short *current_dialogue_node,short which_slot,FILE
 	add_short_string_to_file(file_id,"\tnextstate = ",which_slot * 10 + 1,";");
 	add_string(file_id,"\tcondition = 1;");
 	
-	add_big_string_to_file(file_id,"\tquestion = ",
-	  -999,"What is your job?",-999,"",-999,";");
+	add_string(file_id,"\tquestion = \"_What is your job?_\";");	
 	get_bl_str(str,3,which_slot + 30);
-	add_big_string_to_file(file_id,"\ttext1 = ",
-	  -999,str,-999,"",-999,";");
+	add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 	add_cr(file_id);
 
 	*current_dialogue_node = *current_dialogue_node + 1;
 
 }
-
 void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file_id,short which_node,short town_being_ported)
+
 {
 	char str[256],str2[256],str3[256];
-
-	if (boe_talk_data.talk_nodes[which_node].personality < 0)
+	char new_line[500];	
+	if ((boe_talk_data.talk_nodes[which_node].personality < 0) && (boe_talk_data.talk_nodes[which_node].personality != -2))
 		return;
 	
 	if (boe_talk_data.talk_nodes[which_node].personality == -2) {
-		add_string(file_id,"//OBSOLETE: Nodes following this point had a personality of -2.");
+		add_string(file_id,"// OBSOLETE: Nodes following this point had a personality of -2.");
 		add_string(file_id,"//  Nodes reachable from all personalities are obsolete in BoA.");
 		}
 	add_short_string_to_file(file_id,"begintalknode ",*current_dialogue_node,";");
 	add_short_string_to_file(file_id,"\tstate = ",which_slot * 10 + 1,";");
 	add_short_string_to_file(file_id,"\tpersonality = ",town_being_ported * 20 + which_slot,";");
-	add_short_string_to_file(file_id,"\tnextstate = ",-1,";");
+	add_string(file_id,"\tnextstate = -1;");
 	//add_short_string_to_file(file_id,"\tnextstate = ",which_slot * 10 + 1,";");
 	add_string(file_id,"\tcondition = 1;");
 	sprintf(str,"\tquestion = _xxxx xxxx_;");
@@ -4241,20 +4269,20 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 	get_bl_str(str2,3,which_node * 2 + 40 + 1);
 	switch (boe_talk_data.talk_nodes[which_node].type) {
 		case 0: // talk
-			if (strlen(str) > 0)
-				add_big_string_to_file(file_id,"\ttext1 = ",
-				  -999,str,-999,"",-999,";");
-			if (strlen(str2) > 0)
-				add_big_string_to_file(file_id,"\ttext2 = ",
-				  -999,str2,-999,"",-999,";");
+			if (strlen(str) > 0) {
+				sprintf(new_line,"\ttext1 = \"%s\";", str);
+				add_string(file_id,new_line);
+				}
+			if (strlen(str2) > 0) {
+				sprintf(new_line,"\ttext2 = \"%s\";", str2);
+				add_string(file_id,new_line);
+				}
 			break;
 		case 1: // dep on sdf
 			if (strlen(str) > 0)
-				add_big_string_to_file(file_id,"\ttext1 = ",
-				  -999,str,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 			if (strlen(str2) > 0)
-				add_big_string_to_file(file_id,"\ttext3 = ",
-				  -999,str2,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext3 = \"",-999,str2,-999,"",-999,"\";");
 				add_big_string_to_file(file_id,"\taction = DEP_ON_SDF ",
 				  boe_talk_data.talk_nodes[which_node].extras[0]," ",
 				  boe_talk_data.talk_nodes[which_node].extras[1]," ",
@@ -4262,33 +4290,23 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			break;
 		case 2: // dep on sdf
 			if (strlen(str) > 0)
-				add_big_string_to_file(file_id,"\ttext1 = ",
-				  -999,str,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 			if (strlen(str2) > 0)
-				add_big_string_to_file(file_id,"\ttext2 = ",
-				  -999,str2,-999,"",-999,";");
-				add_big_string_to_file(file_id,"\taction = SET_SDF ",
-				  boe_talk_data.talk_nodes[which_node].extras[0]," ",
-				  boe_talk_data.talk_nodes[which_node].extras[1]," 1",
-				  -999,";");
+				add_big_string_to_file(file_id,"\ttext2 = \"",-999,str2,-999,"",-999,"\";");
+				add_big_string_to_file(file_id,"\taction = SET_SDF ",boe_talk_data.talk_nodes[which_node].extras[0]," ",boe_talk_data.talk_nodes[which_node].extras[1]," 1",-999,";");
 			break;
 		case 3: // inn
-			add_big_string_to_file(file_id,"\ttext1 = ",
-			  -999,str,-999,"",-999,";");
-			add_big_string_to_file(file_id,"\ttext3 = ",
-			  -999,str2,-999,"",-999,";");
-			add_big_string_to_file(file_id,"\ttext5 = ",
-			  -999,"You can't stay in an inn when on horseback.",-999,"",-999,";");
+			add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
+			add_big_string_to_file(file_id,"\ttext3 = \"",-999,str2,-999,"",-999,"\";");
+			add_string_to_file(file_id,"\ttext5 = \"You can't stay in an inn when on horseback.\";");
 			add_big_string_to_file(file_id,"\taction = INN ",
 				  boe_talk_data.talk_nodes[which_node].extras[0]," ",
 				  boe_talk_data.talk_nodes[which_node].extras[2]," ",
 				  boe_talk_data.talk_nodes[which_node].extras[3],";");
 			break;
 		case 4: // dep on day
-			add_big_string_to_file(file_id,"\ttext1 = ",
-			  -999,str,-999,"",-999,";");
-			add_big_string_to_file(file_id,"\ttext3 = ",
-			  -999,str2,-999,"",-999,";");
+			add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
+			add_big_string_to_file(file_id,"\ttext3 = \"",-999,str2,-999,"",-999,"\";");
 			add_string(file_id,"\tcode =");
 			add_big_string_to_file(file_id,"\t\tif (what_day_of_scenario() >=",
 			   boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,")");
@@ -4297,15 +4315,13 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			add_string(file_id,"\tbreak;");
 			break;
 		case 5: // dep on day with event
-			add_big_string_to_file(file_id,"\ttext1 = ",
-			  -999,str,-999,"",-999,";");
-			add_big_string_to_file(file_id,"\ttext3 = ",
-			  -999,str2,-999,"",-999,";");
+			add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
+			add_big_string_to_file(file_id,"\ttext3 = \"",-999,str2,-999,"",-999,"\";");
 			add_string(file_id,"\tcode =");
 			if (boe_talk_data.talk_nodes[which_node].extras[1] > 0) {
 				sprintf(str3,"\t\tif ((what_day_of_scenario() >= %d) && ((day_event_happened(%d) < 0) || (day_event_happened(%d) >= %d)))",
-				  boe_talk_data.talk_nodes[which_node].extras[0], boe_talk_data.talk_nodes[which_node].extras[1],
-				  boe_talk_data.talk_nodes[which_node].extras[1], boe_talk_data.talk_nodes[which_node].extras[0]);
+				  boe_talk_data.talk_nodes[which_node].extras[0],boe_talk_data.talk_nodes[which_node].extras[1],
+				  boe_talk_data.talk_nodes[which_node].extras[1],boe_talk_data.talk_nodes[which_node].extras[0]);
 				add_string(file_id,str3);
 				}
 				else add_big_string_to_file(file_id,"\t\tif (what_day_of_scenario() >=",
@@ -4315,22 +4331,19 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			add_string(file_id,"\tbreak;");
 			break;
 		case 6: // dep on town
-			add_big_string_to_file(file_id,"\ttext1 = ",
-			  -999,str,-999,"",-999,";");
-			add_big_string_to_file(file_id,"\ttext3 = ",
-			  -999,str2,-999,"",-999,";");
+			add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
+			add_big_string_to_file(file_id,"\ttext3 = \"",-999,str2,-999,"",-999,"\";");
 			add_string(file_id,"\tcode =");
-			add_big_string_to_file(file_id,"\t\tif (current_town() ==",
-			   boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,")");
+			add_big_string_to_file(file_id,"\t\tif (current_town() ==",boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,")");
 			add_string(file_id,"\t\t\tremove_string(3);");
 			add_string(file_id,"\t\t\telse remove_string(1);");	
 			add_string(file_id,"\tbreak;");
 			break;
 		case 7: case 9: case 10: case 11: case 23: // shop
-			add_string(file_id,"\ttext1 = You finish shopping.;");
+			add_string(file_id,"\ttext1 = \"You finish shopping.\";");
 			add_string(file_id,"\tcode =");
 			add_string(file_id,"//WARNING: Shops work differently now. You'll need to modify this.");
-			sprintf(str3,"\t\tbegin_shop_mode(%s,Shop description here.,0,%d,3);",str,
+			sprintf(str3,"\t\tbegin_shop_mode(\"%s\",\"Shop description here.\",0,%d,3);",str,
 				  boe_talk_data.talk_nodes[which_node].extras[0]);
 			add_string(file_id,str3);
 			add_string(file_id,"\tbreak;");
@@ -4342,78 +4355,58 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			add_string(file_id,"//You might want to completely rewrite or delete this node.");
 			break;
 		case 12: // healer
-			add_big_string_to_file(file_id,"\ttext1 = ",
-			  -999,str,-999,"",-999,";");
+			add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 			add_string(file_id,"//OBSOLETE: Healers no longer work like a shop.");
 			add_string(file_id,"//Use the restore_pc command to heal characters.");
 			break;
 		case 13: case 14: case 15: // sell
-			add_big_string_to_file(file_id,"\ttext1 = ",
-			  -999,str,-999,"",-999,";");
+			add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 			add_string(file_id,"//OBSOLETE: Selling no longer gets its own window.");
 			add_string(file_id,"//  You sell items while in shop mode.");
 			break;
 		case 16: // id
 			if (strlen(str) > 0)
-				add_big_string_to_file(file_id,"\ttext1 = ",
-				  -999,str,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 			if (strlen(str2) > 0)
-				add_big_string_to_file(file_id,"\ttext2 = ",
-				  -999,str2,-999,"",-999,";");
-			add_big_string_to_file(file_id,"\taction = ID ",
-			   boe_talk_data.talk_nodes[which_node].extras[0],"",
-			  -999,"",
-			  -999,";");
+				add_big_string_to_file(file_id,"\ttext2 = \"",-999,str2,-999,"",-999,"\";");
+			add_big_string_to_file(file_id,"\taction = ID ",boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,";");
 			break;
 		case 17: // enchant weapons
-			add_big_string_to_file(file_id,"\ttext1 = ",
-			  -999,str,-999,"",-999,";");
+			add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 			add_string(file_id,"//OBSOLETE: Individual items can no longer be augmented.");
 			add_string(file_id,"//  You can hardcode this using the it_augment_item field and.");
 			add_string(file_id,"//  the augment_item_on_space function.");
 			break;
 		case 18: // buy response
 			if (strlen(str) > 0)
-				add_big_string_to_file(file_id,"\ttext1 = ",
-				  -999,str,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 			if (strlen(str2) > 0)
-				add_big_string_to_file(file_id,"\ttext3 = ",
-				  -999,str2,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext3 = \"",-999,str2,-999,"",-999,"\";");
 				sprintf(str3,"\taction = PAY %d %d %d %d;",
-				  -1,-1,-1, boe_talk_data.talk_nodes[which_node].extras[0]);
+				  -1,-1,-1,boe_talk_data.talk_nodes[which_node].extras[0]);
 				add_string(file_id,str3);
 			break;
 		case 19: // buy response set flag
 			if (strlen(str) > 0)
-				add_big_string_to_file(file_id,"\ttext1 = ",
-				  -999,str,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 			if (strlen(str2) > 0)
-				add_big_string_to_file(file_id,"\ttext3 = ",
-				  -999,str2,-999,"",-999,";");
-				add_big_string_to_file(file_id,"\ttext5 = ",
-				  -999,"You have already bought this.",-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext3 = \"",-999,str2,-999,"",-999,"\";");
+				add_big_string_to_file(file_id,"\ttext5 = \"",-999,"You have already bought this.",-999,"",-999,"\";");
 				sprintf(str3,"\taction = PAY %d %d %d %d;",
-				  boe_talk_data.talk_nodes[which_node].extras[1], boe_talk_data.talk_nodes[which_node].extras[2],
-				  boe_talk_data.talk_nodes[which_node].extras[3], boe_talk_data.talk_nodes[which_node].extras[0]);
+				  boe_talk_data.talk_nodes[which_node].extras[1],boe_talk_data.talk_nodes[which_node].extras[2],
+				  boe_talk_data.talk_nodes[which_node].extras[3],boe_talk_data.talk_nodes[which_node].extras[0]);
 				add_string(file_id,str3);
 			break;
 		case 20: // ship shop
-			add_big_string_to_file(file_id,"\ttext1 = ",
-			  -999,str,-999,"",-999,";");
-			add_big_string_to_file(file_id,"\ttext3 = ",
-			  -999,str2,-999,"",-999,";");
-			add_big_string_to_file(file_id,"\ttext5 = ",
-			  -999,"There are no ships left.",-999,"",-999,";");
+			add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
+			add_big_string_to_file(file_id,"\ttext3 = \"",-999,str2,-999,"",-999,"\";");
+			add_big_string_to_file(file_id,"\ttext5 = \"",-999,"There are no ships left.",-999,"",-999,"\";");
 			add_string(file_id,"\tcode =");
 			add_string(file_id,"\t\tclear_strings();");
-			add_big_string_to_file(file_id,"\t\tif (coins_amount() >=",
-			   boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,") {");
-			add_big_string_to_file(file_id,"\t\t\tif (set_boat_range_property(",
-			   boe_talk_data.talk_nodes[which_node].extras[1],",",
-			   boe_talk_data.talk_nodes[which_node].extras[1] + boe_talk_data.talk_nodes[which_node].extras[2],"",-999,") {");
+			add_big_string_to_file(file_id,"\t\tif (coins_amount() >=",boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,") {");
+			add_big_string_to_file(file_id,"\t\t\tif (set_boat_range_property(",boe_talk_data.talk_nodes[which_node].extras[1],",",boe_talk_data.talk_nodes[which_node].extras[1] + boe_talk_data.talk_nodes[which_node].extras[2],"",-999,")) {");
 			add_string(file_id,"\t\t\t\tadd_string(1);");	
-			add_big_string_to_file(file_id,"\t\t\t\tchange_coins(-1 * ",
-			   boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,");");
+			add_big_string_to_file(file_id,"\t\t\t\tchange_coins(-",boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,");");
 			add_string(file_id,"\t\t\t\t}");
 			add_string(file_id,"\t\t\t\telse add_string(5);");
 			add_string(file_id,"\t\t\t}");
@@ -4421,22 +4414,15 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			add_string(file_id,"\tbreak;");
 			break;
 		case 21: // horse shop
-			add_big_string_to_file(file_id,"\ttext1 = ",
-			  -999,str,-999,"",-999,";");
-			add_big_string_to_file(file_id,"\ttext3 = ",
-			  -999,str2,-999,"",-999,";");
-			add_big_string_to_file(file_id,"\ttext5 = ",
-			  -999,"There are no horses left.",-999,"",-999,";");
+			add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
+			add_big_string_to_file(file_id,"\ttext3 = \"",-999,str2,-999,"",-999,"\";");
+			add_string(file_id,"\ttext5 = \"There are no horses left.\";");
 			add_string(file_id,"\tcode =");
 			add_string(file_id,"\t\tclear_strings();");
-			add_big_string_to_file(file_id,"\t\tif (coins_amount() >=",
-			   boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,") {");
-			add_big_string_to_file(file_id,"\t\t\tif (set_horse_range_property(",
-			   boe_talk_data.talk_nodes[which_node].extras[1],",",
-			  boe_talk_data.talk_nodes[which_node].extras[1] + boe_talk_data.talk_nodes[which_node].extras[2],"",-999,") {");
+			add_short_string_to_file(file_id,"\t\tif (coins_amount() >=",boe_talk_data.talk_nodes[which_node].extras[0],") {");
+			add_ish_string_to_file(file_id,"\t\t\tif (set_horse_range_property(",boe_talk_data.talk_nodes[which_node].extras[1],",",boe_talk_data.talk_nodes[which_node].extras[1] + boe_talk_data.talk_nodes[which_node].extras[2],")) {");
 			add_string(file_id,"\t\t\t\tadd_string(1);");	
-			add_big_string_to_file(file_id,"\t\t\t\tchange_coins(-1 * ",
-			   boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,");");
+			add_short_string_to_file(file_id,"\t\t\t\tchange_coins(-",boe_talk_data.talk_nodes[which_node].extras[0],");");
 			add_string(file_id,"\t\t\t\t}");
 			add_string(file_id,"\t\t\t\telse add_string(5);");
 			add_string(file_id,"\t\t\t}");
@@ -4444,46 +4430,34 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			add_string(file_id,"\tbreak;");
 			break;
 		case 22: // buy spec item
-			add_big_string_to_file(file_id,"\ttext1 = ",
-			  -999,str,-999,"",-999,";");
-			add_big_string_to_file(file_id,"\ttext3 = ",
-			  -999,str2,-999,"",-999,";");
-			add_big_string_to_file(file_id,"\ttext5 = ",
-			  -999,"You already have this item.",-999,"",-999,";");
+			add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
+			add_big_string_to_file(file_id,"\ttext3 = \"",-999,str2,-999,"",-999,"\";");
+			add_big_string_to_file(file_id,"\ttext5 = \"",-999,"You already have this item.",-999,"",-999,"\";");
 			add_string(file_id,"\tcode =");
 			add_string(file_id,"\t\tclear_strings();");
-			add_big_string_to_file(file_id,"\t\tif (has_special_item(",
-			   boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,") > 0)");
+			add_big_string_to_file(file_id,"\t\tif (has_special_item(",boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,") > 0)");
 			add_string(file_id,"\t\t\tadd_string(5);");	
 			add_string(file_id,"\t\t\telse {");	
-			add_big_string_to_file(file_id,"\t\t\t\tif (pay_coins(",
-			   boe_talk_data.talk_nodes[which_node].extras[1],"",-999,"",-999,")) {");
+			add_big_string_to_file(file_id,"\t\t\t\tif (pay_coins(",boe_talk_data.talk_nodes[which_node].extras[1],"",-999,"",-999,")) {");
 			add_string(file_id,"\t\t\t\t\tadd_string(1);");	
-			add_big_string_to_file(file_id,"\t\t\t\t\tchange_spec_item(",
-			   boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,");");
+			add_big_string_to_file(file_id,"\t\t\t\t\tchange_spec_item(",boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,");");
 			add_string(file_id,"\t\t\t\t\t}");	
 			add_string(file_id,"\t\t\t\t\telse add_string(3);");	
 			add_string(file_id,"\t\t\t\t}");	
 			add_string(file_id,"\tbreak;");			
 			break;
 		case 24: // buy town location
-			add_big_string_to_file(file_id,"\ttext1 = ",
-			  -999,str,-999,"",-999,";");
-			add_big_string_to_file(file_id,"\ttext3 = ",
-			  -999,str2,-999,"",-999,";");
-			add_big_string_to_file(file_id,"\ttext5 = ",
-			  -999,"You already know where this town is.",-999,"",-999,";");
+			add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
+			add_big_string_to_file(file_id,"\ttext3 = \"",-999,str2,-999,"",-999,"\";");
+			add_big_string_to_file(file_id,"\ttext5 = \"",-999,"You already know where this town is.",-999,"",-999,"\";");
 			add_string(file_id,"\tcode =");
 			add_string(file_id,"\t\tclear_strings();");
-			add_big_string_to_file(file_id,"\t\tif (get_town_visibility(",
-			   boe_talk_data.talk_nodes[which_node].extras[1],"",-999,"",-999,") > 0)");
+			add_big_string_to_file(file_id,"\t\tif (get_town_visibility(",boe_talk_data.talk_nodes[which_node].extras[1],"",-999,"",-999,") > 0)");
 			add_string(file_id,"\t\t\tadd_string(5);");	
 			add_string(file_id,"\t\t\telse {");	
-			add_big_string_to_file(file_id,"\t\t\t\tif (pay_coins(",
-			   boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,")) {");
+			add_big_string_to_file(file_id,"\t\t\t\tif (pay_coins(",boe_talk_data.talk_nodes[which_node].extras[0],"",-999,"",-999,")) {");
 			add_string(file_id,"\t\t\t\t\tadd_string(1);");	
-			add_big_string_to_file(file_id,"\t\t\t\t\tset_town_visibility(",
-			   boe_talk_data.talk_nodes[which_node].extras[1],"",-999,"",-999,");");
+			add_big_string_to_file(file_id,"\t\t\t\t\tset_town_visibility(",boe_talk_data.talk_nodes[which_node].extras[1],"",-999,"",-999,");");
 			add_string(file_id,"\t\t\t\t\t}");	
 			add_string(file_id,"\t\t\t\t\telse add_string(3);");	
 			add_string(file_id,"\t\t\t\t}");	
@@ -4491,20 +4465,16 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			break;
 		case 25: // force conv end
 			if (strlen(str) > 0)
-				add_big_string_to_file(file_id,"\ttext1 = ",
-				  -999,str,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 			if (strlen(str2) > 0)
-				add_big_string_to_file(file_id,"\ttext2 = ",
-				  -999,str2,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext2 = \"",-999,str2,-999,"",-999,"\";");
 			add_string(file_id,"\taction = END_TALK;");	
 			break;
 		case 26: // hostile conv end
 			if (strlen(str) > 0)
-				add_big_string_to_file(file_id,"\ttext1 = ",
-				  -999,str,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 			if (strlen(str2) > 0)
-				add_big_string_to_file(file_id,"\ttext2 = ",
-				  -999,str2,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext2 = \"",-999,str2,-999,"",-999,"\";");
 			add_string(file_id,"\taction = END_TALK;");	
 			add_string(file_id,"\tcode =");
 			add_string(file_id,"\t\tset_attitude(character_talking_to(),10);");
@@ -4512,11 +4482,9 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			break;
 		case 27: // town hostile conv end
 			if (strlen(str) > 0)
-				add_big_string_to_file(file_id,"\ttext1 = ",
-				  -999,str,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 			if (strlen(str2) > 0)
-				add_big_string_to_file(file_id,"\ttext2 = ",
-				  -999,str2,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext2 = \"",-999,str2,-999,"",-999,"\";");
 			add_string(file_id,"\taction = END_TALK;");	
 			add_string(file_id,"\tcode =");
 			add_string(file_id,"\t\tmake_town_hostile();");
@@ -4524,11 +4492,9 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			break;
 		case 28: // kill char, conv end
 			if (strlen(str) > 0)
-				add_big_string_to_file(file_id,"\ttext1 = ",
-				  -999,str,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 			if (strlen(str2) > 0)
-				add_big_string_to_file(file_id,"\ttext2 = ",
-				  -999,str2,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext2 = \"",-999,str2,-999,"",-999,"\";");
 			add_string(file_id,"\taction = END_TALK;");	
 			add_string(file_id,"\tcode =");
 			add_string(file_id,"\t\terase_char(character_talking_to());");
@@ -4536,22 +4502,18 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			break;
 		case 29: // run town node
 			if (strlen(str) > 0)
-				add_big_string_to_file(file_id,"\ttext1 = ",
-				  -999,str,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 			if (strlen(str2) > 0)
-				add_big_string_to_file(file_id,"\ttext2 = ",
-				  -999,str2,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext2 = \"",-999,str2,-999,"",-999,"\";");
 			add_string(file_id,"\tcode =");
 			add_short_string_to_file(file_id,"\trun_town_script(",boe_talk_data.talk_nodes[which_node].extras[0] + 10,");");			
 			add_string(file_id,"\tbreak;");			
 			break;
 		case 30: // run scenario node
 			if (strlen(str) > 0)
-				add_big_string_to_file(file_id,"\ttext1 = ",
-				  -999,str,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
 			if (strlen(str2) > 0)
-				add_big_string_to_file(file_id,"\ttext2 = ",
-				  -999,str2,-999,"",-999,";");
+				add_big_string_to_file(file_id,"\ttext2 = \"",-999,str2,-999,"",-999,"\";");
 			add_string(file_id,"\tcode =");
 			add_short_string_to_file(file_id,"\trun_scenario_script(",boe_talk_data.talk_nodes[which_node].extras[0] + 10,");");			
 			add_string(file_id,"\tbreak;");			
@@ -4593,10 +4555,18 @@ void get_bl_str(char *str,short str_type,short str_num)
 		return;
 		}
 	switch (str_type) {
-		case 0: strcpy(str,boe_scen_text.scen_strs[str_num + 160]); break;
-		case 1: strcpy(str,boe_scen_text.town_strs[str_num + 20]); break;
-		case 2: strcpy(str,boe_scen_text.out_strs[str_num + 10]); break;
-		case 3: strcpy(str,boe_scen_text.talk_strs[str_num]); break;
+		case 0: 
+		strcpy(str,boe_scen_text.scen_strs[str_num + 160]); 
+		break;
+		case 1: 
+		strcpy(str,boe_scen_text.town_strs[str_num + 20]); 
+		break;
+		case 2: 
+		strcpy(str,boe_scen_text.out_strs[str_num + 10]); 
+		break;
+		case 3: 
+		strcpy(str,boe_scen_text.talk_strs[str_num]); 
+		break;
 		}
 	for (short i = 0; i < (short)strlen(str); i++)
 		if (str[i] == 34)
