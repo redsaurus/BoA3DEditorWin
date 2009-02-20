@@ -4186,8 +4186,11 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 		case 229: // out store
 			add_string(file_id,"// OBSOLETE VALUE WARNING: Shops work very differently now.");
-			sprintf(temp_str1,"\t// begin_shop_mode(\"%s\",\"shop description here\",%d,-1);",node->m1,node->ex2b);
-			add_short_string_to_file(file_id,"// Name of Store = (",node->m1,");");
+//			void begin_shop_mode(char shop_name,char shop_desc,short which_shop,short price_adjust,short sell_adjustment)
+//			Immediately puts the party in shopping mode, buying from which_shop, which has name shop_name and description
+//			 shop_desc. price_adjust is a number from 0 to 6 determining how expensive the shop items are (0 - cheaper, 
+//			6 - more expensive). sell_adjustment is either -1 (which means the shop doesn't buy items) or 0 to 6, a number
+//			 which determines how much the shop pays for items (0 means the store pays more, 6 means pays less).
 			add_short_string_to_file(file_id,"// Number of first item in store = (",node->ex1a,");");
 			add_short_string_to_file(file_id,"// Store type (see docs. for list) = (",node->ex1b,");");
 			add_short_string_to_file(file_id,"// Number of items in store (1 .. 40) = (",node->ex2a,");");
@@ -4228,12 +4231,11 @@ void port_dialogue_intro_text(short *current_dialogue_node,short which_slot,FILE
 	add_short_string_to_file(file_id,"\tpersonality = ",town_being_ported * 20 + which_slot,";");
 	add_short_string_to_file(file_id,"\tnextstate = ",which_slot * 10 + 1,";");
 	add_string(file_id,"\tcondition = 1;");
-	
-	add_big_string_to_file(file_id,"\tquestion = \"",-999,boe_scen_text.talk_strs[which_slot],-999,"",-999,"\";");
+	add_ishtrs_string_to_file(file_id,"\tquestion = \"",boe_scen_text.talk_strs[which_slot],"\";");
 	get_bl_str(str,3,which_slot + 10);
-	add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
+	add_ishtrs_string_to_file(file_id,"\ttext1 = \"",str,"\";");
 	get_bl_str(str,3,which_slot + 20);
-	add_big_string_to_file(file_id,"\ttext5 = \"",-999,str,-999,"",-999,"\";");
+	add_ishtrs_string_to_file(file_id,"\ttext5 = \"",str,"\";");
 	if (which_slot == 0)
 		add_string(file_id,"\taction = INTRO; // This line only does anything if the character has a personality set.");
 		else add_string(file_id,"\taction = INTRO;");
@@ -4256,7 +4258,7 @@ void port_dialogue_intro_text(short *current_dialogue_node,short which_slot,FILE
 	
 	add_string(file_id,"\tquestion = \"_What is your job?_\";");	
 	get_bl_str(str,3,which_slot + 30);
-	add_big_string_to_file(file_id,"\ttext1 = \"",-999,str,-999,"",-999,"\";");
+	add_ishtrs_string_to_file(file_id,"\ttext1 = \"",str,"\";");
 	add_cr(file_id);
 
 	*current_dialogue_node = *current_dialogue_node + 1;
@@ -4561,15 +4563,15 @@ void handle_messages(FILE *file_id,short node_type,short message_1,short message
 	char str2[512] = "";
 	
 	if ((message_1 < 0) && (message_2 < 0))
-		add_string(file_id,"\t// Handle messages: no message.");			
+		return;
 
 	if (message_1 >= 0) {
 		get_bl_str(str1,node_type,message_1);
-		add_big_string_to_file(file_id,"\tmessage_dialog(",-999,str1,-999,",);",-999,"");
+		add_ishtrs_string_to_file(file_id,"\tmessage_dialog(\"",str1,"\");");
 		}
 	if (message_2 >= 0) {
 		get_bl_str(str2,node_type,message_2);
-		add_big_string_to_file(file_id,"\tmessage_dialog(,",-999,str2,-999,");",-999,"");
+		add_ishtrs_string_to_file(file_id,"\tmessage_dialog(\"",str2,"\");");
 		}
 }
 
