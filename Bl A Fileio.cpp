@@ -290,6 +290,53 @@ short old_item_to_new_item[400] =
 457,458,459,460,461, 462,463,464,465,466
 };
 
+
+//    1     secret door
+//    2     door
+//    3     locked door
+//    4     m locked door
+//    5     impass door
+//    6     open door
+//    7     window
+//    8     closed gate
+//    9     open gate
+//  10     cracked
+//  11     Sign and wall
+//  12     wall
+//  13     road
+//  14     bridge
+//  15     non-wall 
+
+short old_ter_variety[256] = {
+15,15,15,15,15,12,12,12,12,12,
+12,12,12,12,12,12,12,12,12,12,
+12,12,12,12,12,12,12,12,12,12,
+12,12,12,12,12,12,15,15,15,15,
+15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,14,14,14,14,14,
+14,15,14,14,15,15,15,15,15,13,
+13,13,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15,15,15,15,15,
+15,15,12,1,1,2,3,4,5,6,
+8,9,11,10,10,10,12,12,7,12,
+1,1,2,3,4,5,6,8,9,11,
+10,10,10,7,12,1,1,2,3,4,
+5,6,8,9,11,10,10,10,12,7,
+15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15,15,15,15,15,
+15,15,15,15,15,15
+};
+
+
 // function prototype
 bool read_BoAFilesFolder_from_Pref( char * boaFolder );
 void write_BoAFilesFolder_to_Pref( char * boaFolder );
@@ -1936,9 +1983,9 @@ void import_blades_of_exile_scenario()
 	char new_directory[_MAX_PATH];
 	sprintf(new_directory,"%s%s%s",store_editor_path,slash,new_scen_name);
 	error = (short)CreateDirectory(new_directory,NULL);
-	if (error == FALSE) { //failed to make, try another name
-		// construct name of new scenairo
-		for (i = 0; i < _MAX_PATH - 6; i++)
+		// failed to make scenario, try another name, construct name of new scenario	
+		if (error == FALSE) { 
+				for (i = 0; i < _MAX_PATH - 6; i++)
 			if (new_directory[i] == 0) {
 				new_directory[i] = ' ';
 				new_directory[i + 1] = 'c';
@@ -1956,7 +2003,6 @@ void import_blades_of_exile_scenario()
 			return;
 			}
 		}
-
 	char new_scen_path[_MAX_PATH];
 	sprintf(new_scen_path,"%s%s",new_directory,slash);
 	char new_scen_path_and_name[_MAX_PATH];
