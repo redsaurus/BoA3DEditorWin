@@ -2070,6 +2070,15 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 				overall_mode = 19;
 				break;
 				
+			case 'C': // copy
+			set_string("Instance copied","  ");			
+			copy_selected_instance();
+			if(editing_town)
+				change_made_town = TRUE;
+			else
+				change_made_outdoors = TRUE;
+			break;
+				
 			case 'E': // edit sign
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][1].left;
 				pass_point.y = 6 + palette_buttons[3][1].top;
@@ -2142,9 +2151,21 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 				break;
 			
 			case 'T':
+					set_string("Drawing mode","  ");				 
 					selected_item_number = -1;                 
 					set_cursor(0);
 					overall_mode = 0;
+			break;
+			
+			case 'V': // paste
+
+			if ((copied_creature.exists() == FALSE) && (copied_item.exists() == FALSE) && (copied_ter_script.exists == FALSE)) {
+				beep();
+				break;
+				}
+			set_string("Paste copied instance","Select location to place");
+			set_cursor(7);
+			overall_mode = 48;			
 			break;
 				
 			case 'W':
@@ -2153,6 +2174,15 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 				set_cursor(5);
 				overall_mode = 18;
 				break;
+				
+			case 'X': // cut
+			set_string("Instance deleted","  ");
+				 cut_selected_instance();
+			if(editing_town)
+				change_made_town = TRUE;
+			else
+				change_made_outdoors = TRUE;
+			break;
 				
 			case ' ':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][1].left;
@@ -2230,16 +2260,6 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 						else handle_outdoor_menu(1);
 					break;
 				}
-
-					
-//        MENUITEM "&Copy\tCtrl+C",               102					
-// 			Ctrl + D = outdoor/town details
-// 			Ctrl + L = load new zone
-//        MENUITEM "&Open Scenario\tCtrl+O",      1
-//        MENUITEM "&Quit\tCtrl+Q",               6
-//        MENUITEM "&Save Scenario\tCtrl+S",      2
-//        MENUITEM "&Paste\tCtrl+V",              103
-//        MENUITEM "&Cut\tCtrl+X",                101
 		
 				if ((chr >= 97) && (chr <= 122)) {
 					if (current_drawing_mode == 0) { // use shortcut keys, if editing floor
