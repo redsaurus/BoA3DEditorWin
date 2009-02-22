@@ -79,7 +79,7 @@ short data_dump_file_id;
 char start_name[256];
 short start_volume;
 long start_dir;
-
+short aa = 0;
 // Boolean cur_scen_is_mac = TRUE;
 
 ave_tr_type ave_t;
@@ -2410,6 +2410,16 @@ Boolean is_old_road(short i,short j)
 	if ((boe_outdoor.terrain[i][j] >= 72) && (boe_outdoor.terrain[i][j] <= 73) )
 		return TRUE;
 	return FALSE;
+	
+/*		for (i = 0; i < 48; i++)
+		for (j = 0; j < 48; j++) {
+			current_terrain.variety[i][j] = (short)old_ter_variety[boe_outdoor.terrain[i][j]];
+	 }
+	 
+	if (boe_outdoor.terrain.variety[i][j] ==  13)
+		return TRUE;
+	return FALSE;
+*/	
 }
 
 Boolean is_old_wall(short ter)
@@ -3281,13 +3291,12 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 
 
 	// handle messages for one shots
-	if ((node->type >= 50) && (node->type <= 62) &&
-	  (node->sd1 >= 0) && (node->sd2 >= 0)) {
+	if ((node->type >= 50) && (node->type <= 62) && (node->sd1 >= 0) && (node->sd2 >= 0)) {
 		add_ish_string_to_file(file_id,"\tif (get_flag(",node->sd1,",",node->sd2,") == 250)");
 			add_string(file_id,"\t\tend();");
 		}
 
-		if ((node->type >= 0) && (node->type != 5) && ((node->type < 55)  || (node->type > 60)))
+		if ((node->type >= 0) && (node->type != 5) && (node->type != 189) && (node->type != 190) && ((node->type < 55)  || (node->type > 60)))
 					handle_messages(file_id,node_type,node->m1,node->m2);		
 					
 	switch (node->type) {
@@ -3334,8 +3343,9 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
                }
 			else {
                 add_string(file_id,"\tif (is_outdoor())");
+				if (node->jumpto < 0);                
 				add_string(file_id,"\t\t end();");
-                }
+            }
 			break;
 		case 8: // town block
 			if (node->ex1a > 0) {
@@ -3346,7 +3356,8 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
                 }
 			else {
                 add_string(file_id,"\tif (is_town())");
-				add_string(file_id,"\t\t end();");				
+				if (node->jumpto < 0);                
+				add_string(file_id,"\t\t end();");
                 }
 			break;
 		case 9: // combat block;
@@ -3358,7 +3369,8 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
                 }	
 			else {
                 add_string(file_id,"\tif (is_combat())");
-				add_string(file_id,"\t\t end();");				
+				if (node->jumpto < 0);                
+				add_string(file_id,"\t\t end();");
                 }
 			break;
 		case 10: // looking block
@@ -3375,8 +3387,8 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_short_string_to_file(file_id,"\tset_ticks_forward(",node->ex1a,");");
 			break;
 		case 13:
-			add_string(file_id,"// OBSOLETE NODE: Timers are no longer used. Manually write scenario timers in the ");
-			add_string(file_id,"// scenario script.");
+			add_string(file_id,"// OBSOLETE NODE: Timers are no longer used.");
+			add_string(file_id,"// Manually write scenario timers in the scenario script.");
 			add_short_string_to_file(file_id,"// Number of moves = (",node->ex1a,");");			
 			add_short_string_to_file(file_id,"// Scenario state called: (",node->ex1b + 10,");");						
 			break;
@@ -3399,15 +3411,14 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 			
 		case 19: // forced give
+				aa = old_item_to_new_item[node->ex1a];
 			if (node->ex2b < 0) {
-				add_short_string_to_file(file_id,"\treward_give(",node->ex1a,");")	;	
+				add_short_string_to_file(file_id,"\treward_give(",aa,");")	;	
 				}
 				else {
-					add_short_string_to_file(file_id,"\tif (reward_give(",node->ex1a,") == FALSE)");			
+					add_short_string_to_file(file_id,"\tif (reward_give(",aa,") == FALSE)");			
 					add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");
 					}
-			add_string(file_id,"// Potential translation problems");
-					
 			break;
 		case 20: // buy items of type
 			add_ish_string_to_file(file_id,"\tif (take_all_of_item_class(",node->ex1a,",",node->ex2a,") > 0) ");		
@@ -3436,6 +3447,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 25: // have rest
 			add_string(file_id,"\trevive_party();");
 			add_short_string_to_file(file_id,"\tset_ticks_forward(",node->ex1a,");");
+			add_short_string_to_file(file_id,"// Health and spell points to give: ",node->ex1b,".");									
 			break;
 		case 26: // wandering will fight
 			if (node->ex1a == 0)
@@ -3445,32 +3457,36 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 27: // end scen
 			add_string(file_id,"\tend_scenario(1);");
 			break;
+		   
 		case 50: // give item
-			add_short_string_to_file(file_id,"\tif (reward_give(",node->ex1a,") > 0) {");	
+				aa = old_item_to_new_item[node->ex1a];
+			add_short_string_to_file(file_id,"\tif (reward_give(",aa,") > 0) {");	
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
 				add_ish_string_to_file(file_id,"\t\tset_flag(",node->sd1,",",node->sd2,");");
-			if (node->ex1b > 0) 
-				add_short_string_to_file(file_id,"\t\tchange_coins(",node->ex1b,");");
+				if (node->ex1b > 0) 
+					add_short_string_to_file(file_id,"\t\t\tchange_coins(",node->ex1b,");");
+				if (node->ex2a != 0) 
+					add_short_string_to_file(file_id,"\t\t\t// OBSOLETE NODE: give ",node->ex2a," food.");
 			add_string(file_id,"\t\t}");
 			if (node->ex2b >= 0) {
 				add_short_string_to_file(file_id,"\t\telse set_state_continue(",node->ex2b + 10,");");
 								}
-			add_string(file_id,"// Potential translation problems");								
 			break;
 		case 51: // give spec item
-			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
-				add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",",250,");");
-			add_ish_string_to_file(file_id,"\tchange_spec_item(",node->ex1a,",",(node->ex1b == 0) ? 1 : -1,");");			
+			if (node->ex1b == 0)				
+			add_short_string_to_file(file_id,"\tchange_spec_item(",node->ex1a,",1);");
+			else 
+			add_short_string_to_file(file_id,"\tchange_spec_item(",node->ex1a,",-1);");
 			break;
 		case 52: // one time do nothing
 			break;
 		case 53: // one time do nothing and set
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
-				add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",",250,");");
+				add_ish_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",250);");
 			break;
-		case 54: // one time do nothing and set
+		case 54: // one time text message
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
-				add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",",250,");");
+				add_ish_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",250);");
 			break;
 		case 55: case 56: case 57: // display dialog
 			add_string(file_id,"\treset_dialog();");
@@ -3481,18 +3497,6 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				add_string(file_id,new_line);
 				}
 				}
-			if (node->m2 > 0) {
-				add_string(file_id,"\tadd_dialog_choice(0,OK.);");
-				if (node->ex1a >= 0) {
-				sprintf(new_line,"\tadd_dialog_choice(1,\"%s\".);", old_blades_button_strs[old_blades_available_dlog_buttons[node->ex1a]]);
-				add_string(file_id,new_line);				
-				}
-				if (node->ex2a >= 0) {
-				sprintf(new_line,"\tadd_dialog_choice(2,\"%s\".);", old_blades_button_strs[old_blades_available_dlog_buttons[node->ex2a]]);
-				add_string(file_id,new_line);
-				}	
-				}
-				else {
 				if (node->ex1a >= 0) {
 					sprintf(new_line,"\tadd_dialog_choice(0,\"%s\".);", old_blades_button_strs[old_blades_available_dlog_buttons[node->ex1a]]);
 						add_string(file_id,new_line);
@@ -3501,57 +3505,31 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 					sprintf(new_line,"\tadd_dialog_choice(1,\"%s\".);", old_blades_button_strs[old_blades_available_dlog_buttons[node->ex2a]]);
 						add_string(file_id,new_line);
 					}
-					}
+			if (node->m2 > 0) 
+				add_string(file_id,"\tadd_dialog_choice(2,OK.);");
 			add_string(file_id,"\tchoice = run_dialog(1);");
-			if (node->m2 > 0) {
-				if ((node->sd1 >= 0) && (node->sd2 >= 0)) { 
-					if ((node->ex1a < 0) && (node->ex2a < 0))
-						add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",",250,");");
-						else {
-							add_string(file_id,"\tif (choice != 1)");
-							add_big_string_to_file(file_id,"\t\tset_flag(",node->sd1,",",node->sd2,",",250,");");
-							}
-					}
-				if (node->ex1a >= 0) {
-					add_string(file_id,"\tif (choice == 2)");
+			if (node->ex1a >= 0) {
+					add_string(file_id,"\tif (choice == 1)");
+					if ((node->sd1 >= 0) && (node->sd2 >= 0))  
+						add_ish_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",250);");
 					if (node->ex1b >= 0)
 						add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");
-						else add_string(file_id,"\t\tend();");
+					else add_string(file_id,"\t\tend();");
 					}
 				if (node->ex2a >= 0) {
-					add_string(file_id,"\tif (choice == 3)");
+					add_string(file_id,"\tif (choice == 2)");
+					if ((node->sd1 >= 0) && (node->sd2 >= 0))  
+						add_ish_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",250);");
 					if (node->ex2b >= 0)
 						add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");
-						else add_string(file_id,"\t\tend();");
+					else add_string(file_id,"\t\tend();");
 					}
-				}
-				else {
-					if ((node->sd1 >= 0) && (node->sd2 >= 0)) { 
-						//add_string(file_id,"\tif (choice != 1)");
-						//add_big_string_to_file(file_id,"\t\tset_flag(",node->sd1,",",node->sd2,",",250,");");
-						if (node->ex2a < 0)
-							add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",",250,");");
-							else {
-								add_string(file_id,"\tif (choice != 1)");
-								add_big_string_to_file(file_id,"\t\tset_flag(",node->sd1,",",node->sd2,",",250,");");
-								}
-						}
-					if (node->ex1a >= 0) {
-						add_string(file_id,"\tif (choice == 1)");
-						if (node->ex1b >= 0)
-							add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");
-							else add_string(file_id,"\t\tend();");
-						}
-					if (node->ex2a >= 0) {
-						add_string(file_id,"\tif (choice == 2)");
-						if (node->ex2b >= 0)
-							add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");
-							else add_string(file_id,"\t\tend();");
-						}
-					}
-			
+					if ((node->ex1a < 0) || (node->ex2a < 0))
+					add_string(file_id,"\t// BLANK CHOICES: the numbering of choices may need to be reviewed.");
 			break;	
+			
 		case 58: case 59: case 60: // display item dialog
+				aa = old_item_to_new_item[node->ex1a];		
 			add_string(file_id,"\treset_dialog_preset_options(1);");
 			for (short i = 0; i < 6; i++) {
 				get_bl_str(temp_str1,node_type,node->m1 + i);
@@ -3562,40 +3540,40 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				}
 			add_string(file_id,"\tchoice = run_dialog(1);");
 			add_string(file_id,"\tif (choice == 2) {");
-			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
-				add_big_string_to_file(file_id,"\t\tset_flag(",node->sd1,",",node->sd2,",",250,");");
 			if (node->ex1a > 0) {
-				add_short_string_to_file(file_id,"\t\tif (reward_give(",node->ex1a,")) {");
+				add_short_string_to_file(file_id,"\t\tif (reward_give(",aa,")) {");
 				if (node->ex1b > 0) 
 					add_short_string_to_file(file_id,"\t\t\tchange_coins(",node->ex1b,");");
 				if (node->ex2a != 0) 
-					add_string(file_id,"\t\t\t// OBSOLETE NODE: Food works completely differently now.");
+					add_short_string_to_file(file_id,"\t\t\t// OBSOLETE NODE: give ",node->ex2a," food.");
 				if (node->m2 >= 0) 
 					add_short_string_to_file(file_id,"\t\tchange_spec_item(",node->m2,",1);");
-				
-				add_string(file_id,"\t\t\t}");
+				if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
+				add_ish_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",250);");
+				if (node->ex2b >= 0)
+					add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");
+				add_string(file_id,"\t\t}");
 				}
-				else { 
-					if (node->ex1b > 0) 
-						add_short_string_to_file(file_id,"\t\tchange_coins(",node->ex1b,");");
-					if (node->m2 >= 0) 
-						add_short_string_to_file(file_id,"\t\tchange_spec_item(",node->m2,",1);");
+			else { 
+				if (node->ex1b > 0) 
+					add_short_string_to_file(file_id,"\t\tchange_coins(",node->ex1b,");");
+				if (node->ex2a != 0) 
+					add_short_string_to_file(file_id,"\t\t\t// OBSOLETE NODE: give ",node->ex2a," food.");
+				if (node->m2 >= 0) 
+					add_short_string_to_file(file_id,"\t\tchange_spec_item(",node->m2,",1);");
+				if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
+					add_big_string_to_file(file_id,"\t\tset_flag(",node->sd1,",",node->sd2,",",250,");");
 					}			
-			if (node->ex2b >= 0)
-				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");
-			add_string(file_id,"\t\t}");
-			add_string(file_id,"// Potential translation problems");			
+			add_string(file_id,"\t\t\t}");					
 			break;
-			
-			
 		case 61: // place outdoor enc
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
-				add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",",250,");");
+				add_ish_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",250);");
 			add_short_string_to_file(file_id,"\tcreate_out_spec_enc(",node->ex1a,");");
 			break;
 		case 62: // place town enc
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
-				add_big_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",",250,");");
+				add_ish_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",250);");
 			add_short_string_to_file(file_id,"\tactivate_hidden_group(",node->ex1a,");");
 			break;
 		case 63: // trap
@@ -3889,19 +3867,23 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 		case 151: // Cave Lore present
 			add_string(file_id,"// OBSOLETE NODE: Cave Lore Trait doesn't exist anymore.");
-			add_string(file_id,"//   Try checking to see if party has enough Nature Lore skill instead.");
-			add_short_string_to_file(file_id,"// set_state_continue(",node->ex1b + 10,");");						
+			add_string(file_id,"//   Here Nature Lore has been assigned an arbitrary value of 30.");			
+			add_string(file_id,"\tif (get_skill_total(16) >= 30)");
+			add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");
+			add_string(file_id,"\telse");
 			break;
 		case 152: // Woodsman present
 			add_string(file_id,"// OBSOLETE NODE: Woodsman Trait doesn't exist anymore.");
-			add_string(file_id,"//   Try checking to see if party has enough Nature Lore skill instead.");
-			add_short_string_to_file(file_id,"// set_state_continue(",node->ex1b + 10,");");						
+			add_string(file_id,"//   Here Nature Lore has been assigned an arbitrary value of 30.");			
+			add_string(file_id,"\tif (get_skill_total(16) >= 30)");
+			add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");						
+			add_string(file_id,"\telse");
 			break;
 		case 153: // enough mage lore
 			add_short_string_to_file(file_id,"\tif (get_skill_total(13) >= ",node->ex1a,")");
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");			
-				else add_string(file_id,"\t\tend();");			
+				else add_string(file_id,"\t\telse");			
 			break;
 		case 154: // text response
 			add_string(file_id,"// WARNING, NODE ALTERED: The program now looks for exact matches of text");
@@ -4084,7 +4066,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 		case 190: // stairs
 			add_string(file_id,"\tblock_entry(1);");
-			if (node->m1 < 0) {
+			if (node->ex2b == 1) {
 				add_big_string_to_file(file_id,"\t\tmove_to_new_town(",node->ex2a,",",node->ex1a,",",node->ex1b,");");			
 				add_string(file_id,"\t\tend();");
 				}
@@ -4109,7 +4091,8 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,temp_str1);
 			break;
 		case 192: // place item
-			add_big_string_to_file(file_id,"\t\tput_item_on_spot(",node->ex1a,",",node->ex1b,",",node->ex2a,");");			
+				aa = old_item_to_new_item[node->ex2a];
+			add_big_string_to_file(file_id,"\t\tput_item_on_spot(",node->ex1a,",",node->ex1b,",",aa,");");			
 			add_string(file_id,"// Potential translation problems");										  						
 			break;
 		case 193: // split party
@@ -4232,11 +4215,6 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 		case 229: // out store
 			add_string(file_id,"// OBSOLETE VALUE WARNING: Shops work very differently now.");
-//			void begin_shop_mode(char shop_name,char shop_desc,short which_shop,short price_adjust,short sell_adjustment)
-//			Immediately puts the party in shopping mode, buying from which_shop, which has name shop_name and description
-//			 shop_desc. price_adjust is a number from 0 to 6 determining how expensive the shop items are (0 - cheaper, 
-//			6 - more expensive). sell_adjustment is either -1 (which means the shop doesn't buy items) or 0 to 6, a number
-//			 which determines how much the shop pays for items (0 means the store pays more, 6 means pays less).
 			add_short_string_to_file(file_id,"// Number of first item in store = (",node->ex1a,");");
 			add_short_string_to_file(file_id,"// Store type (see docs. for list) = (",node->ex1b,");");
 			add_short_string_to_file(file_id,"// Number of items in store (1 .. 40) = (",node->ex2a,");");
@@ -4246,26 +4224,12 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		}
 
 	if (node->jumpto >= 0)
-		add_short_string_to_file(file_id,"\tset_state_continue(",node->jumpto + 10,");");
+		add_short_string_to_file(file_id,"\tset_state_continue(",node->jumpto + 10,"); // Jump to state");
 		
 	add_string(file_id,"break;");
 	add_cr(file_id);
 }
 
-
-/*
-	
-	for (short i = 0; i < 10; i++)
-		if (same_string(boe_scen_text.talk_strs[i],"Unused" == FALSE)) {
-			port_dialogue_intro_text(&current_dialogue_node,i);
-			
-			for (j = 0; j < 60 ; j++) {
-				if (boe_talk_data.talk_nodes[j].personality % 10 == i)
-					port_dialogue_node(&current_dialogue_node,i,j,which_town);
-				}
-			}
-			
-*/
 
 // which_slot is 0 .. 9. it is which of the 10 personalities in the town being ported
 void port_dialogue_intro_text(short *current_dialogue_node,short which_slot,FILE *file_id,short town_being_ported)
@@ -4689,7 +4653,7 @@ void add_big_string_to_file(FILE *file_id,char *str1,short num1,char *str2,short
 			sprintf(message,"%s%d%s%s%s",str1, num1,str2,str3,str4);
 		else if (num3 == -999)
 			sprintf(message,"%s%d%s%d%s%s", str1, num1, str2, num2, str3, str4);
-
+		else sprintf(message,"%s%d%s%d%s%d%s",str1, num1,str2,num2,str3,num3,str4);
 	add_string_to_file(file_id,message);
 	add_cr(file_id);
 }
