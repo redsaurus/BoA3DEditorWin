@@ -908,7 +908,7 @@ void handle_town_menu(int item_hit)
 				break; // set not prop
 		case 13: for (i = 0; i < 144; i++)
 					town.preset_items[i].properties = town.preset_items[i].properties | 2;
-				fancy_choice_dialog(877,0);
+				fancy_choice_dialog(879,0);
 				draw_terrain();
 				change_made_town = TRUE; 
 				break; // set  prop

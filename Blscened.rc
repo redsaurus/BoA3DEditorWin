@@ -38,7 +38,11 @@ IDC_CURSOR136           CURSOR                  "Resources/rect dr.cur"
 IDC_CURSOR137           CURSOR                  "Resources/hand.cur"
 IDC_CURSOR138           CURSOR                  "resources/rect up.cur"
 IDC_CURSOR139           CURSOR                  "resources/rect dw.cur"
-
+IDC_CURSOR140           CURSOR                  "resources/blocked.cur"
+IDC_CURSOR141           CURSOR                  "resources/web.cur"
+IDC_CURSOR142           CURSOR                  "resources/crate.cur"
+IDC_CURSOR143           CURSOR                  "resources/barrel.cur"
+IDC_CURSOR144           CURSOR                  "resources/barrier.cur"
 /////////////////////////////////////////////////////////////////////////////
 //
 // Icon
@@ -78,8 +82,8 @@ BEGIN
     END
     POPUP "&Edit"
     BEGIN
-    	MENUITEM "&Undo",               101
-        MENUITEM "&Redo",               102
+    	MENUITEM "&Undo\tCtrl+Z",               101
+        MENUITEM "&Redo\tCtrl+Y",               102
     	MENUITEM SEPARATOR
         MENUITEM "&Cut\tCtrl+X",                104
         MENUITEM "&Copy\tCtrl+C",               105
@@ -124,7 +128,8 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Add Random Items",            311
         MENUITEM "Set All Items Not Property",  312
-        MENUITEM "Clear All Items",             313
+        MENUITEM "Set All Items Property",      313        
+        MENUITEM "Clear All Items",             314
         MENUITEM SEPARATOR
         MENUITEM "Advanced:",                   315
         MENUITEM "  Clear All Monsters",        316
@@ -1293,6 +1298,14 @@ BEGIN
     LTEXT           "0_5",2,150,58,62,20
     LTEXT           "Do you want to erase all creatures in this town?",3,26,
                     25,258,32
+END
+
+879 DIALOG  10, 10, 341, 91
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,210,70,66,20
+    LTEXT           "All of the items in this town are now property, if they are taken by the party the guards may attack.",
+                    2,19,22,257,47
 END
 
 880 DIALOG  10, 10, 285, 157

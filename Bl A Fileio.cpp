@@ -83,7 +83,7 @@ short aa = 0;
 short bb = 0;
 short cc = 0;
 short dd = 0;
-short ee = 0;
+
 // Boolean cur_scen_is_mac = TRUE;
 
 
@@ -2409,36 +2409,12 @@ void port_boe_out_data()
 
 Boolean is_old_road(short i,short j)
 {
-/*	if ((boe_outdoor.terrain[i][j] >= 79) && (boe_outdoor.terrain[i][j] <= 81) )
-		return TRUE;
-	if ((boe_outdoor.terrain[i][j] >= 65) && (boe_outdoor.terrain[i][j] <= 70) )
-		return TRUE;
-	if ((boe_outdoor.terrain[i][j] >= 72) && (boe_outdoor.terrain[i][j] <= 73) )
-		return TRUE;
-	return FALSE;
-*/	
-			ee = (short)old_ter_variety[boe_outdoor.terrain[i][j]];
-			
-				if (ee == 13)
-						return TRUE;
-				else	
-						return FALSE;
-
+ 		  return(old_ter_variety[boe_outdoor.terrain[i][j]] == 13);
 }
 
 Boolean is_old_wall(short ter)
 {
-/*	if ((ter >= 5) && (ter <= 35))
-		return TRUE;
-	if ((ter >= 122) && (ter <= 169))
-		return TRUE;
-	return FALSE;
-*/	
-			ee = (short)old_ter_variety[ter];		
-				if ((ee > 0) && (ee < 13))
-						return TRUE;
-				else	
-						return FALSE;
+ 		return((old_ter_variety[ter] > 0) && (old_ter_variety[ter] < 13));
 }
 
 
@@ -2683,8 +2659,7 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 							door_script.loc.y = (t_coord)j;
 							sprintf(door_script.script_name,"door");
 							
-							switch (ee) {
-								ee = (short)old_ter_variety[boe_big_town.terrain[i][j]];								   
+							switch (old_ter_variety[boe_big_town.terrain[i][j]]) {
 								case 1:
 								t_d.terrain[i][j] = 18 + wall_adj; 
 								break; // s door
