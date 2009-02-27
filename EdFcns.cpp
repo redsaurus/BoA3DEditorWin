@@ -923,16 +923,11 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							need_redraw = TRUE;
 							mouse_button_held = FALSE;
 							break;		
-						case 203: // place, edit terrain script
-							if (editing_town == FALSE) {
-								set_string("Place Terrain Script","Only in towns.");
-								break;
-								}
-							set_string("Place Terrain Script","");
-							overall_mode = 70;
-							set_cursor(7);
-							break;		
-
+						case 203: // eyedropper
+							set_cursor(1);		
+							set_string("Click on terrain to select it.","   ");				
+							overall_mode = 73;
+						break;		
 // q_3DModStart
 						case 204: //switch 3D on/off
 							if(cur_viewing_mode >= 10) {
@@ -1031,45 +1026,52 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							set_string("Make Spot Blocked","Select location");
 							overall_mode = 61;
 							object_sticky_draw = shift_key;
-							set_cursor(0);
+							set_cursor(10);
 							break;		
 						case 401: 
 							set_string("Place web","Select location");
 							overall_mode = 62;
 							object_sticky_draw = shift_key;
-							set_cursor(0);
+							set_cursor(11);
 							break;		
 						case 402: 
 							set_string("Place crate","Select location");
 							overall_mode = 63;
 							object_sticky_draw = shift_key;
-							set_cursor(0);
+							set_cursor(12);
 							break;		
 						case 403: 
 							set_string("Place barrel","Select location");
 							overall_mode = 64;
 							object_sticky_draw = shift_key;
-							set_cursor(10);
+							set_cursor(13);
 							break;		
 						case 404: 
 							set_string("Place fire barrier","Select location");
 							overall_mode = 65;
 							object_sticky_draw = shift_key;
-							set_cursor(0);
+							set_cursor(14);
 							break;
 						case 405: 
 							set_string("Place force barrier","Select location");
 							overall_mode = 66;
 							object_sticky_draw = shift_key;
-							set_cursor(0);
+							set_cursor(14);
 							break;		
 						case 406: 
-							break;		
-						case 407: 
 							set_string("Clear space","Select space to clear");
 							overall_mode = 67;
 							object_sticky_draw = shift_key;
 							set_cursor(4);
+							break;
+						case 407: // place terrain script
+							if (editing_town == FALSE) {
+								set_string("Place Terrain Script","Only in towns.");
+								break;
+								}
+							set_string("Place Terrain Script","");
+							overall_mode = 70;
+							set_cursor(7);
 							break;
 
 						case 500: 
@@ -1723,6 +1725,14 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				if(!object_sticky_draw)
 					reset_drawing_mode(); 
 				break;		
+		case 73:
+				set_cursor(1);		
+				set_string("Click on terrain/floor to select it.","   ");				
+				current_floor_drawn=floor_in_spot;
+				current_terrain_drawn=ter_in_spot;
+				set_cursor(0);
+				overall_mode = 0;
+				break;
 
 		}
 		
@@ -2116,8 +2126,8 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 			break;		
 			
 			case 'P': // place terrain script
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][2].left;
-				pass_point.y = 6 + palette_buttons[3][2].top;
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][4].left;
+				pass_point.y = 6 + palette_buttons[7][4].top;
     			handle_action(pass_point,wParam,-1);
 			break;		
 			
@@ -2183,48 +2193,20 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 			else
 				change_made_outdoors = TRUE;
 			break;
-				
+
+			case 'Y':
+				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][2].left;
+				pass_point.y = 6 + palette_buttons[3][2].top;
+    			handle_action(pass_point,wParam,-1);
+			break;
+			
+							
 			case ' ':
 				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][1].left;
 				pass_point.y = 6 + palette_buttons[1][1].top;
 				handle_action(pass_point,wParam,-1);
 				break; 
 
-			case '!':
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][4].left;
-				pass_point.y = 6 + palette_buttons[0][4].top;
-    			handle_action(pass_point,wParam,-1);
-			break; 
-			case '@':
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][4].left;
-				pass_point.y = 6 + palette_buttons[1][4].top;
-    			handle_action(pass_point,wParam,-1);
-			break; 
-			case '#':
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][4].left;
-				pass_point.y = 6 + palette_buttons[2][4].top;
-    			handle_action(pass_point,wParam,-1);
-			break; 
-			case '$':
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][4].left;
-				pass_point.y = 6 + palette_buttons[3][4].top;
-    			handle_action(pass_point,wParam,-1);
-			break; 
-			case '%':
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][4].left;
-				pass_point.y = 6 + palette_buttons[4][4].top;
-    			handle_action(pass_point,wParam,-1);
-			break; 
-			case '^':
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][4].left;
-				pass_point.y = 6 + palette_buttons[5][4].top;
-    			handle_action(pass_point,wParam,-1);
-			break; 
-			case '*':
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][4].left;
-				pass_point.y = 6 + palette_buttons[7][4].top;
-    			handle_action(pass_point,wParam,-1);
-			break; 
 				
 												
 // q_3DModStart
