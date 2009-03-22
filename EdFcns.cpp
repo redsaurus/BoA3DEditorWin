@@ -925,7 +925,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							break;		
 						case 203: // eyedropper
 							set_cursor(1);		
-							set_string("Click on terrain to select it.","   ");				
+							set_string("Click on terrain/floor to select it.","   ");				
 							overall_mode = 73;
 						break;		
 // q_3DModStart

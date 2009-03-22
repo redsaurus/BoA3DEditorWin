@@ -32,7 +32,7 @@ short store_cur_t ;
 Boolean store_strict_string;
 
 // q_3DModStart
-HCURSOR cursors[10] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+HCURSOR cursors[15] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 // q_3DModEnd
 
 
@@ -373,7 +373,7 @@ void set_cursor(short which_c)
 
 	if (cursors[0] == NULL) {
 // q_3DModStart
-		for (i = 0; i < 10; i++)
+		for (i = 0; i < 15; i++)
 			cursors[i] = LoadCursor(store_hInstance,MAKEINTRESOURCE(130 + i));
 // q_3DModEnd
 	}

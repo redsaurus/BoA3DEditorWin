@@ -962,6 +962,15 @@ public:
 	location procedure_passed_locations[NUM_PROCEDURE_PASS_VARS];
 };
 
+/*
+class boe_outdoor_record_type{
+public:
+	void clear_boe_outdoor_record_type();
+	unsigned char	terrain_variety[48][48];
+	old_blades_outdoor_record_type;
+	};
+*/
+
 // begin Blades of Exile records
 // This junk only used for routines to port BoE scenarios.
 
@@ -1502,13 +1511,8 @@ void handle_edit_menu(int item_hit);
 bool file_initialize();
 void save_campaign();
 void load_campaign();
-// void augment_terrain(location to_create);
 void load_outdoor_and_borders(location which_out);
-
-// q_3DModStart
 void save_change_to_outdoor_size(short plus_north,short plus_west,short plus_south,short plus_east,short on_surface);
-// q_3DModEnd
-
 void load_town(short which_town);
 void start_data_dump();
 Boolean create_basic_scenario(char *scen_name_short,char *scen_name_with_ext,char *scen_full_name,short out_width,short out_height,short on_surface,Boolean use_warriors_grove);
@@ -1520,6 +1524,9 @@ void import_blades_of_exile_scenario();
 bool import_boa_outdoors();
 short FSRead(FILE *file_id, long *len, char *data);
 short FSClose(FILE *file_id);
+
+// Query
+void start_full_data_dump();
 
 // dlogtool
 void cd_init_dialogs();

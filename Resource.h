@@ -22,6 +22,11 @@
 #define IDC_CURSOR137                   137
 #define IDC_CURSOR138                   138
 #define IDC_CURSOR139                   139
+#define IDC_CURSOR140                   140
+#define IDC_CURSOR141                   141
+#define IDC_CURSOR142                   142
+#define IDC_CURSOR143                   143
+#define IDC_CURSOR144                   144
 #define IDD_DIALOG1                     139
 #define ID_SCENARIO_CHANGEOUTDOORSIZE   220
 #define IDC_STATIC                      -1
