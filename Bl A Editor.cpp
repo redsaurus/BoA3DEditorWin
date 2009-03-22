@@ -44,7 +44,7 @@
 #include "global.h"
 #include "version.h"
 
-// Gloabl varialbes
+// Global variables
 
 HINSTANCE store_hInstance;
 
@@ -107,7 +107,7 @@ short cur_viewing_mode = 10; // 0 - big icons 1 - small icons 10 - big 3D icons 
 // q_3DModEnd
 
 short overall_mode = 0;
-// 0 - 9 - different errain painting modes
+// 0 - 9 - different terrain painting modes
 // 0 - neutral state, editing terrain/spaces with pencil
 // 1 - large paintbrush
 // 2 - small paintbrush
@@ -168,7 +168,7 @@ item_type copied_item;
 creature_start_type copied_creature;
 in_town_on_ter_script_type copied_ter_script;
 
-// external gloabal variables
+// external global variables
 
 extern HDC main_dc;
 extern HBITMAP main_bitmap;
@@ -201,6 +201,7 @@ void handle_campaign_menu(int item_hit);
 void handle_item_menu(int item_hit);
 void handle_monst_menu(int item_hit);
 void handle_edit_menu(int item_hit);
+void handle_help_menu(int item_hit);
 short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam);
 // void max_window(HWND window);
 void check_colors();
@@ -626,7 +627,7 @@ void handle_menu_choice(short choice)
 				handle_monst_menu(menu_item - 1100);
 				break;
 			case 15:
-				fancy_choice_dialog(1062,0);
+				handle_help_menu(menu_item % 100);					 
 				break;
 			case 16:				// patch for ctrl-<key> command
 				handle_keystroke( choice % 100, 0 );
@@ -820,11 +821,6 @@ void handle_campaign_menu(int item_hit)
 				change_made_town = TRUE;
 			}
 			break;
-		case 19: //   Write Scenario Data to Text File
-			if (fancy_choice_dialog(866,0) == 1) {
-				start_data_dump();
-			}
-			break;
 		case 20: //   Change Outdoor Size
 			if (change_made_town || change_made_outdoors) {
 				give_error("You need to save the changes made to your scenario before you can change the outdoor size.",
@@ -846,7 +842,7 @@ void handle_town_menu(int item_hit)
 	short i,x;	
 
 	switch (item_hit) {
-		case 1: // laod new town
+		case 1: // load new town
 			if (change_made_town == TRUE) {
 				if (save_check(859) == FALSE)
 					break;							
@@ -912,7 +908,7 @@ void handle_town_menu(int item_hit)
 				draw_terrain();
 				change_made_town = TRUE; 
 				break; // set  prop
-		case 14:
+		case 15:
 			if (fancy_choice_dialog(862,0) == 2)
 				break;
 			for (i = 0; i < 144; i++)
@@ -1064,6 +1060,25 @@ void handle_monst_menu(int item_hit)
 	overall_mode = 46;
 	mode_count = (short)item_hit;
 	set_string("Place New Creature","Select location to place");
+}
+
+
+void handle_help_menu(int item_hit)
+{   
+	switch (item_hit) {
+		case 1: // 2D Editor Credits
+				fancy_choice_dialog(1062,0);
+				break;
+		case 2: // 3D Editor Credits
+				fancy_choice_dialog(1063,0);
+			break;	
+		case 4: //   Write Scenario Data to Text File
+			if (fancy_choice_dialog(866,0) == 1) {
+				start_data_dump();
+			}
+			break;
+		}
+	draw_main_screen();		
 }
 
 void check_colors()
