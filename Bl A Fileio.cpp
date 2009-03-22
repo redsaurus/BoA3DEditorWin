@@ -1244,87 +1244,54 @@ void start_data_dump()
 	FILE *data_dump_file_id;
 	long len;
 
-	if (NULL == (data_dump_file_id = fopen("Scenario Data", "wb"))) {
+	if (NULL == (data_dump_file_id = fopen("Scenario Data.txt", "wb"))) {
 		oops_error(11);
 		return;
 		}	
-	
-	sprintf((char *)get_text,"Scenario data for %s:\r",scenario.scen_name);
+	sprintf((char *)get_text,"\r\rScenario data for %s:\r\r",scenario.scen_name);
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"\r");
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
 	sprintf((char *)get_text,"Floor types for %s:\r",scenario.scen_name);
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-
-	for (i = 0; i < 255; i++) 
+	for (i = 0; i < 255; i++)
 		if (scen_data.scen_floors[i].ed_pic.not_legit() == FALSE) {
 			sprintf((char *)get_text,"  Floor %d: %s\r",(int)i,scen_data.scen_floors[i].floor_name);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}	
-
-	sprintf((char *)get_text,"\r");
+	sprintf((char *)get_text,"\r\rTerrain types for %s:\r",scenario.scen_name);
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-	sprintf((char *)get_text,"Terrain types for %s:\r",scenario.scen_name);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-
 	for (i = 0; i < 511; i++) 
 		if (scen_data.scen_ter_types[i].ed_pic.not_legit() == FALSE) {
 			sprintf((char *)get_text,"  Terrain %d: %s\r", (int)i,scen_data.scen_ter_types[i].ter_name);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}	
-
-	sprintf((char *)get_text,"\r");
+	sprintf((char *)get_text,"\r\rCreature types for %s:\r",scenario.scen_name);
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-	sprintf((char *)get_text,"Creature types for %s:\r",scenario.scen_name);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
 	for (i = 0; i < 256; i++) {
 		sprintf((char *)get_text,"  Creature %d: %s\r",(int)i,scen_data.scen_creatures[i].name);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-	
-		}	
-
-	sprintf((char *)get_text,"\r");
+		}
+	sprintf((char *)get_text,"\r\rItem types for %s:\r",scenario.scen_name);
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-	sprintf((char *)get_text,"Item types for %s:\r",scenario.scen_name);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
 	for (i = 0; i < NUM_SCEN_ITEMS; i++) {
 		sprintf((char *)get_text,"  Item %d: %s\r", (int)i,scen_data.scen_items[i].full_name);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-	
-		}	
+		}
+		sprintf((char *)get_text,"\r\r");
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
 	FSClose(data_dump_file_id);
 }	
 
-/*
-short str_to_num(char *str) 
-{
-	long l;
-	
-	StringToNum(str,&l);
-	return (short) l;
-}
-*/
+
 
 Boolean create_basic_scenario(char *scen_name_short,char *scen_name_with_ext,char *scen_full_name,short out_width,short out_height,short on_surface,Boolean use_warriors_grove)
 {
