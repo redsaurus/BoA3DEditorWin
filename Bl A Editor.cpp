@@ -31,15 +31,6 @@
 // that file.
 
 #include "stdafx.h"
-/*
-#include <windows.h>
-
-#include "stdlib.h"
-#include "string.h"
-#include "stdio.h"
-#include "math.h"
-*/
-
 #include "Resource.h"
 #include "global.h"
 #include "version.h"
@@ -62,7 +53,6 @@ short ulx = 0, uly = 0;
 
 short mode_count = 0;
 
-// short old_depth = 16;
 
 // q_3DModStart
 Boolean change_made_town = FALSE;
@@ -102,8 +92,7 @@ short current_height_mode = 0; // 0 - no autohills, 1 - autohills
 Boolean editing_town = FALSE;
 
 // q_3DModStart
-short cur_viewing_mode = 10; // 0 - big icons 1 - small icons 10 - big 3D icons 11 - 3D view as in game
-// short cur_viewing_mode = 0; // 0 - big icons 1 - small icons 10 - big 3D icons 11 - 3D view as in game
+short cur_viewing_mode = 0; // 0 - big icons 1 - small icons 10 - big 3D icons 11 - 3D view as in game
 // q_3DModEnd
 
 short overall_mode = 0;
@@ -182,11 +171,8 @@ char szAppName[] = "Blades of Avernum Scenario Editor";
 char file_path_name[_MAX_PATH];
 Boolean All_Done = FALSE;
 Boolean window_in_front = TRUE;
-
 RECT right_sbar_rect;
-
 Boolean force_game_end = FALSE;
-
 
 // Function prototype
 
@@ -207,8 +193,6 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam);
 void check_colors();
 void check_game_done();
 
-
-
 //MW specified argument and return type.
 int APIENTRY _tWinMain (HINSTANCE hInstance,
 						HINSTANCE /* hPrevInstance */,
@@ -216,20 +200,6 @@ int APIENTRY _tWinMain (HINSTANCE hInstance,
 						int nCmdShow)
 {
 	MSG msg;
-
-/*
-	// Check another instance of this App is running
-	HANDLE hMutex = NULL;
-	BOOL bPrevInstance = FALSE;
-
-	hMutex = CreateMutex(
-		NULL,						// no security attributes
-		FALSE,						// initially not owned
-		"MutexToBoA3DEditorApp");	// name of mutex
-	if ( GetLastError() == ERROR_ALREADY_EXISTS )
-		bPrevInstance = TRUE;
-*/
-
 	MyRegisterClass(hInstance);
 
 	if (!InitInstance(hInstance, nCmdShow)) 
@@ -244,15 +214,8 @@ int APIENTRY _tWinMain (HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 	}
-
-/*
-	// Release mutex
-	if ( hMutex )
-		ReleaseMutex( hMutex );
-*/
 	return (int)msg.wParam;
 }
-
 
 void MyRegisterClass( HINSTANCE hInstance )
 {
@@ -435,23 +398,6 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		lockLatestStep();
 		break;
 
-/*
-	case WM_RBUTTONDOWN:
-		mouse_button_held = FALSE;
-		cursor_stay();
-		if (hwnd != mainPtr)
-			check_cd_event(hwnd,message,wParam,lParam);
-		else {
-			SetFocus(hwnd);
-			press = MAKEPOINT(lParam);
-
-			All_Done = handle_action(press, wParam,lParam);
-			check_game_done();
-		}
-		return 0;
-		break;
-*/
-
 	case WM_TIMER:
 		// first, mouse held?
 		if ((wParam == 1) && (mouse_button_held == TRUE)) {
@@ -509,10 +455,6 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 	case WM_PAINT:
 		// put the buffer on the screen
 		hdc = BeginPaint( hwnd, &ps );
-/*
-		GetClientRect( hwnd, &r );
-		BitBlt( hdc, 0, 0, r.right, r.bottom, main_dc, 0, 0, SRCCOPY );
-*/
 		EndPaint( hwnd, &ps );
 
 		if (hwnd != mainPtr)
@@ -589,13 +531,6 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 return DefWindowProc(hwnd,message,wParam,lParam);
 }
 
-/*
-void Handle_Activate()
-{
-	restore_cursor();
-}
-*/
-
 void handle_menu_choice(short choice)
 {
 	int menu_item;
@@ -654,7 +589,6 @@ void handle_file_menu(int item_hit)
 			}
 			break;
 		case 2: // save
-			//modify_lists();
 			save_campaign();
 			break;
 		case 3: // new scen
@@ -694,7 +628,6 @@ void handle_campaign_menu(int item_hit)
 			editing_town = TRUE;
 			set_up_terrain_buttons();
 			shut_down_menus(/* 4 */);
-			//set_string("Drawing mode","");
 			DrawMenuBar(mainPtr);
 			reset_drawing_mode();
 			purgeUndo();
@@ -707,7 +640,6 @@ void handle_campaign_menu(int item_hit)
 			current_drawing_mode = current_height_mode = 0;
 			editing_town = FALSE;
 			set_up_terrain_buttons();
-			//set_string("Drawing mode","");
 			shut_down_menus(/* 2 */);
 			clear_selected_copied_objects();
 			DrawMenuBar(mainPtr);
@@ -896,19 +828,19 @@ void handle_town_menu(int item_hit)
 				change_made_town = TRUE; 
 				redraw_screen();
 				 break; // add random
-		case 12: for (i = 0; i < 144; i++)
+		case 12: for (i = 0; i < 144; i++)// set not prop
 					town.preset_items[i].properties = town.preset_items[i].properties & 253;
 				fancy_choice_dialog(861,0);
 				draw_terrain();
 				change_made_town = TRUE; 
-				break; // set not prop
-		case 13: for (i = 0; i < 144; i++)
+				break; 
+		case 13: for (i = 0; i < 144; i++)// set  prop
 					town.preset_items[i].properties = town.preset_items[i].properties | 2;
 				fancy_choice_dialog(879,0);
 				draw_terrain();
 				change_made_town = TRUE; 
-				break; // set  prop
-		case 15:
+				break; 
+		case 15:// clear all items
 			if (fancy_choice_dialog(862,0) == 2)
 				break;
 			for (i = 0; i < 144; i++)
@@ -916,7 +848,7 @@ void handle_town_menu(int item_hit)
 			draw_terrain();
 			change_made_town = TRUE; 
 			redraw_screen();
-			break; // clear all items
+			break; 
 
 		case 16: 
 			if (fancy_choice_dialog(878,0) == 2)
@@ -937,10 +869,40 @@ void handle_town_menu(int item_hit)
 			change_made_town = TRUE; 
 			redraw_screen();
 			break;	
+		case 18:// clear all fields, 0:7
+			if (fancy_choice_dialog(883,0) == 2)
+				break;
+			for (short i = 0; i < 60; i++) {
+			if ((town.preset_fields[i].field_type >= 0) && (town.preset_fields[i].field_type < 8)) {
+			town.preset_fields[i].field_loc.x = 0;
+			town.preset_fields[i].field_loc.y = 0;
+			town.preset_fields[i].field_type = -1;
+			}
+			}
+			change_made_town = TRUE;
+			redraw_screen();
+			break; 
+		case 19:// clear all stains, 14:21
+			if (fancy_choice_dialog(884,0) == 2)
+				break;
+			for (short i = 0; i < 60; i++) {
+			if ((town.preset_fields[i].field_type > 13) && (town.preset_fields[i].field_type < 22)) {
+			town.preset_fields[i].field_loc.x = 0;
+			town.preset_fields[i].field_loc.y = 0;
+			town.preset_fields[i].field_type = -1;
+			}
+			}
+			change_made_town = TRUE;
+			redraw_screen();
+			break;
+
+			
+
 
 
 		}
 }
+
 void handle_outdoor_menu(int item_hit)
 {
 	short x;
@@ -1073,10 +1035,18 @@ void handle_help_menu(int item_hit)
 				fancy_choice_dialog(1063,0);
 			break;	
 		case 4: //   Write Scenario Data to Text File
-			if (fancy_choice_dialog(866,0) == 1) {
+			if (fancy_choice_dialog(866,0) == 1)
 				start_data_dump();
-			}
 			break;
+		case 5: //   Do full write up
+			if (fancy_choice_dialog(881,0) == 1)
+				start_full_data_dump();
+			break;
+		case 6: //   Full print out of town data
+			if (fancy_choice_dialog(882,0) == 1)
+				start_town_data_dump();
+			break;
+
 		}
 	draw_main_screen();		
 }

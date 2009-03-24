@@ -652,43 +652,29 @@ public:
 	macRECT special_rects[NUM_TOWN_PLACED_SPECIALS];
 	unsigned char spec_id[NUM_TOWN_PLACED_SPECIALS];
 	short lighting;
-
-	// signs
 	location sign_locs[15];
 	char sign_text[15][256];
-
 	location start_locs[4];
 	location exit_locs[4];
 	macRECT in_town_rect;
 	item_type preset_items[NUM_TOWN_PLACED_ITEMS];	
 	preset_field_type preset_fields[NUM_TOWN_PLACED_FIELDS];
-
 	short wall_1_sheet,wall_1_height,wall_2_sheet,wall_2_height,cliff_sheet;
-		// how high to make walls and what sheets to look in to get wall graphics
 	short beam_type;
-		// sort of beams which might be present in level
-		// 0 - never, 1 - damage, 2 - impass
 	short environmental_sound; // sound to play in background
 	short is_on_surface;
 	short town_kill_day,town_linked_event;
-		// town is cleaned out is event town_linked_event is not done by day town_kill_day
 	short external_floor_type;
 	short monster_respawn_chance;
-	
-	// scripts and specials
 	char town_script[SCRIPT_NAME_LEN]; 
 	in_town_on_ter_script_type ter_scripts[NUM_TER_SCRIPTS];
-	
 	macRECT room_rect[16];
 	char info_rect_text[16][30];
 	creature_start_type creatures[NUM_TOWN_PLACED_CREATURES];
 	short extra[20];
-	
 	location waypoints[NUM_WAYPOINTS];
-
 	short exit_specs[4];
 	short spec_on_entry,spec_on_entry_if_dead;
-
 	} ;
 
 
@@ -1527,6 +1513,7 @@ short FSClose(FILE *file_id);
 
 // Query
 void start_full_data_dump();
+void start_town_data_dump();
 
 // dlogtool
 void cd_init_dialogs();
