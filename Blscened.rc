@@ -76,7 +76,7 @@ BEGIN
         MENUITEM "&Open Scenario\tCtrl+O",      1
         MENUITEM "&Save Scenario\tCtrl+S",      2
         MENUITEM "New Scenario\tCtrl+N",                3
-        MENUITEM "Import Blades of Exile Scenario\tCtrl+I", 4
+        MENUITEM "Import Blades of Exile Scenario\t- - - -", 4
         MENUITEM SEPARATOR
         MENUITEM "&Quit\tCtrl+Q",               6
     END
@@ -204,7 +204,7 @@ BEGIN
     BEGIN
         MENUITEM "Dummy",                       703
     END
-    POPUP "&Help"
+    POPUP "&Query"
     BEGIN
         MENUITEM "About Blades Scenario Editor", 1501
         MENUITEM "3D Editor Credits", 1502        
@@ -213,6 +213,12 @@ BEGIN
         MENUITEM "Write Scenario Data To Text File\tCtrl+A", 1504
         MENUITEM "Full Write up of Scenario Data\tCtrl+B", 1505
         MENUITEM "Town: Write Data To File\tCtrl+E", 1506
+        MENUITEM SEPARATOR
+        MENUITEM "Increase Numerical Mode\tCtrl+G", 1507
+        MENUITEM "Decrease Numerical Mode\tCtrl+H", 1508
+        MENUITEM SEPARATOR
+        MENUITEM "Load Previous Outdoor Zone/Town\tCtrl+J", 1509
+        MENUITEM "Load Next Outdoor Zone/Town\tCtrl+K", 1510
     END
 END
 
@@ -227,7 +233,6 @@ BEGIN
     "^O",           1,                      ASCII,  NOINVERT
     "^S",           2,                      ASCII,  NOINVERT
     "^N",           3,                      ASCII,  NOINVERT
-    "^I",           4,                      ASCII,  NOINVERT
     "^Q",           6,                      ASCII,  NOINVERT
     "^Z",           101,                    ASCII,  NOINVERT
     "^Y",           102,                    ASCII,  NOINVERT
@@ -239,13 +244,16 @@ BEGIN
     "^A",           1504,                   ASCII,  NOINVERT
     "^B",           1505,                   ASCII,  NOINVERT
     "^E",           1506,                   ASCII,  NOINVERT
-//    "^F",           1507,                   ASCII,  NOINVERT
+    "^G",           1507,                   ASCII,  NOINVERT
+    "^H",           1508,                   ASCII,  NOINVERT
+    "^J",           1509,                   ASCII,  NOINVERT
+    "^K",           1510,                   ASCII,  NOINVERT
     VK_TAB,         1609,                   VIRTKEY, CONTROL, NOINVERT
 //    "^D",         302/402,                ASCII,  NOINVERT
 //    "^L",         301/401,                ASCII,  NOINVERT
 END
 
-
+// Currently available: F,M,P,U,W
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog

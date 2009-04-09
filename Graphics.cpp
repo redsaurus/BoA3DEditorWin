@@ -1,11 +1,4 @@
 #include "stdafx.h"
-/*
-#include <Windows.h>
-#include <stdio.h>
-#include "math.h"
-#include "stdlib.h"
-*/
-
 #include "global.h"
 #include "dibengine.h"
 
@@ -16,7 +9,7 @@ const int kTer3DTopClip = 1;
 const int kTer3DBottomClip = 3;
 
 
-// Gloabl varialbes
+// Global variables
 
 HDC main_dc;
 HDC main_dc2;
@@ -36,8 +29,9 @@ HFONT tiny_font;
 RECT terrain_buttons_rect = {0,0,210,550}; /**/
 
 Boolean showed_graphics_error = FALSE;
+extern short numerical_display_mode;
 
-// external gloabal variables
+// external global variables
 
 extern HWND	mainPtr;
 extern HWND right_sbar;
@@ -48,13 +42,7 @@ extern town_record_type town;
 extern big_tr_type t_d;
 extern outdoor_record_type current_terrain;
 extern scen_item_data_type scen_data;
-// extern short borders[4][50];
-// extern unsigned char border_floor[4][50];
-// extern unsigned char border_height[4][50];
-
-// q_3DModStart
 extern outdoor_record_type border_terrains[3][3];
-// q_3DModEnd
 
 extern short cur_town;
 extern location cur_out;
@@ -94,7 +82,7 @@ extern RECT left_text_lines[10];
 extern RECT right_text_lines[5];
 
 extern short selected_item_number;
-extern Boolean hintbook_mode;
+extern char hintbook_mode;
 extern Boolean small_any_drawn;
 
 // local variables
@@ -1024,7 +1012,7 @@ void place_ter_icons_3D(location which_outdoor_sector, outdoor_record_type *draw
 	if (editing_town) {
 		// draw ter scripts
 		for (i = 0; i < NUM_TER_SCRIPTS; i++) {
-			if (town.ter_scripts[i].exists && same_point(town.ter_scripts[i].loc,loc_drawn)) {
+			if (town.ter_scripts[i].exists && same_point(town.ter_scripts[i].loc,loc_drawn) ) {
 				draw_ter_script_3D(at_point_center_x,at_point_center_y,to_whole_area_rect);
 			}
 		}
@@ -2920,7 +2908,7 @@ void draw_ter_large()
 {
 	short q,r,i;
 	location where_draw;
-	short t_to_draw,floor_to_draw,height_to_draw;
+	short t_to_draw,floor_to_draw,height_to_draw,terrsc_to_draw;
 	RECT to_rect;
 //	RECT tiny_to_base = {15,15,22,22};
 	graphic_id_type a;
@@ -2995,9 +2983,6 @@ void draw_ter_large()
 					temp_y = max_dim[town_type] - 1;
 				}
 				
-				//if the town borders touch the edge, the outside terrain isn't displayed
-				//remember, at least one of temp_x and temp_y is 0 or (max_dim[town_type] - 1)
-				//so at least one of the first parts of these if's will be checked
 				if((temp_x == 0) && (temp_x == town.in_town_rect.left  ) && (temp_y >= town.in_town_rect.top ) && (temp_y <= town.in_town_rect.bottom))
 					continue;
 				if((temp_x == (max_dim[town_type] - 1))
@@ -3017,36 +3002,18 @@ void draw_ter_large()
 				}
 			}
 
-		/*	if ((editing_town == FALSE) && (cen_x + q - 4 == -1)) {
-				t_to_draw = borders[3][cen_y + r - 4];
-				floor_to_draw = border_floor[3][cen_y + r - 4];		
-				height_to_draw = border_height[3][cen_y + r - 4];		
-				}
-			else if ((editing_town == FALSE) && (cen_x + q - 4 == 48)) {
-				t_to_draw = borders[1][cen_y + r - 4];
-				floor_to_draw = border_floor[1][cen_y + r - 4];		
-				height_to_draw = border_height[1][cen_y + r - 4];		
-				}
-			else if ((editing_town == FALSE) && (cen_y + r - 4 == -1)) {
-				t_to_draw = borders[0][cen_x + q - 4];
-				floor_to_draw = border_floor[0][cen_x + q - 4];		
-				height_to_draw = border_height[0][cen_x + q - 4];		
-				}
-			else if ((editing_town == FALSE) && (cen_y + r - 4 == 48)) {
-				t_to_draw = borders[2][cen_x + q - 4];
-				floor_to_draw = border_floor[2][cen_x + q - 4];		
-				height_to_draw = border_height[2][cen_x + q - 4];		
-				}
-		*/
-// q_3DModEnd
 			else {
 				t_to_draw = (editing_town) ? t_d.terrain[cen_x + q - 4][cen_y + r - 4] : current_terrain.terrain[cen_x + q - 4][cen_y + r - 4];		
 				floor_to_draw = (editing_town) ? t_d.floor[cen_x + q - 4][cen_y + r - 4] : current_terrain.floor[cen_x + q - 4][cen_y + r - 4];		
-				height_to_draw = (editing_town) ? t_d.height[cen_x + q - 4][cen_y + r - 4] : current_terrain.height[cen_x + q - 4][cen_y + r - 4];		
+				height_to_draw = (editing_town) ? t_d.height[cen_x + q - 4][cen_y + r - 4] : current_terrain.height[cen_x + q - 4][cen_y + r - 4];
 				}
 
 			location loc_drawn = {(t_coord)(cen_x + q - 4), (t_coord)(cen_y + r - 4)};
-			
+			if (same_point(loc_drawn,town.ter_scripts[i].loc))
+				terrsc_to_draw = i;
+			else
+				terrsc_to_draw = 999;
+
 			// draw floor
 			a = scen_data.scen_floors[floor_to_draw].ed_pic;
 			
@@ -3137,12 +3104,49 @@ void draw_ter_large()
 			
 			// draw height
 			if (current_drawing_mode == 2) {
-				sprintf(str,"%d",(int)height_to_draw);
+				sprintf(str,"%d",height_to_draw);
 				//  ((editing_town) ? t_d.height[loc_drawn.x][loc_drawn.y] : current_terrain.height[loc_drawn.x][loc_drawn.y]);
 				to_rect = large_edit_ter_rects[q][r];
 				OffsetRect(&to_rect,3,14);
-				to_rect.left = to_rect.right - ((strlen(str) > 1) ? 23 : 14);
-				win_draw_string_outline(main_dc5,to_rect,str,2,10);		
+				if (strlen(str) == 1)
+				to_rect.left = to_rect.right - 14;
+				if (strlen(str) == 2)
+				to_rect.left = to_rect.right - 23;
+				win_draw_string_outline(main_dc5,to_rect,str,2,10);
+				}
+
+			else {
+			short script_num;
+			location loc_drawn;
+			short in_square_x;
+			short in_square_y;
+			// sign numbers, placed special numbers, (town) terrain script numbers,
+			if (numerical_display_mode == 0) 
+				sprintf(str,"%d",floor_to_draw);
+			if (numerical_display_mode == 1) 
+				sprintf(str,"%d",t_to_draw);
+			if (numerical_display_mode == 2) 
+				sprintf(str,"%d",height_to_draw);
+			if (numerical_display_mode == 3) 
+				sprintf(str," ");
+			if (numerical_display_mode == 4){
+/*				 if (town.ter_scripts[i].loc == large_edit_ter_rects[q][r])
+				 				sprintf(str,"%d",i);
+				else sprintf(str,"f");
+*/
+}
+
+//				sprintf(str,"%d",terrsc_to_draw);
+				
+ 				to_rect = large_edit_ter_rects[q][r];
+				OffsetRect(&to_rect,3,14);
+				if (strlen(str) == 1)
+				to_rect.left = to_rect.right - 14;
+				if (strlen(str) == 2)
+				to_rect.left = to_rect.right - 21;
+				if (strlen(str) == 3)
+				to_rect.left = to_rect.right - 29;
+				win_draw_string_outline(main_dc5,to_rect,str,2,10);
 				}
 				
 // q_3DModStart
@@ -3477,21 +3481,19 @@ void draw_item(HDC ter_hdc,HBITMAP store_bmp,short item_num,location loc_drawn,s
 
 void draw_ter_script(short script_num,location loc_drawn,short in_square_x,short in_square_y)
 {
+	char str[256];
+	RECT to_rect = large_edit_ter_rects[in_square_x][in_square_y];
 	RECT ter_script_icon_from = {100,103,120,123}; /**/
 	
 	if (town.ter_scripts[script_num].exists == FALSE)
 		return;
 		
 	if (same_point(town.ter_scripts[script_num].loc,loc_drawn)) {
-		RECT to_rect = large_edit_ter_rects[in_square_x][in_square_y];
+		to_rect = large_edit_ter_rects[in_square_x][in_square_y];
 		to_rect.left = to_rect.right - 20;
 		to_rect.bottom = to_rect.top + 20;
-		
-		rect_draw_some_item(editor_mixed,
-			ter_script_icon_from,ter_draw_gworld,to_rect,0,0);
-
-		}
-
+		rect_draw_some_item(editor_mixed,ter_script_icon_from,ter_draw_gworld,to_rect,0,0);
+				}
 }
 
 Boolean place_terrain_icon_into_ter_small(graphic_id_type icon,short in_square_x,short in_square_y)
@@ -3599,7 +3601,7 @@ void draw_ter_small()
 				}
 
 			// draw creatures
-			if ((editing_town) && (hintbook_mode == FALSE)) {
+			if ((editing_town) && (hintbook_mode == 0 || hintbook_mode == 1)) {
 				for (i = 0; i < NUM_TOWN_PLACED_CREATURES; i++)
 					if ((town.creatures[i].exists()) && 
 					  (town.creatures[i].start_loc.x == q) && (town.creatures[i].start_loc.y == r)) {
@@ -3620,20 +3622,20 @@ void draw_ter_small()
 	 put_rect_in_gworld( main_dc5,terrain_rect_gr_size,0,0,0);
 
 	// draw grid of lines
-	if (hintbook_mode == FALSE) {
+			if ((hintbook_mode == 0) || (hintbook_mode == 2)) {
 		for (i = 1; i < 64; i++) {
-			if (i % 10 == 0) {
+			if (i % 8 == 0) {
 				put_line_in_gworld(main_dc5,0,SMALL_SPACE_SIZE * i,SMALL_SPACE_SIZE * MAX_TOWN_SIZE - 1,SMALL_SPACE_SIZE * i,3 * 8,3 * 8,6 * 8);
 				}
-			if (i % 10 == 5) {
+			if (i % 8 == 4) {
 				put_line_in_gworld(main_dc5,0,SMALL_SPACE_SIZE * i,SMALL_SPACE_SIZE * MAX_TOWN_SIZE - 1,SMALL_SPACE_SIZE * i,10 * 8,10 * 8,20 * 8);
 				}
 			}
 		for (i = 1; i < 64; i++) {
-			if (i % 10 == 0) {
+			if (i % 8 == 0) {
 				put_line_in_gworld(main_dc5,SMALL_SPACE_SIZE * i,0,SMALL_SPACE_SIZE * i,SMALL_SPACE_SIZE * MAX_TOWN_SIZE - 1,3 * 8,3 * 8,6 * 8);
 				}
-			if (i % 10 == 5) {
+			if (i % 8 == 4) {
 				put_line_in_gworld(main_dc5,SMALL_SPACE_SIZE * i,0,SMALL_SPACE_SIZE * i,SMALL_SPACE_SIZE * MAX_TOWN_SIZE - 1,10 * 8,10 * 8,20 * 8);
 				}
 			}
@@ -3766,50 +3768,6 @@ void place_left_text()
 				   (int)i, (int)town.ter_scripts[selected_item_number % 1000].memory_cells[i]); 
 				char_win_draw_string(main_dc,left_text_lines[i + 2],(char *) draw_str,2,10);		
 				}
-			/*
-			sprintf((char *) draw_str,"  Edit This Creature"); 
-			char_win_draw_string(mainPtr,left_text_lines[1],(char *) draw_str,2,10);	
-
-			if (strlen(town.creatures[selected_item_number % 1000].char_script) <= 0)
-				sprintf((char *) draw_str,"  Script: Default");
-				else sprintf((char *) draw_str,"  Script: %s",
-			  	 town.creatures[selected_item_number % 1000].char_script); 
-			char_win_draw_string(mainPtr,left_text_lines[2],(char *) draw_str,2,10);		
-
-			sprintf((char *) draw_str,"  Attitude: %s",
-			  attitude_types[town.creatures[selected_item_number % 1000].start_attitude - 2]); 
-			char_win_draw_string(mainPtr,left_text_lines[3],(char *) draw_str,2,10);		
-			
-			sprintf((char *) draw_str,"  Character ID: %d",
-			   town.creatures[selected_item_number % 1000].character_id); 
-			char_win_draw_string(mainPtr,left_text_lines[4],(char *) draw_str,2,10);		
-
-			sprintf((char *) draw_str,"  Hidden Class: %d",
-			  town.creatures[selected_item_number % 1000].hidden_class); 
-			char_win_draw_string(mainPtr,left_text_lines[5],(char *) draw_str,2,10);		
-
-			if (town.creatures[selected_item_number % 1000].extra_item < 0)
-				sprintf((char *) draw_str,"  Drop Item 1: None");
-				else sprintf((char *) draw_str,"  Drop Item 1: %s %%%d",
-				  scen_data.scen_items[town.creatures[selected_item_number % 1000].extra_item].full_name,
-				  town.creatures[selected_item_number % 1000].extra_item_chance_1); 
-			char_win_draw_string(mainPtr,left_text_lines[6],(char *) draw_str,2,10);		
-
-			if (town.creatures[selected_item_number % 1000].extra_item_2 < 0)
-				sprintf((char *) draw_str,"  Drop Item 2: None");
-				else sprintf((char *) draw_str,"  Drop Item 2: %s %%%d",
-				  scen_data.scen_items[town.creatures[selected_item_number % 1000].extra_item_2].full_name,
-				  town.creatures[selected_item_number % 1000].extra_item_chance_2); 
-			char_win_draw_string(mainPtr,left_text_lines[7],(char *) draw_str,2,10);		
-
-			sprintf((char *) draw_str,"  Personality: %d",
-			   town.creatures[selected_item_number % 1000].personality); 
-			char_win_draw_string(mainPtr,left_text_lines[8],(char *) draw_str,2,10);		
-
-			sprintf((char *) draw_str,"  Facing: %s",
-			  facings[town.creatures[selected_item_number % 1000].facing]); 
-			char_win_draw_string(mainPtr,left_text_lines[9],(char *) draw_str,2,10);		
-			*/
 			}
 		if ((selected_item_number >= 11000) && (selected_item_number < 11000 + NUM_TOWN_PLACED_ITEMS)) {
 			sprintf((char *) draw_str,"Item %d", (int)(selected_item_number % 1000)); 
@@ -3842,8 +3800,8 @@ void place_left_text()
 			char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);		
 			sprintf((char *) draw_str,"  %s",town.town_name); 
 			char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);		
-			//sprintf((char *) draw_str,"  Section X = %d, Y = %d",cur_out.x,cur_out.y); 
-			//char_win_draw_string(mainPtr,left_text_lines[2],(char *) draw_str,2,10);		
+			sprintf((char *) draw_str,"Numerical Display Mode:  %d",numerical_display_mode);
+			char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
 			}
 		}
 		else {
@@ -3853,6 +3811,8 @@ void place_left_text()
 			char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);		
 			sprintf((char *) draw_str,"  Section X = %d, Y = %d", (int)cur_out.x, (int)cur_out.y); 
 			char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);		
+			sprintf((char *) draw_str,"Numerical Display Mode:  %d",numerical_display_mode);
+			char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
 			}
 	SelectObject(main_dc,store_font);
 }
@@ -3898,12 +3858,20 @@ void place_right_buttons( /* short mode */ )
 
 	if (current_drawing_mode == 2) {
 		if (current_height_mode == 0)
-			char_win_draw_string(main_dc4,right_text_lines[2],
-			  "Automatic Hills: OFF",2,12);
-			else char_win_draw_string(main_dc4,right_text_lines[2],
-			  "Automatic Hills: ON",2,12);
+			char_win_draw_string(main_dc4,right_text_lines[2],"Automatic Hills: OFF",2,12);
+			else char_win_draw_string(main_dc4,right_text_lines[2],"Automatic Hills: ON",2,12);
 		}
-		
+	else {
+ 		if (editing_town) {
+			sprintf((char *) draw_str,"Editing Town/Dungeon %d", (int)cur_town);
+			char_win_draw_string(main_dc4,right_text_lines[2],(char *) draw_str,2,12);
+			}
+		else {
+			sprintf((char *) draw_str,"Section X = %d, Y = %d", (int)cur_out.x, (int)cur_out.y);
+			char_win_draw_string(main_dc4,right_text_lines[2],(char *) draw_str,2,12);
+		}
+		}
+
 	char_win_draw_string(main_dc4,right_text_lines[3],(char *) current_string,2,12);
 	char_win_draw_string(main_dc4,right_text_lines[4],(char *) current_string2,2,12);
 		

@@ -59,7 +59,7 @@ bool object_sticky_draw;
 short current_floor_drawn = 0;
 short current_terrain_drawn = 0;
 
-Boolean hintbook_mode = FALSE;
+char hintbook_mode = 0;
 
 // if a terrain type has special property from 19-30, it is a slope. this
 // array says what corners for these 12 terrain types are elevated.
@@ -2114,7 +2114,9 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 			break;		
 			
 			case 'M':
-				hintbook_mode = !hintbook_mode;
+				if (hintbook_mode == 3)
+				 hintbook_mode = 0;
+				 else  hintbook_mode =  hintbook_mode + 1;
 				small_any_drawn = FALSE;
 				draw_terrain();
 				break;
@@ -2235,6 +2237,13 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 						else handle_outdoor_menu(2);
 					break;
 				}
+				// Ctrl + I = zoom out/zoom in
+				if ((chr == 9) && (ctrl)) {
+					pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][1].left;
+					pass_point.y = 6 + palette_buttons[0][1].top;
+				break;
+				}
+
 				// Ctrl + L = load new zone
 				if ((chr == 12) && (ctrl)) {
 					if (editing_town)

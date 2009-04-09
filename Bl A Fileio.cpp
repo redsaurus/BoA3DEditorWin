@@ -15,47 +15,27 @@
 
 #include "stdafx.h"
 #include <cctype>
-/*
-#include <Windows.h>
-#include <stdio.h>
-#include "string.h"
-#include <ctype.h>
-*/
 #include <commdlg.h>
-
 #include "Global.h"
 #include "CMemStream.h"
 
-
 #define	DONE_BUTTON_ITEM	1
 #define	NIL		0L
-
 #define kWARNING_BEEP	0x010000		// flag bit to beep when display warning
 
 // Global variables
-
 char scenario_path[_MAX_PATH] = ""; // just the path to the scenario file
 char store_editor_path[_MAX_PATH + 1];
 char appl_path[_MAX_PATH + 1];
 
 // external global variables
-
-
 extern HWND mainPtr;
-
 extern scenario_data_type scenario;
 extern town_record_type town;
 extern big_tr_type t_d;
 extern outdoor_record_type current_terrain;
 extern scen_item_data_type scen_data;
-// extern short borders[4][50];
-// extern unsigned char border_floor[4][50];
-// extern unsigned char border_height[4][50];
-
-// q_3DModStart
 extern outdoor_record_type border_terrains[3][3];
-// q_3DModEnd
-
 extern short cur_town;
 extern short town_type ;
 extern location cur_out;
@@ -64,17 +44,10 @@ extern short overall_mode;
 extern short max_dim[3];
 extern Boolean file_is_loaded;
 extern Boolean showed_graphics_error;
-
-// q_3DModStart
 extern short cen_x, cen_y;
-// q_3DModEnd
-
-// q_3DModStart
 extern Boolean change_made_town, change_made_outdoors;
-// q_3DModEnd
 
 // local variables
-
 short data_dump_file_id;
 char start_name[256];
 short start_volume;
@@ -83,8 +56,6 @@ short aa = 0;
 short bb = 0;
 short cc = 0;
 short dd = 0;
-
-// Boolean cur_scen_is_mac = TRUE;
 
 
 ave_tr_type ave_t;
@@ -395,11 +366,9 @@ void kludge_correct_old_bad_data();
 short SetFPos(FILE *file, short mode, long len);
 short FSWrite(FILE *file_id, long *len, char *data);
 
-
 // registry constant
 const char* kRegistryKey = "Software\\Spiderweb Software\\BoA 3D Editor";
 const char* kRegistryName = "BoA DATA Dirctory";
-
 
 bool read_BoAFilesFolder_from_Pref( char * boaFolder )
 {
@@ -1379,8 +1348,8 @@ void start_full_data_dump()
 	sprintf((char *)get_text,"\r\rNames of the Outdoor Sections in %s:\r",scenario.scen_name);
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++)
-		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) {
+		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) 	
+			for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) {
 			load_outdoor(out_sec,outdoor);
 			sprintf((char *)get_text,"  Section X = %d, Y = %d:  %s \r",(short) out_sec.x,(short) out_sec.y,outdoor.name);
 			len = (long) (strlen((char *)get_text));
@@ -1401,14 +1370,14 @@ void start_full_data_dump()
 		sprintf((char *)get_text,"   tl = top,left while br = bottom,right\r");
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++)
-		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) {
+		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) 	
+			for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) {
 			load_outdoor(out_sec,outdoor);
 			sprintf((char *)get_text,"Section X = %d, Y = %d:  %s \r",(short) out_sec.x,(short) out_sec.y,outdoor.name);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			for (short i = 0; i < 8; i++) {
-			if ((outdoor.exit_dests[i] > 0) && (outdoor.exit_dests[i] < 200)) {
+			if ((outdoor.exit_dests[i] >= 0) && (outdoor.exit_dests[i] < scenario.num_towns)) {
 			sprintf((char *)get_text,"   Town entrance %d: town %d, tl = (%d,%d) br = (%d,%d)\r",i,outdoor.exit_dests[i],outdoor.exit_rects[i].left,outdoor.exit_rects[i].top,outdoor.exit_rects[i].right,outdoor.exit_rects[i].bottom);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
@@ -1438,15 +1407,14 @@ void start_town_data_dump()
 	if (NULL == (data_dump_file_id = fopen("Town Report.txt", "wb"))) {
 		return;
 		}
-	sprintf((char *)get_text,"\r\rTown Data Printout for town %d, %s:\r\r",cur_town,town.town_name);
+	sprintf((char *)get_text,"\r\rTown Data Printout for town %d, %s:\r\r",(int)cur_town,town.town_name);
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
 		sprintf((char *)get_text,"\r\r  Town Placed Specials: \r");
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 		for (short i = 0; i < 60; i++) {
-			sprintf((char *)get_text,"   Placed special: %d:  tl = (%d,%d) br = (%d,%d), state: %d\r",i,town.special_rects[i].left,town.special_rects[i].top,town.special_rects[i].right,town.special_rects[i].bottom,town.spec_id[i]);
+			sprintf((char *)get_text,"   Placed special %d:  tl = (%d,%d) br = (%d,%d), state: %d\r",i,town.special_rects[i].left,town.special_rects[i].top,town.special_rects[i].right,town.special_rects[i].bottom,town.spec_id[i]);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}

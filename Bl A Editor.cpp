@@ -9,27 +9,6 @@
 // that people will be able to make different flavors of editor to suit
 // different sets of users.
 
-// Before you get started, some things you should know.
-
-// 1. This is just the editor code, not the game. You can't use this to add new calls
-// or features to the game itself. Along these lines, you must make sure to preserve
-// the data structures.
-
-// 2. This is basically the same editor code, heavily modified, that I wrote 10 years
-// ago. It is, in parts, clumsy, kludgy, and, in general,  written to my own personal tastes
-// and style. The inevitable E-mails explaning to me how my coding would be better 
-// if I did this or that will be read with interest and probably make no difference
-// whatsoever. If I wrote this from scratch today, it would look much different.
-
-// 3. Also, if I wrote this today, it would be commented much better than it is.
-// I would like to comment this heavily, but I just don't have the time.
-
-// Some files of great importance.
-
-// global.h - This is where all of the data structures are stored.
-// dlogool.c - This is the custom dialog engine. There are comments on this in
-// that file.
-
 #include "stdafx.h"
 #include "Resource.h"
 #include "global.h"
@@ -48,9 +27,7 @@ char szWinName[] = "Blades of Avernum dialogs";
 RECT	windRect;
 Boolean mouse_button_held = FALSE;
 short cen_x, cen_y;
-
 short ulx = 0, uly = 0;
-
 short mode_count = 0;
 
 
@@ -89,8 +66,8 @@ Boolean kill_next_win_char = FALSE;
 short current_drawing_mode = 0; // 0 - floor 1 - terrain 2 - height
 short town_type = 0;  // 0 - big 1 - ave 2 - small
 short current_height_mode = 0; // 0 - no autohills, 1 - autohills
-Boolean editing_town = FALSE;
-
+Boolean editing_town = TRUE;
+short numerical_display_mode = 0;
 // q_3DModStart
 short cur_viewing_mode = 0; // 0 - big icons 1 - small icons 10 - big 3D icons 11 - 3D view as in game
 // q_3DModEnd
@@ -1027,6 +1004,9 @@ void handle_monst_menu(int item_hit)
 
 void handle_help_menu(int item_hit)
 {   
+		 	Boolean need_redraw;
+			short x;
+			location spot_hit;
 	switch (item_hit) {
 		case 1: // 2D Editor Credits
 				fancy_choice_dialog(1062,0);
@@ -1045,6 +1025,99 @@ void handle_help_menu(int item_hit)
 		case 6: //   Full print out of town data
 			if (fancy_choice_dialog(882,0) == 1)
 				start_town_data_dump();
+			break;
+		case 7: //   Rotate current numerical display mode: going forwards
+					numerical_display_mode = ((numerical_display_mode + 1) % 4);
+					need_redraw = TRUE;
+			break; 
+		case 8: //   Rotate current numerical display mode: going backwards
+				 if (numerical_display_mode == 0)
+				    numerical_display_mode = 3;
+					else numerical_display_mode = ((numerical_display_mode - 1) % 4);
+					need_redraw = TRUE;
+			break;
+			
+		case 9: // load previous town/outdoor zone
+			if (editing_town) {
+			 if (cur_town == 0)
+				load_town(scenario.num_towns - 1);
+			 else load_town(cur_town - 1);
+				clear_selected_copied_objects();
+				set_up_terrain_buttons();
+				change_made_town = FALSE;
+				cen_x = max_dim[town_type] / 2; cen_y = max_dim[town_type] / 2;
+				reset_drawing_mode();
+				reset_small_drawn();
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
+				}
+
+			else {
+				if (cur_out.x > 0) {
+				 spot_hit.x = cur_out.x - 1;
+				 spot_hit.y = cur_out.y;
+				 }
+				if ((cur_out.x == 0) && (cur_out.y > 0)) {
+				 spot_hit.x = scenario.out_width - 1;
+				 spot_hit.y = cur_out.y - 1;
+				 }
+				if ((cur_out.x == 0) && (cur_out.y == 0)) {
+				 spot_hit.x = scenario.out_width - 1;
+				 spot_hit.y = scenario.out_height - 1;
+				 }
+				clear_selected_copied_objects();
+				load_outdoor_and_borders(spot_hit);
+				set_up_terrain_buttons();
+				cen_x = 24; cen_y = 24;
+				reset_drawing_mode();
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
+				change_made_outdoors = FALSE;
+				}
+			break;
+			
+		case 10: // load next town/outdoor zone
+							if (editing_town) {
+			if (cur_town + 1 == scenario.num_towns)
+				load_town(0);
+			else load_town(cur_town + 1);
+			
+				clear_selected_copied_objects();
+				set_up_terrain_buttons();
+				change_made_town = FALSE;
+				cen_x = max_dim[town_type] / 2; cen_y = max_dim[town_type] / 2;
+				reset_drawing_mode();
+				reset_small_drawn();
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
+				}
+				
+				else {
+			if ((cur_out.x < scenario.out_width - 1) && (cur_out.y <= scenario.out_height - 1)) {
+				 spot_hit.x = cur_out.x + 1;
+				 spot_hit.y = cur_out.y;
+				 }
+			if ((cur_out.x == scenario.out_width - 1) && (cur_out.y < scenario.out_height - 1)) {
+				 spot_hit.x = 0;
+				 spot_hit.y = cur_out.y + 1;
+				 }
+			if ((cur_out.x == scenario.out_width - 1) && (cur_out.y == scenario.out_height - 1)) {
+				 spot_hit.x = 0;
+				 spot_hit.y = 0;
+				 }
+				clear_selected_copied_objects();
+				load_outdoor_and_borders(spot_hit);
+				set_up_terrain_buttons();
+				cen_x = 24; cen_y = 24;
+				reset_drawing_mode();
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
+				change_made_outdoors = FALSE;
+				}
 			break;
 
 		}

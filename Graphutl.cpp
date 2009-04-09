@@ -261,8 +261,7 @@ rect_draw_some_item ( src_gworld,  src_rect,   targ_gworld,
 //				1	draw to main window
 //				2	draw to dialog window
 
-void rect_draw_some_item(HDIB src_hdib,RECT src_rect,HDIB dest_hdib,RECT dest_rect,
-	short trans, short main_win) {
+void rect_draw_some_item(HDIB src_hdib,RECT src_rect,HDIB dest_hdib,RECT dest_rect,short trans, short main_win) {
 	HDC hdcMem,hdcMem2 = NULL,destDC;
 	HBITMAP transbmp = NULL,old_bmp;
 	COLORREF white = RGB(255,255,255),oldcolor;

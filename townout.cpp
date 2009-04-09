@@ -1,49 +1,32 @@
-#include "stdafx.h"
-/*
-#include <Windows.h>
-#include <stdio.h>
-#include "math.h"
-#include "stdlib.h"
-*/
 
+#include "stdafx.h"
 #include "global.h"
 
-// Gloabl varialbes
-
+// Global variables
 short dialog_answer;
 
-// external gloabal variables
-
+// external global variables
 extern short cen_x, cen_y;
 extern Boolean dialog_not_toast;
-
 extern scenario_data_type scenario;
 extern town_record_type town;
 extern big_tr_type t_d;
 extern outdoor_record_type current_terrain;
 extern scen_item_data_type scen_data;
-// extern short borders[4][50];
-// extern unsigned char border_floor[4][50];
-// extern unsigned char border_height[4][50];
 extern short cur_town;
 extern location cur_out;
 extern short current_drawing_mode;
 extern short town_type ;
-// extern short current_height_mode ;
 extern Boolean editing_town;
 extern short overall_mode;
-// extern big_tr_type template_t_d;
 extern char *attitude_types[4];
 extern  Boolean file_is_loaded;
 
 // local variables
-
 creature_start_type store_placed_monst;
 short store_which_placed_monst;
 
-// q_3DModStart
 short extra_dialog_answer[4];
-// q_3DModEnd
 
 short str_do_delete[16];
 short a,b,c;
@@ -69,11 +52,7 @@ short cur_shortcut;
 
 void put_placed_monst_in_dlog();
 Boolean get_placed_monst_in_dlog();
-// void put_placed_item_in_dlog();
-// Boolean get_placed_item_in_dlog();
-// void edit_placed_item_event_filter (short item_hit);
-// void edit_placed_item(short which_i);
-// void edit_sign_event_filter (short item_hit);
+
 void put_out_wand_in_dlog();
 Boolean get_out_wand_in_dlog();
 Boolean save_town_details();
@@ -95,8 +74,6 @@ void put_make_scen_2_in_dlog();
 short edit_make_scen_2(short *val_array);
 Boolean save_scen_details();
 void put_scen_details_in_dlog();
-
-
 
 void put_placed_monst_in_dlog()
 {
