@@ -9,6 +9,7 @@ short dialog_answer;
 extern short cen_x, cen_y;
 extern Boolean dialog_not_toast;
 extern scenario_data_type scenario;
+extern zone_names_data_type zone_names;
 extern town_record_type town;
 extern big_tr_type t_d;
 extern outdoor_record_type current_terrain;
@@ -352,7 +353,7 @@ void outdoor_details_event_filter (short item_hit)
 			CDGT(851,2,(char *) str);
 			str[19] = 0;
 			sprintf(current_terrain.name,"%s",(char *) str);
-
+			strcpy(&zone_names.section_names[zone_names.out_width * cur_out.y + cur_out.x][0],&current_terrain.name[0]);
 			CDGT(851,3,(char *) str);
 			str[SCRIPT_NAME_LEN - 1] = 0;
 			sprintf(current_terrain.section_script,"%s",(char *) str);
@@ -602,6 +603,7 @@ Boolean save_town_details()
 	
 	// save values
 	CDGT(832,2,town.town_name);
+	strcpy(&zone_names.town_names[cur_town][0],&town.town_name[0]);
 	town.lighting = cd_get_led_range(832,33,36);
 	town.is_on_surface = cd_get_led(832,32);
 	town.monster_respawn_chance = CDGN(832,3);
@@ -1007,6 +1009,7 @@ Boolean new_town()
 	town.set_start_locs(size);
 	t_d.clear_big_tr_type();
 	strcpy(town.town_name,(char *) temp_str);
+	strcpy(&zone_names.town_names[new_town][0],&town.town_name[0]);
 	town_type = size;
 	town.is_on_surface = on_surface_answer;
 	if (on_surface_answer) {

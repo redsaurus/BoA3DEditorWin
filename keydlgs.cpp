@@ -31,10 +31,7 @@ short store_cur_t ;
 // short num_specs[3] = {256,60,100};
 Boolean store_strict_string;
 
-// q_3DModStart
 HCURSOR cursors[15] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
-// q_3DModEnd
-
 
 // function prototype
 
@@ -42,9 +39,6 @@ void display_strings(char *text1, char *text2, char *title, /* short sound_num, 
 void put_text_res();
 // short choice_dialog(short pic,short num);
 
-
-
-	
 void fancy_choice_dialog_event_filter (short item_hit)
 {
 	dialog_not_toast = FALSE;
@@ -61,7 +55,6 @@ short fancy_choice_dialog(short which_dlog,short parent)
 	
 	cd_create_dialog_parent_num(which_dlog,parent);
 	
-
 //#ifndef EXILE_BIG_GUNS
 //	while (dialog_not_toast)
 //		ModalDialog((ModalFilterProcPtr) cd_event_filter, &item_hit);
@@ -70,7 +63,6 @@ short fancy_choice_dialog(short which_dlog,short parent)
 		ModalDialog();	
 
 	cd_kill_dialog(which_dlog,0);
-
 
 	i = dialog_answer;
 	dialog_answer = store_dialog_answer;
@@ -99,20 +91,22 @@ Boolean string_not_clean(char *str,short max_length,short strict_file_naming,cha
 	
 	if ((short)strlen(str) > max_length - 1)
 		error = TRUE;
-		else if (strict_file_naming) {
-			for (short i = 0; i < (short)strlen(str); i++) 
-				if ((isalpha(str[i]) == FALSE) && (isdigit(str[i]) == FALSE) && (str[i] != ' '))
-						error = TRUE;
-			}
+	else if (strict_file_naming) {
+		for (short i = 0; i < (short)strlen(str); i++){
+			if ((isalpha(str[i]) == FALSE) && (isdigit(str[i]) == FALSE) && (str[i] != ' '))
+					error = TRUE;
+		}
+	}
 			
 	if (error) {
 		if (strict_file_naming)
 			sprintf(error_str,"%s is either too long (max. length is %d characters) or has an illegal character. There can be only letters and numbers (no spaces or other characters).",
 			  beginning_of_error, (int)(max_length - 1));
-			else sprintf(error_str,"%s too long (max. length is %d characters.",beginning_of_error,(int)(max_length - 1));
+		else
+			sprintf(error_str,"%s too long (max. length is %d characters.",beginning_of_error,(int)(max_length - 1));
 		give_error(error_str,"",parent_num);
 		return TRUE;
-		}
+	}
 	return FALSE;
 }
 
@@ -127,8 +121,7 @@ void display_strings_event_filter (short item_hit)
 		case 1:
 			dialog_not_toast = FALSE;
 			break;
-
-		}
+	}
 }
 
 void display_strings(char *text1, char *text2,
@@ -155,7 +148,6 @@ void display_strings(char *text1, char *text2,
 	
 	cd_kill_dialog(store_which_string_dlog,0);
 }
-
 
 void choose_text_res_event_filter (short item_hit)
 {
@@ -189,7 +181,7 @@ void choose_text_res_event_filter (short item_hit)
 					cd_set_led(820,i,(i == item_hit) ? 1 : 0);
 				}
 			break;
-		}
+	}
 }
 
 void put_text_res()
@@ -201,17 +193,17 @@ void put_text_res()
 		if (store_first_t + which_page * 40 + i > store_last_t) {
 			csit(820,7 + i * 2,"");
 			cd_activate_item(820,8 + i * 2,0);
-			}
-			else {
-				get_str(str,store_res_list,store_first_t + 40 * which_page + i);
-				csit(820,7 + i * 2,(char *) str);
-				cd_activate_item(820,8 + i * 2,1);
-				}
+		}
+		else{
+			get_str(str,store_res_list,store_first_t + 40 * which_page + i);
+			csit(820,7 + i * 2,(char *) str);
+			cd_activate_item(820,8 + i * 2,1);
+		}
 		if (which_page * 40 + i == store_cur_t - store_first_t)
 			cd_set_led(820,8 + i * 2,1);
-			else cd_set_led(820,8 + i * 2,0);
-		}
-
+		else
+			cd_set_led(820,8 + i * 2,0);
+	}
 }
 
 // res_list:
@@ -221,6 +213,8 @@ void put_text_res()
 //   -3 - buttons
 //   -4 - terrain
 //   -6 - floor
+//   -7 - town names
+//   -8 - outdoor section names
 short choose_text_res(short res_list,short first_t,short last_t,short cur_choice,short parent_num,char *title)
 {
 	store_res_list = res_list;

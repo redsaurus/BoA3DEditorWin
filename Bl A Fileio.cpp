@@ -35,6 +35,15 @@ extern town_record_type town;
 extern big_tr_type t_d;
 extern outdoor_record_type current_terrain;
 extern scen_item_data_type scen_data;
+<<<<<<< .mine
+extern zone_names_data_type zone_names;
+// extern short borders[4][50];
+// extern unsigned char border_floor[4][50];
+// extern unsigned char border_height[4][50];
+
+// q_3DModStart
+=======
+>>>>>>> .r34
 extern outdoor_record_type border_terrains[3][3];
 extern short cur_town;
 extern short town_type ;
@@ -723,9 +732,7 @@ void save_campaign()
 
 				}
 	
-// q_3DModStart
 	change_made_town = change_made_outdoors = FALSE;
-// q_3DModEnd
 	
 	// now, everything is moved over. Delete the original, and rename the dummy
 	
@@ -932,10 +939,9 @@ int do_save_change_to_outdoor_size(short plus_north,short plus_west,short plus_s
 	//load_outdoors(spot_hit,0);
 	load_outdoor_and_borders(spot_hit);
 	set_up_terrain_buttons();
-
+	load_all_outdoor_names(NULL);
 	return 0;
 }
-// q_3DModEnd
 
 // Loads a given campaign. Loads the last zone edited into memory for immediate editing.
 void load_campaign()
@@ -989,18 +995,16 @@ void load_campaign()
 	refresh_graphics_library();
 	overall_mode = 0;	
 
-// q_3DModStart
 	change_made_town = change_made_outdoors = FALSE;
-// q_3DModEnd
 
 	load_town(scenario.last_town_edited);
 	//load_town(0);
 
-// q_3DModStart
 //	load_outdoors(scenario.last_out_edited,0);
-// q_3DModEnd
 
 	load_outdoor_and_borders(scenario.last_out_edited);
+	load_all_outdoor_names(NULL);
+	load_all_town_names(NULL);
 	file_is_loaded = TRUE;
 	clear_selected_copied_objects();
 	//load_spec_graphics();
@@ -1034,8 +1038,6 @@ void get_name_of_current_scenario(char *name)
 	strcpy(name,(char *) file_name);
 }
 
-
-// q_3DModStart
 void load_outdoor_and_borders(location which_out)
 {
 	short i,j;
@@ -1063,7 +1065,6 @@ void load_outdoor_and_borders(location which_out)
 	showed_graphics_error = FALSE;
 	kludge_correct_old_bad_data();
 }
-// q_3DModEnd
 
 
 void load_outdoor( location which_out, outdoor_record_type & to_where )
@@ -1080,7 +1081,7 @@ void load_outdoor( location which_out, outdoor_record_type & to_where )
 		oops_error(28);
 		SysBeep(/* 2 */);
 		return;
-		}
+	}
 		
 	out_sec_num = scenario.out_width * which_out.y + which_out.x;
 	
@@ -1101,6 +1102,57 @@ void load_outdoor( location which_out, outdoor_record_type & to_where )
 	if (error != 0) {FSClose(file_id);oops_error(79);return;}
 }
 
+void load_all_outdoor_names(char* to_open)
+{
+	short x,y;
+	FILE* file_id;
+	long len=sizeof(outdoor_record_type),len_to_jump;
+	short out_sec_num=0;
+	outdoor_record_type store_out;
+	short error;
+	len_to_jump = sizeof(scenario_data_type);
+	
+	if(to_open==NULL){
+		if ((file_id = fopen(szFileName, "rb")) == NULL) {
+			oops_error(76);	return;
+		}
+		zone_names.out_width=scenario.out_width;
+		zone_names.out_height=scenario.out_height;
+	}
+	else{
+		if ((file_id = fopen(to_open, "rb")) == NULL) {
+			oops_error(76); return;
+		}
+		scenario_data_type temp_scen;
+		if ((error = FSRead(file_id, &len_to_jump, (char *) &temp_scen)) != 0){
+			FSClose(file_id); oops_error(75); return;
+		}
+		if (temp_scen.scenario_platform() < 0) {
+			give_error("This file is not a legitimate Blades of Avernum scenario.","",0);
+			return;
+		}
+		if (!temp_scen.scenario_platform()) //is this correct?
+			temp_scen.port();
+		zone_names.out_width=temp_scen.out_width;
+		zone_names.out_height=temp_scen.out_height;
+	}
+	for(y=0; y<zone_names.out_height; y++){
+		for(x=0; x<zone_names.out_width; x++){
+			error = SetFPos (file_id, 1, len_to_jump);	
+			if (error != 0) {FSClose(file_id);oops_error(77);return;}
+			out_sec_num = zone_names.out_width * y + x;
+			error = FSRead(file_id, &len, (char *) &store_out);
+			if (error != 0) {FSClose(file_id);oops_error(78);return;}
+			
+			strcpy(&zone_names.section_names[out_sec_num][0],&store_out.name[0]);
+			len_to_jump+=sizeof(outdoor_record_type);;
+		}
+	}
+	
+	error = FSClose(file_id);
+	if (error != 0) {FSClose(file_id);oops_error(79);return;}
+}
+
 void load_town(short which_town)
 {
 	short i,j;
@@ -1112,7 +1164,7 @@ void load_town(short which_town)
 		oops_error(28);
 		SysBeep(/* 2 */);
 		return;
-		}	
+	}
 		
 	len_to_jump = sizeof(scenario_data_type);
 
@@ -1192,6 +1244,64 @@ void load_town(short which_town)
 	kludge_correct_old_bad_data();
 }
 
+//unfortunately the names of the towns are scattered through the file, so this is messy
+void load_all_town_names(char* to_open)
+{
+	short i;
+	FILE* file_id;
+	long len,len_to_jump = 0,store;
+	short error;
+	town_record_type temp_town;
+	len_to_jump = sizeof(scenario_data_type);
+	scenario_data_type temp_scen;
+	if(to_open==NULL){
+		if (NULL == (file_id = fopen(szFileName, "rb"))) {
+			oops_error(80);	return;
+		}
+	}
+	else{
+		if (NULL == (file_id = fopen(to_open, "rb"))) {
+			oops_error(80);	return;
+		}
+	}
+	
+	if ((error = FSRead(file_id, &len_to_jump, (char *) &temp_scen)) != 0){
+		FSClose(file_id); oops_error(75); return;
+	}
+	if (temp_scen.scenario_platform() < 0) {
+		give_error("This file is not a legitimate Blades of Avernum scenario.","",0);
+		file_is_loaded = FALSE;
+		return;
+	}
+	if (!temp_scen.scenario_platform())
+		temp_scen.port();
+	zone_names.out_width=temp_scen.out_width;
+	zone_names.out_height=temp_scen.out_height;
+	
+	store = (long) (zone_names.out_width * zone_names.out_height) * (long) (sizeof(outdoor_record_type));
+	len_to_jump += store;
+	
+	for (i = 0; i < (short)temp_scen.num_towns; i++){
+		error = SetFPos (file_id, 1, len_to_jump);
+		if (error != 0) {FSClose(file_id);oops_error(81);return;}
+		//load the  name
+		len = sizeof(town_record_type);
+		
+		error = FSRead(file_id, &len , (char *) &temp_town);
+		if (error != 0) {FSClose(file_id);oops_error(82);return;}
+		if (currently_editing_windows_scenario)
+			temp_town.port();
+		strcpy(&zone_names.town_names[i][0],&temp_town.town_name[0]);
+		switch (temp_scen.town_size[i]) {
+			case 0: len_to_jump += sizeof (big_tr_type) + sizeof(town_record_type); break;
+			case 1: len_to_jump += sizeof (ave_tr_type) + sizeof(town_record_type); break;
+			case 2: len_to_jump += sizeof (tiny_tr_type) + sizeof(town_record_type); break;
+		}
+	}
+	
+	error = FSClose(file_id);
+	if (error != 0) {FSClose(file_id);oops_error(86);return;}
+}
 
 void oops_error(short error)
 {
@@ -1575,10 +1685,6 @@ bool import_boa_town()
 	FILE *file_id;
 	char import_file_path[_MAX_PATH] = "";
 	char import_file_name[_MAX_FNAME + _MAX_EXT] = "";
-	
-	which_town = pick_import_town(841 /*,0 */);
-	if (which_town < 0)
-		return(false);
 
 	ofn.hwndOwner = mainPtr;
 	ofn.lpstrFile = import_file_path; // full path and file name
@@ -1587,12 +1693,13 @@ bool import_boa_town()
 
 	if (GetOpenFileName(&ofn) == 0)
 		return(false);
+	load_all_town_names(import_file_path);
+	
 	if (NULL == (file_id = fopen(import_file_path, "rb"))) {
 		oops_error(28);
 		SysBeep(/* 2 */);
 		return(false);
-	}	
-
+	}
 	
 	len = (long) kSizeOfScenario_data_type;
 	if ((error = FSRead(file_id, &len, (char *) &temp_scenario)) != 0){
@@ -1605,6 +1712,10 @@ bool import_boa_town()
 		give_error("This file is not a legitimate Blades of Avernum scenario.","",0);
 		return(false);
 	}
+	
+	which_town = pick_import_town(841 /*,0 */);
+	if (which_town < 0)
+		return(false);
 	
 	temp_scenario.port();
 		
@@ -1691,6 +1802,7 @@ bool import_boa_town()
 		oops_error(207);
 		return(false);
 	}
+	strcpy(&zone_names.town_names[cur_town][0],&town.town_name[0]);
 	return(true);
 }
 
@@ -1749,7 +1861,8 @@ bool import_boa_outdoors()
 	error = FSRead(file_id, &len , (char *) &current_terrain);
 
 	current_terrain.port();
-
+	
+	strcpy(&zone_names.section_names[cur_out.x + cur_out.y*scenario.out_width][0],&current_terrain.name[0]);
 	error = FSClose(file_id);
 	if (error != 0) {FSClose(file_id);oops_error(307); return(false);}
 	return(true);
@@ -1826,7 +1939,6 @@ void init_warriors_grove()
 }
 
 // data for Blades of Exile porting
-
 void import_blades_of_exile_scenario()
 {
 	short i,j;
@@ -3671,7 +3783,8 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 		case 130: // sdf?
 			if ((node->ex1a >= 0) && (node->ex1b >= 0)) {
-				add_big_string_to_file(file_id,"\tif (get_flag(",node->sd1,",",node->sd2,") >= ",node->ex1a,")");
+				add_big_string_to_file(file_id,"\tif (get_flag(",
+				  node->sd1,",",node->sd2,") >= ",node->ex1a,")");
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");			
 				}
 			if ((node->ex2a >= 0) && (node->ex2b >= 0)) {

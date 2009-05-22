@@ -1075,6 +1075,7 @@ BEGIN
     LTEXT           "~Pick Town to Edit:",5,25,19,167,17
     LTEXT           "Enter the number of the town you want to edit next:",6,
                     25,38,185,28
+    LTEXT           "0_109",7,152,68,63,13
 END
 
 856 DIALOG  10, 10, 284, 149
@@ -1087,6 +1088,7 @@ BEGIN
     LTEXT           "~Entrance to what town?",5,23,20,167,17
     LTEXT           "What town do you want the party to end up in when they walk into this rectangle?",
                     6,23,39,213,42
+    LTEXT           "0_109",7,152,68,63,13
 END
 
 857 DIALOG  10, 10, 401, 230
@@ -1405,6 +1407,26 @@ BEGIN
     LTEXT           "+",6,26,26,257,19
 END
 
+<<<<<<< .mine
+986 DIALOG  10, 10, 503, 279
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "0_63",1,403,247,65,20
+    LTEXT           "5_716",2,6,6,36,36
+    LTEXT           "The Blades of Avernum Scenario Editor can be a tricky program to use. It has lots of options and a lot of features. Fortunately, it also comes with very comprehensive online documentation.",
+                    3,50,22,413,44
+    LTEXT           "To get to this documentation, run the program Blades Editor Documentation. This file contains the full instructions for the editor, ready to be printed out.",
+                    4,50,67,412,40
+    LTEXT           "Of special importance is the section 'How to Make a Simple Scenario.  It describes, in exact, step-by-step detail, how to make a simple scenario with dungeons, monsters, and treasure. This section will give you a quick, easy start.",
+                    5,50,108,412,53
+    LTEXT           "Once you've mastered the basics, using this section, skim through the documentation. Unfortunately, this is not a program you will be able to get the best use out of without using the instructions.",
+                    6,50,162,418,40
+    LTEXT           "Finally, if you're stuck and need ideas, go to http://www.spidweb.com. There is a Scenario Editor forum there, which has all kinds of hints, tips, and answers for better scenario design.",
+                    7,50,203,418,41
+    LTEXT           "BLADES OF AVERNUM - GETTING STARTED",8,50,4,265,16
+END
+=======
+>>>>>>> .r34
 
 990 DIALOG  10, 10, 340, 92
 STYLE WS_POPUP | WS_DLGFRAME
@@ -1455,7 +1477,6 @@ BEGIN
                     275,16
 END
 
-
 1062 DIALOG  10, 10, 518, 388
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
@@ -1492,7 +1513,7 @@ STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "Go for it!",1,103,64,41,10,WS_GROUP
     PUSHBUTTON      "Exit",100,59,64,42,10,WS_GROUP
-    LTEXT           "The Blades of Avernum editor looks best when the monitor is set to thousands of colors. With the current monitor settings, the editor may not work.",
+    LTEXT           "The Blades of Avernum Editor looks best when the monitor is set to thousands of colors. With the current monitor settings, the editor may not work.",
                     3,10,7,276,66
     LTEXT           "It might work with less colors, or it might not work at all. Do you wish to try?",
                     4,10,74,276,49

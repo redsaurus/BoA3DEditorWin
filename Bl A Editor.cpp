@@ -31,10 +31,8 @@ short ulx = 0, uly = 0;
 short mode_count = 0;
 
 
-// q_3DModStart
 Boolean change_made_town = FALSE;
 Boolean change_made_outdoors = FALSE;
-// q_3DModEnd
 
 Boolean file_is_loaded = FALSE;
 
@@ -44,6 +42,7 @@ town_record_type	town;
 big_tr_type			t_d;
 outdoor_record_type current_terrain;
 scen_item_data_type scen_data;
+zone_names_data_type zone_names;
 
 // outdoor border
 //	the first index 0:top, 1:right, 2:bottom, 3:left, the second index x(bottom, top) or y(left, right) coordinate
@@ -51,9 +50,7 @@ scen_item_data_type scen_data;
 // unsigned char border_floor[4][50];
 // unsigned char border_height[4][50];
 
-// q_3DModStart
 outdoor_record_type border_terrains[3][3];
-// q_3DModEnd
 
 short cur_town;
 location cur_out;
@@ -68,9 +65,7 @@ short town_type = 0;  // 0 - big 1 - ave 2 - small
 short current_height_mode = 0; // 0 - no autohills, 1 - autohills
 Boolean editing_town = TRUE;
 short numerical_display_mode = 0;
-// q_3DModStart
 short cur_viewing_mode = 0; // 0 - big icons 1 - small icons 10 - big 3D icons 11 - 3D view as in game
-// q_3DModEnd
 
 short overall_mode = 0;
 // 0 - 9 - different terrain painting modes

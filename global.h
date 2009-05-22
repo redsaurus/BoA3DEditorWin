@@ -727,7 +727,7 @@ public:
 
 typedef struct {
 	short ter_type,item_num[10],item_odds[10],property;
-	} item_storage_shortcut_type;
+} item_storage_shortcut_type;
 
 class scen_item_data_type {
 public:
@@ -738,7 +738,20 @@ public:
 	floor_type_type scen_floors[256];
 	terrain_type_type scen_ter_types[512];
 	creature_type scen_creatures[256];
-	} ;
+} ;
+
+//town i's name is stored in town_names[i]
+//outdoor section i,j's name is stored in
+// section_names[i+out_width*j]
+class zone_names_data_type {
+public:
+	char town_names[200][20];
+	char section_names[100][20];
+	int out_width;
+	int out_height;
+	//width and height are stored seperately here as these data structures may 
+	//be used to store information about scenarios from which zones are being imported
+};
 
 class boat_record_type {
 public:
@@ -1497,9 +1510,12 @@ void handle_edit_menu(int item_hit);
 bool file_initialize();
 void save_campaign();
 void load_campaign();
+// void augment_terrain(location to_create);
 void load_outdoor_and_borders(location which_out);
+void load_all_outdoor_names(char* to_open);
 void save_change_to_outdoor_size(short plus_north,short plus_west,short plus_south,short plus_east,short on_surface);
 void load_town(short which_town);
+void load_all_town_names(char* to_open);
 void start_data_dump();
 Boolean create_basic_scenario(char *scen_name_short,char *scen_name_with_ext,char *scen_full_name,short out_width,short out_height,short on_surface,Boolean use_warriors_grove);
 bool import_boa_town();

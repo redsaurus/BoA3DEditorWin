@@ -38,10 +38,18 @@ extern HWND right_sbar;
 extern RECT right_sbar_rect;
 
 extern scenario_data_type scenario;
+extern zone_names_data_type zone_names;
 extern town_record_type town;
 extern big_tr_type t_d;
 extern outdoor_record_type current_terrain;
 extern scen_item_data_type scen_data;
+<<<<<<< .mine
+// extern short borders[4][50];
+// extern unsigned char border_floor[4][50];
+// extern unsigned char border_height[4][50];
+
+=======
+>>>>>>> .r34
 extern outdoor_record_type border_terrains[3][3];
 
 extern short cur_town;
@@ -70,10 +78,8 @@ extern short current_terrain_drawn;
 extern RECT border_rect[4];
 extern RECT terrain_rects[264];							
 
-// q_3DModStart
 extern RECT terrain_rects_3D[264];
 extern short hill_c_heights[12][4];
-// q_3DModEnd
 
 extern RECT palette_buttons[8][6];
 extern RECT large_edit_ter_rects[9][9];
@@ -4033,6 +4039,9 @@ void p2c(char *str)
 
 }
 */
+//returns a string from one of a number of sets, listed below. 
+//this is used to build up lists of things that have customized 
+//names in the scenario, like cretaures or towns
 // i,j is a STR# resource.
 // If i < 0, get instead other strings
 //   -1 - creature types
@@ -4040,34 +4049,37 @@ void p2c(char *str)
 //   -3 - buttons
 //   -4 - terrain
 //   -6 - floor
+//   -7 - town name
+//   -8 - outdoor section name
 void get_str(char *str,short i, short j)
 {
-
-	if (i == -1) {
-		sprintf((char *) str,"%s (L%d)",scen_data.scen_creatures[j].name,
-			(int)scen_data.scen_creatures[j].level);
-		return;
-		}
-	if (i == -2) {
-		strcpy((char *) str,scen_data.scen_items[j].full_name);
-		return;
-		}
-	if (i == -3) {
-		strcpy((char *) str,button_strs[available_dlog_buttons[j]]);
-		return;
-		}
-
-	if (i == -4) {
-		strcpy((char *) str,scen_data.scen_ter_types[j].ter_name);
-		return;
-		}
-	if (i == -6) {
-		strcpy((char *) str,scen_data.scen_floors[j].floor_name);
-		return;
-		}
-	
-	GetIndString(str, i, j);
-//	p2c(str);
+	int y;
+	switch(i){
+		case -1:
+			sprintf((char *) str,"%s (L%d)",scen_data.scen_creatures[j].name,(int)scen_data.scen_creatures[j].level);
+			break;
+		case -2:
+			strcpy((char *) str,scen_data.scen_items[j].full_name);
+			break;
+		case -3:
+			strcpy((char *) str,button_strs[available_dlog_buttons[j]]);
+			break;
+		case -4:
+			strcpy((char *) str,scen_data.scen_ter_types[j].ter_name);
+			break;
+		case -6:
+			strcpy((char *) str,scen_data.scen_floors[j].floor_name);
+			break;
+		case -7:
+			sprintf((char *) str,"(%i) %s",(j-1),(char*)&zone_names.town_names[j-1][0]);
+			break;
+		case -8:
+			y = (j-1)/zone_names.out_width;
+			sprintf((char *) str,"(%i,%i) %s",(j-1)-(y*zone_names.out_width),y,(char*)&zone_names.section_names[j-1][0]);
+			break;
+		default:
+			GetIndString(str, i, j);
+	}
 }
 
 /*
