@@ -35,15 +35,11 @@ extern town_record_type town;
 extern big_tr_type t_d;
 extern outdoor_record_type current_terrain;
 extern scen_item_data_type scen_data;
-<<<<<<< .mine
 extern zone_names_data_type zone_names;
 // extern short borders[4][50];
 // extern unsigned char border_floor[4][50];
 // extern unsigned char border_height[4][50];
 
-// q_3DModStart
-=======
->>>>>>> .r34
 extern outdoor_record_type border_terrains[3][3];
 extern short cur_town;
 extern short town_type ;

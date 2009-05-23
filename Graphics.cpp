@@ -43,13 +43,6 @@ extern town_record_type town;
 extern big_tr_type t_d;
 extern outdoor_record_type current_terrain;
 extern scen_item_data_type scen_data;
-<<<<<<< .mine
-// extern short borders[4][50];
-// extern unsigned char border_floor[4][50];
-// extern unsigned char border_height[4][50];
-
-=======
->>>>>>> .r34
 extern outdoor_record_type border_terrains[3][3];
 
 extern short cur_town;
