@@ -64,7 +64,7 @@ short current_drawing_mode = 0; // 0 - floor 1 - terrain 2 - height
 short town_type = 0;  // 0 - big 1 - ave 2 - small
 short current_height_mode = 0; // 0 - no autohills, 1 - autohills
 Boolean editing_town = TRUE;
-short numerical_display_mode = 0;
+short numerical_display_mode = 3;
 short cur_viewing_mode = 0; // 0 - big icons 1 - small icons 10 - big 3D icons 11 - 3D view as in game
 
 short overall_mode = 0;
@@ -251,7 +251,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		0,
 		0,
 		772,
-		601,
+		635, // was originally 601
 		NULL,
 		NULL,
 		hInstance,
@@ -868,9 +868,9 @@ void handle_town_menu(int item_hit)
 			redraw_screen();
 			break;
 
-			
-
-
+		case 20:// clear selected instance
+								selected_item_number = -1;
+			break;
 
 		}
 }
@@ -924,6 +924,20 @@ void handle_outdoor_menu(int item_hit)
 			overall_mode = 71;
 			set_cursor(7);
 			break;
+
+		case 12: 					// Clear All Placed Specials
+			if (fancy_choice_dialog(885,0) == 2)
+				break;
+			if (editing_town)
+				break;
+			for (x = 0; x < NUM_OUT_PLACED_SPECIALS; x++) {
+				current_terrain.spec_id[x] = kNO_OUT_SPECIALS;
+				SetMacRect(&current_terrain.special_rects[x],-1,-1,-1,-1);
+				}
+				change_made_outdoors = TRUE;
+			redraw_screen();
+			break;
+
 		}
 }
 
@@ -1115,6 +1129,50 @@ void handle_help_menu(int item_hit)
 				}
 			break;
 
+		case 11: // load outdoor zone above
+			if (editing_town)
+				break;
+				if (cur_out.y > 0) {
+				 spot_hit.x = cur_out.x;
+				 spot_hit.y = cur_out.y - 1;
+				 }
+				else {
+				 spot_hit.x = cur_out.x;
+				 spot_hit.y = scenario.out_height - 1;
+				 }
+				clear_selected_copied_objects();
+				load_outdoor_and_borders(spot_hit);
+				set_up_terrain_buttons();
+				cen_x = 24; cen_y = 24;
+				reset_drawing_mode();
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
+				change_made_outdoors = FALSE;
+			break;
+			
+		case 12: // load outdoor zone below
+			if (editing_town)
+				break;
+				if (cur_out.y < scenario.out_height - 1) {
+				 spot_hit.x = cur_out.x;
+				 spot_hit.y = cur_out.y + 1;
+				 }
+				else {
+				 spot_hit.x = cur_out.x;
+				 spot_hit.y = 0;
+				 }
+				clear_selected_copied_objects();
+				load_outdoor_and_borders(spot_hit);
+				set_up_terrain_buttons();
+				cen_x = 24; cen_y = 24;
+				reset_drawing_mode();
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
+				change_made_outdoors = FALSE;
+			break;
+
 		}
 	draw_main_screen();		
 }
@@ -1212,6 +1270,7 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam)
 		case 832: edit_town_details_event_filter(item_hit); break;
 		case 835: edit_town_wand_event_filter(item_hit); break;
 		case 837: edit_placed_monst_event_filter(item_hit); break;
+//		case 838: edit_placed_terrain_script_event_filter(item_hit); break;
 		case 839: edit_town_strs_event_filter(item_hit); break;
 		case 840: edit_area_rect_event_filter(item_hit); break;
 		case 841: pick_import_town_event_filter(item_hit); break;

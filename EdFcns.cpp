@@ -50,9 +50,9 @@ RECT large_edit_ter_rects[9][9];
 RECT small_edit_ter_rects[MAX_TOWN_SIZE][MAX_TOWN_SIZE];
 
 // Bottom text rectangles
-RECT left_text_lines[10];
+RECT left_text_lines[14];
 // right_text_lines rects are for INSIDE the buttons GWORLD, NOT the screen.
-RECT right_text_lines[5];
+RECT right_text_lines[6];
 
 location spot_hit;
 bool object_sticky_draw;
@@ -259,17 +259,17 @@ void init_screen_locs()
 {
 	int i;
 	
-	for (i = 0; i < 10; i++)
-		SetRECT(left_text_lines[i],LEFT_TEXT_LINE_WIDTH * (i / 5) + LEFT_TEXT_LINE_ULX,
-			LEFT_TEXT_LINE_ULY + (i % 5) * TEXT_LINE_HEIGHT,
-			LEFT_TEXT_LINE_WIDTH * (i / 5) + LEFT_TEXT_LINE_ULX + LEFT_TEXT_LINE_WIDTH,
-			LEFT_TEXT_LINE_ULY + (i % 5) * TEXT_LINE_HEIGHT + TEXT_LINE_HEIGHT);
+	for (i = 0; i < 14; i++)
+		SetRECT(left_text_lines[i],LEFT_TEXT_LINE_WIDTH * (i / 7) + LEFT_TEXT_LINE_ULX,
+			LEFT_TEXT_LINE_ULY + (i % 7) * TEXT_LINE_HEIGHT,
+			LEFT_TEXT_LINE_WIDTH * (i / 7) + LEFT_TEXT_LINE_ULX + LEFT_TEXT_LINE_WIDTH,
+			LEFT_TEXT_LINE_ULY + (i % 7) * TEXT_LINE_HEIGHT + TEXT_LINE_HEIGHT);
 // right_text_lines rects are for INSIDE the buttons GWORLD, NOT the screen.
-	for (i = 0; i < 5; i++)
+	for (i = 0; i < 6; i++)
 		SetRECT(right_text_lines[i], RIGHT_TEXT_LINE_ULX,
-			RIGHT_TEXT_LINE_ULY + (i % 5) * TEXT_LINE_HEIGHT,
+			RIGHT_TEXT_LINE_ULY + (i % 6) * TEXT_LINE_HEIGHT,
 			 RIGHT_TEXT_LINE_ULX + 200,
-			RIGHT_TEXT_LINE_ULY + (i % 5) * TEXT_LINE_HEIGHT + TEXT_LINE_HEIGHT);
+			RIGHT_TEXT_LINE_ULY + (i % 6) * TEXT_LINE_HEIGHT + TEXT_LINE_HEIGHT);
 }
 
 
@@ -1137,24 +1137,21 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 // q_3DModStart
 	if ((selected_item_number >= 0) && ((cur_viewing_mode == 0) || (cur_viewing_mode == 10) || (cur_viewing_mode == 11))) {
 // q_3DModEnd
-		for (i = 0; i < 10; i++)
+		for (i = 0; i < 14; i++)
 			if ((mouse_button_held == FALSE) && (POINTInRECT(the_point,left_text_lines[i]))) {
 				// if editing an item
 				if ((selected_item_number >= 11000) && (selected_item_number < 11000 + NUM_TOWN_PLACED_ITEMS)) {
 					switch (i) {
-						case 1:
+						case 0:
 							choice = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,town.preset_items[selected_item_number % 1000].which_item,
 							  0,"What sort of item?");
 							if (choice >= 0)
 								town.preset_items[selected_item_number % 1000].which_item = choice;			
 							break;
-						case 2: 
-							if (town.preset_items[selected_item_number % 1000].charges > 0) {
-								town.preset_items[selected_item_number % 1000].charges =
-									(unsigned char)how_many_dlog(town.preset_items[selected_item_number % 1000].charges,0,250,"How many charges?(0-255)");
-								if (town.preset_items[selected_item_number % 1000].charges <= 0)
-									town.preset_items[selected_item_number % 1000].charges = 1;
-								}
+// case 1: Edit this item
+						case 2:
+							town.preset_items[selected_item_number % 1000].properties =
+								town.preset_items[selected_item_number % 1000].properties ^ 1;
 							break;
 						case 3:
 							town.preset_items[selected_item_number % 1000].properties = 
@@ -1164,27 +1161,53 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							town.preset_items[selected_item_number % 1000].properties = 
 								town.preset_items[selected_item_number % 1000].properties ^ 4;
 							break;
-						case 5: 
+						case 5:
+							town.preset_items[selected_item_number % 1000].properties =
+								town.preset_items[selected_item_number % 1000].properties ^ 8;
+							break;
+						case 6:
+							town.preset_items[selected_item_number % 1000].properties =
+								town.preset_items[selected_item_number % 1000].properties ^ 16;
+							break;
+						case 8:
 								town.preset_items[selected_item_number % 1000].item_shift.x =
 									(t_coord)how_many_dlog(town.preset_items[selected_item_number % 1000].item_shift.x,-5,5,"Horizontal Pixel Offset (-5..5)");
 							break;
-						case 6: 
+						case 9:
 								town.preset_items[selected_item_number % 1000].item_shift.y =
 									(t_coord)how_many_dlog(town.preset_items[selected_item_number % 1000].item_shift.y,-5,5,"Vertical Pixel Offset (-5..5)");
 							break;
+							
+						case 10:
+							if (town.preset_items[selected_item_number % 1000].charges > 0) {
+								town.preset_items[selected_item_number % 1000].charges =
+									(unsigned char)how_many_dlog(town.preset_items[selected_item_number % 1000].charges,0,250,"How many charges?(0-255)");
+								if (town.preset_items[selected_item_number % 1000].charges <= 0)
+									town.preset_items[selected_item_number % 1000].charges = 1;
+								}
+							break;
+
 						}
 					}
 
 				if ((selected_item_number >= 9000) && (selected_item_number < 9000 + NUM_TER_SCRIPTS)) {
 					switch (i) {
-						case 1:
+//						case 1:
+//						edit_placed_terrain_script(selected_item_number % 1000);
+//						break;
+						case 2: case 3: case 4: case 5: case 6:
+							town.ter_scripts[selected_item_number % 1000].memory_cells[i - 2] =
+								how_many_dlog(town.ter_scripts[selected_item_number % 1000].memory_cells[i - 2],-30000,30000,"Put what in this memory cell?");
+							break;
+
+						case 8:
 							get_str_dlog(town.ter_scripts[selected_item_number % 1000].script_name,"What script?",str_response,TRUE);
 							str_response[SCRIPT_NAME_LEN - 1] = 0;
 							strcpy(town.ter_scripts[selected_item_number % 1000].script_name,str_response);
 							break;
-						case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9:
-							town.ter_scripts[selected_item_number % 1000].memory_cells[i - 2] = 
-								how_many_dlog(town.ter_scripts[selected_item_number % 1000].memory_cells[i - 2],-30000,30000,"Put what in this memory cell?");						
+						case 9: case 10: case 11: case 12: case 13:
+							town.ter_scripts[selected_item_number % 1000].memory_cells[i - 4] =
+								how_many_dlog(town.ter_scripts[selected_item_number % 1000].memory_cells[i - 4],-30000,30000,"Put what in this memory cell?");
 							break;
 						default:
 							break;
@@ -1203,55 +1226,45 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 						edit_placed_monst(selected_item_number % 1000);
 						break;
 					case 2:
-						get_str_dlog(town.creatures[selected_item_number % 1000].char_script,"What script?",str_response,TRUE);
-						str_response[SCRIPT_NAME_LEN - 1] = 0;
-						strcpy(town.creatures[selected_item_number % 1000].char_script,str_response);
-						break;
-					case 3:
-						town.creatures[selected_item_number % 1000].start_attitude = 
+						town.creatures[selected_item_number % 1000].start_attitude =
 						  (town.creatures[selected_item_number % 1000].start_attitude + 1) % 6;
 						if (town.creatures[selected_item_number % 1000].start_attitude < 2)
 							town.creatures[selected_item_number % 1000].start_attitude = 2;
 						break;
+
+					case 3:
+						get_str_dlog(town.creatures[selected_item_number % 1000].char_script,"What script?",str_response,TRUE);
+						str_response[SCRIPT_NAME_LEN - 1] = 0;
+						strcpy(town.creatures[selected_item_number % 1000].char_script,str_response);
+						break;
 					case 4:
+						town.creatures[selected_item_number % 1000].personality =
+							how_many_dlog(town.creatures[selected_item_number % 1000].personality,0,3999,"What personality? (0-3999)");
+						break;
+
+					case 5:
 						town.creatures[selected_item_number % 1000].character_id = 
 							how_many_dlog(town.creatures[selected_item_number % 1000].character_id,0,19999,"What character id? (0-19999)");						
 						break;
-					case 5:
-						town.creatures[selected_item_number % 1000].hidden_class = 
-							how_many_dlog(town.creatures[selected_item_number % 1000].hidden_class,0,19,"What hidden class? (0-19)");						
-						break;
 					case 6:
-						choice = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,town.creatures[selected_item_number % 1000].extra_item,
-						  0,"What sort of item?");
-						if (choice >= 0) {
-							if (choice == 0)
-								choice = -1;
-							town.creatures[selected_item_number % 1000].extra_item = choice;
-							town.creatures[selected_item_number % 1000].extra_item_chance_1 = 
-								how_many_dlog(town.creatures[selected_item_number % 1000].extra_item_chance_1,0,100,"What chance? (0-100)");						
-							}
-						break;			
-					case 7:
-						choice = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,town.creatures[selected_item_number % 1000].extra_item_2,
-						  0,"What sort of item?");
-						if (choice >= 0) {
-							if (choice == 0)
-								choice = -1;
-							town.creatures[selected_item_number % 1000].extra_item_2 = choice;
-							town.creatures[selected_item_number % 1000].extra_item_chance_2 = 
-								how_many_dlog(town.creatures[selected_item_number % 1000].extra_item_chance_2,0,100,"What chance? (0-100)");						
-							}
-						break;			
-					case 8:
-						town.creatures[selected_item_number % 1000].personality = 
-							how_many_dlog(town.creatures[selected_item_number % 1000].personality,0,3999,"What personality? (0-3999)");						
+						town.creatures[selected_item_number % 1000].hidden_class =
+							how_many_dlog(town.creatures[selected_item_number % 1000].hidden_class,0,19,"What hidden class? (0-19)");
 						break;
+
+					case 8:
+						town.creatures[selected_item_number % 1000].attached_event =
+							how_many_dlog(town.creatures[selected_item_number % 1000].attached_event,0,9,"What event? (0-9)");
+						break;
+
 					case 9:
 						town.creatures[selected_item_number % 1000].facing = 
 							(town.creatures[selected_item_number % 1000].facing + 1) % 4;						
 						break;
-					
+					case 10: case 11: case 12: case 13:
+							town.creatures[selected_item_number % 1000].memory_cells[i - 10] =
+							how_many_dlog(town.creatures[selected_item_number % 1000].memory_cells[i - 10],-30000,30000,"Put what in this memory cell?");
+						break;
+
 					}
 				}
 			need_redraw = TRUE;	
@@ -1707,7 +1720,7 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				break;		
 			
 		case 70:
-				create_new_ter_script("dummy",spot_hit,NULL);
+				create_new_ter_script("door",spot_hit,NULL);
 				if(!object_sticky_draw)
 					reset_drawing_mode(); 				
 				break;
@@ -2069,147 +2082,165 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	extern short selected_item_number;
 	bool ctrl_key = (GetKeyState( VK_CONTROL ) & 0x8000) != 0;	// check MSB for current key state
 
-
 	switch(chr)
 		{
-			
-			case 'A':
-				set_string("Place bounding walls","");
-				mode_count = 2;
-				set_cursor(5);
-				overall_mode = 19;
-				break;
-				
-			case 'C': // copy
-			set_string("Instance copied","  ");			
-			copy_selected_instance();
-			if(editing_town)
-				change_made_town = TRUE;
-			else
-				change_made_outdoors = TRUE;
-			break;
-				
-			case 'E': // edit sign
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][1].left;
-				pass_point.y = 6 + palette_buttons[3][1].top;
-    			handle_action(pass_point,wParam,-1);
-			break;		
-				
-			case 'F':  // find-replace terrain
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][2].left;
-				pass_point.y = 6 + palette_buttons[2][2].top;
-    			handle_action(pass_point,wParam,-1);
-			break;		
-			
-			case 'G': // Erase special
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][2].left;
-				pass_point.y = 6 + palette_buttons[6][2].top;
-    			handle_action(pass_point,wParam,-1);
-			break;		
-			
-			case 'H': // Set special
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][2].left;
-				pass_point.y = 6 + palette_buttons[7][2].top;
-    			handle_action(pass_point,wParam,-1);
-			break;		
-			
-			case 'M':
+	case 'A': // Pencil
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][0].left;
+	pass_point.y = 6 + palette_buttons[0][0].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'B': // Paintbrush (Large)
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][0].left;
+	pass_point.y = 6 + palette_buttons[1][0].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'C': // Paintbrush (Small)
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][0].left;
+	pass_point.y = 6 + palette_buttons[2][0].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'D': // Spraycan (Large)
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][0].left;
+	pass_point.y = 6 + palette_buttons[3][0].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'E': // Spraycan (Small)
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][0].left;
+	pass_point.y = 6 + palette_buttons[4][0].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'F': // Change Height
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][0].left;
+	pass_point.y = 6 + palette_buttons[5][0].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'G': // Paint Rectangle (Hollow)
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][0].left;
+	pass_point.y = 6 + palette_buttons[6][0].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'H': // Paint Rectangle (Full)
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][0].left;
+	pass_point.y = 6 + palette_buttons[7][0].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'I': case '[': // Zoom Out/Zoom In
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][1].left;
+	pass_point.y = 6 + palette_buttons[0][1].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'J': // Change Drawing Mode
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][1].left;
+	pass_point.y = 6 + palette_buttons[1][1].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'K': // Automatic Hills
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][1].left;
+	pass_point.y = 6 + palette_buttons[2][1].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'L': // Edit Sign
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][1].left;
+	pass_point.y = 6 + palette_buttons[3][1].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'M': // toggle hintbook mode
 				if (hintbook_mode == 3)
 				 hintbook_mode = 0;
 				 else  hintbook_mode =  hintbook_mode + 1;
 				small_any_drawn = FALSE;
 				draw_terrain();
-				break;
-				
-			case 'N': // place spec enc
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][2].left;
-				pass_point.y = 6 + palette_buttons[5][2].top;
-    			handle_action(pass_point,wParam,-1);
-			break;		
-			
-			case 'P': // place terrain script
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][4].left;
-				pass_point.y = 6 + palette_buttons[7][4].top;
-    			handle_action(pass_point,wParam,-1);
-			break;		
-			
-			case 'Q': // hollow rectangle
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][0].left;
-				pass_point.y = 6 + palette_buttons[6][0].top;
-    			handle_action(pass_point,wParam,-1);
-			break;					
-			
-
-			case 'R': // full rectangle
-				if (current_drawing_mode == 2) {
-					pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][0].left;
-					pass_point.y = 6 + palette_buttons[5][0].top;
-					}
-					else {
-						pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][0].left;
-						pass_point.y = 6 + palette_buttons[7][0].top;
-						//pass_point.h = RIGHT_AREA_UL_X + 6 + palette_buttons[7][0].left;
-						//pass_point.v = RIGHT_AREA_UL_Y + 6 + terrain_rects[255].bottom + palette_buttons[7][0].top;
-						}
-				handle_action(pass_point,wParam,-1);
-				break; 
-
-			case 'S':
-				if (editing_town) {
-					set_string("Select/edit placed object","Select object to edit");
-					set_cursor(7);
-					overall_mode = 40;
-					}
-				break;
-			
-			case 'T':
-					set_string("Drawing mode","  ");				 
-					selected_item_number = -1;                 
-					set_cursor(0);
-					overall_mode = 0;
-			break;
-			
-			case 'V': // paste
-
+	break;
+	case 'N': // Cut selected instance
+			set_string("Instance copied and deleted","  ");
+				 cut_selected_instance();
+			if(editing_town)
+				change_made_town = TRUE;
+			else
+				change_made_outdoors = TRUE;
+	break;
+	case 'O': // Copy selected instance
+				set_string("Instance copied","  ");
+			copy_selected_instance();
+			if(editing_town)
+				change_made_town = TRUE;
+			else
+				change_made_outdoors = TRUE;
+	break;
+	case 'P': // Paste selected instance
 			if ((copied_creature.exists() == FALSE) && (copied_item.exists() == FALSE) && (copied_ter_script.exists == FALSE)) {
 				beep();
 				break;
 				}
 			set_string("Paste copied instance","Select location to place");
 			set_cursor(7);
-			overall_mode = 48;			
-			break;
-				
-			case 'W':
-				set_string("Swap walls 1 <--> 2","Select rectangle to set");
-				mode_count = 2;
-				set_cursor(5);
-				overall_mode = 18;
-				break;
-				
-			case 'X': // cut
-			set_string("Instance deleted","  ");
-				 cut_selected_instance();
-			if(editing_town)
-				change_made_town = TRUE;
-			else
-				change_made_outdoors = TRUE;
-			break;
+			overall_mode = 48;
+	break;
+	case 'Q': // Place Walls
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][2].left;
+	pass_point.y = 6 + palette_buttons[0][2].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'R': // Switch Wall Types
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][2].left;
+	pass_point.y = 6 + palette_buttons[1][2].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'S': // Change Terrain Randomly
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][2].left;
+	pass_point.y = 6 + palette_buttons[2][2].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'T': // Eyedropper
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][2].left;
+	pass_point.y = 6 + palette_buttons[3][2].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'U': case ']': // 2D/3D
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][2].left;
+	pass_point.y = 6 + palette_buttons[4][2].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'V': // Create Special Encounter
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][2].left;
+	pass_point.y = 6 + palette_buttons[5][2].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'W': // Delete Special Encounter
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][2].left;
+	pass_point.y = 6 + palette_buttons[6][2].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'X': // Edit Special Encounter
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][2].left;
+	pass_point.y = 6 + palette_buttons[7][2].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'Y': // Select/Edit Object
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][3].left;
+	pass_point.y = 6 + palette_buttons[0][3].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
+	case 'Z': // Place Terrain Script
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][4].left;
+	pass_point.y = 6 + palette_buttons[7][4].top;
+	    handle_action(pass_point,wParam,-1);
+	break;
 
-			case 'Y':
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][2].left;
-				pass_point.y = 6 + palette_buttons[3][2].top;
-    			handle_action(pass_point,wParam,-1);
-			break;
-			
-							
-			case ' ':
-				pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][1].left;
-				pass_point.y = 6 + palette_buttons[1][1].top;
-				handle_action(pass_point,wParam,-1);
-				break; 
 
-				
+	case ',':
+	set_string("Drawing mode","  ");
+	selected_item_number = -1;
+	set_cursor(0);
+	overall_mode = 0;
+	break;
+
+	case ' ':
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][1].left;
+	pass_point.y = 6 + palette_buttons[1][1].top;
+	handle_action(pass_point,wParam,-1);
+	break;
+
 												
 // q_3DModStart
 			case VK_TAB:	// '\t':
@@ -2236,12 +2267,6 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 						handle_town_menu(2);
 						else handle_outdoor_menu(2);
 					break;
-				}
-				// Ctrl + I = zoom out/zoom in
-				if ((chr == 9) && (ctrl)) {
-					pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][1].left;
-					pass_point.y = 6 + palette_buttons[0][1].top;
-				break;
 				}
 
 				// Ctrl + L = load new zone
@@ -4255,29 +4280,25 @@ void place_items_in_town()
 	draw_terrain();
 }
 
-
 void create_town_entry(RECT rect_hit)
 {
 	short x,y;
-	
-	for (x = 0; x < 8; x++){
+
+	for (x = 0; x < 8; x++)
 		if ((current_terrain.exit_dests[x] < 0) || (current_terrain.exit_rects[x].right <= 0)) {
 			y = get_a_number(856,0,0,scenario.num_towns - 1);
-			if(y==-1)
-				return;//the user cancelled the action
 			if (cre(y,0,scenario.num_towns - 1,"The town number you gave was out of range. It must be from 0 to the number of towns in the scenario - 1.","",0) == TRUE) return;
 			if (y >= 0) {
 				current_terrain.exit_dests[x] = y;
-				current_terrain.exit_rects[x].top = (short)rect_hit.top;							
-				current_terrain.exit_rects[x].left = (short)rect_hit.left;							
-				current_terrain.exit_rects[x].bottom = (short)rect_hit.bottom;							
-				current_terrain.exit_rects[x].right = (short)rect_hit.right;							
-			}
+				current_terrain.exit_rects[x].top = (short)rect_hit.top;
+				current_terrain.exit_rects[x].left = (short)rect_hit.left;
+				current_terrain.exit_rects[x].bottom = (short)rect_hit.bottom;
+				current_terrain.exit_rects[x].right = (short)rect_hit.right;
+				}
 			return;
-		}
-		return;
-	}
-	give_error("You can't set more than 8 town entrances in any outdoor section.","",0);
+			}
+		give_error("You can't set more than 8 town entrances in any outdoor section.","",0);
+
 }
 
 void edit_town_entry(location spot_hit)

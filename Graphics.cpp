@@ -26,7 +26,7 @@ HFONT underline_font;
 HFONT bold_font;
 HFONT tiny_font;
 
-RECT terrain_buttons_rect = {0,0,210,550}; /**/
+RECT terrain_buttons_rect = {0,0,210,584}; /* was 550 */
 
 Boolean showed_graphics_error = FALSE;
 extern short numerical_display_mode;
@@ -77,8 +77,8 @@ extern short hill_c_heights[12][4];
 extern RECT palette_buttons[8][6];
 extern RECT large_edit_ter_rects[9][9];
 extern RECT small_edit_ter_rects[MAX_TOWN_SIZE][MAX_TOWN_SIZE];
-extern RECT left_text_lines[10];
-extern RECT right_text_lines[5];
+extern RECT left_text_lines[14];
+extern RECT right_text_lines[6];
 
 extern short selected_item_number;
 extern char hintbook_mode;
@@ -3684,7 +3684,7 @@ void place_left_text()
 	if (cur_viewing_mode == 1) 
 		return;
 
-	for (short i = 0; i < 10; i++)
+	for (short i = 0; i < 14; i++)
  		paint_pattern(NULL,1,left_text_lines[i],0);
 
 	HFONT store_font = (HFONT)SelectObject(main_dc,bold_font);
@@ -3708,92 +3708,139 @@ void place_left_text()
 				(int)scen_data.scen_creatures[town.creatures[selected_item_number % 1000].number].level); 
 			char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);	
 
+			sprintf((char *) draw_str,"  Attitude: %s",
+			  attitude_types[town.creatures[selected_item_number % 1000].start_attitude - 2]); 
+			char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
+			
 			if (strlen(town.creatures[selected_item_number % 1000].char_script) <= 0)
 				sprintf((char *) draw_str,"  Script: Default");
 				else sprintf((char *) draw_str,"  Script: %s",
-			  	 town.creatures[selected_item_number % 1000].char_script); 
-			char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);		
-
-			sprintf((char *) draw_str,"  Attitude: %s",
-			  attitude_types[town.creatures[selected_item_number % 1000].start_attitude - 2]); 
-			char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);		
-			
-			sprintf((char *) draw_str,"  Character ID: %d",
-			   (int)town.creatures[selected_item_number % 1000].character_id); 
-			char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);		
-
-			sprintf((char *) draw_str,"  Hidden Class: %d",
-			  (int)town.creatures[selected_item_number % 1000].hidden_class); 
-			char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);		
-
-			if (town.creatures[selected_item_number % 1000].extra_item == 0)
-				town.creatures[selected_item_number % 1000].extra_item = -1;
-			
-			if (town.creatures[selected_item_number % 1000].extra_item < 0)
-				sprintf((char *) draw_str,"  Drop Item 1: None");
-				else sprintf((char *) draw_str,"  Drop Item 1: %s %%%d",
-				  scen_data.scen_items[town.creatures[selected_item_number % 1000].extra_item].full_name,
-				  (int)town.creatures[selected_item_number % 1000].extra_item_chance_1); 
-			char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);		
-
-			if (town.creatures[selected_item_number % 1000].extra_item_2 == 0)
-				town.creatures[selected_item_number % 1000].extra_item_2 = -1;
-
-			if (town.creatures[selected_item_number % 1000].extra_item_2 < 0)
-				sprintf((char *) draw_str,"  Drop Item 2: None");
-				else sprintf((char *) draw_str,"  Drop Item 2: %s %%%d",
-				  scen_data.scen_items[town.creatures[selected_item_number % 1000].extra_item_2].full_name,
-				  (int)town.creatures[selected_item_number % 1000].extra_item_chance_2); 
-			char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);		
+			  	 town.creatures[selected_item_number % 1000].char_script);
+			char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
 
 			sprintf((char *) draw_str,"  Personality: %d",
-			   (int)town.creatures[selected_item_number % 1000].personality); 
-			char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);		
+			   (int)town.creatures[selected_item_number % 1000].personality);
+			char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
+
+			sprintf((char *) draw_str,"  Character ID: %d",
+			   (int)town.creatures[selected_item_number % 1000].character_id); 
+			char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);
+
+			sprintf((char *) draw_str,"  Hidden Class: %d",
+			  (int)town.creatures[selected_item_number % 1000].hidden_class);
+			char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);
+
+			sprintf((char *) draw_str,"  Creature Location: x = %d, y = %d",
+				   (int)town.creatures[selected_item_number % 1000].start_loc.x,
+				   (int)town.creatures[selected_item_number % 1000].start_loc.y);
+			char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);
+	
+			sprintf((char *) draw_str,"  Attached Event: %d",
+			  (int)town.creatures[selected_item_number % 1000].attached_event);
+			char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);
 
 			sprintf((char *) draw_str,"  Facing: %s",
 			  facings[town.creatures[selected_item_number % 1000].facing]); 
 			char_win_draw_string(main_dc,left_text_lines[9],(char *) draw_str,2,10);		
-				
+
+			for (short i = 0; i < 4; i++) {
+				sprintf((char *) draw_str,"  Memory Cell %d: %d",
+				   (int)i, (int)town.creatures[selected_item_number % 1000].memory_cells[i]);
+				char_win_draw_string(main_dc,left_text_lines[i + 10],(char *) draw_str,2,10);
+				}
 			}
+			
+			
 		if ((selected_item_number >= 9000) && (selected_item_number < 9000 + NUM_TER_SCRIPTS)) {
 			sprintf((char *) draw_str,"Terrain Script %d:", (int)(selected_item_number % 1000)); 
 			char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);		
 
+			sprintf((char *) draw_str,"  Edit This Script");
+			char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
+
+			for (short i = 0; i < 5; i++) {
+				sprintf((char *) draw_str,"  Memory Cell %d: %d",
+				   (int)i, (int)town.ter_scripts[selected_item_number % 1000].memory_cells[i]);
+				char_win_draw_string(main_dc,left_text_lines[i + 2],(char *) draw_str,2,10);
+				}
+
+			sprintf((char *) draw_str,"  Script Location: x = %d, y = %d",
+				   (int)town.ter_scripts[selected_item_number % 1000].loc.x,
+				   (int)town.ter_scripts[selected_item_number % 1000].loc.y);
+			char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);
+
 			sprintf((char *) draw_str,"  Script: %s",
 			  	 town.ter_scripts[selected_item_number % 1000].script_name); 
-			char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);		
-			for (short i = 0; i < 8; i++) {
+			char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);
+
+			for (short i = 5; i < 10; i++) {
 				sprintf((char *) draw_str,"  Memory Cell %d: %d",
 				   (int)i, (int)town.ter_scripts[selected_item_number % 1000].memory_cells[i]); 
-				char_win_draw_string(main_dc,left_text_lines[i + 2],(char *) draw_str,2,10);		
+				char_win_draw_string(main_dc,left_text_lines[i + 4],(char *) draw_str,2,10);
 				}
 			}
+
+
 		if ((selected_item_number >= 11000) && (selected_item_number < 11000 + NUM_TOWN_PLACED_ITEMS)) {
-			sprintf((char *) draw_str,"Item %d", (int)(selected_item_number % 1000)); 
-			char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);		
-			sprintf((char *) draw_str,"  %s",
-			  scen_data.scen_items[town.preset_items[selected_item_number % 1000].which_item].full_name); 
-			char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);		
-			if (scen_data.scen_items[town.preset_items[selected_item_number % 1000].which_item].charges > 0) {
-				sprintf((char *) draw_str,"  Charges/Amount: %d",
-				  (int)town.preset_items[selected_item_number % 1000].charges); 
-				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);		
-				}
+
+			sprintf((char *) draw_str,"Item %d: %s", (int)(selected_item_number % 1000),
+			scen_data.scen_items[town.preset_items[selected_item_number % 1000].which_item].full_name);
+			char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
+
+			sprintf((char *) draw_str,"  Edit This Placed Item  (Type %d)",
+				(int)town.preset_items[selected_item_number % 1000].which_item);
+			char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
+
+			if (town.preset_items[selected_item_number % 1000].properties & 1)
+						sprintf((char *) draw_str,"  Identified");
+			else sprintf((char *) draw_str,"  Not Identified");
+			char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
+
 			if (town.preset_items[selected_item_number % 1000].properties & 2)
-				sprintf((char *) draw_str,"  Property");
-				else sprintf((char *) draw_str,"  Not Property");
+						sprintf((char *) draw_str,"  Property");
+			else sprintf((char *) draw_str,"  Not Property");
 			char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);		
+
 			if (town.preset_items[selected_item_number % 1000].properties & 4)
-				sprintf((char *) draw_str,"  Contained");
-				else sprintf((char *) draw_str,"  Not Contained");
+						sprintf((char *) draw_str,"  Contained");
+			else sprintf((char *) draw_str,"  Not Contained");
 			char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);		
-			sprintf((char *) draw_str,"  Drawing Shift X: %d",
-			  (int)town.preset_items[selected_item_number % 1000].item_shift.x); 
-			char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);		
+
+			if (town.preset_items[selected_item_number % 1000].properties & 8)
+						sprintf((char *) draw_str,"  Cursed");
+			else sprintf((char *) draw_str,"  Not Cursed");
+			char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);
+
+			if (town.preset_items[selected_item_number % 1000].properties & 16)
+						sprintf((char *) draw_str,"  Once per Day");
+			else sprintf((char *) draw_str,"  Not Once per Day");
+			char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);
+
+			sprintf((char *) draw_str,"  Placed Item Location: x = %d, y = %d",
+			   (int)town.preset_items[selected_item_number % 1000].item_loc.x,
+			   (int)town.preset_items[selected_item_number % 1000].item_loc.y);
+			char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);
+
+						sprintf((char *) draw_str,"  Drawing Shift X: %d",
+			  (int)town.preset_items[selected_item_number % 1000].item_shift.x);
+			char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);
 			sprintf((char *) draw_str,"  Drawing Shift Y: %d",
-			  (int)town.preset_items[selected_item_number % 1000].item_shift.y); 
-			char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);		
-			}
+			  (int)town.preset_items[selected_item_number % 1000].item_shift.y);
+			char_win_draw_string(main_dc,left_text_lines[9],(char *) draw_str,2,10);
+
+			if (scen_data.scen_items[town.preset_items[selected_item_number % 1000].which_item].charges > 0)
+				sprintf((char *) draw_str,"  Charges/Amount: %d",(int)town.preset_items[selected_item_number % 1000].charges);
+			else sprintf((char *) draw_str,"  Needs no Charges");
+				char_win_draw_string(main_dc,left_text_lines[10],(char *) draw_str,2,10);
+
+			for (short i = 11; i < 14; i++) {
+				sprintf((char *) draw_str,"  ");
+				char_win_draw_string(main_dc,left_text_lines[i],(char *) draw_str,2,10);
+				}
+				}
+
+
+
 		if (selected_item_number < 0) {
 			sprintf((char *) draw_str,"Editing Town/Dungeon %d", (int)cur_town); 
 			char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);		
@@ -3829,7 +3876,7 @@ void place_right_buttons( /* short mode */ )
 	HBITMAP store_bmp;
 	HFONT store_font;
 
-	for (short i = 0; i < 5; i++) {
+	for (short i = 0; i < 6; i++) {
  		paint_pattern(terrain_buttons_gworld,0,right_text_lines[i],2);
 		}
 	
@@ -3851,29 +3898,38 @@ void place_right_buttons( /* short mode */ )
 		case 2: sprintf((char *) draw_str,"Drawing mode: HEIGHT"); break;
 		}
 	char_win_draw_string(main_dc4,right_text_lines[0],(char *) draw_str,2,12);
-	
+	char_win_draw_string(main_dc4,right_text_lines[1],(char *) current_string,2,12);
+	char_win_draw_string(main_dc4,right_text_lines[2],(char *) current_string2,2,12);
+
 	sprintf((char *) draw_str,"Center: x = %d, y = %d ", (int)cen_x, (int)cen_y);
-	char_win_draw_string(main_dc4,right_text_lines[1],(char *) draw_str,2,12);
+	char_win_draw_string(main_dc4,right_text_lines[3],(char *) draw_str,2,12);
 
 	if (current_drawing_mode == 2) {
 		if (current_height_mode == 0)
-			char_win_draw_string(main_dc4,right_text_lines[2],"Automatic Hills: OFF",2,12);
-			else char_win_draw_string(main_dc4,right_text_lines[2],"Automatic Hills: ON",2,12);
+			char_win_draw_string(main_dc4,right_text_lines[4],"Automatic Hills: OFF",2,12);
+			else char_win_draw_string(main_dc4,right_text_lines[4],"Automatic Hills: ON",2,12);
 		}
 	else {
  		if (editing_town) {
 			sprintf((char *) draw_str,"Editing Town/Dungeon %d", (int)cur_town);
-			char_win_draw_string(main_dc4,right_text_lines[2],(char *) draw_str,2,12);
+			char_win_draw_string(main_dc4,right_text_lines[4],(char *) draw_str,2,12);
 			}
 		else {
 			sprintf((char *) draw_str,"Section X = %d, Y = %d", (int)cur_out.x, (int)cur_out.y);
-			char_win_draw_string(main_dc4,right_text_lines[2],(char *) draw_str,2,12);
+			char_win_draw_string(main_dc4,right_text_lines[4],(char *) draw_str,2,12);
 		}
+		
+ 		if (editing_town) {
+			sprintf((char *) draw_str,"  %s",town.town_name);
+			char_win_draw_string(main_dc4,right_text_lines[5],(char *) draw_str,2,12);
+			}
+		else {
+			sprintf((char *) draw_str,"  %s",current_terrain.name);
+			char_win_draw_string(main_dc4,right_text_lines[5],(char *) draw_str,2,12);
 		}
 
-	char_win_draw_string(main_dc4,right_text_lines[3],(char *) current_string,2,12);
-	char_win_draw_string(main_dc4,right_text_lines[4],(char *) current_string2,2,12);
-		
+		}
+
 	// palette buttons
 	for (short i = 0; i < 8; i++)
 		for (short j = 0; j < ((editing_town == TRUE) ? 6 : 3); j++) {

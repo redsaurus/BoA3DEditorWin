@@ -26,6 +26,7 @@ extern  Boolean file_is_loaded;
 // local variables
 creature_start_type store_placed_monst;
 short store_which_placed_monst;
+short store_which_placed_terrain_script;
 
 short extra_dialog_answer[4];
 
@@ -75,7 +76,19 @@ void put_make_scen_2_in_dlog();
 short edit_make_scen_2(short *val_array);
 Boolean save_scen_details();
 void put_scen_details_in_dlog();
+/*
+void put_placed_terrain_script_in_dlog();
 
+void put_placed_terrain_script_in_dlog()
+{
+	char str[256];
+	short i;
+
+ 	CDST(838,5,store_placed_terrain_script.script_name);
+ 	for (i = 0; i < 10; i++)
+	 	CDSN(838,17 + i,store_placed_terrain_script.memory_cells[i]);
+}
+*/
 void put_placed_monst_in_dlog()
 {
 	char str[256];
@@ -104,8 +117,8 @@ void put_placed_monst_in_dlog()
 
  	get_str(str,4,store_placed_monst.time_flag + 1);
  	csit(837,39,(char *) str);
-
 }
+
 Boolean get_placed_monst_in_dlog()
 {
 	char str[256];
