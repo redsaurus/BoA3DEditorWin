@@ -134,6 +134,7 @@ BEGIN
         MENUITEM "  Clear All Special Encounters", 317
         MENUITEM "  Clear All Preset Fields", 318
         MENUITEM "  Clear All Placed Stains", 319
+        MENUITEM "  Clear Selected Instance", 320
     END
     POPUP "&Outdoors"
     BEGIN
@@ -147,6 +148,9 @@ BEGIN
         MENUITEM "Edit Area Descriptions",      408
         MENUITEM SEPARATOR
         MENUITEM "Set Starting Location",       410
+        MENUITEM SEPARATOR
+        MENUITEM "Advanced:",                   411
+        MENUITEM "  Clear All Placed Specials", 412
     END
     POPUP "&I1"
     BEGIN
@@ -217,8 +221,10 @@ BEGIN
         MENUITEM "Increase Numerical Mode\tCtrl+G", 1507
         MENUITEM "Decrease Numerical Mode\tCtrl+H", 1508
         MENUITEM SEPARATOR
-        MENUITEM "Load Previous Outdoor Zone/Town\tCtrl+J", 1509
+        MENUITEM "Load Outdoor Zone Above\tCtrl+I", 1511
+				MENUITEM "Load Previous Outdoor Zone/Town\tCtrl+J", 1509
         MENUITEM "Load Next Outdoor Zone/Town\tCtrl+K", 1510
+        MENUITEM "Load Outdoor Zone Below\tCtrl+M", 1512
     END
 END
 
@@ -241,6 +247,7 @@ BEGIN
     "^V",           106,                    ASCII,  NOINVERT
     "^T",           201,                    ASCII,  NOINVERT
     "^R",           202,                    ASCII,  NOINVERT
+    "^U",           320,                    ASCII,  NOINVERT
     "^A",           1504,                   ASCII,  NOINVERT
     "^B",           1505,                   ASCII,  NOINVERT
     "^E",           1506,                   ASCII,  NOINVERT
@@ -248,6 +255,8 @@ BEGIN
     "^H",           1508,                   ASCII,  NOINVERT
     "^J",           1509,                   ASCII,  NOINVERT
     "^K",           1510,                   ASCII,  NOINVERT
+    "^I",           1511,                   ASCII,  NOINVERT
+    "^M",           1512,                   ASCII,  NOINVERT
     VK_TAB,         1609,                   VIRTKEY, CONTROL, NOINVERT
 //    "^D",         302/402,                ASCII,  NOINVERT
 //    "^L",         301/401,                ASCII,  NOINVERT
@@ -446,10 +455,8 @@ BEGIN
     LTEXT           "*",27,187,131,46,14
     LTEXT           "*(Leave this at -1 for no shortcut.)",28,253,150,227,14
     LTEXT           "~Item Placement Shortcuts",29,26,18,256,17
-    LTEXT           "You can design shortcuts for automatic placement of items in towns. When editing towns, if you select the Place Automatic Items menu item, the edit will randomly place items you specify in terrain types you specify.",
-                    30,26,37,439,40
-    LTEXT           "Enter the terrain type to get the items, the numbers of the items to place, and the percentage chance (0-100) that the item is places there. For more details, see the documentation.",
-                    31,26,82,439,41
+    LTEXT           "You can design shortcuts for automatic placement of items in towns. When editing towns, if you select the Place Automatic Items menu item, the edit will randomly place items you specify in terrain types you specify.",30,26,37,439,40
+    LTEXT           "Enter the terrain type to get the items, the numbers of the items to place, and the percentage chance (0-100) that the item is places there. For more details, see the documentation.",31,26,82,439,41
     LTEXT           "*Item shortcut number:",32,26,131,155,14
     LTEXT           "*Terrain type number:",33,245,131,136,14
     LTEXT           "*Number of item to place:",34,26,170,98,26
@@ -750,7 +757,7 @@ BEGIN
     LTEXT           "0_109",42,343,272,63,17
 END
 
-837 DIALOG  10, 10, 576, 571
+837 DIALOG  10, 10, 576, 750
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,600,336,31,10,WS_GROUP
@@ -783,8 +790,8 @@ BEGIN
     LTEXT           "2_0",28,327,152,23,14
     LTEXT           "2_0",29,462,136,23,14
     LTEXT           "2_0",30,462,152,23,14
-    LTEXT           "1_63",31,454,536,69,16
-    LTEXT           "0_5",32,388,536,62,16
+    LTEXT           "1_63",31,478,580,63,16
+    LTEXT           "0_5",32,412,580,62,16
     LTEXT           "0_109",33,318,105,75,16
     LTEXT           "0_109",34,229,256,75,16
     LTEXT           "0_109",35,229,280,75,16
@@ -797,8 +804,7 @@ BEGIN
     LTEXT           "*Memory Cells",42,352,191,109,14
     LTEXT           "*Extra Items",43,34,219,183,14
     LTEXT           "*Personality",44,34,310,143,14
-    LTEXT           "Enter the information for this monster/townsperson. You only need to worry about the personality if this is not a hostile monster. ",
-                    45,25,53,480,33
+    LTEXT           "Enter the information for this monster/townsperson. You only need to worry about the personality if this is not a hostile monster. ",45,25,53,480,33
     LTEXT           "*Creature number:",46,288,36,126,15
     LTEXT           "~Creature type:",47,34,109,115,15
     LTEXT           "*Creature starting attitude:",48,34,131,169,15
@@ -822,6 +828,45 @@ BEGIN
     LTEXT           "*Cell 7",66,361,381,50,14
     LTEXT           "*Cell 8",67,361,405,50,14
     LTEXT           "*Cell 9",68,361,428,50,14
+    LTEXT           "0_3",69,89,580,75,16
+    LTEXT           "0_2",70,27,580,62,16
+END
+
+
+// This will be altered for terrain scripts
+838 DIALOG  10,10,576,571
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,600,336,31,10,WS_GROUP
+    LTEXT           "~Edit Terrain Script",1,25,30,138,17
+    LTEXT           "*Script number:",2,34,53,126,15
+    LTEXT           "*",3,162,53,50,15
+    LTEXT           "*Terrain script:",4,34,109,120,14
+    LTEXT           "6_0",5,156,109,164,16
+    LTEXT           "*Memory Cells",6,352,191,109,14
+    LTEXT           "*Cell 0",7,34,212,50,14
+    LTEXT           "*Cell 1",8,34,236,50,14
+    LTEXT           "*Cell 2",9,34,260,50,14
+    LTEXT           "*Cell 3",10,34,284,50,14
+    LTEXT           "*Cell 4",11,34,309,50,14
+    LTEXT           "*Cell 5",12,34,333,50,14
+    LTEXT           "*Cell 6",13,34,357,50,14
+    LTEXT           "*Cell 7",14,34,381,50,14
+    LTEXT           "*Cell 8",15,34,405,50,14
+    LTEXT           "*Cell 9",16,34,428,50,14
+    LTEXT           "6_0",17,91,211,72,16
+    LTEXT           "6_0",18,91,235,72,16
+    LTEXT           "6_0",19,91,259,72,16
+    LTEXT           "6_0",20,91,283,72,16
+    LTEXT           "6_0",21,91,307,72,16
+    LTEXT           "6_0",22,91,331,72,16
+    LTEXT           "6_0",23,91,355,72,16
+    LTEXT           "6_0",24,91,379,72,16
+    LTEXT           "6_0",25,91,403,72,16
+    LTEXT           "6_0",26,91,427,72,16
+    LTEXT           "OK",27,600,336,31,10
+    LTEXT           "0_5",28,61,536,62,16
+    LTEXT           "1_63",29,127,536,69,16
 END
 
 839 DIALOG  10, 10, 521, 526
@@ -1073,8 +1118,7 @@ BEGIN
     LTEXT           "1_63",3,152,95,58,16
     LTEXT           "0_5",4,86,95,62,16
     LTEXT           "~Pick Town to Edit:",5,25,19,167,17
-    LTEXT           "Enter the number of the town you want to edit next:",6,
-                    25,38,185,28
+    LTEXT           "Enter the number of the town you want to edit next:",6,25,38,185,28
     LTEXT           "0_109",7,152,68,63,13
 END
 
@@ -1086,9 +1130,8 @@ BEGIN
     LTEXT           "1_63",3,179,109,58,16
     LTEXT           "0_5",4,113,109,62,16
     LTEXT           "~Entrance to what town?",5,23,20,167,17
-    LTEXT           "What town do you want the party to end up in when they walk into this rectangle?",
-                    6,23,39,213,42
-    LTEXT           "0_109",7,152,68,63,13
+    LTEXT           "What town do you want the party to end up in when they walk into this rectangle?",6,23,39,213,42
+    LTEXT           "0_109",7,179,85,63,13
 END
 
 857 DIALOG  10, 10, 401, 230
@@ -1364,6 +1407,14 @@ BEGIN
     LTEXT           "1_63",1,216,58,66,20
     LTEXT           "0_5",2,150,58,62,20
     LTEXT           "Do you want to erase all stains (blood, slime pools, bones and rocks) in this town?",3,26,25,258,32
+END
+
+885 DIALOG  10, 10, 341, 91
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,216,58,66,20
+    LTEXT           "0_5",2,150,58,62,20
+    LTEXT           "Do you want to erase all special encounters in this outdoor zone?",3,26,25,258,32
 END
 
 970 DIALOG  10, 10, 368, 145
