@@ -82,13 +82,15 @@ BEGIN
     END
     POPUP "&Edit"
     BEGIN
-    	MENUITEM "&Undo\tCtrl+Z",               101
+    		MENUITEM "&Undo\tCtrl+Z",               101
         MENUITEM "&Redo\tCtrl+Y",               102
-    	MENUITEM SEPARATOR
-        MENUITEM "&Cut\tCtrl+X",                104
-        MENUITEM "&Copy\tCtrl+C",               105
-        MENUITEM "&Paste\tCtrl+V",              106
-        MENUITEM "Clear",                       107
+ 				MENUITEM SEPARATOR
+        MENUITEM "Selected Objects:",           103
+        MENUITEM " &Cut\tCtrl+X",               104
+        MENUITEM " &Copy\tCtrl+C",              105
+        MENUITEM " &Paste\tCtrl+V",             106
+        MENUITEM " &Delete\tCtrl+A",       			107
+        MENUITEM " &Clear\tCtrl+B", 						108
     END
     POPUP "&Scenario"
     BEGIN
@@ -134,7 +136,6 @@ BEGIN
         MENUITEM "  Clear All Special Encounters", 317
         MENUITEM "  Clear All Preset Fields", 318
         MENUITEM "  Clear All Placed Stains", 319
-        MENUITEM "  Clear Selected Instance", 320
     END
     POPUP "&Outdoors"
     BEGIN
@@ -214,9 +215,9 @@ BEGIN
         MENUITEM "3D Editor Credits", 1502        
         MENUITEM SEPARATOR
         MENUITEM "Query Functions:",                   1503
-        MENUITEM "Write Scenario Data To Text File\tCtrl+A", 1504
-        MENUITEM "Full Write up of Scenario Data\tCtrl+B", 1505
-        MENUITEM "Town: Write Data To File\tCtrl+E", 1506
+        MENUITEM "Write Scenario Data To Text File", 1504
+        MENUITEM "Full Write up: Outdoor/Town Names", 1505
+        MENUITEM "Town: Write Data To File", 1506
         MENUITEM SEPARATOR
         MENUITEM "Increase Numerical Mode\tCtrl+G", 1507
         MENUITEM "Decrease Numerical Mode\tCtrl+H", 1508
@@ -245,24 +246,26 @@ BEGIN
     "^X",           104,                    ASCII,  NOINVERT
     "^C",           105,                    ASCII,  NOINVERT
     "^V",           106,                    ASCII,  NOINVERT
+    "^A",           107,                    ASCII,  NOINVERT
+    "^B",           108,                    ASCII,  NOINVERT
     "^T",           201,                    ASCII,  NOINVERT
     "^R",           202,                    ASCII,  NOINVERT
-    "^U",           320,                    ASCII,  NOINVERT
-    "^A",           1504,                   ASCII,  NOINVERT
-    "^B",           1505,                   ASCII,  NOINVERT
-    "^E",           1506,                   ASCII,  NOINVERT
     "^G",           1507,                   ASCII,  NOINVERT
     "^H",           1508,                   ASCII,  NOINVERT
     "^J",           1509,                   ASCII,  NOINVERT
     "^K",           1510,                   ASCII,  NOINVERT
     "^I",           1511,                   ASCII,  NOINVERT
     "^M",           1512,                   ASCII,  NOINVERT
+    VK_LEFT,        1509,                   VIRTKEY, CONTROL, NOINVERT
+    VK_RIGHT,       1510,                   VIRTKEY, CONTROL, NOINVERT
+    VK_UP,          1511,                   VIRTKEY, CONTROL, NOINVERT
+    VK_DOWN,        1512,                   VIRTKEY, CONTROL, NOINVERT
     VK_TAB,         1609,                   VIRTKEY, CONTROL, NOINVERT
 //    "^D",         302/402,                ASCII,  NOINVERT
 //    "^L",         301/401,                ASCII,  NOINVERT
 END
 
-// Currently available: F,M,P,U,W
+// Currently available: F,M,P
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
@@ -1234,8 +1237,8 @@ END
 866 DIALOG  10, 10, 357, 108
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    LTEXT           "1_63",1,228,89,66,20
-    LTEXT           "0_5",2,162,89,62,20
+    LTEXT           "1_63",1,228,95,66,20
+    LTEXT           "0_5",2,162,95,62,20
     LTEXT           "Do you want a list of all the floor, terrain, monster, and item types in your scenario to be put in a file called 'Scenario data'? You can then print out this file to act as a handy reference while designing your scenario.",
                     3,22,21,271,66
 END
@@ -1379,9 +1382,9 @@ END
 881 DIALOG  10, 10, 357, 108
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    LTEXT           "1_63",1,228,89,66,20
-    LTEXT           "0_5",2,162,89,62,20
-    LTEXT           "Do you want a list of all the floor, terrain, monster, and item types in your scenario to be put in a file called 'Scenario Names Data'? This will also include a list of all outdoor zone and town names along with other things.",
+    LTEXT           "1_63",1,228,95,66,20
+    LTEXT           "0_5",2,162,95,62,20
+    LTEXT           "Do you want a list of all the outdoor zone and town names in your scenario to be put in a file called 'Scenario Write Up'? This will also include a list of other things like town entrances.",
                     3,22,21,271,66
 END
 
@@ -1547,7 +1550,7 @@ END
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,411,349,61,20
-    LTEXT           "Blades of Avernum 3D Editor version 3.2",2,22,24,425,51
+    LTEXT           "Blades of Avernum 3D Editor version 20.6.2009",2,22,24,425,51
     LTEXT           "Originally created by Notus, for the Macintosh platfrom.",3,22,78,439,83
     LTEXT           "Ported to Windows by Isaac, who is also missing in action."4,22,162,451,67
     LTEXT           "Latest version: serious programming by Niemand.  Aesthetic touches by Ishad Nha.",5,22,230,449,50
