@@ -2144,38 +2144,27 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	pass_point.y = 6 + palette_buttons[3][1].top;
 	    handle_action(pass_point,wParam,-1);
 	break;
-	case 'M': // toggle hintbook mode
-				if (hintbook_mode == 3)
-				 hintbook_mode = 0;
-				 else  hintbook_mode =  hintbook_mode + 1;
-				small_any_drawn = FALSE;
-				draw_terrain();
+	case 'M': // Create Room Rectangle
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][1].left;
+	pass_point.y = 6 + palette_buttons[4][1].top;
+	    handle_action(pass_point,wParam,-1);
 	break;
-	case 'N': // Cut selected instance
-			set_string("Instance copied and deleted","  ");
-				 cut_selected_instance();
-			if(editing_town)
-				change_made_town = TRUE;
-			else
-				change_made_outdoors = TRUE;
+	case 'N': // Place Spawn Point
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][1].left;
+	pass_point.y = 6 + palette_buttons[5][1].top;
+	    handle_action(pass_point,wParam,-1);
 	break;
-	case 'O': // Copy selected instance
-				set_string("Instance copied","  ");
-			copy_selected_instance();
-			if(editing_town)
-				change_made_town = TRUE;
-			else
-				change_made_outdoors = TRUE;
+	case 'O': // Create Town Entrance
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][1].left;
+	pass_point.y = 6 + palette_buttons[6][1].top;
+	    handle_action(pass_point,wParam,-1);
 	break;
-	case 'P': // Paste selected instance
-			if ((copied_creature.exists() == FALSE) && (copied_item.exists() == FALSE) && (copied_ter_script.exists == FALSE)) {
-				beep();
-				break;
-				}
-			set_string("Paste copied instance","Select location to place");
-			set_cursor(7);
-			overall_mode = 48;
+	case 'P': // Edit Town Entrance
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][1].left;
+	pass_point.y = 6 + palette_buttons[7][1].top;
+	    handle_action(pass_point,wParam,-1);
 	break;
+
 	case 'Q': // Place Walls
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][2].left;
 	pass_point.y = 6 + palette_buttons[0][2].top;
@@ -2227,12 +2216,50 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	    handle_action(pass_point,wParam,-1);
 	break;
 
+	case '\\': // toggle hintbook mode
+				if (hintbook_mode == 3)
+				 hintbook_mode = 0;
+				 else  hintbook_mode =  hintbook_mode + 1;
+				small_any_drawn = FALSE;
+				draw_terrain();
+	break;
 
-	case ',':
+	case '-': // Delete selected instance
+	delete_selected_instance();
+	set_string("Selected Instance Deleted","");
+	break;
+	case '=': // Clear selected instance
 	set_string("Drawing mode","  ");
 	selected_item_number = -1;
 	set_cursor(0);
 	overall_mode = 0;
+	break;
+
+
+	case ',': // Cut selected instance
+			set_string("Instance copied and deleted","  ");
+				 cut_selected_instance();
+			if(editing_town)
+				change_made_town = TRUE;
+			else
+				change_made_outdoors = TRUE;
+	break;
+	case '.': // Copy selected instance
+				set_string("Instance copied","  ");
+			copy_selected_instance();
+			if(editing_town)
+				change_made_town = TRUE;
+			else
+				change_made_outdoors = TRUE;
+	break;
+	case '/': // Paste selected instance
+			if ((copied_creature.exists() == FALSE) && (copied_item.exists() == FALSE) && (copied_ter_script.exists == FALSE)) {
+				beep();
+				break;
+				}
+			set_string("Paste copied instance","Select location to place");
+			set_cursor(7);
+			overall_mode = 48;
 	break;
 
 	case ' ':
@@ -3637,13 +3664,13 @@ void shut_down_menus()
 		EnableMenuItem(menu,2,MF_GRAYED | MF_BYCOMMAND);
 		//EnableMenuItem(menu,3,MF_GRAYED | MF_BYCOMMAND);
 
-		for (short i = 101; i < 108; i++)
+		for (short i = 101; i < 109; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 201; i < 220; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 301; i < 318; i++)
+		for (short i = 301; i < 320; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 401; i < 411; i++)
+		for (short i = 401; i < 413; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 600; i < 1100; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
@@ -3661,38 +3688,35 @@ void shut_down_menus()
 	}
 
 	if (editing_town == TRUE) {
-		for (short i = 301; i < 318; i++)
+		for (short i = 101; i < 109; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
-		for (short i = 401; i < 411; i++)
+		for (short i = 301; i < 320; i++)
+			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
+		for (short i = 401; i < 413; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 600; i < 1100; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
-		
-		EnableMenuItem(menu,101,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu,102,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu,104,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu,105,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu,106,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu,107,MF_ENABLED | MF_BYCOMMAND);
 	}
 	else {
-		for (short i = 301; i < 318; i++)
-			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 401; i < 411; i++)
-			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
-		for (short i = 600; i < 1100; i++)
-			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 1100; i < 1356; i++)
-			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		
 		EnableMenuItem(menu,101,MF_ENABLED | MF_BYCOMMAND);
 		EnableMenuItem(menu,102,MF_ENABLED | MF_BYCOMMAND);
+		EnableMenuItem(menu,103,MF_GRAYED | MF_BYCOMMAND);
 		EnableMenuItem(menu,104,MF_GRAYED | MF_BYCOMMAND);
 		EnableMenuItem(menu,105,MF_GRAYED | MF_BYCOMMAND);
 		EnableMenuItem(menu,106,MF_GRAYED | MF_BYCOMMAND);
-		EnableMenuItem(menu,107,MF_GRAYED | MF_BYCOMMAND);	
+		EnableMenuItem(menu,107,MF_GRAYED | MF_BYCOMMAND);
+		EnableMenuItem(menu,108,MF_GRAYED | MF_BYCOMMAND);
+		for (short i = 301; i < 320; i++)
+			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
+		for (short i = 401; i < 413; i++)
+			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
+		for (short i = 600; i < 1100; i++)
+			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
+		for (short i = 1100; i < 1356; i++)
+			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
+		
 	}
 }
 

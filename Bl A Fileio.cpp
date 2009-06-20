@@ -1377,68 +1377,20 @@ void start_full_data_dump()
 	location out_sec;
 	outdoor_record_type outdoor;
 
-	if (NULL == (data_dump_file_id = fopen("Scenario Names Data.txt", "wb"))) {
+	if (NULL == (data_dump_file_id = fopen("Scenario Write Up.txt", "wb"))) {
 		return;
 		}
 
 	sprintf((char *)get_text,"\r\rScenario data for %s:\r\r",scenario.scen_name);
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	sprintf((char *)get_text,"Floor types for %s:\r",scenario.scen_name);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-	for (i = 0; i < 256; i++) {
-		if (scen_data.scen_floors[i].ed_pic.not_legit() == FALSE) {
-			sprintf((char *)get_text,"  Floor %d: %s\r",(int)i,scen_data.scen_floors[i].floor_name);
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			}
-		else  {
-			sprintf((char *)get_text,"  Floor %d: ((Unused type))\r",(int)i);
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			}
-		}
-	sprintf((char *)get_text,"\r\rTerrain types for %s:\r",scenario.scen_name);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	for (i = 0; i < 512; i++) {
-		if (scen_data.scen_ter_types[i].ed_pic.not_legit() == FALSE) {
-			sprintf((char *)get_text,"  Terrain %d: %s\r", (int)i,scen_data.scen_ter_types[i].ter_name);
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			}
-		else  {
-			sprintf((char *)get_text,"  Terrain %d: ((Unused type))\r",(int)i);
-			len = (long) (strlen((char *)get_text));
-			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			}
-		}
-	sprintf((char *)get_text,"\r\rCreature types for %s:\r",scenario.scen_name);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	for (i = 0; i < 256; i++) {
-		sprintf((char *)get_text,"  Creature %d: %s\r",(int)i,scen_data.scen_creatures[i].name);
-		len = (long) (strlen((char *)get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		}
-	sprintf((char *)get_text,"\r\rItem types for %s:\r",scenario.scen_name);
-	len = (long) (strlen((char *)get_text));
-	FSWrite(data_dump_file_id, &len, (char *) get_text);
-
-	for (i = 0; i < 500; i++) {
-		sprintf((char *)get_text,"  Item %d: %s\r", (int)i,scen_data.scen_items[i].full_name);
-		len = (long) (strlen((char *)get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		}
 		sprintf((char *)get_text,"\r\r  Outdoor Start Zone: X = %d, Y = %d.\r",scenario.what_outdoor_section_start_in.x,scenario.what_outdoor_section_start_in.y);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 		sprintf((char *)get_text,"  Outdoor Start Location: X = %d, Y = %d.\r",scenario.start_where_in_outdoor_section.x,scenario.start_where_in_outdoor_section.y);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf((char *)get_text,"\r  Starting Town = %d: .\r",scenario.start_in_what_town);
+		sprintf((char *)get_text,"\r  Starting Town = %d.\r",scenario.start_in_what_town);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 		sprintf((char *)get_text,"  Starting Town Location: X = %d, Y = %d.\r",scenario.what_start_loc_in_town.x,scenario.what_start_loc_in_town.y);
@@ -1447,7 +1399,7 @@ void start_full_data_dump()
 		sprintf((char *)get_text,"\r\r  Last Outdoor Zone Edited: X = %d, Y = %d.\r",scenario.last_out_edited.x,scenario.last_out_edited.y);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf((char *)get_text,"  Last Town Edited = %d: .\r",scenario.last_town_edited);
+		sprintf((char *)get_text,"  Last Town Edited = %d.\r",scenario.last_town_edited);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 
@@ -1483,11 +1435,11 @@ void start_full_data_dump()
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			for (short i = 0; i < 8; i++) {
-			if ((outdoor.exit_dests[i] >= 0) && (outdoor.exit_dests[i] < scenario.num_towns)) {
+//			if ((outdoor.exit_dests[i] >= 0) && (outdoor.exit_dests[i] < scenario.num_towns)) {
 			sprintf((char *)get_text,"   Town entrance %d: town %d, tl = (%d,%d) br = (%d,%d)\r",i,outdoor.exit_dests[i],outdoor.exit_rects[i].left,outdoor.exit_rects[i].top,outdoor.exit_rects[i].right,outdoor.exit_rects[i].bottom);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
-			}
+//			}
 		}
 		}
 		sprintf((char *)get_text,"\r\r");

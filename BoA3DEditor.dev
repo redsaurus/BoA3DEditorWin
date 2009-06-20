@@ -148,27 +148,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
-FileName=global.h
-CompileCpp=1
-Folder=3D BoA Editor Windows
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit14]
-FileName=Graphics.cpp
-CompileCpp=1
-Folder=3D BoA Editor Windows
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit15]
 FileName=Graphutl.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -178,7 +158,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit16]
+[Unit15]
 FileName=keydlgs.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -188,7 +168,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit17]
+[Unit16]
 FileName=Library.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -198,7 +178,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit18]
+[Unit17]
 FileName=Resource.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -208,7 +188,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit19]
+[Unit18]
 FileName=sound.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -218,7 +198,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit20]
+[Unit19]
 FileName=stdafx.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -228,7 +208,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit21]
+[Unit20]
 FileName=stdafx.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -238,7 +218,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit22]
+[Unit21]
 FileName=tokntype.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -248,7 +228,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit23]
+[Unit22]
 FileName=townout.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -258,8 +238,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit24]
+[Unit23]
 FileName=version.h
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit24]
+FileName=global.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
 Compile=1
@@ -285,4 +275,14 @@ OriginalFilename=
 ProductName=
 ProductVersion=
 AutoIncBuildNr=0
+
+[Unit13]
+FileName=Graphics.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 

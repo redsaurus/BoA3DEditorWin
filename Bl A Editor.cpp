@@ -590,6 +590,59 @@ void handle_file_menu(int item_hit)
 	}
 }
 
+void handle_edit_menu(int item_hit)
+{
+	switch (item_hit) {
+		case 1: // undo
+			performUndo();
+			break;
+		case 2: // redo
+			performRedo();
+			break;
+		case 4: // cut
+			set_string("Instance copied and deleted","  ");
+			cut_selected_instance();
+			if(editing_town)
+				change_made_town = TRUE;
+			else
+				change_made_outdoors = TRUE;
+			break;
+		case 5: // copy
+			set_string("Instance copied","  ");
+			copy_selected_instance();
+			if(editing_town)
+				change_made_town = TRUE;
+			else
+				change_made_outdoors = TRUE;
+			break;
+		case 6: // paste
+			if ((copied_creature.exists() == FALSE) && (copied_item.exists() == FALSE) && (copied_ter_script.exists == FALSE)) {
+				beep();
+				break;
+				}
+			set_string("Paste copied instance","Select location to place");
+			set_cursor(7);
+			overall_mode = 48;
+			break;
+		case 7: // delete selected instance
+			delete_selected_instance();
+			set_string("Selected Instance Deleted","");
+			if(editing_town)
+				change_made_town = TRUE;
+			else
+				change_made_outdoors = TRUE;
+			break;
+		case 8:// clear selected instance
+			if (editing_town == FALSE)
+				break;
+				selected_item_number = -1;
+			break;
+
+		}
+	draw_main_screen();
+}
+
+
 void handle_campaign_menu(int item_hit)
 {
 	switch (item_hit) {
@@ -868,10 +921,6 @@ void handle_town_menu(int item_hit)
 			redraw_screen();
 			break;
 
-		case 20:// clear selected instance
-								selected_item_number = -1;
-			break;
-
 		}
 }
 
@@ -928,8 +977,6 @@ void handle_outdoor_menu(int item_hit)
 		case 12: 					// Clear All Placed Specials
 			if (fancy_choice_dialog(885,0) == 2)
 				break;
-			if (editing_town)
-				break;
 			for (x = 0; x < NUM_OUT_PLACED_SPECIALS; x++) {
 				current_terrain.spec_id[x] = kNO_OUT_SPECIALS;
 				SetMacRect(&current_terrain.special_rects[x],-1,-1,-1,-1);
@@ -939,50 +986,6 @@ void handle_outdoor_menu(int item_hit)
 			break;
 
 		}
-}
-
-void handle_edit_menu(int item_hit)
-{   
-	switch (item_hit) {
-		case 1: // undo
-			performUndo();
-			break;
-		case 2: // redo
-			performRedo();
-			break;	
-		case 4: // cut
-			cut_selected_instance();
-			if(editing_town)
-				change_made_town = TRUE;
-			else
-				change_made_outdoors = TRUE;
-			break;
-		case 5: // copy
-			copy_selected_instance();
-			if(editing_town)
-				change_made_town = TRUE;
-			else
-				change_made_outdoors = TRUE;
-			break;
-		case 6: // paste
-
-			if ((copied_creature.exists() == FALSE) && (copied_item.exists() == FALSE) && (copied_ter_script.exists == FALSE)) {
-				beep();
-				break;
-				}
-			set_string("Paste copied instance","Select location to place");
-			set_cursor(7);
-			overall_mode = 48;			
-			break;
-		case 7: // clear
-			delete_selected_instance();
-			if(editing_town)
-				change_made_town = TRUE;
-			else
-				change_made_outdoors = TRUE;
-			break;	
-		}
-	draw_main_screen();		
 }
 
 
@@ -1036,13 +1039,13 @@ void handle_help_menu(int item_hit)
 				start_town_data_dump();
 			break;
 		case 7: //   Rotate current numerical display mode: going forwards
-					numerical_display_mode = ((numerical_display_mode + 1) % 4);
+					numerical_display_mode = ((numerical_display_mode + 1) % 5);
 					need_redraw = TRUE;
 			break; 
 		case 8: //   Rotate current numerical display mode: going backwards
 				 if (numerical_display_mode == 0)
-				    numerical_display_mode = 3;
-					else numerical_display_mode = ((numerical_display_mode - 1) % 4);
+				    numerical_display_mode = 4;
+					else numerical_display_mode = ((numerical_display_mode - 1) % 5);
 					need_redraw = TRUE;
 			break;
 			

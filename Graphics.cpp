@@ -3128,15 +3128,13 @@ void draw_ter_large()
 				sprintf(str,"%d",height_to_draw);
 			if (numerical_display_mode == 3) 
 				sprintf(str," ");
-			if (numerical_display_mode == 4){
+			if (numerical_display_mode == 4)
+				sprintf(str,"%d,%d",q,r);
 /*				 if (town.ter_scripts[i].loc == large_edit_ter_rects[q][r])
 				 				sprintf(str,"%d",i);
 				else sprintf(str,"f");
+				sprintf(str,"%d",terrsc_to_draw);
 */
-}
-
-//				sprintf(str,"%d",terrsc_to_draw);
-				
  				to_rect = large_edit_ter_rects[q][r];
 				OffsetRect(&to_rect,3,14);
 				if (strlen(str) == 1)

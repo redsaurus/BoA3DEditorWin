@@ -26,7 +26,7 @@ extern  Boolean file_is_loaded;
 // local variables
 creature_start_type store_placed_monst;
 short store_which_placed_monst;
-short store_which_placed_terrain_script;
+in_town_on_ter_script_type store_placed_terrain_script;
 
 short extra_dialog_answer[4];
 
@@ -76,7 +76,7 @@ void put_make_scen_2_in_dlog();
 short edit_make_scen_2(short *val_array);
 Boolean save_scen_details();
 void put_scen_details_in_dlog();
-/*
+
 void put_placed_terrain_script_in_dlog();
 
 void put_placed_terrain_script_in_dlog()
@@ -88,7 +88,7 @@ void put_placed_terrain_script_in_dlog()
  	for (i = 0; i < 10; i++)
 	 	CDSN(838,17 + i,store_placed_terrain_script.memory_cells[i]);
 }
-*/
+
 void put_placed_monst_in_dlog()
 {
 	char str[256];
@@ -178,6 +178,21 @@ void edit_placed_monst_event_filter (short item_hit)
 				put_placed_monst_in_dlog();
 				}			
 			break;
+
+		case 34:
+			i = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,store_placed_monst.extra_item,837,"Which item?");
+			if (i >= 0)
+				store_placed_monst.extra_item = i;
+			put_placed_monst_in_dlog();
+			break;
+
+		case 35:
+			i = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,store_placed_monst.extra_item_2,837,"Which item?");
+			if (i >= 0)
+				store_placed_monst.extra_item_2 = i;
+			put_placed_monst_in_dlog();
+			break;
+
 		case 36: // choose time type
 			if (get_placed_monst_in_dlog() == FALSE)
 				break;
@@ -187,19 +202,21 @@ void edit_placed_monst_event_filter (short item_hit)
 				put_placed_monst_in_dlog();
 				}			
 			break;
-		case 34:
-			i = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,store_placed_monst.extra_item,837,"Which item?"); 
-			if (i >= 0)
-				store_placed_monst.extra_item = i;
+		case 69:
+//			if (get_placed_monst_in_dlog() == FALSE)
+//			break;
+			store_which_placed_monst++;
+			store_placed_monst = town.creatures[store_which_placed_monst];
 			put_placed_monst_in_dlog();
 			break;
 
-		case 35:
-			i = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,store_placed_monst.extra_item_2,837,"Which item?"); 
-			if (i >= 0)
-				store_placed_monst.extra_item_2 = i;
+		case 70:
+//			if (get_placed_monst_in_dlog() == FALSE)
+//			break;
+			store_which_placed_monst--;
+			store_placed_monst = town.creatures[store_which_placed_monst];
 			put_placed_monst_in_dlog();
-			break;		
+			break;
 
 		default:
 			cd_hit_led_range(837,27,30,item_hit);
