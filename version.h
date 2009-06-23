@@ -1,2 +1,2 @@
-#define kVersion "  Version 6.20.2009"
+#define kVersion "  Version 6.23.2009"
 

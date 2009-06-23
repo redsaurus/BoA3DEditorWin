@@ -1034,7 +1034,7 @@ void handle_help_menu(int item_hit)
 			if (fancy_choice_dialog(881,0) == 1)
 				start_full_data_dump();
 			break;
-		case 6: //   Full print out of town data
+		case 6: //   Filtered print out of town data
 			if (fancy_choice_dialog(882,0) == 1)
 				start_town_data_dump();
 			break;
@@ -1175,7 +1175,6 @@ void handle_help_menu(int item_hit)
 				redraw_screen();
 				change_made_outdoors = FALSE;
 			break;
-
 		}
 	draw_main_screen();		
 }

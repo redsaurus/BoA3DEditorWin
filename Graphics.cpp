@@ -1934,16 +1934,17 @@ void draw_town_objects_3D(short x, short y, short at_point_center_x, short at_po
 				field_of_type[ftype] = TRUE;
 		}
 
-	// draw barrels, etc
-	if (/*is_barrel(x,y)*/  field_of_type[7]) {
-		a.which_sheet = 707;
-		a.which_icon = 5;
+	if (/*is_force_barrier(x,y)*/  field_of_type[3]) {
+		a.which_sheet = 743;
+		a.which_icon = 6;//this probably doesn't look different enough - it's just another animation picture
 		place_icon_into_ter_3D_large(a,at_point_center_x,at_point_center_y
 			- scen_data.scen_ter_types[t_d.terrain[x][y]].height_adj,to_whole_area_rect,lighting);
 	}
-	if (/*is_crate(x,y)*/  field_of_type[6]) {
-		a.which_sheet = 707;
-		a.which_icon = 6;
+
+	//I want my own custom pictures for these?  It would be nice to be able to distinguish them, anyway...
+	if (/*is_fire_barrier(x,y)*/  field_of_type[4]) {
+		a.which_sheet = 743;
+		a.which_icon = 3;
 		place_icon_into_ter_3D_large(a,at_point_center_x,at_point_center_y
 			- scen_data.scen_ter_types[t_d.terrain[x][y]].height_adj,to_whole_area_rect,lighting);
 	}
@@ -1953,19 +1954,20 @@ void draw_town_objects_3D(short x, short y, short at_point_center_x, short at_po
 		place_icon_into_ter_3D_large(a,at_point_center_x,at_point_center_y
 			- scen_data.scen_ter_types[t_d.terrain[x][y]].height_adj,to_whole_area_rect,lighting);
 	}
-	//I want my own custom pictures for these?  It would be nice to be able to distinguish them, anyway...
-	if (/*is_fire_barrier(x,y)*/  field_of_type[4]) {
-		a.which_sheet = 743;
-		a.which_icon = 3;
+	if (/*is_crate(x,y)*/  field_of_type[6]) {
+		a.which_sheet = 707;
+		a.which_icon = 6;
 		place_icon_into_ter_3D_large(a,at_point_center_x,at_point_center_y
 			- scen_data.scen_ter_types[t_d.terrain[x][y]].height_adj,to_whole_area_rect,lighting);
 	}
-	if (/*is_force_barrier(x,y)*/  field_of_type[3]) {
-		a.which_sheet = 743;
-		a.which_icon = 6;//this probably doesn't look different enough - it's just another animation picture
+	// draw barrels, etc
+	if (/*is_barrel(x,y)*/  field_of_type[7]) {
+		a.which_sheet = 707;
+		a.which_icon = 5;
 		place_icon_into_ter_3D_large(a,at_point_center_x,at_point_center_y
 			- scen_data.scen_ter_types[t_d.terrain[x][y]].height_adj,to_whole_area_rect,lighting);
 	}
+
 	// draw stains
 	for (short j = 0; j < 8; j++) {
 		if (/*is_sfx(x,y,j)*/  field_of_type[j + 14]) {

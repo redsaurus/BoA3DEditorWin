@@ -338,7 +338,8 @@ public:
 	void SetSurface( short onSurface );
 
 	char name[20];
-	unsigned char floor[48][48],height[48][48];
+	unsigned char floor[48][48];
+	unsigned char height[48][48];
 	short terrain[48][48];
 	macRECT special_rects[NUM_OUT_PLACED_SPECIALS];
 	short spec_id[NUM_OUT_PLACED_SPECIALS];
@@ -1530,6 +1531,7 @@ short FSClose(FILE *file_id);
 // Query
 void start_full_data_dump();
 void start_town_data_dump();
+void start_full_town_data_dump();
 
 // dlogtool
 void cd_init_dialogs();

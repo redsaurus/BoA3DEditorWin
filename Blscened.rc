@@ -1393,7 +1393,7 @@ STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,228,89,66,20
     LTEXT           "0_5",2,162,89,62,20
-    LTEXT           "This will list all items, placed special states and fields, along with their locations and types, in a file called 'Town Report'.",3,22,21,271,66
+    LTEXT           "This will list all items, placed special states and fields, along with their locations and types, in a file called 'Concise Town Report'. Null entries will be omitted.",3,22,21,271,66
 END
 
 883 DIALOG  10, 10, 341, 91
