@@ -109,13 +109,9 @@ RECT terrain_rect_gr_size = {0,0,512,512};
 // RECT blue_button_from = {91,112,107,126}; /**/						
 // RECT start_button_from = {70,112,91,119};
 RECT base_small_button_from = {0,103,10,113};
-
-// q_3DModStart
 RECT base_small_3D_button_from = {0,143,16,154};
-// q_3DModEnd
-
 RECT palette_button_base = {0,0,25,18};
-// RECT left_button_base = {5,5,200,21};
+extern const RECT terrain_viewport_3d = {5,5,501,420};
 
 RECT buttons_from[NUM_BUTTONS] = {{0,0,23,23},{46,0,108,23},{0,132,102,155},{126,23,142,36},
 								{0,92,62,115},{0,69,62,92},{126,46,188,69},{126,69,188,92}, // l, r, u, d
@@ -137,11 +133,8 @@ char *facings[4] = {"North","West","South","East"};
 short small_what_drawn[64][64];
 short small_what_floor_drawn[64][64];
 
-// q_3DModStart
 HDIB tint_area;
 RECT tint_rect = {0,0,PICT_BOX_WIDTH_3D,PICT_BOX_HEIGHT_3D};
-// q_3DModEnd
-
 
 // function prototype
 
@@ -149,7 +142,6 @@ void load_main_screen();
 void delete_graphic(HDIB *to_delete);
 Boolean place_terrain_icon_into_ter_large(graphic_id_type icon,short in_square_x,short in_square_y);
 
-// q_3DModStart
 void draw_wall_3D_sidebar(short t_to_draw, RECT to_rect);
 Boolean place_icon_into_3D_sidebar(graphic_id_type icon, RECT to_rect, short unscaled_offset_x, short unscaled_offset_y);
 Boolean place_icon_into_ter_3D_large(graphic_id_type icon,short at_point_center_x,short at_point_center_y,RECT *to_whole_area_rect,short lighting);
@@ -173,7 +165,6 @@ void maybe_draw_part_of_3D_rect(outdoor_record_type *drawing_terrain, short cent
 		macRECT rect, short inset, short r, short g, short b,RECT *to_whole_area_rect);
 void draw_town_objects_3D(short x, short y, short at_point_center_x, short at_point_center_y,RECT *to_whole_area_rect,short lighting);
 void draw_ter_3D_large();
-// q_3DModEnd
 
 void draw_ter_large();
 void draw_creature(HDC ter_hdc,HBITMAP store_bmp,short creature_num,location loc_drawn,short in_square_x,short in_square_y);
@@ -196,12 +187,10 @@ void put_rect_on_screen(HDC win,RECT to_rect,short r,short g, short b);
 // void put_clipped_rect_on_screen(HDC win,RECT to_rect,RECT clip_rect,short r,short g, short b);
 void put_clipped_rect_in_gworld(HDC line_gworld,RECT to_rect,RECT clip_rect,short r,short g, short b);
 
-// q_3DModStart
 void adjust_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short graphic_adjust/*,
 		short light_level, Boolean has_border, short border_r, short border_g, short border_b*/);
 void apply_lighting_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short lighting);
 void add_border_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short border_r, short border_g, short border_b);
-// q_3DModEnd
 
 Boolean is_field_type(short i,short j,short field_type);
 void make_field_type(short i,short j,short field_type);
@@ -220,56 +209,46 @@ void cant_draw_graphics_error(graphic_id_type a,char *bonus_string,short bonus_n
 // void refresh_graphics_on_screen();
 
 
-
 void Set_up_win ()
 {
 	short i,j;
 
-	font = CreateFont(12,0,0,0,0, 0,0,0, 0,0,
-		0,0,0,"MS Sans Serif");
-	small_bold_font = CreateFont(12,0,0,0,700, 0,0,0, 0,0,
-		0,0,0,"MS Sans Serif");
-	italic_font = CreateFont(12,0,0,0,0, 1,0,0, 0,0,
-		0,0,0,"MS Sans Serif");
-	underline_font = CreateFont(12,0,0,0,0, 0,1,0, 0,0,
-		0,0,0,"MS Sans Serif");
-	bold_font = CreateFont(14,0,0,0,700, 0,0,0, 0,0,
-		0,0,0,"MS Sans Serif");
+	font = CreateFont(12,0,0,0,0, 0,0,0, 0,0, 0,0,0,"MS Sans Serif");
+	small_bold_font = CreateFont(12,0,0,0,700, 0,0,0, 0,0, 0,0,0,"MS Sans Serif");
+	italic_font = CreateFont(12,0,0,0,0, 1,0,0, 0,0, 0,0,0,"MS Sans Serif");
+	underline_font = CreateFont(12,0,0,0,0, 0,1,0, 0,0, 0,0,0,"MS Sans Serif");
+	bold_font = CreateFont(14,0,0,0,700, 0,0,0, 0,0, 0,0,0,"MS Sans Serif");
 	tiny_font = font;
 
-	for (i = 0; i < 8; i++)
-		for (j = 0; j < 6; j++) {
-		palette_buttons[i][j] = palette_button_base;
-		OffsetRect(&palette_buttons[i][j],i * 25 + PALETTE_BUT_UL_X, j * 17 + PALETTE_BUT_UL_Y);
+	for (i = 0; i < 8; i++){
+		for (j = 0; j < 6; j++){
+		    palette_buttons[i][j] = palette_button_base;
+		    OffsetRect(&palette_buttons[i][j],i * 25 + PALETTE_BUT_UL_X, j * 17 + PALETTE_BUT_UL_Y);
 		}	
-
-	for (i = 0; i < 9; i++)
-		for (j = 0; j < 9; j++) {
+    }
+	for (i = 0; i < 9; i++){
+		for (j = 0; j < 9; j++){
 			SetRECT(large_edit_ter_rects[i][j],TERRAIN_BORDER_WIDTH + i * BIG_SPACE_SIZE,TERRAIN_BORDER_WIDTH + j * BIG_SPACE_SIZE,
 			  TERRAIN_BORDER_WIDTH + (i + 1) * BIG_SPACE_SIZE,TERRAIN_BORDER_WIDTH + (j + 1) * BIG_SPACE_SIZE);
-			//SetRect(&large_edit_ter_rects[i][j],TER_RECT_UL_X + i * BIG_SPACE_SIZE,TER_RECT_UL_Y + j * BIG_SPACE_SIZE,
-			  //TER_RECT_UL_X + (i + 1) * BIG_SPACE_SIZE,TER_RECT_UL_Y + (j + 1) * BIG_SPACE_SIZE);
-			}
-	for (i = 0; i < MAX_TOWN_SIZE; i++)
-		for (j = 0; j < MAX_TOWN_SIZE; j++) {
+		}
+    }
+	for (i = 0; i < MAX_TOWN_SIZE; i++){
+		for (j = 0; j < MAX_TOWN_SIZE; j++){
 			SetRECT(small_edit_ter_rects[i][j],  i * SMALL_SPACE_SIZE,  j * SMALL_SPACE_SIZE,
 			    (i + 1) * SMALL_SPACE_SIZE,  (j + 1) * SMALL_SPACE_SIZE);
-			//SetRect(&small_edit_ter_rects[i][j],TER_RECT_UL_X + i * SMALL_SPACE_SIZE,TER_RECT_UL_Y + j * SMALL_SPACE_SIZE,
-			  //TER_RECT_UL_X + (i + 1) * SMALL_SPACE_SIZE,TER_RECT_UL_Y + (j + 1) * SMALL_SPACE_SIZE);
-			}
+		}
+    }
 	for (i = 0; i < 264; i++)
 		SetRECT(terrain_rects[i],3 + (i % 12) * (TER_BUTTON_SIZE + 1),2 + (i / 12) * (TER_BUTTON_SIZE + 1),
 			3 + (i % 12) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE,2 + (i / 12) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE);
 
-// q_3DModStart
 	for (i = 0; i < 228; i++)
 		SetRECT(terrain_rects_3D[i],3 + (i % 12) * (TER_BUTTON_SIZE + 1),2 + (i / 12) * (TER_BUTTON_HEIGHT_3D + 1),
 			3 + (i % 12) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE,2 + (i / 12) * (TER_BUTTON_HEIGHT_3D + 1) + TER_BUTTON_HEIGHT_3D);
-// q_3DModEnd
 
 	for (i = 0; i < MAX_NUM_SHEETS_IN_LIBRARY; i++) {
 		graphics_library[i] = NULL;
-		}
+	}
 	RECT world_screen = {large_edit_ter_rects[0][0].left,large_edit_ter_rects[0][0].top,
 		large_edit_ter_rects[8][8].right,large_edit_ter_rects[8][8].bottom}; /**/
 
@@ -288,16 +267,6 @@ void Set_up_win ()
 
 void load_main_screen()
 {
-/*
-	RECT rc;
-	HDC main_dc0 = GetDC( mainPtr );
-	main_dc = CreateCompatibleDC( main_dc0 );
-	GetClientRect( mainPtr, &rc );
-	main_bitmap = CreateCompatibleBitmap( main_dc0, rc.right, rc.bottom );
-	main_bitmap_save = (HBITMAP)SelectObject( main_dc, main_bitmap );
-	SetMapMode(main_dc,GetMapMode(main_dc0));
-	ReleaseDC( mainPtr, main_dc0 );
-*/
 	main_dc = GetDC(mainPtr);
 
 	SelectObject(main_dc,font);
@@ -322,25 +291,16 @@ void load_main_screen()
 
 	ter_resize_buffer_gworld = DibCreate (100,100, 16,0);
 
-// q_3DModStart
 	tint_area = DibCreate (tint_rect.right,tint_rect.bottom, 16,0);
-// q_3DModEnd
 
 	buttons_gworld = load_pict(2000);
-	//for (i = 0; i < 14; i++) 
-	 //   bg[i] = GetPixPat (128 + i);
-	//for (i = 0; i < 29; i++) 
-	 //   map_pat[i] = GetPixPat (200 + i);
 
 	bw_bitmap = CreateBitmap(72,72,1,1,NULL);
 	pattern_gworld = DibCreate (192,256, 16,0);
 	dialog_pattern_gworld = DibCreate (192,256, 16,0);
 	pat_source_gworld = load_pict(4900);
 
-// q_3DModStart
-//	editor_mixed = load_pict(4902);
 	editor_mixed = load_pict(4915);
-// q_3DModEnd
 
 	mixed_gworld = load_pict(903);
 	if (dlog_horiz_border_bottom_gworld == NULL)
@@ -382,7 +342,6 @@ void lose_graphics()
 	delete_graphic(&terrain_buttons_gworld);
 
 	ReleaseDC( mainPtr, main_dc );
-//	DeleteDC(main_dc);
 
 	DeleteDC(main_dc2);
 	DeleteDC(main_dc3);
@@ -394,7 +353,6 @@ void lose_graphics()
 	DeleteObject(italic_font);
 	DeleteObject(underline_font);
 	DeleteObject(bold_font);
-//	DeleteObject(tiny_font);
 
 }
 
@@ -414,19 +372,11 @@ void redraw_screen()
 	small_any_drawn = TRUE;
 	draw_main_screen();
 }
-/*
-void update_main_screen( void )
-{
-	InvalidateRect(mainPtr, NULL, FALSE);		// claim to redraw all client area
-	ValidateRect( mainPtr, &right_sbar_rect );	// except scroll bar
-}
-*/
+
 void draw_main_screen()
 {
-	place_right_buttons(/* 0 */);
+	place_right_buttons();
 	draw_terrain();
-//	ShowScrollBar(right_sbar,SB_CTL,TRUE);
-//	update_main_screen();
 }
 
 
@@ -452,9 +402,7 @@ void set_up_terrain_buttons()
 	}
 
  	// first make terrain buttons
-// q_3DModStart
 	for (i = 0; i < ((cur_viewing_mode >= 10 && current_drawing_mode > 0) ? 228 : 264); i++){
-// q_3DModEnd
 		if ((i < 256) || (current_drawing_mode > 0)) {
 			ter_from = ter_from_base;
 			
@@ -463,7 +411,6 @@ void set_up_terrain_buttons()
 			Boolean do_this_item = TRUE;
 			short store_ter_type = 0;
 			
-// q_3DModStart
 			if(cur_viewing_mode == 10 || cur_viewing_mode == 11) {
 				SetRECT(ter_from,0,0,PICT_BOX_WIDTH_3D,PICT_BOX_HEIGHT_3D);
 				switch (current_drawing_mode) {
@@ -508,8 +455,8 @@ void set_up_terrain_buttons()
 				//So I had to copy that sheet into 3D editor graphics and make this horrible hack (in multiple places!)
 				if(a.which_sheet == 701)
 					a.which_sheet = 4916;
-			} else {
-// q_3DModEnd
+			} 
+            else {
 				switch (current_drawing_mode) {
 				case 0:
 					a = scen_data.scen_floors[i].ed_pic;
@@ -541,8 +488,7 @@ void set_up_terrain_buttons()
 						cant_draw_graphics_error(a,"Error was for terrain type",store_ter_type);
 					return;	
 				}
-
-// q_3DModStart
+                
 				if((cur_viewing_mode >= 10) && (current_drawing_mode == 0))
 					ter_from.top += (PICT_BOX_HEIGHT_3D - PICT_BOX_WIDTH_3D);
 				
@@ -551,7 +497,6 @@ void set_up_terrain_buttons()
 					ter_from,terrain_buttons_gworld,(cur_viewing_mode >= 10 && current_drawing_mode > 0) ? 
 					terrain_rects_3D[i] : terrain_rects[i],0,0);
 				SelectObject(main_dc5,DibBitmapHandle(terrain_buttons_gworld));
-// q_3DModEnd
 			}
 		}
 	}
@@ -564,25 +509,20 @@ void set_up_terrain_buttons()
 	const RECT kRealisticButtonRect = {PALETTE_BUT_WIDTH * 7,PALETTE_BUT_HEIGHT * 6,
 				PALETTE_BUT_WIDTH * (7 + 1),PALETTE_BUT_HEIGHT * (6 + 1) + 1};
 
-	for (i = 0; i < 8; i++)
+	for (i = 0; i < 8; i++){
 		for (j = 0; j < ((editing_town == TRUE) ? 6 : 3); j++) {
 			RECT from_rect = {PALETTE_BUT_WIDTH * i,PALETTE_BUT_HEIGHT * j,
 				PALETTE_BUT_WIDTH * (i + 1),PALETTE_BUT_HEIGHT * (j + 1) + 1}; /**/
 			RECT to_rect = palette_buttons[i][j];
-// q_3DModStart
 			if(cur_viewing_mode >= 10 && i == 0 && j == 1)		// realistic mode palette icon
 				from_rect = kRealisticButtonRect;
-// q_3DModEnd
-			//OffsetRect(&to_rect,RIGHT_BUTTONS_X_SHIFT,0);
 			to_rect.right++;
 			from_rect.right++;
-			//to_rect.bottom++;
-			//from_rect.bottom++;
 			
 			rect_draw_some_item(editor_mixed,
 				from_rect,terrain_buttons_gworld,to_rect,0,0);
-			
 		}
+    }
 }
 
 void delete_graphic(HDIB *to_delete)
@@ -602,9 +542,8 @@ Boolean place_terrain_icon_into_ter_large(graphic_id_type icon,short in_square_x
 
 	short index = safe_get_index_of_sheet(&a);
 	if (index < 0) {
-		//cant_draw_graphics_error(a);
 		return FALSE;	
-		}		
+	}		
 	SetRECT(from_rect,1 + (TER_BUTTON_SIZE + 1) * (a.which_icon % 10),1 + (TER_BUTTON_SIZE + 1) * (a.which_icon / 10),
 	  1 + (TER_BUTTON_SIZE + 1) * (a.which_icon % 10) + TER_BUTTON_SIZE,1 + (TER_BUTTON_SIZE + 1) * (a.which_icon / 10) + TER_BUTTON_SIZE);
 
@@ -616,12 +555,9 @@ Boolean place_terrain_icon_into_ter_large(graphic_id_type icon,short in_square_x
 	rect_draw_some_item(ter_resize_buffer_gworld,
 		buffer_to_rect,ter_draw_gworld,to_rect,1,0);
 
-
 	return TRUE;
 }
 
-
-// q_3DModStart
 void draw_wall_3D_sidebar(short t_to_draw, RECT to_rect)
 {			
 	graphic_id_type a;
@@ -728,9 +664,8 @@ Boolean place_icon_into_3D_sidebar(graphic_id_type icon, RECT to_rect, short uns
 	
 	short index = safe_get_index_of_sheet(&a);
 	if (index < 0) {
-		//cant_draw_graphics_error(a);
 		return FALSE;	
-		}
+	}
 	SetRECT(from_rect,1 + (PICT_BOX_WIDTH_3D + 1) * (a.which_icon % 10),1 + (PICT_BOX_HEIGHT_3D + 1) * (a.which_icon / 10),
 	  1 + (PICT_BOX_WIDTH_3D + 1) * (a.which_icon % 10) + PICT_BOX_WIDTH_3D,1 + (PICT_BOX_HEIGHT_3D + 1) * (a.which_icon / 10) + PICT_BOX_HEIGHT_3D);
 
@@ -771,7 +706,6 @@ Boolean place_icon_into_ter_3D_large(graphic_id_type icon,short at_point_center_
 	SetRECT(from_rect,1 + (PICT_BOX_WIDTH_3D + 1) * (a.which_icon % 10),1 + (PICT_BOX_HEIGHT_3D + 1) * (a.which_icon / 10),
 	  1 + (PICT_BOX_WIDTH_3D + 1) * (a.which_icon % 10) + PICT_BOX_WIDTH_3D,1 + (PICT_BOX_HEIGHT_3D + 1) * (a.which_icon / 10) + PICT_BOX_HEIGHT_3D);
 	
-//	GWorldPtr src_gworld = graphics_library[index];
 	HDIB src_gworld = graphics_library[index];
 	adjust_graphic(&src_gworld,&from_rect,a.graphic_adjust);
 	apply_lighting_to_graphic(&src_gworld,&from_rect,lighting);
@@ -807,7 +741,6 @@ Boolean place_creature_icon_into_ter_3D_large(graphic_id_type icon,short at_poin
 	SetRECT(from_rect,1 + (PICT_BOX_WIDTH_3D + 1) * (a.which_icon % 10),1 + (PICT_BOX_HEIGHT_3D + 1) * (a.which_icon / 10),
 	  1 + (PICT_BOX_WIDTH_3D + 1) * (a.which_icon % 10) + PICT_BOX_WIDTH_3D,1 + (PICT_BOX_HEIGHT_3D + 1) * (a.which_icon / 10) + PICT_BOX_HEIGHT_3D);
 	
-//	GWorldPtr src_gworld = graphics_library[index];
 	HDIB src_gworld = graphics_library[index];
 	adjust_graphic(&src_gworld,&from_rect,a.graphic_adjust);
 	apply_lighting_to_graphic(&src_gworld,&from_rect,lighting);
@@ -857,14 +790,12 @@ Boolean place_cliff_icon_into_ter_3D_large(short sheet,short at_point_center_x,s
 		to_rect.left = to_rect.left + 4;
 	}
 	
-//	GWorldPtr src_gworld = graphics_library[index];
 	HDIB src_gworld = graphics_library[index];
 	apply_lighting_to_graphic(&src_gworld,&from_rect,lighting);
 	
 	rect_draw_some_item(src_gworld,from_rect,ter_draw_gworld,to_rect,1,0);
 	return TRUE;
 }
-
 
 Boolean place_item_icon_into_ter_3D_large(graphic_id_type icon,short at_point_center_x,short at_point_center_y,RECT *to_whole_area_rect,short lighting)
 {
@@ -888,7 +819,6 @@ Boolean place_item_icon_into_ter_3D_large(graphic_id_type icon,short at_point_ce
 	SetRECT(from_rect,1 + (ITEM_BOX_SIZE_3D + 1) * (a.which_icon % 10),1 + (ITEM_BOX_SIZE_3D + 1) * (a.which_icon / 10),
 	  1 + (ITEM_BOX_SIZE_3D + 1) * (a.which_icon % 10) + ITEM_BOX_SIZE_3D,1 + (ITEM_BOX_SIZE_3D + 1) * (a.which_icon / 10) + ITEM_BOX_SIZE_3D);
 	
-//	GWorldPtr src_gworld = graphics_library[index];
 	HDIB src_gworld = graphics_library[index];
 	adjust_graphic(&src_gworld,&from_rect,a.graphic_adjust);
 	apply_lighting_to_graphic(&src_gworld,&from_rect,lighting);
@@ -919,7 +849,6 @@ Boolean place_outdoor_creature_icon_into_ter_3D_large(graphic_id_type icon,short
 	SetRECT(from_rect,1 + (PICT_BOX_WIDTH_3D + 1) * (a.which_icon % 4),1 + (PICT_BOX_HEIGHT_3D + 1) * (a.which_icon / 4),
 	  1 + (PICT_BOX_WIDTH_3D + 1) * (a.which_icon % 4) + OUTDOOR_CREATURE_WIDTH_3D,1 + (PICT_BOX_HEIGHT_3D + 1) * (a.which_icon / 4) + OUTDOOR_CREATURE_HEIGHT_3D);
 	
-//	GWorldPtr src_gworld = graphics_library[index];
 	HDIB src_gworld = graphics_library[index];
 	adjust_graphic(&src_gworld,&from_rect,a.graphic_adjust);
 	apply_lighting_to_graphic(&src_gworld,&from_rect,lighting);
@@ -960,7 +889,6 @@ Boolean place_corner_wall_icon_into_ter_3D_large(graphic_id_type icon,short at_p
 		to_rect.left += PICT_BOX_WIDTH_3D / 2;
 	}
 	
-//	GWorldPtr src_gworld = graphics_library[index];
 	HDIB src_gworld = graphics_library[index];
 	apply_lighting_to_graphic(&src_gworld,&from_rect,lighting);
 	
@@ -984,7 +912,6 @@ void place_ter_icon_on_tile_3D(short at_point_center_x,short at_point_center_y,s
 	OffsetRect(&tiny_from,16 * (which_icon % 10),11 * (which_icon / 10));
 	
 	rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,1,0);
-
 }
 
 void draw_ter_script_3D(short at_point_center_x,short at_point_center_y,RECT *to_whole_area_rect)
@@ -995,7 +922,6 @@ void draw_ter_script_3D(short at_point_center_x,short at_point_center_y,RECT *to
 	
 	if(rects_touch(&to_rect,to_whole_area_rect))
 		rect_draw_some_item(editor_mixed,ter_script_icon_from,ter_draw_gworld,to_rect,1,0);
-	
 }
 
 void place_ter_icons_3D(location which_outdoor_sector, outdoor_record_type *drawing_terrain, short square_x, short square_y,
@@ -2051,10 +1977,11 @@ void draw_ter_3D_large()
 	
  	paint_pattern(ter_draw_gworld,0,terrain_rect_gr_size,2);
 
-	RECT whole_area_rect = {large_edit_ter_rects[0][0].left,large_edit_ter_rects[0][0].top,
-		large_edit_ter_rects[8][8].right,large_edit_ter_rects[8][8].bottom};
+	RECT whole_area_rect = terrain_viewport_3d;
+        /*= {large_edit_ter_rects[0][0].left,large_edit_ter_rects[0][0].top,
+		large_edit_ter_rects[8][8].right,large_edit_ter_rects[8][8].bottom};*/
 	
-	MacInsetRect(&whole_area_rect,-15,-15);
+	//MacInsetRect(&whole_area_rect,-15,-15);
 	ZeroRectCorner(&whole_area_rect);
 
 	HRGN clipRgn = CreateRectRgn( whole_area_rect.left, whole_area_rect.top, whole_area_rect.right, whole_area_rect.bottom );
@@ -2070,12 +1997,7 @@ void draw_ter_3D_large()
 	clipRect.top	-= (ELEVATION_Y_DISPLACEMENT_3D * kTer3DTopClip);		// for cliff of outer screen origin 
 	clipRect.bottom	+= (ELEVATION_Y_DISPLACEMENT_3D * kTer3DBottomClip);	// for item/cliff of outer screen origin
 
- 	//FillCRect(&terrain_rect_gr_size,bg[6]);
-
 	put_rect_in_gworld(main_dc5,whole_area_rect,0,0,0);
-	//InsetRect(&whole_area_rect,15,15);
-	//FrameRect(&whole_area_rect);
-	//InsetRect(&whole_area_rect,-15,-15);
 
 	to_rect = whole_area_rect;
 	MacInsetRect(&to_rect,1,1);
@@ -2084,15 +2006,10 @@ void draw_ter_3D_large()
 	SelectObject(main_dc5,store_bmp);
 
 	if (file_is_loaded == FALSE) {
-		//for (q = 0; q < 9; q++) 
-		//	for (r = 0; r < 9; r++) 
-		//		fill_rect_in_gworld(ter_draw_gworld,large_edit_ter_rects[q][r],230,230,230);
-
 		SelectObject(main_dc5,DibBitmapHandle(ter_draw_gworld));
 		to_rect = whole_area_rect;
 		MacInsetRect(&to_rect,1,1);
 		fill_rect_in_gworld(main_dc5,to_rect,230,230,230);
-		//put_rect_in_gworld(ter_draw_gworld,to_rect,0,0,0);
 
 		SelectObject(main_dc5,store_font);
 		SelectObject(main_dc5,store_bmp);
@@ -2113,10 +2030,7 @@ void draw_ter_3D_large()
 	
 	short temp_x, temp_y;
 	//this crazy code draws bordering sectors when in outdoor mode (or repeating floors when in town mode)
-	short sector_offset_x/* = 0*/, sector_offset_y/* = 0*/;
-	//if(!editing_town) {
-	//	sector_offset_x = sector_offset_y = -1;
-	//}
+	short sector_offset_x, sector_offset_y;
 	
 	short temp_floor[2][2];
 	short temp_terrain[2][2];
@@ -2126,46 +2040,114 @@ void draw_ter_3D_large()
 	set_up_corner_and_sight_map();
 	
 	for(sector_offset_x = -1;sector_offset_x <= 1/*!editing_town*/;sector_offset_x++){
-	for(sector_offset_y = -1;sector_offset_y <= 1/*!editing_town*/;sector_offset_y++){
-	//don't draw nonexistant sectors
-	if(!editing_town && (cur_out.x + sector_offset_x < 0 || cur_out.y + sector_offset_y < 0 || 
-	cur_out.x + sector_offset_x >= scenario.out_width || cur_out.y + sector_offset_y >= scenario.out_height))
-		continue;
-	
-	//don't waste time drawing totally useless stuff
-//	if(cen_x > 18 && sector_offset_x == -1)
-	if(cen_x > 12 && sector_offset_x == -1)
-		continue;
-	if(cen_x < (current_size - 18) && sector_offset_x == 1)
-		continue;
-//	if(cen_y > 18 && sector_offset_y == -1)
-	if(cen_y > 12 && sector_offset_y == -1)
-		continue;
-	if(cen_y < (current_size - 18) && sector_offset_y == 1)
-		continue;
-	
-	if(!editing_town) {
-		if(sector_offset_x == 0 && sector_offset_y == 0)
-			drawing_terrain = &current_terrain;
-		else
-			drawing_terrain = &border_terrains[sector_offset_x + 1][sector_offset_y + 1];
-		
-		//region number
-		if(current_terrain.extra[0] != drawing_terrain->extra[0])
+    	for(sector_offset_y = -1;sector_offset_y <= 1/*!editing_town*/;sector_offset_y++){
+		//don't draw nonexistant sectors
+		if(!editing_town && (cur_out.x + sector_offset_x < 0 || cur_out.y + sector_offset_y < 0 || 
+		cur_out.x + sector_offset_x >= scenario.out_width || cur_out.y + sector_offset_y >= scenario.out_height))
 			continue;
-
-		which_outdoor_sector = cur_out;
-		OffsetLocation( which_outdoor_sector, sector_offset_x, sector_offset_y );
-	}
 	
-	for(x = 0; x < current_size; x++) {
-		for(y = 0; y < current_size; y++) {
-			temp_x = temp_y = 0;
-			//only draw things in line of sight from center
-			if(cur_viewing_mode == 11) {
-				temp_x = x;
-				temp_y = y;
-				if(editing_town) {
+		//don't waste time drawing totally useless stuff
+		if(cen_x > 18 && sector_offset_x == -1)
+			continue;
+		if(cen_x < (current_size - 18) && sector_offset_x == 1)
+			continue;
+		if(cen_y > 18 && sector_offset_y == -1)
+			continue;
+		if(cen_y < (current_size - 18) && sector_offset_y == 1)
+			continue;
+		
+		if(!editing_town) {
+			if(sector_offset_x == 0 && sector_offset_y == 0)
+				drawing_terrain = &current_terrain;
+			else
+				drawing_terrain = &border_terrains[sector_offset_x + 1][sector_offset_y + 1];
+			
+			//region number
+			if(current_terrain.extra[0] != drawing_terrain->extra[0])
+				continue;
+	
+			which_outdoor_sector = cur_out;
+			OffsetLocation( which_outdoor_sector, sector_offset_x, sector_offset_y );
+		}
+	
+		for(x = 0; x < current_size; x++) {
+			for(y = 0; y < current_size; y++) {
+				temp_x = temp_y = 0;
+				//only draw things in line of sight from center
+				if(cur_viewing_mode == 11) {
+					temp_x = x;
+					temp_y = y;
+					if(editing_town) {
+						if(sector_offset_x == -1) {
+							temp_x = 0;
+						}
+						if(sector_offset_x == 1) {
+							temp_x = current_size - 1;
+						}
+						if(sector_offset_y == -1) {
+							temp_y = 0;
+						}
+						if(sector_offset_y == 1) {
+							temp_y = current_size - 1;
+						}
+					}
+					else {
+						temp_x += sector_offset_x * current_size;
+						temp_y += sector_offset_y * current_size;
+					}
+					view_to.x = (char)temp_x;
+					view_to.y = (char)temp_y;
+					//in the game, things a certain distance away aren't drawn.  Also, 
+					//that helps here by reducing the number of line-of-sight calculations needed
+					if(editing_town && (n_abs(view_to.x - cen_x) > 10 || n_abs(view_to.y - cen_y) > 10))
+						continue;
+					if(!editing_town && (n_abs(view_to.x - cen_x) + n_abs(view_to.y - cen_y) > 14))
+						continue;
+					
+					see_in = get_see_in(sector_offset_x,sector_offset_y,x,y);
+					see_to = get_see_to(sector_offset_x,sector_offset_y,x,y);
+					
+					for(temp_x = 0; temp_x < 3; temp_x++) {
+						for(temp_y = 0; temp_y < 3; temp_y++) {
+							see_in_neighbors[temp_x][temp_y] = get_see_in(sector_offset_x,sector_offset_y,x + temp_x - 1,y + temp_y - 1);
+						}
+					}
+				
+					if(see_to) {
+						if(editing_town ? town.is_on_surface : current_terrain.is_on_surface)
+							lighting = 8;
+						else {
+							lighting = (editing_town) ? t_d.lighting[view_to.x][view_to.y] : 0;
+							if(editing_town) {
+								if(town.lighting == 0)
+									lighting += 4;
+								
+								if(town.lighting != 3)
+									rad = 8;
+								else
+									rad = 1;
+							}
+							else {
+								lighting += 5;
+								rad = 2;
+							}
+							distance = dist(view_from,view_to);
+							
+							if(distance <= rad) {
+								lighting += rad - distance + 1;
+							}
+							
+							if(lighting == 0)
+								continue;
+							
+							lighting = min((editing_town ? 6 : 8),lighting);
+						}
+					}
+				}
+			
+				if(editing_town && (sector_offset_x != 0 || sector_offset_y != 0)) {
+					temp_x = x;
+					temp_y = y;
 					if(sector_offset_x == -1) {
 						temp_x = 0;
 					}
@@ -2178,614 +2160,526 @@ void draw_ter_3D_large()
 					if(sector_offset_y == 1) {
 						temp_y = current_size - 1;
 					}
+					floor_to_draw = t_d.floor[temp_x][temp_y];
+					t_to_draw = 0;
+					height_to_draw = t_d.height[temp_x][temp_y];
+					if(town.external_floor_type != -1)
+						floor_to_draw = town.external_floor_type;
 				}
 				else {
-					temp_x += sector_offset_x * current_size;
-					temp_y += sector_offset_y * current_size;
+					t_to_draw = (editing_town) ? t_d.terrain[x][y] : drawing_terrain->terrain[x][y];		
+					floor_to_draw = (editing_town) ? t_d.floor[x][y] : drawing_terrain->floor[x][y];		
+					height_to_draw = (editing_town) ? t_d.height[x][y] : drawing_terrain->height[x][y];		
 				}
-				view_to.x = (char)temp_x;
-				view_to.y = (char)temp_y;
-				//in the game, things a certain distance away aren't drawn.  Also, 
-				//that helps here by reducing the number of line-of-sight calculations needed
-				if(editing_town && (n_abs(view_to.x - cen_x) > 10 || n_abs(view_to.y - cen_y) > 10))
+			
+				rel_x = (x + sector_offset_x * current_size) - cen_x;
+				rel_y = (y + sector_offset_y * current_size) - cen_y;
+				
+				center_of_current_square_x = (rel_x - rel_y) * SPACE_X_DISPLACEMENT_3D + center_area_x;
+				center_of_current_square_y = (rel_x + rel_y) * SPACE_Y_DISPLACEMENT_3D + center_area_y
+					- (height_to_draw - center_height) * ELEVATION_Y_DISPLACEMENT_3D;
+	
+				// clipping
+				POINT center_of_current_square = {center_of_current_square_x, center_of_current_square_y};
+				if ( ! POINTInRECT( center_of_current_square, clipRect ) )
 					continue;
-				if(!editing_town && (n_abs(view_to.x - cen_x) + n_abs(view_to.y - cen_y) > 14))
-					continue;
-				
-				see_in = get_see_in(sector_offset_x,sector_offset_y,x,y);
-				see_to = get_see_to(sector_offset_x,sector_offset_y,x,y);
-				
-				for(temp_x = 0; temp_x < 3; temp_x++) {
-					for(temp_y = 0; temp_y < 3; temp_y++) {
-						see_in_neighbors[temp_x][temp_y] = get_see_in(sector_offset_x,sector_offset_y,x + temp_x - 1,y + temp_y - 1);
-					}
-				}
-				
-				if(see_to) {
-					if(editing_town ? town.is_on_surface : current_terrain.is_on_surface) {
-						lighting = 8;
-					}
-					else {
-						lighting = (editing_town) ? t_d.lighting[view_to.x][view_to.y] : 0;
-						if(editing_town) {
-							if(town.lighting == 0)
-								lighting += 4;
-							
-							if(town.lighting != 3)
-								rad = 8;
-							else
-								rad = 1;
-						}
-						else {
-							lighting += 5;
-							rad = 2;
-						}
-						distance = dist(view_from,view_to);
-						
-						if(distance <= rad) {
-							lighting += rad - distance + 1;
-						}
-						
-						if(lighting == 0)
-							continue;
-						
-						lighting = min((editing_town ? 6 : 8),lighting);
-					}
-				}
-			}
-			
-			
-			if(editing_town && (sector_offset_x != 0 || sector_offset_y != 0)) {
-				temp_x = x;
-				temp_y = y;
-				if(sector_offset_x == -1) {
-					temp_x = 0;
-				}
-				if(sector_offset_x == 1) {
-					temp_x = current_size - 1;
-				}
-				if(sector_offset_y == -1) {
-					temp_y = 0;
-				}
-				if(sector_offset_y == 1) {
-					temp_y = current_size - 1;
-				}
-				floor_to_draw = t_d.floor[temp_x][temp_y];
-				t_to_draw = 0;
-				height_to_draw = t_d.height[temp_x][temp_y];
-				if(town.external_floor_type != -1) {
-					floor_to_draw = town.external_floor_type;
-				}
-			}
-			else {
-				t_to_draw = (editing_town) ? t_d.terrain[x][y] : drawing_terrain->terrain[x][y];		
-				floor_to_draw = (editing_town) ? t_d.floor[x][y] : drawing_terrain->floor[x][y];		
-				height_to_draw = (editing_town) ? t_d.height[x][y] : drawing_terrain->height[x][y];		
-			}
-			
-			
-			rel_x = (x + sector_offset_x * current_size) - cen_x;
-			rel_y = (y + sector_offset_y * current_size) - cen_y;
-			
-			center_of_current_square_x = (rel_x - rel_y) * SPACE_X_DISPLACEMENT_3D + center_area_x;
-			center_of_current_square_y = (rel_x + rel_y) * SPACE_Y_DISPLACEMENT_3D + center_area_y
-				- (height_to_draw - center_height) * ELEVATION_Y_DISPLACEMENT_3D;
 
-			// clipping
-			POINT center_of_current_square = {center_of_current_square_x, center_of_current_square_y};
-			if ( ! POINTInRECT( center_of_current_square, clipRect ) )
-				continue;
-
-			//draw only bordering floors in outside of town, where the border rect doesn't touch
-			if(editing_town && (sector_offset_x != 0 || sector_offset_y != 0) && see_in) {
+				//draw only bordering floors in outside of town, where the border rect doesn't touch
+				if(editing_town && (sector_offset_x != 0 || sector_offset_y != 0) && see_in) {
+					
+					//don't draw that which can't be seen.  it's easy here.
+					//no, place_icon_into_ter_3D_large() already checks for this
+					/*if(center_of_current_square_x - SPACE_X_DISPLACEMENT_3D > whole_area_rect.right ||
+					center_of_current_square_y - SPACE_Y_DISPLACEMENT_3D > whole_area_rect.bottom ||
+					center_of_current_square_x + SPACE_X_DISPLACEMENT_3D < whole_area_rect.left ||
+					center_of_current_square_y + SPACE_Y_DISPLACEMENT_3D < whole_area_rect.top)
+						continue;*/
+					
+					//don't draw solid stone
+					if(floor_to_draw == 255)
+						continue;
+					
+					//if the town borders touch the edge, the outside terrain isn't displayed
+					//remember, at least one of temp_x and temp_y is 0 or (current_size - 1)
+					//so at least one of the first parts of these if's will be checked
+					if((temp_x == 0) && (temp_x == town.in_town_rect.left  ) && (temp_y >= town.in_town_rect.top ) && (temp_y <= town.in_town_rect.bottom))
+						continue;
+					if((temp_x == (current_size - 1))
+									 && (temp_x == town.in_town_rect.right ) && (temp_y >= town.in_town_rect.top ) && (temp_y <= town.in_town_rect.bottom))
+						continue;
+					if((temp_y == 0) && (temp_y == town.in_town_rect.top   ) && (temp_x >= town.in_town_rect.left) && (temp_x <= town.in_town_rect.right ))
+						continue;
+					if((temp_y == (current_size - 1)) 
+									 && (temp_y == town.in_town_rect.bottom) && (temp_x >= town.in_town_rect.left) && (temp_x <= town.in_town_rect.right ))
+						continue;
+					
+					a = scen_data.scen_floors[floor_to_draw].pic;
 				
-				//don't draw that which can't be seen.  it's easy here.
-				//no, place_icon_into_ter_3D_large() already checks for this
-				/*if(center_of_current_square_x - SPACE_X_DISPLACEMENT_3D > whole_area_rect.right ||
-				center_of_current_square_y - SPACE_Y_DISPLACEMENT_3D > whole_area_rect.bottom ||
-				center_of_current_square_x + SPACE_X_DISPLACEMENT_3D < whole_area_rect.left ||
-				center_of_current_square_y + SPACE_Y_DISPLACEMENT_3D < whole_area_rect.top)
-					continue;*/
-				
-				//don't draw solid stone
-				if(floor_to_draw == 255)
+					// if graphic is undefined for floor, just draw white
+					if (a.not_legit()) {
+						//fill_rect_in_gworld(ter_draw_gworld,large_edit_ter_rects[q][r],230,230,230);
+					}
+					else if (place_icon_into_ter_3D_large(a,center_of_current_square_x,center_of_current_square_y,to_whole_area_rect,lighting) == FALSE)
+						cant_draw_graphics_error(a,"Error was for floor type",floor_to_draw);
+					
 					continue;
-				
-				//if the town borders touch the edge, the outside terrain isn't displayed
-				//remember, at least one of temp_x and temp_y is 0 or (current_size - 1)
-				//so at least one of the first parts of these if's will be checked
-				if((temp_x == 0) && (temp_x == town.in_town_rect.left  ) && (temp_y >= town.in_town_rect.top ) && (temp_y <= town.in_town_rect.bottom))
-					continue;
-				if((temp_x == (current_size - 1))
-								 && (temp_x == town.in_town_rect.right ) && (temp_y >= town.in_town_rect.top ) && (temp_y <= town.in_town_rect.bottom))
-					continue;
-				if((temp_y == 0) && (temp_y == town.in_town_rect.top   ) && (temp_x >= town.in_town_rect.left) && (temp_x <= town.in_town_rect.right ))
-					continue;
-				if((temp_y == (current_size - 1)) 
-								 && (temp_y == town.in_town_rect.bottom) && (temp_x >= town.in_town_rect.left) && (temp_x <= town.in_town_rect.right ))
-					continue;
-				
-				a = scen_data.scen_floors[floor_to_draw].pic;
-				
-				// if graphic is undefined for floor, just draw white
-				if (a.not_legit()) {
-					//fill_rect_in_gworld(ter_draw_gworld,large_edit_ter_rects[q][r],230,230,230);
 				}
-				else if (place_icon_into_ter_3D_large(a,center_of_current_square_x,center_of_current_square_y,to_whole_area_rect,lighting) == FALSE)
-					cant_draw_graphics_error(a,"Error was for floor type",floor_to_draw);
+			
+				//nasty - floor outside town isn't affected by this, so this has to be done after drawing it
+				center_of_current_square_y = center_of_current_square_y - scen_data.scen_floors[floor_to_draw].floor_height;
 				
-				continue;
-			}
-			
-			//nasty - floor outside town isn't affected by this, so this has to be done after drawing it
-			center_of_current_square_y = center_of_current_square_y - scen_data.scen_floors[floor_to_draw].floor_height;
-			
-			//draw cliffs
-			if(!editing_town) {
-				//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
-				//not that that situation would happen
-				if(current_terrain.is_on_surface)
-					sheet = 657;
+				//draw cliffs
+				if(!editing_town) {
+					//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
+					//not that that situation would happen
+					if(current_terrain.is_on_surface)
+						sheet = 657;
+					else
+						sheet = 658;
+				}
 				else
-					sheet = 658;
-			}
-			else {
-				sheet = town.cliff_sheet;
-			}
+					sheet = town.cliff_sheet;
 			
-			if (sheet >= 0 && see_to) {
-				//draw cliffs to SE, then E, then S
+				if (sheet >= 0 && see_to) {
+					//draw cliffs to SE, then E, then S
+					
+					temp_floor [0][0] = temp_floor [1][0] = temp_floor [0][1] = temp_floor [1][1] = floor_to_draw;
+					temp_height[0][0] = temp_height[1][0] = temp_height[0][1] = temp_height[1][1] = height_to_draw;
+					temp_terrain[0][0] = temp_terrain[1][0] = temp_terrain[0][1] = temp_terrain[1][1] = 0;
+					
+					temp_see_to[0][0] = see_to;
+					temp_see_to[1][0] = get_see_to(sector_offset_x,sector_offset_y,x + 1,y);
+					temp_see_to[0][1] = get_see_to(sector_offset_x,sector_offset_y,x,y + 1);
+					temp_see_to[1][1] = get_see_to(sector_offset_x,sector_offset_y,x + 1,y + 1);
+					
+					if(x < current_size - 1) {
+						temp_floor[1][0] = (editing_town) ? t_d.floor[x + 1][y] : drawing_terrain->floor[x + 1][y];
+						temp_terrain[1][0] = (editing_town) ? t_d.terrain[x + 1][y] : drawing_terrain->terrain[x + 1][y];
+						temp_height[1][0] = (editing_town) ? t_d.height[x + 1][y] : drawing_terrain->height[x + 1][y];
+					}
+					else if(!editing_town && sector_offset_x < 1) {
+						temp_floor[1][0] = border_terrains[sector_offset_x + 2][sector_offset_y + 1].floor[0][y];
+						temp_terrain[1][0] = border_terrains[sector_offset_x + 2][sector_offset_y + 1].terrain[0][y];
+						temp_height[1][0] = border_terrains[sector_offset_x + 2][sector_offset_y + 1].height[0][y];
+					}
+					
+					if(y < current_size - 1) {
+						temp_floor[0][1] = (editing_town) ? t_d.floor[x][y + 1] : drawing_terrain->floor[x][y + 1];
+						temp_terrain[0][1] = (editing_town) ? t_d.terrain[x][y + 1] : drawing_terrain->terrain[x][y + 1];
+						temp_height[0][1] = (editing_town) ? t_d.height[x][y + 1] : drawing_terrain->height[x][y + 1];
+					}
+					else if(!editing_town && sector_offset_y < 1) {
+						temp_floor[0][1] = border_terrains[sector_offset_x + 1][sector_offset_y + 2].floor[x][0];
+						temp_terrain[0][1] = border_terrains[sector_offset_x + 1][sector_offset_y + 2].terrain[x][0];
+						temp_height[0][1] = border_terrains[sector_offset_x + 1][sector_offset_y + 2].height[x][0];
+					}
+					
+					if(x < current_size - 1 && y < current_size - 1) {
+						temp_floor[1][1] = (editing_town) ? t_d.floor[x + 1][y + 1] : drawing_terrain->floor[x + 1][y + 1];
+						temp_terrain[1][1] = (editing_town) ? t_d.terrain[x + 1][y + 1] : drawing_terrain->terrain[x + 1][y + 1];
+						temp_height[1][1] = (editing_town) ? t_d.height[x + 1][y + 1] : drawing_terrain->height[x + 1][y + 1];
+					}
+					else if(!editing_town && sector_offset_y < 1 && sector_offset_x < 1) {
+						temp_floor[1][1] = border_terrains[sector_offset_x + 2][sector_offset_y + 2].floor[0][0];
+						temp_terrain[1][1] = border_terrains[sector_offset_x + 2][sector_offset_y + 2].terrain[0][0];
+						temp_height[1][1] = border_terrains[sector_offset_x + 2][sector_offset_y + 2].height[0][0];
+					}
 				
+					//don't draw cliffs if lower space is solid stone (true to BoA)
+					//can only see a cliff if see_to base and top of them
+					//For E and S cliffs (also similar for SE cliffs), don't draw them if nearby sloping terrain slopes up to both border corner-points
+					//(the game does it this way, it looks better, and there's no loss of information)
+					
+					//SE cliffs
+					if(!(x == current_size - 1 && cur_out.x + sector_offset_x == scenario.out_width - 1) && 
+					!(y == current_size - 1 && cur_out.y + sector_offset_y == scenario.out_height - 1) && 
+					!((temp_height[1][0] >= height_to_draw) && (temp_height[0][1] < height_to_draw)) && //??? this is what I got from observing BoA...
+					(temp_floor[0][1] != 255) &&
+					(temp_see_to[0][1]) &&
+					!(temp_height[0][1] == height_to_draw - 1 && (scen_data.scen_ter_types[temp_terrain[1][1]].special == 19 || scen_data.scen_ter_types[temp_terrain[1][1]].special == 25 || scen_data.scen_ter_types[temp_terrain[1][1]].special == 26 || scen_data.scen_ter_types[temp_terrain[1][1]].special == 27 || scen_data.scen_ter_types[temp_terrain[1][1]].special == 28 || scen_data.scen_ter_types[temp_terrain[1][1]].special == 30))) {
+						neighbor_height = temp_height[1][1];
+						while(neighbor_height < min(height_to_draw,temp_height[0][1])) {
+							if (place_cliff_icon_into_ter_3D_large(sheet,center_of_current_square_x, center_of_current_square_y +
+							(height_to_draw - neighbor_height) * ELEVATION_Y_DISPLACEMENT_3D, 1, to_whole_area_rect, lighting) == FALSE)
+								cant_draw_graphics_error(a,"Error was for cliff type",sheet);
+							neighbor_height++;
+						}
+					}
 				
-				temp_floor [0][0] = temp_floor [1][0] = temp_floor [0][1] = temp_floor [1][1] = floor_to_draw;
-				temp_height[0][0] = temp_height[1][0] = temp_height[0][1] = temp_height[1][1] = height_to_draw;
-				temp_terrain[0][0] = temp_terrain[1][0] = temp_terrain[0][1] = temp_terrain[1][1] = 0;
-				
-				temp_see_to[0][0] = see_to;
-				temp_see_to[1][0] = get_see_to(sector_offset_x,sector_offset_y,x + 1,y);
-				temp_see_to[0][1] = get_see_to(sector_offset_x,sector_offset_y,x,y + 1);
-				temp_see_to[1][1] = get_see_to(sector_offset_x,sector_offset_y,x + 1,y + 1);
-				
-				if(x < current_size - 1) {
-					temp_floor[1][0] = (editing_town) ? t_d.floor[x + 1][y] : drawing_terrain->floor[x + 1][y];
-					temp_terrain[1][0] = (editing_town) ? t_d.terrain[x + 1][y] : drawing_terrain->terrain[x + 1][y];
-					temp_height[1][0] = (editing_town) ? t_d.height[x + 1][y] : drawing_terrain->height[x + 1][y];
-				}
-				else if(!editing_town && sector_offset_x < 1) {
-					temp_floor[1][0] = border_terrains[sector_offset_x + 2][sector_offset_y + 1].floor[0][y];
-					temp_terrain[1][0] = border_terrains[sector_offset_x + 2][sector_offset_y + 1].terrain[0][y];
-					temp_height[1][0] = border_terrains[sector_offset_x + 2][sector_offset_y + 1].height[0][y];
-				}
-				
-				if(y < current_size - 1) {
-					temp_floor[0][1] = (editing_town) ? t_d.floor[x][y + 1] : drawing_terrain->floor[x][y + 1];
-					temp_terrain[0][1] = (editing_town) ? t_d.terrain[x][y + 1] : drawing_terrain->terrain[x][y + 1];
-					temp_height[0][1] = (editing_town) ? t_d.height[x][y + 1] : drawing_terrain->height[x][y + 1];
-				}
-				else if(!editing_town && sector_offset_y < 1) {
-					temp_floor[0][1] = border_terrains[sector_offset_x + 1][sector_offset_y + 2].floor[x][0];
-					temp_terrain[0][1] = border_terrains[sector_offset_x + 1][sector_offset_y + 2].terrain[x][0];
-					temp_height[0][1] = border_terrains[sector_offset_x + 1][sector_offset_y + 2].height[x][0];
-				}
-				
-				if(x < current_size - 1 && y < current_size - 1) {
-					temp_floor[1][1] = (editing_town) ? t_d.floor[x + 1][y + 1] : drawing_terrain->floor[x + 1][y + 1];
-					temp_terrain[1][1] = (editing_town) ? t_d.terrain[x + 1][y + 1] : drawing_terrain->terrain[x + 1][y + 1];
-					temp_height[1][1] = (editing_town) ? t_d.height[x + 1][y + 1] : drawing_terrain->height[x + 1][y + 1];
-				}
-				else if(!editing_town && sector_offset_y < 1 && sector_offset_x < 1) {
-					temp_floor[1][1] = border_terrains[sector_offset_x + 2][sector_offset_y + 2].floor[0][0];
-					temp_terrain[1][1] = border_terrains[sector_offset_x + 2][sector_offset_y + 2].terrain[0][0];
-					temp_height[1][1] = border_terrains[sector_offset_x + 2][sector_offset_y + 2].height[0][0];
-				}
-				
-				//don't draw cliffs if lower space is solid stone (true to BoA)
-				//can only see a cliff if see_to base and top of them
-				//For E and S cliffs (also similar for SE cliffs), don't draw them if nearby sloping terrain slopes up to both border corner-points
-				//(the game does it this way, it looks better, and there's no loss of information)
-				
-				//SE cliffs
-				if(!(x == current_size - 1 && cur_out.x + sector_offset_x == scenario.out_width - 1) && 
-				!(y == current_size - 1 && cur_out.y + sector_offset_y == scenario.out_height - 1) && 
-				!((temp_height[1][0] >= height_to_draw) && (temp_height[0][1] < height_to_draw)) && //??? this is what I got from observing BoA...
-				(temp_floor[0][1] != 255) &&
-				(temp_see_to[0][1]) &&
-				!(temp_height[0][1] == height_to_draw - 1 && (scen_data.scen_ter_types[temp_terrain[1][1]].special == 19 || scen_data.scen_ter_types[temp_terrain[1][1]].special == 25 || scen_data.scen_ter_types[temp_terrain[1][1]].special == 26 || scen_data.scen_ter_types[temp_terrain[1][1]].special == 27 || scen_data.scen_ter_types[temp_terrain[1][1]].special == 28 || scen_data.scen_ter_types[temp_terrain[1][1]].special == 30))) {
-					neighbor_height = temp_height[1][1];
-					while(neighbor_height < min(height_to_draw,temp_height[0][1])) {
-						if (place_cliff_icon_into_ter_3D_large(sheet,center_of_current_square_x, center_of_current_square_y +
-						(height_to_draw - neighbor_height) * ELEVATION_Y_DISPLACEMENT_3D, 1, to_whole_area_rect, lighting) == FALSE)
-							cant_draw_graphics_error(a,"Error was for cliff type",sheet);
-						neighbor_height++;
-					}
-				}
-				
-				//E cliffs
-				if(!(x == current_size - 1 && cur_out.x + sector_offset_x == scenario.out_width - 1) && 
-				(temp_height[1][0] < height_to_draw) && 
-				(temp_floor[1][0] != 255) &&
-				(temp_see_to[1][0]) &&
-				!(temp_height[1][0] == height_to_draw - 1 && (scen_data.scen_ter_types[temp_terrain[1][0]].special == 19 || scen_data.scen_ter_types[temp_terrain[1][0]].special == 27 || scen_data.scen_ter_types[temp_terrain[1][0]].special == 28))) {
-					neighbor_height = min(temp_height[1][0],temp_height[1][1]);//as in BoA, depends on lower of east and southeast spaces
-					while(neighbor_height < height_to_draw) {
-						if (place_cliff_icon_into_ter_3D_large(sheet,center_of_current_square_x, center_of_current_square_y +
-						(height_to_draw - neighbor_height) * ELEVATION_Y_DISPLACEMENT_3D, 0, to_whole_area_rect, lighting) == FALSE)
-							cant_draw_graphics_error(a,"Error was for cliff type",sheet);
-						neighbor_height++;
-					}
-				}
-				
-				//S cliffs
-				if(!(y == current_size - 1 && cur_out.y + sector_offset_y == scenario.out_height - 1) && 
-				(temp_height[0][1] < height_to_draw) && 
-				(temp_floor[0][1] != 255) &&
-				(temp_see_to[0][1]) &&
-				!(temp_height[0][1] == height_to_draw - 1 && (scen_data.scen_ter_types[temp_terrain[0][1]].special == 25 || scen_data.scen_ter_types[temp_terrain[0][1]].special == 27 || scen_data.scen_ter_types[temp_terrain[0][1]].special == 30))) {
-					neighbor_height = temp_height[0][1];
-					while(neighbor_height < height_to_draw) {
-						if (place_cliff_icon_into_ter_3D_large(sheet,center_of_current_square_x, center_of_current_square_y +
-						(height_to_draw - neighbor_height) * ELEVATION_Y_DISPLACEMENT_3D, 2, to_whole_area_rect, lighting) == FALSE)
-							cant_draw_graphics_error(a,"Error was for cliff type",sheet);
-						neighbor_height++;
-					}
-				}
-			}
-			
-			
-			// draw floor if the terrain doesn't cover it up, but not solid stone
-			if(floor_to_draw != 255 && scen_data.scen_ter_types[t_to_draw].suppress_floor == FALSE && see_in) {
-				a = scen_data.scen_floors[floor_to_draw].pic;
-				
-				// if graphic is undefined for floor, just draw white
-				if (a.not_legit()) {
-					//fill_rect_in_gworld(ter_draw_gworld,large_edit_ter_rects[q][r],230,230,230);
-				}
-				else if (place_icon_into_ter_3D_large(a,center_of_current_square_x,center_of_current_square_y,to_whole_area_rect,lighting) == FALSE)
-					cant_draw_graphics_error(a,"Error was for floor type",floor_to_draw);
-			}
-			
-			te_full_move_block = (scen_data.scen_ter_types[t_to_draw].move_block[0] == 1 && scen_data.scen_ter_types[t_to_draw].move_block[1] == 1 &&
-				scen_data.scen_ter_types[t_to_draw].move_block[2] == 1 && scen_data.scen_ter_types[t_to_draw].move_block[3] == 1);
-			
-			te_partial_move_block = (!te_full_move_block && (scen_data.scen_ter_types[t_to_draw].move_block[0] == 1 || scen_data.scen_ter_types[t_to_draw].move_block[1] == 1 ||
-				scen_data.scen_ter_types[t_to_draw].move_block[2] == 1 || scen_data.scen_ter_types[t_to_draw].move_block[3] == 1));
-			
-			te_no_move_block = (scen_data.scen_ter_types[t_to_draw].move_block[0] == 0 && scen_data.scen_ter_types[t_to_draw].move_block[1] == 0 &&
-				scen_data.scen_ter_types[t_to_draw].move_block[2] == 0 && scen_data.scen_ter_types[t_to_draw].move_block[3] == 0);
-			
-			//deal with putting extra wall piece in corner of other walls
-			nw_corner = get_nw_corner(sector_offset_x,sector_offset_y,x,y);
-			sw_corner = get_sw_corner(sector_offset_x,sector_offset_y,x,y);
-			se_corner = get_se_corner(sector_offset_x,sector_offset_y,x,y);
-			ne_corner = get_ne_corner(sector_offset_x,sector_offset_y,x,y);
-			
-			//only draw this editor stuff when not viewing as in the game
-			if(cur_viewing_mode == 10) {
-				// draw terrain that goes under drawn rects (no move block is a rough approximation)
-				if (t_to_draw > 0 && te_no_move_block) {
-					draw_terrain_3D(t_to_draw, x, y, cur_out.x + sector_offset_x, cur_out.y + sector_offset_y, center_of_current_square_x, center_of_current_square_y, see_in_neighbors, 0, to_whole_area_rect, lighting);
-				}
-
-				if(sector_offset_x == 0 && sector_offset_y == 0) {
-					//grid over everything being edited
-					//nasty floor height adjust strikes again!  don't let the grid be adjusted by it, because it corresponds to clicking.
-					SelectObject(main_dc5,DibBitmapHandle(ter_draw_gworld));
-					put_line_segment_in_gworld_3D(main_dc5,drawing_terrain,center_of_current_square_x,
-					center_of_current_square_y + scen_data.scen_floors[floor_to_draw].floor_height,x,y,
-					1,0,FALSE,FALSE,0,-1,48,48,48,to_whole_area_rect);
-					put_line_segment_in_gworld_3D(main_dc5,drawing_terrain,center_of_current_square_x,
-					center_of_current_square_y + scen_data.scen_floors[floor_to_draw].floor_height,x,y,
-					-1,0,FALSE,FALSE,0,0,48,48,48,to_whole_area_rect);
-					put_line_segment_in_gworld_3D(main_dc5,drawing_terrain,center_of_current_square_x,
-					center_of_current_square_y + scen_data.scen_floors[floor_to_draw].floor_height,x,y,
-					0,1,FALSE,FALSE,0,0,48,48,48,to_whole_area_rect);
-					put_line_segment_in_gworld_3D(main_dc5,drawing_terrain,center_of_current_square_x,
-					center_of_current_square_y + scen_data.scen_floors[floor_to_draw].floor_height,x,y,
-					0,-1,FALSE,FALSE,0,1,48,48,48,to_whole_area_rect);
-					SelectObject(main_dc5,store_bmp);
-				}
-
-				
-				//draw little wall corners corners if they should be drawn
-				if(sw_corner == 1 || sw_corner == 2) {
-					a.clear_graphic_id_type();
-					a.which_icon = 9;
-					if(editing_town == FALSE) {
-						//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
-						//not that that situation would happen
-						a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
-					}
-					else if(sw_corner == 1) {
-						a.which_sheet = town.wall_1_sheet;
-					}
-					else if(sw_corner == 2) {
-						a.which_sheet = town.wall_2_sheet;
-					}
-					place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x,center_of_current_square_y,TRUE,to_whole_area_rect,lighting);
-				}
-				if(nw_corner == 1 || nw_corner == 2) {
-					a.clear_graphic_id_type();
-					a.which_icon = 9;
-					if(editing_town == FALSE) {
-						//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
-						//not that that situation would happen
-						a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
-					}
-					else if(nw_corner == 1) {
-						a.which_sheet = town.wall_1_sheet;
-					}
-					else if(nw_corner == 2) {
-						a.which_sheet = town.wall_2_sheet;
-					}
-					place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x + 18,center_of_current_square_y - 12,TRUE,to_whole_area_rect,lighting);
-				}
-				if(ne_corner == 1 || ne_corner == 2) {
-					a.clear_graphic_id_type();
-					a.which_icon = 9;
-					if(editing_town == FALSE) {
-						//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
-						//not that that situation would happen
-						a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
-					}
-					else if(ne_corner == 1) {
-						a.which_sheet = town.wall_1_sheet;
-					}
-					else if(ne_corner == 2) {
-						a.which_sheet = town.wall_2_sheet;
-					}
-					place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x,center_of_current_square_y,FALSE,to_whole_area_rect,lighting);
-				}
-				if(se_corner == 1 || se_corner == 2) {
-					a.clear_graphic_id_type();
-					a.which_icon = 9;
-					if(editing_town == FALSE) {
-						//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
-						//not that that situation would happen
-						a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
-					}
-					else if(se_corner == 1) {
-						a.which_sheet = town.wall_1_sheet;
-					}
-					else if(se_corner == 2) {
-						a.which_sheet = town.wall_2_sheet;
-					}
-					place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x + 18,center_of_current_square_y + 12,TRUE,to_whole_area_rect,lighting);
-				}
-				
-				//draw walls, etc. after the grid so it doesn't look bad (walls stick up a little, and the grid doesn't go in a bump over them)
-				if (t_to_draw > 0 && te_partial_move_block) {
-					draw_terrain_3D(t_to_draw, x, y, cur_out.x + sector_offset_x, cur_out.y + sector_offset_y, center_of_current_square_x, center_of_current_square_y, see_in_neighbors, 0, to_whole_area_rect, lighting);
-				}
-				
-				// draw Various Rectangles
-				// Town mode: special encs and other rectangles
-				if (editing_town) {
-					for (i = 0; i < NUM_TOWN_PLACED_SPECIALS; i++) {
-						if ((town.spec_id[i] >= 0) && (town.spec_id[i] < 255)) {
-							maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
-									town.special_rects[i], 1 + 4, 200, 200, 255, to_whole_area_rect);
-							maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
-									town.special_rects[i], 2 + 4, 0, 0, 255, to_whole_area_rect);
+					//E cliffs
+					if(!(x == current_size - 1 && cur_out.x + sector_offset_x == scenario.out_width - 1) && 
+					(temp_height[1][0] < height_to_draw) && 
+					(temp_floor[1][0] != 255) &&
+					(temp_see_to[1][0]) &&
+					!(temp_height[1][0] == height_to_draw - 1 && (scen_data.scen_ter_types[temp_terrain[1][0]].special == 19 || scen_data.scen_ter_types[temp_terrain[1][0]].special == 27 || scen_data.scen_ter_types[temp_terrain[1][0]].special == 28))) {
+						neighbor_height = min(temp_height[1][0],temp_height[1][1]);//as in BoA, depends on lower of east and southeast spaces
+						while(neighbor_height < height_to_draw) {
+							if (place_cliff_icon_into_ter_3D_large(sheet,center_of_current_square_x, center_of_current_square_y +
+							(height_to_draw - neighbor_height) * ELEVATION_Y_DISPLACEMENT_3D, 0, to_whole_area_rect, lighting) == FALSE)
+								cant_draw_graphics_error(a,"Error was for cliff type",sheet);
+							neighbor_height++;
 						}
 					}
 					
-					maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
-								town.in_town_rect, 3 + 4, 255, 0, 0, to_whole_area_rect);
-					
-					// description rects
-					for (i = 0; i < 16; i++) {
-						if (town.room_rect[i].right > 0) {
-							maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
-									town.room_rect[i], 4 + 4, 0, 255, 0, to_whole_area_rect);
-						}
-					}
-				}
-				// Outdoor mode: special encs and other rectangles
-				if (editing_town == FALSE) {
-					// town entry rects
-					for (i = 0; i < 8; i++) {
-						if ((current_terrain.exit_rects[i].right > 0) && (drawing_terrain->exit_dests[i] >= 0)) {
-							maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
-									drawing_terrain->exit_rects[i], 3 + 4, 255, 0, 255, to_whole_area_rect);
-						}
-					}
-					
-					// special enc rects
-					for (i = 0; i < NUM_OUT_PLACED_SPECIALS; i++) {
-						if (drawing_terrain->spec_id[i] >= 0) {
-							maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
-									drawing_terrain->special_rects[i], 1 + 4, 200, 200, 255, to_whole_area_rect);
-							maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
-									drawing_terrain->special_rects[i], 2 + 4, 0, 0, 255, to_whole_area_rect);
-						}
-					}
-					
-					// description rects
-					for (i = 0; i < 8; i++) {
-						if (current_terrain.info_rect[i].right > 0) {
-							maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
-									drawing_terrain->info_rect[i], 4 + 4, 0, 255, 0, to_whole_area_rect);
+					//S cliffs
+					if(!(y == current_size - 1 && cur_out.y + sector_offset_y == scenario.out_height - 1) && 
+					(temp_height[0][1] < height_to_draw) && 
+					(temp_floor[0][1] != 255) &&
+					(temp_see_to[0][1]) &&
+					!(temp_height[0][1] == height_to_draw - 1 && (scen_data.scen_ter_types[temp_terrain[0][1]].special == 25 || scen_data.scen_ter_types[temp_terrain[0][1]].special == 27 || scen_data.scen_ter_types[temp_terrain[0][1]].special == 30))) {
+						neighbor_height = temp_height[0][1];
+						while(neighbor_height < height_to_draw) {
+							if (place_cliff_icon_into_ter_3D_large(sheet,center_of_current_square_x, center_of_current_square_y +
+							(height_to_draw - neighbor_height) * ELEVATION_Y_DISPLACEMENT_3D, 2, to_whole_area_rect, lighting) == FALSE)
+								cant_draw_graphics_error(a,"Error was for cliff type",sheet);
+							neighbor_height++;
 						}
 					}
 				}
 				
-				// draw terrain that goes over drawn rects (move block is a rough approximation)
-				if (t_to_draw > 0 && te_full_move_block) {
-					draw_terrain_3D(t_to_draw, x, y, cur_out.x + sector_offset_x, cur_out.y + sector_offset_y, center_of_current_square_x, center_of_current_square_y, see_in_neighbors, 0, to_whole_area_rect, lighting);
-				}
-				
-				// Town mode: draw all instances
-				if (editing_town) {
-					draw_town_objects_3D(x,y,center_of_current_square_x,center_of_current_square_y,to_whole_area_rect,lighting);
-				}
-				
-				place_ter_icons_3D(which_outdoor_sector,drawing_terrain,x,y,t_to_draw,floor_to_draw,center_of_current_square_x,center_of_current_square_y,to_whole_area_rect);
-			}
-			if(cur_viewing_mode == 11 && see_to) {
-				terrain_in_front = (!scen_data.scen_ter_types[t_to_draw].blocks_view[0] && !scen_data.scen_ter_types[t_to_draw].blocks_view[1] &&
-				(scen_data.scen_ter_types[t_to_draw].blocks_view[2] || scen_data.scen_ter_types[t_to_draw].blocks_view[3]) );
-				
-				//determine whether extra corner wall pieces will be drawn cut away (regardless of whether they'll be drawn at all)
-				nw_corner_cutaway = see_in_neighbors[0][0];
-				sw_corner_cutaway = see_in_neighbors[0][1];
-				se_corner_cutaway = see_in_neighbors[1][1];
-				ne_corner_cutaway = see_in_neighbors[1][0];
-				
-				//figure out if any of them will be drawn (to account for BoA's strangeness - if a corner wall is
-				//drawn on a space, all the other terrain on that space [except sometimes other walls] is drawn)
-				is_wall_corner = (nw_corner == 1 || nw_corner == 2) || (sw_corner == 1 || sw_corner == 2) || 
-				(se_corner == 1 || se_corner == 2) || (ne_corner == 1 || ne_corner == 2);
-				
-				//draw nw, ne, sw corners if they should be drawn
-				if(sw_corner == 1 || sw_corner == 2) {
-					a.clear_graphic_id_type();
-					a.which_icon = sw_corner_cutaway ? 9 : 8;
-					if(editing_town == FALSE) {
-						//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
-						//not that that situation would happen
-						a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
-						wall_height = ((sw_corner == 1) ? 2 : 1);
-					}
-					else if(sw_corner == 1) {
-						a.which_sheet = town.wall_1_sheet;
-						wall_height = town.wall_1_height;
-					}
-					else if(sw_corner == 2) {
-						a.which_sheet = town.wall_2_sheet;
-						wall_height = town.wall_2_height;
-					}
-					if(sw_corner_cutaway)
-						wall_height = 1;
-					for(i = 0; i < wall_height; i++) {
-						place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x,
-						center_of_current_square_y - i * 35,TRUE,to_whole_area_rect,lighting);
-					}
-				}
-				if(nw_corner == 1 || nw_corner == 2) {
-					a.clear_graphic_id_type();
-					a.which_icon = nw_corner_cutaway ? 9 : 8;
-					if(editing_town == FALSE) {
-						//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
-						//not that that situation would happen
-						a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
-						wall_height = ((nw_corner == 1) ? 2 : 1);
-					}
-					else if(nw_corner == 1) {
-						a.which_sheet = town.wall_1_sheet;
-						wall_height = town.wall_1_height;
-					}
-					else if(nw_corner == 2) {
-						a.which_sheet = town.wall_2_sheet;
-						wall_height = town.wall_2_height;
-					}
-					if(nw_corner_cutaway)
-						wall_height = 1;
-					for(i = 0; i < wall_height; i++) {
-						place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x + 18,
-						(center_of_current_square_y - 12) - i * 35,TRUE,to_whole_area_rect,lighting);
-					}
-				}
-				if(ne_corner == 1 || ne_corner == 2) {
-					a.clear_graphic_id_type();
-					a.which_icon = ne_corner_cutaway ? 9 : 8;
-					if(editing_town == FALSE) {
-						//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
-						//not that that situation would happen
-						a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
-						wall_height = ((ne_corner == 1) ? 2 : 1);
-					}
-					else if(ne_corner == 1) {
-						a.which_sheet = town.wall_1_sheet;
-						wall_height = town.wall_1_height;
-					}
-					else if(ne_corner == 2) {
-						a.which_sheet = town.wall_2_sheet;
-						wall_height = town.wall_2_height;
-					}
-					if(ne_corner_cutaway)
-						wall_height = 1;
-					for(i = 0; i < wall_height; i++) {
-						place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x,
-						center_of_current_square_y - i * 35,FALSE,to_whole_area_rect,lighting);
-					}
-				}
-				
-				if(!terrain_in_front) {
-					if (t_to_draw > 0) {
-						draw_terrain_3D(t_to_draw, x, y, cur_out.x + sector_offset_x, cur_out.y + sector_offset_y, center_of_current_square_x, center_of_current_square_y, see_in_neighbors, is_wall_corner, to_whole_area_rect, lighting);
-					}
-				}
-						// Town mode: draw all instances
-				if (editing_town && see_in) {
-					draw_town_objects_3D(x,y,center_of_current_square_x,center_of_current_square_y,to_whole_area_rect,lighting);
-				}
-			
-				if(terrain_in_front) {
-					if (t_to_draw > 0) {
-						draw_terrain_3D(t_to_draw, x, y, cur_out.x + sector_offset_x, cur_out.y + sector_offset_y, center_of_current_square_x, center_of_current_square_y, see_in_neighbors, is_wall_corner, to_whole_area_rect, lighting);
-					}
-				}
-				
-				//draw se corner if it should be drawn
-				if(se_corner == 1 || se_corner == 2) {
-					a.clear_graphic_id_type();
-					a.which_icon = se_corner_cutaway ? 9 : 8;
-					if(editing_town == FALSE) {
-						//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
-						//not that that situation would happen
-						a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
-						wall_height = ((se_corner == 1) ? 2 : 1);
-					}
-					else if(se_corner == 1) {
-						a.which_sheet = town.wall_1_sheet;
-						wall_height = town.wall_1_height;
-					}
-					else if(se_corner == 2) {
-						a.which_sheet = town.wall_2_sheet;
-						wall_height = town.wall_2_height;
-					}
-					if(se_corner_cutaway)
-						wall_height = 1;
-					for(i = 0; i < wall_height; i++) {
-						place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x + 18,
-						(center_of_current_square_y + 12) - i * 35,TRUE,to_whole_area_rect,lighting);
-					}
-				}
-				
-				
-			}
-			
-			//outdoor mode
-			if(!editing_town && see_in) {
-				//Hill terrains effectively modify the height of the square's corners, raising some of them by (almost) one elevation level.
-				hill_ability = scen_data.scen_ter_types[t_to_draw].special;
-				height_adjust_right = height_adjust_left = height_adjust_bottom = height_adjust_top = 
-									height_adjust_center = scen_data.scen_ter_types[t_to_draw].height_adj;
-				//if it's actually a HILL ability...
-				if(hill_ability >= 19 && hill_ability <= 30) {
-					hill_ability -= 19;
+				// draw floor if the terrain doesn't cover it up, but not solid stone
+				if(floor_to_draw != 255 && scen_data.scen_ter_types[t_to_draw].suppress_floor == FALSE && see_in) {
+					a = scen_data.scen_floors[floor_to_draw].pic;
 					
-					if(hill_c_heights[hill_ability][3])
-						height_adjust_right += 10;
+					// if graphic is undefined for floor, just draw white
+					if (a.not_legit()) {
+						//fill_rect_in_gworld(ter_draw_gworld,large_edit_ter_rects[q][r],230,230,230);
+					}
+					else if (place_icon_into_ter_3D_large(a,center_of_current_square_x,center_of_current_square_y,to_whole_area_rect,lighting) == FALSE)
+						cant_draw_graphics_error(a,"Error was for floor type",floor_to_draw);
+				}
+				
+				te_full_move_block = (scen_data.scen_ter_types[t_to_draw].move_block[0] == 1 && scen_data.scen_ter_types[t_to_draw].move_block[1] == 1 &&
+					scen_data.scen_ter_types[t_to_draw].move_block[2] == 1 && scen_data.scen_ter_types[t_to_draw].move_block[3] == 1);
+				
+				te_partial_move_block = (!te_full_move_block && (scen_data.scen_ter_types[t_to_draw].move_block[0] == 1 || scen_data.scen_ter_types[t_to_draw].move_block[1] == 1 ||
+					scen_data.scen_ter_types[t_to_draw].move_block[2] == 1 || scen_data.scen_ter_types[t_to_draw].move_block[3] == 1));
+				
+				te_no_move_block = (scen_data.scen_ter_types[t_to_draw].move_block[0] == 0 && scen_data.scen_ter_types[t_to_draw].move_block[1] == 0 &&
+					scen_data.scen_ter_types[t_to_draw].move_block[2] == 0 && scen_data.scen_ter_types[t_to_draw].move_block[3] == 0);
+				
+				//deal with putting extra wall piece in corner of other walls
+				nw_corner = get_nw_corner(sector_offset_x,sector_offset_y,x,y);
+				sw_corner = get_sw_corner(sector_offset_x,sector_offset_y,x,y);
+				se_corner = get_se_corner(sector_offset_x,sector_offset_y,x,y);
+				ne_corner = get_ne_corner(sector_offset_x,sector_offset_y,x,y);
+			
+				//only draw this editor stuff when not viewing as in the game
+				if(cur_viewing_mode == 10) {
+					// draw terrain that goes under drawn rects (no move block is a rough approximation)
+					if (t_to_draw > 0 && te_no_move_block) {
+						draw_terrain_3D(t_to_draw, x, y, cur_out.x + sector_offset_x, cur_out.y + sector_offset_y, center_of_current_square_x, center_of_current_square_y, see_in_neighbors, 0, to_whole_area_rect, lighting);
+					}
+	
+					if(sector_offset_x == 0 && sector_offset_y == 0) {
+						//grid over everything being edited
+						//nasty floor height adjust strikes again!  don't let the grid be adjusted by it, because it corresponds to clicking.
+						SelectObject(main_dc5,DibBitmapHandle(ter_draw_gworld));
+						put_line_segment_in_gworld_3D(main_dc5,drawing_terrain,center_of_current_square_x,
+						center_of_current_square_y + scen_data.scen_floors[floor_to_draw].floor_height,x,y,
+						1,0,FALSE,FALSE,0,-1,48,48,48,to_whole_area_rect);
+						put_line_segment_in_gworld_3D(main_dc5,drawing_terrain,center_of_current_square_x,
+						center_of_current_square_y + scen_data.scen_floors[floor_to_draw].floor_height,x,y,
+						-1,0,FALSE,FALSE,0,0,48,48,48,to_whole_area_rect);
+						put_line_segment_in_gworld_3D(main_dc5,drawing_terrain,center_of_current_square_x,
+						center_of_current_square_y + scen_data.scen_floors[floor_to_draw].floor_height,x,y,
+						0,1,FALSE,FALSE,0,0,48,48,48,to_whole_area_rect);
+						put_line_segment_in_gworld_3D(main_dc5,drawing_terrain,center_of_current_square_x,
+						center_of_current_square_y + scen_data.scen_floors[floor_to_draw].floor_height,x,y,
+						0,-1,FALSE,FALSE,0,1,48,48,48,to_whole_area_rect);
+						SelectObject(main_dc5,store_bmp);
+					}
+				
+					//draw little wall corners corners if they should be drawn
+					if(sw_corner == 1 || sw_corner == 2) {
+						a.clear_graphic_id_type();
+						a.which_icon = 9;
+						if(editing_town == FALSE) {
+							//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
+							//not that that situation would happen
+							a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
+						}
+						else if(sw_corner == 1)
+							a.which_sheet = town.wall_1_sheet;
+						else if(sw_corner == 2)
+							a.which_sheet = town.wall_2_sheet;
+						place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x,center_of_current_square_y,TRUE,to_whole_area_rect,lighting);
+					}
+					if(nw_corner == 1 || nw_corner == 2) {
+						a.clear_graphic_id_type();
+						a.which_icon = 9;
+						if(editing_town == FALSE) {
+							//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
+							//not that that situation would happen
+							a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
+						}
+						else if(nw_corner == 1)
+							a.which_sheet = town.wall_1_sheet;
+						else if(nw_corner == 2)
+							a.which_sheet = town.wall_2_sheet;
+						place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x + 18,center_of_current_square_y - 12,TRUE,to_whole_area_rect,lighting);
+					}
+					if(ne_corner == 1 || ne_corner == 2) {
+						a.clear_graphic_id_type();
+						a.which_icon = 9;
+						if(editing_town == FALSE) {
+							//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
+							//not that that situation would happen
+							a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
+						}
+						else if(ne_corner == 1)
+							a.which_sheet = town.wall_1_sheet;
+						else if(ne_corner == 2)
+							a.which_sheet = town.wall_2_sheet;
+						place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x,center_of_current_square_y,FALSE,to_whole_area_rect,lighting);
+					}
+					if(se_corner == 1 || se_corner == 2) {
+						a.clear_graphic_id_type();
+						a.which_icon = 9;
+						if(editing_town == FALSE) {
+							//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
+							//not that that situation would happen
+							a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
+						}
+						else if(se_corner == 1)
+							a.which_sheet = town.wall_1_sheet;
+						else if(se_corner == 2)
+							a.which_sheet = town.wall_2_sheet;
+						place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x + 18,center_of_current_square_y + 12,TRUE,to_whole_area_rect,lighting);
+					}
+					
+					//draw walls, etc. after the grid so it doesn't look bad (walls stick up a little, and the grid doesn't go in a bump over them)
+					if (t_to_draw > 0 && te_partial_move_block) {
+						draw_terrain_3D(t_to_draw, x, y, cur_out.x + sector_offset_x, cur_out.y + sector_offset_y, center_of_current_square_x, center_of_current_square_y, see_in_neighbors, 0, to_whole_area_rect, lighting);
+					}
+					
+					// draw Various Rectangles
+					// Town mode: special encs and other rectangles
+					if (editing_town) {
+						for (i = 0; i < NUM_TOWN_PLACED_SPECIALS; i++) {
+							if ((town.spec_id[i] >= 0) && (town.spec_id[i] < 255)) {
+								maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
+										town.special_rects[i], 1 + 4, 200, 200, 255, to_whole_area_rect);
+								maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
+										town.special_rects[i], 2 + 4, 0, 0, 255, to_whole_area_rect);
+							}
+						}
 						
-					if(hill_c_heights[hill_ability][1])
-						height_adjust_left += 10;
-					
-					if(hill_c_heights[hill_ability][2])
-						height_adjust_bottom += 10;
+						maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
+									town.in_town_rect, 3 + 4, 255, 0, 0, to_whole_area_rect);
 						
-					if(hill_c_heights[hill_ability][0])
-						height_adjust_top += 10;
-				}
+						// description rects
+						for (i = 0; i < 16; i++) {
+							if (town.room_rect[i].right > 0) {
+								maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
+										town.room_rect[i], 4 + 4, 0, 255, 0, to_whole_area_rect);
+							}
+						}
+					}
+					// Outdoor mode: special encs and other rectangles
+					if (editing_town == FALSE) {
+						// town entry rects
+						for (i = 0; i < 8; i++) {
+							if ((current_terrain.exit_rects[i].right > 0) && (drawing_terrain->exit_dests[i] >= 0)) {
+								maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
+										drawing_terrain->exit_rects[i], 3 + 4, 255, 0, 255, to_whole_area_rect);
+							}
+						}
+					
+						// special enc rects
+						for (i = 0; i < NUM_OUT_PLACED_SPECIALS; i++) {
+							if (drawing_terrain->spec_id[i] >= 0) {
+								maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
+										drawing_terrain->special_rects[i], 1 + 4, 200, 200, 255, to_whole_area_rect);
+								maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
+										drawing_terrain->special_rects[i], 2 + 4, 0, 0, 255, to_whole_area_rect);
+							}
+						}
+						
+						// description rects
+						for (i = 0; i < 8; i++) {
+							if (current_terrain.info_rect[i].right > 0) {
+								maybe_draw_part_of_3D_rect(drawing_terrain,center_of_current_square_x,center_of_current_square_y,x,y,
+										drawing_terrain->info_rect[i], 4 + 4, 0, 255, 0, to_whole_area_rect);
+							}
+						}
+					}
 				
-				// Preset monsters
-				for (i = 0; i < 8; i++) {
-					if ((drawing_terrain->preset[i].start_loc.x > 0) &&
-					(drawing_terrain->preset[i].start_loc.x == x) && (drawing_terrain->preset[i].start_loc.y == y)) {
-						a = (scen_data.scen_creatures[drawing_terrain->preset[i].hostile[0]].char_graphic);
-						a.which_icon = (scen_data.scen_creatures[drawing_terrain->preset[i].hostile[0]].small_or_large_template) ? (5 * 4) : (3 * 4);
-						if (a.not_legit() == FALSE) {
-							if(drawing_terrain->preset[i].hostile_amount[0] == 0) {//do nothing
+					// draw terrain that goes over drawn rects (move block is a rough approximation)
+					if (t_to_draw > 0 && te_full_move_block) {
+						draw_terrain_3D(t_to_draw, x, y, cur_out.x + sector_offset_x, cur_out.y + sector_offset_y, center_of_current_square_x, center_of_current_square_y, see_in_neighbors, 0, to_whole_area_rect, lighting);
+					}
+					
+					// Town mode: draw all instances
+					if (editing_town) {
+						draw_town_objects_3D(x,y,center_of_current_square_x,center_of_current_square_y,to_whole_area_rect,lighting);
+					}
+					
+					place_ter_icons_3D(which_outdoor_sector,drawing_terrain,x,y,t_to_draw,floor_to_draw,center_of_current_square_x,center_of_current_square_y,to_whole_area_rect);
+				}
+				if(cur_viewing_mode == 11 && see_to) {
+					terrain_in_front = (!scen_data.scen_ter_types[t_to_draw].blocks_view[0] && !scen_data.scen_ter_types[t_to_draw].blocks_view[1] &&
+					(scen_data.scen_ter_types[t_to_draw].blocks_view[2] || scen_data.scen_ter_types[t_to_draw].blocks_view[3]) );
+					
+					//determine whether extra corner wall pieces will be drawn cut away (regardless of whether they'll be drawn at all)
+					nw_corner_cutaway = see_in_neighbors[0][0];
+					sw_corner_cutaway = see_in_neighbors[0][1];
+					se_corner_cutaway = see_in_neighbors[1][1];
+					ne_corner_cutaway = see_in_neighbors[1][0];
+					
+					//figure out if any of them will be drawn (to account for BoA's strangeness - if a corner wall is
+					//drawn on a space, all the other terrain on that space [except sometimes other walls] is drawn)
+					is_wall_corner = (nw_corner == 1 || nw_corner == 2) || (sw_corner == 1 || sw_corner == 2) || 
+					(se_corner == 1 || se_corner == 2) || (ne_corner == 1 || ne_corner == 2);
+				
+					//draw nw, ne, sw corners if they should be drawn
+					if(sw_corner == 1 || sw_corner == 2) {
+						a.clear_graphic_id_type();
+						a.which_icon = sw_corner_cutaway ? 9 : 8;
+						if(editing_town == FALSE) {
+							//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
+							//not that that situation would happen
+							a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
+							wall_height = ((sw_corner == 1) ? 2 : 1);
+						}
+						else if(sw_corner == 1) {
+							a.which_sheet = town.wall_1_sheet;
+							wall_height = town.wall_1_height;
+						}
+						else if(sw_corner == 2) {
+							a.which_sheet = town.wall_2_sheet;
+							wall_height = town.wall_2_height;
+						}
+						if(sw_corner_cutaway)
+							wall_height = 1;
+						for(i = 0; i < wall_height; i++) {
+							place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x,
+							center_of_current_square_y - i * 35,TRUE,to_whole_area_rect,lighting);
+						}
+					}
+					if(nw_corner == 1 || nw_corner == 2) {
+						a.clear_graphic_id_type();
+						a.which_icon = nw_corner_cutaway ? 9 : 8;
+						if(editing_town == FALSE) {
+							//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
+							//not that that situation would happen
+							a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
+							wall_height = ((nw_corner == 1) ? 2 : 1);
+						}
+						else if(nw_corner == 1) {
+							a.which_sheet = town.wall_1_sheet;
+							wall_height = town.wall_1_height;
+						}
+						else if(nw_corner == 2) {
+							a.which_sheet = town.wall_2_sheet;
+							wall_height = town.wall_2_height;
+						}
+						if(nw_corner_cutaway)
+							wall_height = 1;
+						for(i = 0; i < wall_height; i++) {
+							place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x + 18,
+							(center_of_current_square_y - 12) - i * 35,TRUE,to_whole_area_rect,lighting);
+						}
+					}
+					if(ne_corner == 1 || ne_corner == 2) {
+						a.clear_graphic_id_type();
+						a.which_icon = ne_corner_cutaway ? 9 : 8;
+						if(editing_town == FALSE) {
+							//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
+							//not that that situation would happen
+							a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
+							wall_height = ((ne_corner == 1) ? 2 : 1);
+						}
+						else if(ne_corner == 1) {
+							a.which_sheet = town.wall_1_sheet;
+							wall_height = town.wall_1_height;
+						}
+						else if(ne_corner == 2) {
+							a.which_sheet = town.wall_2_sheet;
+							wall_height = town.wall_2_height;
+						}
+						if(ne_corner_cutaway)
+							wall_height = 1;
+						for(i = 0; i < wall_height; i++) {
+							place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x,
+							center_of_current_square_y - i * 35,FALSE,to_whole_area_rect,lighting);
+						}
+					}
+				
+					if(!terrain_in_front) {
+						if (t_to_draw > 0) {
+							draw_terrain_3D(t_to_draw, x, y, cur_out.x + sector_offset_x, cur_out.y + sector_offset_y, center_of_current_square_x, center_of_current_square_y, see_in_neighbors, is_wall_corner, to_whole_area_rect, lighting);
+						}
+					}
+							// Town mode: draw all instances
+					if (editing_town && see_in) {
+						draw_town_objects_3D(x,y,center_of_current_square_x,center_of_current_square_y,to_whole_area_rect,lighting);
+					}
+				
+					if(terrain_in_front) {
+						if (t_to_draw > 0) {
+							draw_terrain_3D(t_to_draw, x, y, cur_out.x + sector_offset_x, cur_out.y + sector_offset_y, center_of_current_square_x, center_of_current_square_y, see_in_neighbors, is_wall_corner, to_whole_area_rect, lighting);
+						}
+					}
+				
+					//draw se corner if it should be drawn
+					if(se_corner == 1 || se_corner == 2) {
+						a.clear_graphic_id_type();
+						a.which_icon = se_corner_cutaway ? 9 : 8;
+						if(editing_town == FALSE) {
+							//yes, even if it's a neigboring sector with a different is_on_surface value, it gets displayed like the current sector
+							//not that that situation would happen
+							a.which_sheet = ((current_terrain.is_on_surface) ? 616 : 614);
+							wall_height = ((se_corner == 1) ? 2 : 1);
+						}
+						else if(se_corner == 1) {
+							a.which_sheet = town.wall_1_sheet;
+							wall_height = town.wall_1_height;
+						}
+						else if(se_corner == 2) {
+							a.which_sheet = town.wall_2_sheet;
+							wall_height = town.wall_2_height;
+						}
+						if(se_corner_cutaway)
+							wall_height = 1;
+						for(i = 0; i < wall_height; i++) {
+							place_corner_wall_icon_into_ter_3D_large(a,center_of_current_square_x + 18,
+							(center_of_current_square_y + 12) - i * 35,TRUE,to_whole_area_rect,lighting);
+						}
+					}
+				}
+			
+				//outdoor mode
+				if(!editing_town && see_in) {
+					//Hill terrains effectively modify the height of the square's corners, raising some of them by (almost) one elevation level.
+					hill_ability = scen_data.scen_ter_types[t_to_draw].special;
+					height_adjust_right = height_adjust_left = height_adjust_bottom = height_adjust_top = 
+										height_adjust_center = scen_data.scen_ter_types[t_to_draw].height_adj;
+					//if it's actually a HILL ability...
+					if(hill_ability >= 19 && hill_ability <= 30) {
+						hill_ability -= 19;
+						
+						if(hill_c_heights[hill_ability][3])
+							height_adjust_right += 10;
+							
+						if(hill_c_heights[hill_ability][1])
+							height_adjust_left += 10;
+						
+						if(hill_c_heights[hill_ability][2])
+							height_adjust_bottom += 10;
+							
+						if(hill_c_heights[hill_ability][0])
+							height_adjust_top += 10;
+					}
+				
+					// Preset monsters
+					for (i = 0; i < 8; i++) {
+						if ((drawing_terrain->preset[i].start_loc.x > 0) &&
+						(drawing_terrain->preset[i].start_loc.x == x) && (drawing_terrain->preset[i].start_loc.y == y)) {
+							a = (scen_data.scen_creatures[drawing_terrain->preset[i].hostile[0]].char_graphic);
+							a.which_icon = (scen_data.scen_creatures[drawing_terrain->preset[i].hostile[0]].small_or_large_template) ? (5 * 4) : (3 * 4);
+							if (a.not_legit() == FALSE) {
+								if(drawing_terrain->preset[i].hostile_amount[0] == 0) {//do nothing
 							}
 							else if(drawing_terrain->preset[i].hostile_amount[0] < 4) {
 								if(place_outdoor_creature_icon_into_ter_3D_large(a,center_of_current_square_x + 15,center_of_current_square_y - 11 - height_adjust_center,to_whole_area_rect,lighting) == FALSE)
@@ -2814,19 +2708,16 @@ void draw_ter_3D_large()
 						cant_draw_graphics_error(a,"Make sure that the editor and the current version of 3D Editor Graphics are in the folder 'Blades of Avernum Files'.",0);
 				}
 			}
-			if(editing_town && see_in) {
-				
-				//draw the imaginary player
-				if(cur_viewing_mode == 11 && x == cen_x && y == cen_y) {
-					a.which_sheet = 4917;
-					a.which_icon = 0;
-					a.graphic_adjust = 0;
-					if(place_icon_into_ter_3D_large(a,center_of_current_square_x,center_of_current_square_y - scen_data.scen_ter_types[t_to_draw].height_adj,to_whole_area_rect,lighting) == FALSE)
-						cant_draw_graphics_error(a,"Make sure that the editor and the current version of 3D Editor Graphics are in the folder 'Blades of Avernum Files'.",0);
+			if(editing_town && see_in) {	
+	            //draw the imaginary player
+	            if(cur_viewing_mode == 11 && x == cen_x && y == cen_y) {
+	                a.which_sheet = 4917;
+	                a.which_icon = 0;
+	                a.graphic_adjust = 0;
+	                if(place_icon_into_ter_3D_large(a,center_of_current_square_x,center_of_current_square_y - scen_data.scen_ter_types[t_to_draw].height_adj,to_whole_area_rect,lighting) == FALSE)
+					    cant_draw_graphics_error(a,"Make sure that the editor and the current version of 3D Editor Graphics are in the folder 'Blades of Avernum Files'.",0);
 				}
-			}
-			
-			
+			}	
 		}
 	}
 
@@ -2849,28 +2740,24 @@ void draw_ter_3D_large()
 	corner_to = whole_area_rect;
 	corner_to.right = corner_to.left + 44;
 	corner_to.bottom = corner_to.top + 44;
-//	SetRECT(corner_from,130,223,174,267);
 	SetRECT(corner_from,129,222,174,267);
 	rect_draw_some_item(mixed_gworld,corner_from,ter_draw_gworld,corner_to,1,0);
 	
 	corner_to = whole_area_rect;
 	corner_to.left = corner_to.right - 44;
 	corner_to.bottom = corner_to.top + 44;
-//	SetRECT(corner_from,176,223,220,267);
 	SetRECT(corner_from,175,222,220,267);
 	rect_draw_some_item(mixed_gworld,corner_from,ter_draw_gworld,corner_to,1,0);
 	
 	corner_to = whole_area_rect;
 	corner_to.left = corner_to.right - 44;
 	corner_to.top = corner_to.bottom - 44;
-//	SetRECT(corner_from,176,269,220,313);
 	SetRECT(corner_from,175,268,220,313);
 	rect_draw_some_item(mixed_gworld,corner_from,ter_draw_gworld,corner_to,1,0);
 	
 	corner_to = whole_area_rect;
 	corner_to.right = corner_to.left + 44;
 	corner_to.top = corner_to.bottom - 44;
-//	SetRECT(corner_from,130,269,174,313);
 	SetRECT(corner_from,129,268,174,313);
 	rect_draw_some_item(mixed_gworld,corner_from,ter_draw_gworld,corner_to,1,0);
 	
@@ -2894,16 +2781,10 @@ void draw_ter_3D_large()
 	to_rect = whole_area_rect;
 	OffsetRect(&to_rect,TER_RECT_UL_X,TER_RECT_UL_Y);
 	rect_draw_some_item(ter_draw_gworld,
-		whole_area_rect,ter_draw_gworld,to_rect,0,1);			
-	
+		whole_area_rect,ter_draw_gworld,to_rect,0,1);
 
 	small_any_drawn = FALSE;
-	//if (cur_viewing_mode == 0) 
-	//	draw_frames();
-
 }
-// q_3DModEnd
-
 
 void draw_ter_large()
 {
@@ -2911,7 +2792,6 @@ void draw_ter_large()
 	location where_draw;
 	short t_to_draw,floor_to_draw,height_to_draw,terrsc_to_draw;
 	RECT to_rect;
-//	RECT tiny_to_base = {15,15,22,22};
 	graphic_id_type a;
 	char str[256];
 	HBITMAP store_bmp;
@@ -2948,14 +2828,12 @@ void draw_ter_large()
 			whole_area_rect,ter_draw_gworld,to_rect,0,1);			
 
 		return;
-		}
+	}
 		
-	//SetPort(mainPtr);
 	for (q = 0; q < 9; q++) 
 		for (r = 0; r < 9; r++) {
 			where_draw.x = (t_coord)q; where_draw.y = (t_coord)r;
 
-// q_3DModStart
 			if((editing_town == FALSE) && ((cen_x + q - 4 <= -1) || (cen_x + q - 4 >= 48) || (cen_y + r - 4 <= -1) || (cen_y + r - 4 >= 48)) ) {
 				short sector_offset_x = ((cen_x + q - 4 <= -1) ? -1 : ((cen_x + q - 4 >= 48) ? 1 : 0));
 				short sector_offset_y = ((cen_y + r - 4 <= -1) ? -1 : ((cen_y + r - 4 >= 48) ? 1 : 0));
@@ -3147,13 +3025,11 @@ void draw_ter_large()
 				to_rect.left = to_rect.right - 29;
 				win_draw_string_outline(main_dc5,to_rect,str,2,10);
 				}
-				
-// q_3DModStart
+			
 			if(((editing_town == FALSE) && ((cen_x + q - 4 <= -1) || (cen_x + q - 4 >= 48) || (cen_y + r - 4 <= -1) || (cen_y + r - 4 >= 48))) ||
 			(editing_town == TRUE) && ((cen_x + q - 4 <= -1) || (cen_x + q - 4 >= max_dim[town_type]) || (cen_y + r - 4 <= -1) || (cen_y + r - 4 >= max_dim[town_type])) ) {
 				continue;
 			}
-// q_3DModEnd
 
 			put_rect_in_gworld(main_dc5,large_edit_ter_rects[q][r],0,0,0);
 
@@ -3203,70 +3079,68 @@ void draw_ter_large()
 			  	
 			// then town only tiny icons
 			if (editing_town) {
-				for (i = 0; i < 4; i++)		
+				for (i = 0; i < 4; i++){	
 					if (same_point(loc_drawn,town.start_locs[i])) {
 						place_ter_icon_on_tile(q,r,small_icon_position,i);
 						small_icon_position++;
+					}
+                }
 
-						}	
-
-
-				for (i = 0; i < NUM_WAYPOINTS; i++)		
+				for (i = 0; i < NUM_WAYPOINTS; i++){	
 					if (same_point(loc_drawn,town.waypoints[i])) {
 						place_ter_icon_on_tile(q,r,small_icon_position,10 + i);
 						small_icon_position++;
-						}	
-
-				for (i = 0; i < 6; i++)		
+					}	
+                }
+				for (i = 0; i < 6; i++)	{	
 					if (same_point(loc_drawn,town.respawn_locs[i])) {
 						place_ter_icon_on_tile(q,r,small_icon_position,24);
 						small_icon_position++;
-						}	
-
+					}	
+                }
 				// start scenario icon
 				if ((scenario.start_in_what_town == cur_town) && (same_point(loc_drawn,scenario.what_start_loc_in_town))) {
 					place_ter_icon_on_tile(q,r,small_icon_position,23);
 					small_icon_position++;
-					}
+				}
 
 					
 				// blocked spaces
 				if (is_blocked(loc_drawn.x,loc_drawn.y)) {
 					place_ter_icon_on_tile(q,r,small_icon_position,22);
 					small_icon_position++;
-					}			
-				}
+				}			
+			}
 			SelectObject(main_dc5,DibBitmapHandle(ter_draw_gworld));
 			
 			// Outdoor mode: draw tiny icons
-			if (editing_town == FALSE) {
-
+			if (editing_town == FALSE){
 				SelectObject(main_dc5,store_bmp);
 				
 				// WANDERING MONST ICON
-				for (i = 0; i < 4; i++)		
+				for (i = 0; i < 4; i++){	
 					if (same_point(loc_drawn,current_terrain.wandering_locs[i])) {
 						place_ter_icon_on_tile(q,r,small_icon_position,24);
 						small_icon_position++;
-						}	
-
+					}	
+                }
 				// Preset MONST ICON
-				for (i = 0; i < 8; i++)		
+				for (i = 0; i < 8; i++){	
 					if ((current_terrain.preset[i].start_loc.x > 0) &&
 					  (same_point(loc_drawn,current_terrain.preset[i].start_loc))) {
 						place_ter_icon_on_tile(q,r,small_icon_position,25);
 						small_icon_position++;
-						}	
-				
+					}
+				}
 				// start scenario icon
 				if ((same_point(cur_out,scenario.what_outdoor_section_start_in)) && 
 				  (same_point(loc_drawn,scenario.start_where_in_outdoor_section))) {
 					place_ter_icon_on_tile(q,r,small_icon_position,23);
 					small_icon_position++;
-					}
-				SelectObject(main_dc5,DibBitmapHandle(ter_draw_gworld));
 				}
+				SelectObject(main_dc5,DibBitmapHandle(ter_draw_gworld));
 			}
+		}
 	
 
 	// draw Various Rectangles
@@ -3275,9 +3149,9 @@ void draw_ter_large()
 	MacInsetRect(&clip_rect,15,15);
 
 	// Town mode: special encs and other rectangles
-	if (editing_town) {
-		for (i = 0; i < NUM_TOWN_PLACED_SPECIALS; i++)
-			if (town.spec_id[i] != kNO_TOWN_SPECIALS) {
+	if (editing_town){
+		for (i = 0; i < NUM_TOWN_PLACED_SPECIALS; i++){
+			if (town.spec_id[i] != kNO_TOWN_SPECIALS){
 				rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (town.special_rects[i].left - cen_x + 4);
 				rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (town.special_rects[i].right - cen_x + 4 + 1) - 1;
 				rectangle_draw_rect.top = 15 + BIG_SPACE_SIZE * (town.special_rects[i].top - cen_y + 4);
@@ -3286,7 +3160,8 @@ void draw_ter_large()
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,200,200,255);
 				MacInsetRect(&rectangle_draw_rect,1,1);
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,0,0,255);
-				}
+			}
+        }
 		// zone border rect
 		rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (town.in_town_rect.left - cen_x + 4);
 		rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (town.in_town_rect.right - cen_x + 4 + 1) - 1;
@@ -3296,7 +3171,7 @@ void draw_ter_large()
 		put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,255,0,0); 
 		
 		// description rects
-		for (i = 0; i < 16; i++)
+		for (i = 0; i < 16; i++){
 			if (town.room_rect[i].right > 0) {
 				rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (town.room_rect[i].left - cen_x + 4);
 				rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (town.room_rect[i].right - cen_x + 4 + 1) - 1;
@@ -3304,12 +3179,13 @@ void draw_ter_large()
 				rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (town.room_rect[i].bottom - cen_y + 4 + 1) - 1;				
 				MacInsetRect(&rectangle_draw_rect,4,4);
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,0,255,0);
-				}
-		}
+			}
+        }
+	}
 	// Outdoor mode: special encs and other rectangles
-	if (editing_town == FALSE) {
+	if (editing_town == FALSE){
 		// town entry rects
-		for (i = 0; i < 8; i++)
+		for (i = 0; i < 8; i++){
 			if ((current_terrain.exit_rects[i].right > 0) && (current_terrain.exit_dests[i] >= 0)) {
 				rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (current_terrain.exit_rects[i].left - cen_x + 4);
 				rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (current_terrain.exit_rects[i].right - cen_x + 4 + 1) - 1;
@@ -3317,10 +3193,10 @@ void draw_ter_large()
 				rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (current_terrain.exit_rects[i].bottom - cen_y + 4 + 1) - 1;				
 				MacInsetRect(&rectangle_draw_rect,1,1);
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,255,0,255);
-				}
-				
+			}
+        }				
 		// special enc rects
-		for (i = 0; i < NUM_OUT_PLACED_SPECIALS; i++)
+		for (i = 0; i < NUM_OUT_PLACED_SPECIALS; i++){
 			if (current_terrain.spec_id[i] != kNO_OUT_SPECIALS) {
 				rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (current_terrain.special_rects[i].left - cen_x + 4);
 				rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (current_terrain.special_rects[i].right - cen_x + 4 + 1) - 1;
@@ -3330,10 +3206,10 @@ void draw_ter_large()
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,200,200,255);
 				MacInsetRect(&rectangle_draw_rect,1,1);
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,0,0,255);
-				}
-		
+			}
+        }
 		// description rects
-		for (i = 0; i < 8; i++)
+		for (i = 0; i < 8; i++){
 			if (current_terrain.info_rect[i].right > 0) {
 				rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (current_terrain.info_rect[i].left - cen_x + 4);
 				rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (current_terrain.info_rect[i].right - cen_x + 4 + 1) - 1;
@@ -3341,8 +3217,9 @@ void draw_ter_large()
 				rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (current_terrain.info_rect[i].bottom - cen_y + 4 + 1) - 1;				
 				MacInsetRect(&rectangle_draw_rect,4,4);
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,0,255,0);
-				}
-		}
+			}
+        }
+	}
 				
 	SelectObject(main_dc5,store_font);
 	SelectObject(main_dc5,store_bmp);
@@ -3353,11 +3230,7 @@ void draw_ter_large()
 	rect_draw_some_item(ter_draw_gworld,
 		whole_area_rect,ter_draw_gworld,to_rect,0,1);			
 	
-
 	small_any_drawn = FALSE;
-	//if (cur_viewing_mode == 0) 
-	//	draw_frames();
-	
 }
 
 void place_ter_icon_on_tile(short tile_x,short tile_y,short position,short which_icon)
@@ -3370,10 +3243,7 @@ void place_ter_icon_on_tile(short tile_x,short tile_y,short position,short which
 	RECT tiny_from = base_small_button_from;
 	OffsetRect(&tiny_from,10 * (which_icon % 10),10 * (which_icon / 10));
 	rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
-
 }
-
-
 
 // obj_num is num of object to drawn (in zone's list of objects)
 // loc_game_rect is rect on screen of object being drawn
@@ -3387,7 +3257,7 @@ void draw_creature(HDC ter_hdc,HBITMAP store_bmp,short creature_num,location loc
 	if (town.creatures[creature_num].exists() == FALSE)
 		return;
 		
-	if (same_point(town.creatures[creature_num].start_loc,loc_drawn)) {
+	if (same_point(town.creatures[creature_num].start_loc,loc_drawn)){
 		RECT base_rect = large_edit_ter_rects[in_square_x][in_square_y];
 		a = scen_data.scen_creatures[town.creatures[creature_num].number].char_graphic;
 
@@ -3399,20 +3269,19 @@ void draw_creature(HDC ter_hdc,HBITMAP store_bmp,short creature_num,location loc
 		short obj_index = safe_get_index_of_sheet(&a);
 		if (obj_index < 0) {
 			cant_draw_graphics_error(a,"Error was for creature type",town.creatures[creature_num].number);
-			}		
-			else rect_draw_some_item(graphics_library[obj_index],
-				from_rect,ter_draw_gworld,to_rect,0,0);
+		}		
+		else 
+            rect_draw_some_item(graphics_library[obj_index], from_rect,ter_draw_gworld,to_rect,0,0);
 
 		if (town.creatures[creature_num].start_attitude >= 4)
 			r = 255;
-			else if (town.creatures[creature_num].start_attitude < 3)
-				b = 255;
+		else if (town.creatures[creature_num].start_attitude < 3)
+			b = 255;
 		if (town.creatures[creature_num].hidden_class > 0) 
 			g = 255;
 
 		SelectObject(ter_hdc,DibBitmapHandle(ter_draw_gworld));
-		put_rect_in_gworld(ter_hdc,to_rect,
-		  r,g,b);
+		put_rect_in_gworld(ter_hdc,to_rect,r,g,b);
 
 		// do facing
 		RECT facing_to_rect = to_rect;
@@ -3422,17 +3291,15 @@ void draw_creature(HDC ter_hdc,HBITMAP store_bmp,short creature_num,location loc
 			case 1: MacInsetRect(&facing_to_rect,0,3); facing_to_rect.right = facing_to_rect.left + 2; break;
 			case 2: MacInsetRect(&facing_to_rect,3,0); facing_to_rect.top = facing_to_rect.bottom - 2; break;
 			case 3: MacInsetRect(&facing_to_rect,0,3); facing_to_rect.left = facing_to_rect.right - 2; break;
-			}
-		put_rect_in_gworld(ter_hdc,facing_to_rect,
-		  0,0,0);
+		}
+		put_rect_in_gworld(ter_hdc,facing_to_rect,0,0,0);
 		SelectObject(ter_hdc,store_bmp);
 		  
 		// Labels for wandering and hidden
 		if (town.creatures[creature_num].hidden_class > 0) {
 			sprintf(str,"H");
-			}
 		}
-
+	}
 }
 
 void draw_item(HDC ter_hdc,HBITMAP store_bmp,short item_num,location loc_drawn,short in_square_x,short in_square_y)
@@ -3440,7 +3307,6 @@ void draw_item(HDC ter_hdc,HBITMAP store_bmp,short item_num,location loc_drawn,s
 	graphic_id_type a;
 	short icon_to_use;
 	RECT from_rect;
-	
 		
 	if (town.preset_items[item_num].exists() == FALSE)
 		return;
@@ -3466,7 +3332,7 @@ void draw_item(HDC ter_hdc,HBITMAP store_bmp,short item_num,location loc_drawn,s
 			put_rect_in_gworld(ter_hdc,to_rect,0,0,0);
 			SelectObject(ter_hdc,store_bmp);
 			return;
-			}		
+		}		
 		
 		rect_draw_some_item(graphics_library[obj_index],
 			from_rect,ter_draw_gworld,to_rect,0,0);
@@ -3474,8 +3340,7 @@ void draw_item(HDC ter_hdc,HBITMAP store_bmp,short item_num,location loc_drawn,s
 		SelectObject(ter_hdc,DibBitmapHandle(ter_draw_gworld));
 		put_rect_in_gworld(ter_hdc,to_rect,0,0,0);
 		SelectObject(ter_hdc,store_bmp);
-		}
-
+	}
 }
 
 void draw_ter_script(short script_num,location loc_drawn,short in_square_x,short in_square_y)
@@ -3503,10 +3368,8 @@ Boolean place_terrain_icon_into_ter_small(graphic_id_type icon,short in_square_x
 	graphic_id_type a = icon;
 
 	short index = safe_get_index_of_sheet(&a);
-	if (index < 0) {
-		//cant_draw_graphics_error(a);
-		return FALSE;	
-		}		
+	if (index < 0)
+		return FALSE;			
 	SetRECT(from_rect,1 + (TER_BUTTON_SIZE + 1) * (a.which_icon % 10),1 + (TER_BUTTON_SIZE + 1) * (a.which_icon / 10),
 	  1 + (TER_BUTTON_SIZE + 1) * (a.which_icon % 10) + TER_BUTTON_SIZE,1 + (TER_BUTTON_SIZE + 1) * (a.which_icon / 10) + TER_BUTTON_SIZE);
 
@@ -3520,14 +3383,13 @@ Boolean place_terrain_icon_into_ter_small(graphic_id_type icon,short in_square_x
 	return TRUE;
 }
 
-
-
 void reset_small_drawn()
 {
-	for (short q = 0; q < 64; q++) 
-		for (short r = 0; r < 64; r++) {
+	for (short q = 0; q < 64; q++){
+		for (short r = 0; r < 64; r++){
 			small_what_drawn[q][r] = small_what_floor_drawn[q][r] = -1;
-			}
+		}
+    }
 }
 
 void draw_ter_small()
@@ -3535,8 +3397,7 @@ void draw_ter_small()
 	short q,r,i;
 	location where_draw;
 	short t_to_draw,floor_to_draw;
-	RECT to_rect; /**/
-//	RECT tiny_to_base = {29,37,36,44};
+	RECT to_rect;
 	graphic_id_type a;
 	HBITMAP store_bmp;
 	HFONT store_font;
@@ -3550,7 +3411,7 @@ void draw_ter_small()
 		fill_area_rect.left = 0;
 		fill_area_rect.top = small_edit_ter_rects[0][((editing_town) ? max_dim[town_type] : 48)].top;	
  		paint_pattern(ter_draw_gworld,0,fill_area_rect,2);
-		}
+	}
 	
 	RECT whole_area_rect;
 	SetRECT(whole_area_rect,small_edit_ter_rects[0][0].left,small_edit_ter_rects[0][0].top,
@@ -3575,72 +3436,65 @@ void draw_ter_small()
 				// draw floor
 				a = scen_data.scen_floors[floor_to_draw].ed_pic;
 				if (a.not_legit()) {
-					//fill_rect_in_gworld(ter_draw_gworld,small_edit_ter_rects[q][r],230,230,230);
 					fill_rect_in_gworld(main_dc5,small_edit_ter_rects[q][r],230,230,230);
-					}
-					else {
-						SelectObject(main_dc5,store_bmp);
-						if (place_terrain_icon_into_ter_small(a,q,r) == FALSE)
-							cant_draw_graphics_error(a,"Error was for floor type",floor_to_draw);
-						SelectObject(main_dc5,DibBitmapHandle(ter_draw_gworld));
-						}
+				}
+				else {
+					SelectObject(main_dc5,store_bmp);
+					if (place_terrain_icon_into_ter_small(a,q,r) == FALSE)
+						cant_draw_graphics_error(a,"Error was for floor type",floor_to_draw);
+					SelectObject(main_dc5,DibBitmapHandle(ter_draw_gworld));
+				}
 						
 				// draw terrain
-				if (t_to_draw > 0) {
+				if (t_to_draw > 0){
 					SelectObject(main_dc5,store_bmp);
 					a = scen_data.scen_ter_types[t_to_draw].ed_pic;
 					if (a.not_legit() == FALSE) 
 						if (place_terrain_icon_into_ter_small(a,q,r) == FALSE)
 							cant_draw_graphics_error(a,"Error was for terrain type",t_to_draw);
 					SelectObject(main_dc5,DibBitmapHandle(ter_draw_gworld));
-					}
+				}
 
 				small_what_drawn[q][r] = t_to_draw;
 				small_what_floor_drawn[q][r] = floor_to_draw;
-				}
+			}
 
 			// draw creatures
 			if ((editing_town) && (hintbook_mode == 0 || hintbook_mode == 1)) {
-				for (i = 0; i < NUM_TOWN_PLACED_CREATURES; i++)
+				for (i = 0; i < NUM_TOWN_PLACED_CREATURES; i++){
 					if ((town.creatures[i].exists()) && 
 					  (town.creatures[i].start_loc.x == q) && (town.creatures[i].start_loc.y == r)) {
 					  	to_rect = small_edit_ter_rects[q][r];
 					  	MacInsetRect(&to_rect,1,1);
 						if (town.creatures[i].start_attitude < 3)
 							put_rect_in_gworld(main_dc5,to_rect,0,255,0);
-							else if (town.creatures[i].start_attitude > 3)
-								put_rect_in_gworld(main_dc5,to_rect,255,0,0);
-								else put_rect_in_gworld(main_dc5,to_rect,0,0,255);
-						
-						}	
+						else if (town.creatures[i].start_attitude > 3)
+							put_rect_in_gworld(main_dc5,to_rect,255,0,0);
+						else
+                            put_rect_in_gworld(main_dc5,to_rect,0,0,255);
+					}
 				}
 			}
+        }
+    small_any_drawn = TRUE;
 
-	small_any_drawn = TRUE;
-
-	 put_rect_in_gworld( main_dc5,terrain_rect_gr_size,0,0,0);
+put_rect_in_gworld( main_dc5,terrain_rect_gr_size,0,0,0);
 
 	// draw grid of lines
-			if ((hintbook_mode == 0) || (hintbook_mode == 2)) {
-		for (i = 1; i < 64; i++) {
-			if (i % 8 == 0) {
+	if ((hintbook_mode == 0) || (hintbook_mode == 2)) {
+		for (i = 1; i < 64; i++){
+			if (i % 8 == 0)
 				put_line_in_gworld(main_dc5,0,SMALL_SPACE_SIZE * i,SMALL_SPACE_SIZE * MAX_TOWN_SIZE - 1,SMALL_SPACE_SIZE * i,3 * 8,3 * 8,6 * 8);
-				}
-			if (i % 8 == 4) {
+			if (i % 8 == 4)
 				put_line_in_gworld(main_dc5,0,SMALL_SPACE_SIZE * i,SMALL_SPACE_SIZE * MAX_TOWN_SIZE - 1,SMALL_SPACE_SIZE * i,10 * 8,10 * 8,20 * 8);
-				}
-			}
-		for (i = 1; i < 64; i++) {
-			if (i % 8 == 0) {
-				put_line_in_gworld(main_dc5,SMALL_SPACE_SIZE * i,0,SMALL_SPACE_SIZE * i,SMALL_SPACE_SIZE * MAX_TOWN_SIZE - 1,3 * 8,3 * 8,6 * 8);
-				}
-			if (i % 8 == 4) {
-				put_line_in_gworld(main_dc5,SMALL_SPACE_SIZE * i,0,SMALL_SPACE_SIZE * i,SMALL_SPACE_SIZE * MAX_TOWN_SIZE - 1,10 * 8,10 * 8,20 * 8);
-				}
-			}
-		
-
 		}
+		for (i = 1; i < 64; i++){
+			if (i % 8 == 0)
+				put_line_in_gworld(main_dc5,SMALL_SPACE_SIZE * i,0,SMALL_SPACE_SIZE * i,SMALL_SPACE_SIZE * MAX_TOWN_SIZE - 1,3 * 8,3 * 8,6 * 8);
+			if (i % 8 == 4)
+				put_line_in_gworld(main_dc5,SMALL_SPACE_SIZE * i,0,SMALL_SPACE_SIZE * i,SMALL_SPACE_SIZE * MAX_TOWN_SIZE - 1,10 * 8,10 * 8,20 * 8);
+		}
+	}
 
 	SelectObject(main_dc5,store_font);
 	SelectObject(main_dc5,store_bmp);
@@ -3650,29 +3504,22 @@ void draw_ter_small()
 	OffsetRect(&to_rect,TER_RECT_UL_X,TER_RECT_UL_Y);
 	rect_draw_some_item(ter_draw_gworld,
 		whole_area_rect,ter_draw_gworld,to_rect,0,1);			
-
 }
-
 
 void draw_terrain()
 {
-	
 	if (cur_viewing_mode == 0) 
 		draw_ter_large();
 		
 	if (cur_viewing_mode == 1) 
 		draw_ter_small();
 
-// q_3DModStart
 	if (cur_viewing_mode == 10 || cur_viewing_mode == 11) 
 		draw_ter_3D_large();
-// q_3DModEnd
 
 	place_left_text();
 	
-	place_right_buttons(/* 0 */);
-
-	//rect_draw_some_item(ter_draw_gworld,terrain_rect,ter_draw_gworld,world_screen,0,1);
+	place_right_buttons();
 }
 
 // Takes care of everything on the left side of the screen that isn't terrain. 
@@ -3694,9 +3541,9 @@ void place_left_text()
 		char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);		
 		SelectObject(main_dc,store_font);
 		return;
-		}
+	}
 		
-	if (editing_town) {
+	if (editing_town){
 		// Erase and draw bottom text strs
 		if ((selected_item_number >= 7000) && (selected_item_number < 7000 + NUM_TOWN_PLACED_CREATURES)) {
 			sprintf((char *) draw_str,"Creature %d: %s",(int)(selected_item_number % 1000 + 6),
@@ -3714,8 +3561,8 @@ void place_left_text()
 			
 			if (strlen(town.creatures[selected_item_number % 1000].char_script) <= 0)
 				sprintf((char *) draw_str,"  Script: Default");
-				else sprintf((char *) draw_str,"  Script: %s",
-			  	 town.creatures[selected_item_number % 1000].char_script);
+			else sprintf((char *) draw_str,"  Script: %s",
+			  	town.creatures[selected_item_number % 1000].char_script);
 			char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
 
 			sprintf((char *) draw_str,"  Personality: %d",
@@ -3747,8 +3594,8 @@ void place_left_text()
 				sprintf((char *) draw_str,"  Memory Cell %d: %d",
 				   (int)i, (int)town.creatures[selected_item_number % 1000].memory_cells[i]);
 				char_win_draw_string(main_dc,left_text_lines[i + 10],(char *) draw_str,2,10);
-				}
 			}
+		}
 			
 			
 		if ((selected_item_number >= 9000) && (selected_item_number < 9000 + NUM_TER_SCRIPTS)) {
@@ -3762,7 +3609,7 @@ void place_left_text()
 				sprintf((char *) draw_str,"  Memory Cell %d: %d",
 				   (int)i, (int)town.ter_scripts[selected_item_number % 1000].memory_cells[i]);
 				char_win_draw_string(main_dc,left_text_lines[i + 2],(char *) draw_str,2,10);
-				}
+			}
 
 			sprintf((char *) draw_str,"  Script Location: x = %d, y = %d",
 				   (int)town.ter_scripts[selected_item_number % 1000].loc.x,
@@ -3777,9 +3624,8 @@ void place_left_text()
 				sprintf((char *) draw_str,"  Memory Cell %d: %d",
 				   (int)i, (int)town.ter_scripts[selected_item_number % 1000].memory_cells[i]); 
 				char_win_draw_string(main_dc,left_text_lines[i + 4],(char *) draw_str,2,10);
-				}
 			}
-
+		}
 
 		if ((selected_item_number >= 11000) && (selected_item_number < 11000 + NUM_TOWN_PLACED_ITEMS)) {
 
@@ -3836,10 +3682,8 @@ void place_left_text()
 			for (short i = 11; i < 14; i++) {
 				sprintf((char *) draw_str,"  ");
 				char_win_draw_string(main_dc,left_text_lines[i],(char *) draw_str,2,10);
-				}
-				}
-
-
+			}
+		}
 
 		if (selected_item_number < 0) {
 			sprintf((char *) draw_str,"Editing Town/Dungeon %d", (int)cur_town); 
@@ -3859,10 +3703,9 @@ void place_left_text()
 			char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);		
 			sprintf((char *) draw_str,"Numerical Display Mode:  %d",numerical_display_mode);
 			char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
-			}
+		}
 	SelectObject(main_dc,store_font);
 }
-
 
 // Draws the whole or part of the button and location area to right
 // mode: 0 - draw whole thing
@@ -3870,23 +3713,22 @@ void place_left_text()
 void place_right_buttons( /* short mode */ )
 {
 	RECT to_rect;
-//	RECT whole_palette_from = {0,0,201,86}; /**/
 	char draw_str[256];
 
 	HBITMAP store_bmp;
 	HFONT store_font;
 
-	for (short i = 0; i < 6; i++) {
+	for (short i = 0; i < 6; i++){
  		paint_pattern(terrain_buttons_gworld,0,right_text_lines[i],2);
-		}
+	}
 	
-	if (file_is_loaded == FALSE) {
+	if (file_is_loaded == FALSE){
 		to_rect = terrain_buttons_rect;
 		OffsetRect(&to_rect,RIGHT_BUTTONS_X_SHIFT,0);
 		rect_draw_some_item(terrain_buttons_gworld,terrain_buttons_rect,
 			terrain_buttons_gworld,to_rect,0,1); 
 		return;
-		}
+	}
 
 	SetBkMode(main_dc4,TRANSPARENT);
 	store_font = (HFONT) SelectObject(main_dc4,bold_font);
@@ -3908,12 +3750,12 @@ void place_right_buttons( /* short mode */ )
 		if (current_height_mode == 0)
 			char_win_draw_string(main_dc4,right_text_lines[4],"Automatic Hills: OFF",2,12);
 			else char_win_draw_string(main_dc4,right_text_lines[4],"Automatic Hills: ON",2,12);
-		}
+	}
 	else {
  		if (editing_town) {
 			sprintf((char *) draw_str,"Editing Town/Dungeon %d", (int)cur_town);
 			char_win_draw_string(main_dc4,right_text_lines[4],(char *) draw_str,2,12);
-			}
+		}
 		else {
 			sprintf((char *) draw_str,"Section X = %d, Y = %d", (int)cur_out.x, (int)cur_out.y);
 			char_win_draw_string(main_dc4,right_text_lines[4],(char *) draw_str,2,12);
@@ -3926,12 +3768,11 @@ void place_right_buttons( /* short mode */ )
 		else {
 			sprintf((char *) draw_str,"  %s",current_terrain.name);
 			char_win_draw_string(main_dc4,right_text_lines[5],(char *) draw_str,2,12);
-		}
-
-		}
+        }
+    }
 
 	// palette buttons
-	for (short i = 0; i < 8; i++)
+	for (short i = 0; i < 8; i++){
 		for (short j = 0; j < ((editing_town == TRUE) ? 6 : 3); j++) {
 			//RECT from_rect = {PALETTE_BUT_HEIGHT * j,PALETTE_BUT_WIDTH * 1,
 			//	PALETTE_BUT_HEIGHT * (j + 1),PALETTE_BUT_WIDTH * (i + 1)};
@@ -3939,21 +3780,18 @@ void place_right_buttons( /* short mode */ )
 			RECT from_rect = to_rect;
 			ZeroRectCorner(&from_rect);
 
-// q_3DModStart
 			if(cur_viewing_mode >= 10 && i == 0 && j == 1)		// realistic mode palette icon - not working
 				OffsetRect(&from_rect,PALETTE_BUT_WIDTH * 7,PALETTE_BUT_HEIGHT * 6);
 			else
 				OffsetRect(&from_rect,PALETTE_BUT_WIDTH * i,PALETTE_BUT_HEIGHT * j);
-// q_3DModEnd
 
 			to_rect.right++;
 			from_rect.right++;
 			
 			rect_draw_some_item(editor_mixed,
 				from_rect,terrain_buttons_gworld,to_rect,0,0);
-			
-			}
-
+		}
+    }
 		
 	// place buttons on screen
 	to_rect = terrain_buttons_rect;
@@ -3971,19 +3809,17 @@ void place_right_buttons( /* short mode */ )
 		case 2: selected_ter = current_terrain_drawn; 
 			short draw_position = selected_ter - 12 * GetControlValue(right_sbar);
 
-// q_3DModStart
 			if (draw_position != minmax(0,(cur_viewing_mode >= 10) ? 227 : 263,draw_position))
 				selected_ter = -1;
-				else to_rect = ((cur_viewing_mode >= 10) ? terrain_rects_3D[draw_position] : terrain_rects[draw_position]);
-// q_3DModEnd
-
+			else
+                to_rect = ((cur_viewing_mode >= 10) ? terrain_rects_3D[draw_position] : terrain_rects[draw_position]);
 			break;
-		}	
+	}	
 	if (selected_ter >= 0) {
 		OffsetRect(&to_rect,RIGHT_BUTTONS_X_SHIFT,0);
 		MacInsetRect(&to_rect,-1,-1);
 		put_rect_on_screen(main_dc,to_rect,0,0,0);
-		}
+	}
 	SelectObject(main_dc4,store_font);
 	SelectObject(main_dc4,store_bmp);
 }
@@ -3991,10 +3827,8 @@ void place_right_buttons( /* short mode */ )
 void set_string(char *string,char *string2)
 {
 	strcpy((char *)current_string,string);
-
 	strcpy((char *)current_string2,string2);
-
-	place_right_buttons(/* 0 */);
+	place_right_buttons();
 }
 
 /*
@@ -4018,7 +3852,6 @@ Boolean container_there(location l)
 
 void win_draw_string_outline(HDC dest_hdc,RECT dest_rect,char *str,short mode,short line_height)
 {
-
 	SetTextColor(dest_hdc,RGB(255,255,255));
 	OffsetRect(&dest_rect,1,0);
 	char_win_draw_string(dest_hdc,dest_rect,str,mode,line_height);
@@ -4032,16 +3865,13 @@ void win_draw_string_outline(HDC dest_hdc,RECT dest_rect,char *str,short mode,sh
 	
 	SetTextColor(dest_hdc,RGB(0,0,0));
 	char_win_draw_string(dest_hdc,dest_rect,str,mode,line_height);
-
 }
 
 void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode, short /* line_height*/)
 {
 	char store_s[256];
-	
 	strcpy((char *) store_s,str);
 	win_draw_string( dest_window, dest_rect,store_s, mode /*, line_height */);
-
 }
 
 // mode: 0 - align up and left, 1 - center on one line
@@ -4057,7 +3887,7 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode /*,short l
 			str[i] = 13;
 		if (str[i] == '_')
       	str[i] = 34;
-		}
+	}
 	// if dest is main window, add ulx, uly
 	if (dest_hdc == main_dc)
 		OffsetRect(&dest_rect,ulx,uly);
@@ -4073,21 +3903,10 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode /*,short l
 			dest_rect.bottom += 6; dest_rect.top -= 6;
 			DrawText(dest_hdc,str,(int)strlen((char *)str),&dest_rect,
 			DT_LEFT | DT_VCENTER | DT_NOCLIP | DT_SINGLELINE); break;
-		}
+	}
 	// not yet done adjusts for 1, 2, 3
-	
-}
-/*
-void c2p(char *str) 
-{
-
 }
 
-void p2c(char *str)
-{
-
-}
-*/
 //returns a string from one of a number of sets, listed below. 
 //this is used to build up lists of things that have customized 
 //names in the scenario, like cretaures or towns
@@ -4172,7 +3991,6 @@ Boolean refresh_graphics_library()
 	return TRUE;
 }
 
-
 // Adds a new sheet into library. Returns FALSE if at end of procedure sheet
 // is not safely there.
 // Not e that the which_icon field of new_sheet is ignored.
@@ -4200,7 +4018,6 @@ Boolean load_sheet_into_library(graphic_id_type *new_sheet)
 	
 	num_sheets_in_library++;
 	return TRUE;
-	
 }
 
 // Returns the number of the sheet witht he right characteristics.
@@ -4231,7 +4048,7 @@ short safe_get_index_of_sheet(graphic_id_type *sheet)
 		index = get_index_of_sheet(sheet);
 		if (index < 0)
 			return -1;
-		}
+	}
 	return index;
 }
 
@@ -4258,8 +4075,6 @@ void put_rect_in_gworld(HDC hdc,RECT rect,short r,short g, short b)
 
 void fill_rect_in_gworld(HDC line_gworld,RECT to_rect,short r,short g, short b)
 {
-	//to_rect.right--;
-	//to_rect.bottom--;
 	PaintRect(&to_rect,line_gworld,r,g,b);
 }
 
@@ -4330,7 +4145,6 @@ void put_clipped_rect_in_gworld(HDC line_gworld,RECT to_rect,RECT clip_rect,shor
 	if ((to_rect.right >= clip_rect.left) && (to_rect.right < clip_rect.right))
 		put_line_in_gworld(line_gworld,(short)to_rect.right,smax((short)to_rect.top,(short)clip_rect.top),
 		  (short)to_rect.right,smin((short)to_rect.bottom,(short)clip_rect.bottom),r,g,b);
-
 }
 
 Boolean is_field_type(short i,short j,short field_type)
@@ -4357,12 +4171,11 @@ void make_field_type(short i,short j,short field_type)
 			town.preset_fields[k].field_loc.y = (t_coord)j;
 			town.preset_fields[k].field_type = field_type;
 			return;
-			}
+		}
 	//sprintf(str,"Field error  %d %d %d",i,j,field_type);
 	//give_error(str,"",0);
 	//give_error("Each town can have at most 60 fields and special effects (webs, barrels, blood stains, etc.). To place more, use the eraser first.","",0);
 }
-
 
 void take_field_type(short i,short j,short field_type)
 {
@@ -4374,13 +4187,12 @@ void take_field_type(short i,short j,short field_type)
 			(town.preset_fields[k].field_loc.y == j)) {
 				town.preset_fields[k].field_type = -1;
 				return;
-				}
+		}
 }
 
 Boolean is_web(short i,short j)
 {
 	return is_field_type(i,j,5);
-
 }
 void make_web(short i,short j)
 {
@@ -4398,7 +4210,6 @@ Boolean is_crate(short i,short j)
 void make_crate(short i,short j)
 {
 	make_field_type(i,j,6);
-
 }
 void take_crate(short i,short j)
 {
@@ -4442,7 +4253,6 @@ void make_force_barrier(short i,short j)
 void take_force_barrier(short i,short j)
 {
 	take_field_type(i,j,3);
-
 }
 
 Boolean is_blocked(short i,short j)
@@ -4456,7 +4266,6 @@ void make_blocked(short i,short j)
 void take_blocked(short i,short j)
 {
 	take_field_type(i,j,1);
-
 }
 Boolean is_sfx(short i,short j,short type)
 {
@@ -4471,8 +4280,7 @@ void take_sfx(short i,short j,short type)
 	take_field_type(i,j,type + 14);
 }
 
-void place_dlog_borders_around_rect(HDIB to_gworld,HWND win,
-	RECT border_to_rect)
+void place_dlog_borders_around_rect(HDIB to_gworld,HWND win,RECT border_to_rect)
 {
 	RECT to_rect;
 	
@@ -4490,8 +4298,7 @@ void place_dlog_borders_around_rect(HDIB to_gworld,HWND win,
 void place_dlog_border_on_win(HDIB to_gworld,HWND win,
 	RECT border_to_rect,short horiz_or_vert,short bottom_or_top)
 {
-	RECT from_rect,to_rect,horiz_from = {0,0,607,14}; /**/
-//	RECT corner_block = {0,0,14,14};
+	RECT from_rect,to_rect,horiz_from = {0,0,607,14};
 	short num_sections,section_width,i;
 	HDIB from_gworld;
 
@@ -4505,9 +4312,11 @@ void place_dlog_border_on_win(HDIB to_gworld,HWND win,
 		if (to_gworld != NULL) {
 			if ((win == mainPtr) || (win == NULL))
 				rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect,0,0);
-				else rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect,0,2);
-			}
-			else rect_draw_some_item(from_gworld,from_rect,from_gworld,to_rect,0,(win == mainPtr) ? 1 : 2);
+			else
+                rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect,0,2);
+		}
+		else
+            rect_draw_some_item(from_gworld,from_rect,from_gworld,to_rect,0,(win == mainPtr) ? 1 : 2);
 		to_rect = border_to_rect;
 		to_rect.left = to_rect.right - 14;
 		from_rect = horiz_from;
@@ -4515,10 +4324,12 @@ void place_dlog_border_on_win(HDIB to_gworld,HWND win,
 		if (to_gworld != NULL) {
 			if ((win == mainPtr) || (win == NULL))
 				rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect,0,0);
-				else rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect,0,2);
-			}
-			else rect_draw_some_item(from_gworld,from_rect,from_gworld,to_rect,0,(win == mainPtr) ? 1 : 2);
+			else
+                rect_draw_some_item(from_gworld,from_rect,to_gworld,to_rect,0,2);
 		}
+		else
+            rect_draw_some_item(from_gworld,from_rect,from_gworld,to_rect,0,(win == mainPtr) ? 1 : 2);
+	}
 	if (horiz_or_vert == 1) {
 		section_width = 370;
 		border_to_rect.right = border_to_rect.left + 14;
@@ -4535,12 +4346,13 @@ void place_dlog_border_on_win(HDIB to_gworld,HWND win,
 			if (to_gworld != NULL) {				
 				if ((win == mainPtr) || (win == NULL))
 					rect_draw_some_item(dlog_vert_border_gworld,from_rect,to_gworld,to_rect,0,0);
-					else rect_draw_some_item(dlog_vert_border_gworld,from_rect,to_gworld,to_rect,0,2);
-				}
-				else rect_draw_some_item(dlog_vert_border_gworld,from_rect,dlog_vert_border_gworld,to_rect,0,(win == mainPtr) ? 1 : 2);
+				else
+                    rect_draw_some_item(dlog_vert_border_gworld,from_rect,to_gworld,to_rect,0,2);
 			}
-
+			else
+                rect_draw_some_item(dlog_vert_border_gworld,from_rect,dlog_vert_border_gworld,to_rect,0,(win == mainPtr) ? 1 : 2);
 		}
+	}
 }
 
 void cant_draw_graphics_error(graphic_id_type a,char *bonus_string,short bonus_num)
@@ -4563,16 +4375,9 @@ void cant_draw_graphics_error(graphic_id_type a,char *bonus_string,short bonus_n
 	give_error(error,error2,0);
 }
 
-
-// q_3DModStart
-
-
 // DIB does not always have a monolithic (continuous) bitmap area.
 // Sometimes each row is assigned to scattered area on memory.
 // thus, every time to access to the another row, we should get a pointer via DibPixelPtr()
-
-
-
 
 typedef unsigned long UInt32;
 typedef unsigned short UInt16;
@@ -4600,9 +4405,8 @@ void adjust_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short graphic_adj
 	if(!graphic_adjust)
 		return;
 	
-	if (tint_area == NULL) {
+	if (tint_area == NULL)
 		return;
-		}
 	
 	RECT from_rect = *from_rect_ptr;
 	ZeroRectCorner(from_rect_ptr);
@@ -4623,12 +4427,9 @@ void adjust_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short graphic_adj
 	width = rect_width(&rect_to_fill);
 
 //	dest_shift_width = (short)DibWidth(tint_area) - width;
-
-	for (v = 0; v < height; v++)
-	{
+	for (v = 0; v < height; v++){
 		destBits = (UInt16 *)DibPixelPtr(tint_area, rect_to_fill.left, rect_to_fill.top + v);
-		for (h = 0; h < width; h++)
-		{
+		for (h = 0; h < width; h++){
 			if (*destBits != white) {
 				r1 = GETR(*destBits);
 				g1 = GETG(*destBits);
@@ -4713,9 +4514,8 @@ void apply_lighting_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short 
 	if(lighting == 8)
 		return;
 	
-	if (tint_area == NULL) {
+	if (tint_area == NULL)
 		return;
-		}
 	
 	//only mess with switching gworld if it hasn't already been done
 	if(tint_area != *src_gworld_ptr) {
@@ -4740,12 +4540,10 @@ void apply_lighting_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short 
 
 //	dest_shift_width = (short)DibWidth(tint_area) - width;
 
-	for (v = 0; v < height; v++)
-	{
+	for (v = 0; v < height; v++){
 		destBits = (UInt16 *)DibPixelPtr(tint_area, rect_to_fill.left, rect_to_fill.top + v);
-		for (h = 0; h < width; h++)
-		{
-			if (*destBits != white) {
+		for (h = 0; h < width; h++){
+			if (*destBits != white){
 				r1 = GETR(*destBits);
 				g1 = GETG(*destBits);
 				b1 = GETB(*destBits);
@@ -4768,9 +4566,8 @@ void apply_lighting_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short 
 // give outline to the picture
 void add_border_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short border_r, short border_g, short border_b)
 {
-	if (tint_area == NULL) {
+	if (tint_area == NULL)
 		return;
-		}
 	
 	//only mess with switching gworld if it hasn't already been done
 	if(tint_area != *src_gworld_ptr) {
@@ -4801,13 +4598,11 @@ void add_border_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short bord
 
 	border_color = RGB16BIT(border_r,border_g,border_b);
 //	dest_width = (short)DibWidth(tint_area);
-	for (v = 0; v < height; v++)
-	{
+	for (v = 0; v < height; v++){
 		destBitsL = (UInt16 *)DibPixelPtr(tint_area, rect_to_fill.left, rect_to_fill.top + v - 1);
 		destBits  = (UInt16 *)DibPixelPtr(tint_area, rect_to_fill.left, rect_to_fill.top + v);
 		destBitsU = (UInt16 *)DibPixelPtr(tint_area, rect_to_fill.left, rect_to_fill.top + v + 1);
-		for (h = 0; h < width; h++)
-		{
+		for (h = 0; h < width; h++){
 /*
 			if((*destBits == white) && (
 			(v + 1 < height && (*(destBits + dest_width) & 0x7FFF) != white) ||
@@ -4832,11 +4627,9 @@ void add_border_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short bord
 //		destBits += dest_shift_width;//(width * 2);
 	}
 //	destBits = destBitsStore;
-	for (v = 0; v < height; v++)
-	{
+	for (v = 0; v < height; v++){
 		destBits = (UInt16 *)DibPixelPtr(tint_area, rect_to_fill.left, rect_to_fill.top + v);
-		for (h = 0; h < width; h++)
-		{
+		for (h = 0; h < width; h++){
 			if(*destBits & 0x8000) {
 				*destBits = border_color;
 			}
@@ -4845,10 +4638,6 @@ void add_border_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short bord
 //		destBits += dest_shift_width;//(width * 2);
 	}
 }
-
-
-
-
 
 // Setting color functions
 // rgb are all in the 0 .. 31 range
@@ -4862,9 +4651,8 @@ void set_blitter_color(UInt16 color)
 // tint_strength: 0 - weak, 1 - strong
 void tint_graphic( GWorldPtr dest,short tint_strength)
 {
-	if (dest == NULL) {
+	if (dest == NULL)
 		return;
-		}
 
 	RECT rect_to_fill = get_graphic_rect(dest);
 	UInt32	destRowBytes;
@@ -4896,10 +4684,8 @@ void tint_graphic( GWorldPtr dest,short tint_strength)
 	g2 = GETG(set_color);
 	b2 = GETB(set_color);
 
-	for (v = 0; v < height; v++)
-	{
-		for (h = 0; h < width; h++)
-		{
+	for (v = 0; v < height; v++){
+		for (h = 0; h < width; h++){
 			if (*destBits != white) {
 				r1 = GETR(*destBits);
 				g1 = GETG(*destBits);
@@ -4909,21 +4695,19 @@ void tint_graphic( GWorldPtr dest,short tint_strength)
 					r1 = (5 * r1 + 3 * r2) >> 3;
 					g1 = (5 * g1 + 3 * g2) >> 3;
 					b1 = (5 * b1 + 3 * b2) >> 3;
-					}
-					else {
-						r1 = (3 * r1 + r2) >> 2;
-						g1 = (3 * g1 + g2) >> 2;
-						b1 = (3 * b1 + b2) >> 2;
-						}
+				}
+				else {
+					r1 = (3 * r1 + r2) >> 2;
+					g1 = (3 * g1 + g2) >> 2;
+					b1 = (3 * b1 + b2) >> 2;
+				}
 				//r1 = (r1 + r2) / 2;
 				//g1 = (g1 + g2) / 2;
 				//b1 = (b1 + b2) / 2;
 				*destBits = RGB16BIT(r1,g1,b1);
-				}
+			}
 			destBits++;
-
 		}
-
 		destBits += dest_shift_width;//(width * 2);
 	}
 }
@@ -4933,9 +4717,8 @@ void tint_graphic( GWorldPtr dest,short tint_strength)
 void hue_graphic( GWorldPtr dest,short up_or_down,short red_shift,short
 green_shift,short blue_shift)
 {
-	if (dest == NULL) {
+	if (dest == NULL)
 		return;
-		}
 
 	RECT rect_to_fill = get_graphic_rect(dest);
 	UInt32	destRowBytes;
@@ -4962,10 +4745,8 @@ green_shift,short blue_shift)
 
 	dest_shift_width = (destRowBytes >> 1) - width;
 
-	for (v = 0; v < height; v++)
-	{
-		for (h = 0; h < width; h++)
-		{
+	for (v = 0; v < height; v++){
+		for (h = 0; h < width; h++){
 			if (*destBits != white) {
 				r1 = GETR(*destBits);
 				g1 = GETG(*destBits);
@@ -4975,26 +4756,22 @@ green_shift,short blue_shift)
 					r1 = r1 + red_shift;
 					g1 = g1 + green_shift;
 					b1 = b1 + blue_shift;
-					}
-					else {
-						r1 = r1 - red_shift;
-						g1 = g1 - green_shift;
-						b1 = b1 - blue_shift;
-						}
+				}
+				else {
+					r1 = r1 - red_shift;
+					g1 = g1 - green_shift;
+					b1 = b1 - blue_shift;
+				}
 				r1 = minmax(1,31,r1);
 				g1 = minmax(1,31,g1);
 				b1 = minmax(1,31,b1);
 
 				*destBits = RGB16BIT(r1,g1,b1);
-				}
+			}
 			destBits++;
-
 		}
-
 		destBits += dest_shift_width;//(width * 2);
 	}
 }
 
-#endif /*0*/
-
-// q_3DModEnd
+#endif

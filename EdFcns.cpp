@@ -21,12 +21,19 @@ enum {
 };
 
 // Edit screen coordinates
-const RECT kRect3DEditScrn = {
+/*const RECT kRect3DEditScrn = {
 	TERRAIN_BORDER_WIDTH + TER_RECT_UL_X - 15,
 	TERRAIN_BORDER_WIDTH + TER_RECT_UL_Y - 15,
 	TERRAIN_BORDER_WIDTH + BIG_SPACE_SIZE * 9 + TER_RECT_UL_X + 15,
 	TERRAIN_BORDER_WIDTH + BIG_SPACE_SIZE * 9 + TER_RECT_UL_Y + 15
+};*/
+const RECT kRect3DEditScrn = {
+	0 + TER_RECT_UL_Y,
+	0 + TER_RECT_UL_X,
+	496 + TER_RECT_UL_Y,
+	415 + TER_RECT_UL_X
 };
+extern const RECT terrain_viewport_3d;
 
 // scroll speed limit: duration / cycle
 const DWORD kScrollLimitTime = 100;		// msec
@@ -38,10 +45,8 @@ RECT border_rect[4];
 RECT terrain_rects[264];
 // RECT terrain_rect_base = {0,0,16,16};							
 
-// q_3DModStart
 RECT terrain_rects_3D[264];
-// RECT terrain_rect_base_3D = {0,0,16,16};							
-// q_3DModEnd
+// RECT terrain_rect_base_3D = {0,0,16,16};
 
 RECT palette_buttons[8][6];
 
@@ -87,9 +92,7 @@ extern scen_item_data_type scen_data;
 // extern unsigned char border_floor[4][50];
 // extern unsigned char border_height[4][50];
 
-// q_3DModStart
 extern outdoor_record_type border_terrains[3][3];
-// q_3DModEnd
 
 extern short cur_town;
 extern location cur_out;
@@ -109,10 +112,8 @@ extern short cen_x, cen_y;
 extern short mode_count;
 extern short current_height_mode;
 
-// q_3DModStart
 extern Boolean change_made_town;
 extern Boolean change_made_outdoors;
-// q_3DModEnd
 
 extern HWND	mainPtr;
 
@@ -126,9 +127,7 @@ extern in_town_on_ter_script_type copied_ter_script;
 
 extern Boolean kill_next_win_char;
 
-// q_3DModStart
 extern short current_cursor;
-// q_3DModEnd
 
 // local variables
 
@@ -138,7 +137,6 @@ location last_spot_hit = kINVAL_LOC;
 RECT working_rect;
 Boolean erasing_mode;
 
-// q_3DModStart
 struct corner_and_sight_on_space {
 	unsigned nw_corner : 2;
 	unsigned sw_corner : 2;
@@ -148,7 +146,6 @@ struct corner_and_sight_on_space {
 	unsigned see_to : 1;
 } corner_and_sight_map[88][88];
 typedef struct corner_and_sight_on_space *temp_space_info_ptr;
-// q_3DModEnd
 
 short recursive_depth = 0; // used for recursive hill/terrain correcting function
 short recursive_hill_up_depth = 0;
@@ -169,9 +166,7 @@ bool process_scroll_click( int map_size, POINT thePoint  );
 bool handle_scroll( int map_size, int scrl, bool ctrl_key, bool shft_key );
 Boolean clean_up_from_scrolling( int map_size, int dx, int dy );
 
-// q_3DModStart
 void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_click);
-// q_3DModEnd
 
 // void play_press_snd();
 void set_new_terrain(short selected_terrain);
@@ -216,19 +211,15 @@ Boolean is_wall(short x, short y);
 Boolean is_dumb_terrain(short ter);
 short get_height(short x, short y,short out_or_town);
 
-// q_3DModStart
 Boolean old_can_see_in(location p1,location p2, /* short check_light,*/ short check_travel);
 void old_can_see(location p1,location p2,/* short check_light,*/ short check_travel,Boolean *see_to,Boolean *see_in);
-// q_3DModEnd
 
 // Boolean can_see_to(location p1,location p2,short check_light,short check_travel);
 Boolean can_see_in(location p1,location p2,short check_light,short check_travel);
 void can_see(location p1,location p2,short check_light,short check_travel,Boolean *see_to,Boolean *see_in);
 
-// q_3DModStart
 Boolean can_see_single(location p1,location p2,short check_light,short check_travel,Boolean *see_to);
 Boolean no_block(location l, short direction,short check_light,short check_travel);
-// q_3DModEnd
 
 Boolean look_block(location l, short direction);
 Boolean move_block(location l, short direction);
@@ -238,7 +229,6 @@ void recursive_adjust_space_height_raise(location l);
 void recursive_adjust_space_height_lower(location l);
 Boolean control_key_down();
 
-// q_3DModStart
 void set_see_in(short sector_offset_x, short sector_offset_y, short x, short y, Boolean value);
 void set_see_to(short sector_offset_x, short sector_offset_y, short x, short y, Boolean value);
 void set_nw_corner(short sector_offset_x, short sector_offset_y, short x, short y, short value);
@@ -251,14 +241,10 @@ void find_out_about_corner_walls_being_hidden(outdoor_record_type *drawing_terra
 											  /* Boolean see_to_neighbors[3][3], Boolean see_to, */
 											  short *nw_corner, short *ne_corner, short *se_corner, short *sw_corner);
 Boolean is_wall_drawn(outdoor_record_type *drawing_terrain, short sector_offset_x, short sector_offset_y, short x, short y);
-// q_3DModEnd
-
-
 
 void init_screen_locs()
 {
 	int i;
-	
 	for (i = 0; i < 14; i++)
 		SetRECT(left_text_lines[i],LEFT_TEXT_LINE_WIDTH * (i / 7) + LEFT_TEXT_LINE_ULX,
 			LEFT_TEXT_LINE_ULY + (i % 7) * TEXT_LINE_HEIGHT,
@@ -510,9 +496,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 	Boolean are_done = FALSE;
 	char str_response[256] = "";
 	
-// q_3DModStart
 	Boolean need_redraw = FALSE, option_hit = FALSE, right_click = FALSE;
-// q_3DModEnd
 
 	location spot_hit;
 	POINT cur_point,cur_point2;
@@ -532,9 +516,8 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 
 	if (lparam == -2)
 		option_hit = TRUE;
-	if (lparam != -1) {
+	if (lparam != -1)
 		the_point.x -= ulx;		the_point.y -= uly;
-	}
 
 	right_click = (GetKeyState( VK_RBUTTON ) & 0x8000) != 0;
 
@@ -542,8 +525,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 	cur_point = the_point;
 
 	// scroller on edit screen
-	if ( process_scroll_click( map_size, the_point ) )
-	{
+	if ( process_scroll_click( map_size, the_point ) ){
 		mouse_button_held = FALSE;
 		return are_done;
 	}
@@ -566,23 +548,16 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 						last_spot_hit = spot_hit;
 					
 					old_mode = overall_mode;
-// q_3DModStart
 					if(editing_town)
 						change_made_town = TRUE;
 					else
 						change_made_outdoors = TRUE;
-// q_3DModEnd
 
-						//erasing_mode = TRUE;
-						//mouse_button_held = TRUE;		
-
-// q_3DModStart
 					handle_ter_spot_press(spot_hit,option_hit,right_click);
-// q_3DModEnd
 					
 					need_redraw = TRUE;
-					}
-		}
+				}
+	}
 
 	// clicking in terrain spots, small icon mode
 	if (cur_viewing_mode == 1) {
@@ -602,21 +577,16 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 						last_spot_hit = spot_hit;
 					
 					old_mode = overall_mode;
-// q_3DModStart
 					if(editing_town)
 						change_made_town = TRUE;
 					else
 						change_made_outdoors = TRUE;
 							
 					handle_ter_spot_press(spot_hit,option_hit,right_click);			
-// q_3DModEnd
 					need_redraw = TRUE;
-					}
-		}
+				}
+	}
 
-
-
-// q_3DModStart
 	// clicking in terrain spots, big 3D icon mode
 	else if (cur_viewing_mode == 10 || cur_viewing_mode == 11) {
 		if( POINTInRECT(cur_point, kRect3DEditScrn)) {
@@ -628,7 +598,6 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 			short x = 0, y = 0;
 			long mid_tenth_x, mid_tenth_y, result, x_off_from_center, y_off_from_center;
 			short height_to_draw;
-//				RECT tiny_to_base = {15,15,22,22};
 			graphic_id_type a;
 			
 			short current_size = ((editing_town) ? max_dim[town_type] : 48);
@@ -637,10 +606,11 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 			short center_height;
 			short rel_x, rel_y;
 			
-			RECT whole_area_rect = {large_edit_ter_rects[0][0].left,large_edit_ter_rects[0][0].top,
-				large_edit_ter_rects[8][8].right,large_edit_ter_rects[8][8].bottom};
+			RECT whole_area_rect = terrain_viewport_3d;
+				/*= {large_edit_ter_rects[0][0].left,large_edit_ter_rects[0][0].top,
+				large_edit_ter_rects[8][8].right,large_edit_ter_rects[8][8].bottom};*/
 			
-			MacInsetRect(&whole_area_rect,-15,-15);
+			//MacInsetRect(&whole_area_rect,-15,-15);
 			ZeroRectCorner(&whole_area_rect);
 			
 			
