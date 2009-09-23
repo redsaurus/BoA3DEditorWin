@@ -1520,7 +1520,17 @@ void start_town_data_dump()
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			for (short i = 0; i < 16; i++) {
 		if ((town.room_rect[i].left >= 0) && (town.room_rect[i].top >= 0) && (town.room_rect[i].right >= 0) && (town.room_rect[i].bottom >= 0)) {
-			sprintf((char *)get_text,"   Area Description %d:  tl = (%d,%d), br = (%d,%d), text: %s\r",i,town.room_rect[i].left,town.room_rect[i].top,town.room_rect[i].right,town.room_rect[i].bottom,town.info_rect_text[i]);
+			sprintf((char *)get_text,"   Area Description %d:  tl = (%d,%d), br = (%d,%d), text: \"%s\"\r",i,town.room_rect[i].left,town.room_rect[i].top,town.room_rect[i].right,town.room_rect[i].bottom,town.info_rect_text[i]);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+		}
+			sprintf((char *)get_text,"\r\r  Town Signs: \r");
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			for (short i = 0; i < 15; i++) {
+		if ((town.room_rect[i].left >= 0) && (town.room_rect[i].top >= 0) && (town.room_rect[i].right >= 0) && (town.room_rect[i].bottom >= 0)) {
+			sprintf((char *)get_text,"   Town Sign %d:  x = %d, y = %d, text: \"%s\"\r",i,town.sign_locs[i].x,town.sign_locs[i].y,town.sign_text[i]);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
@@ -1539,6 +1549,256 @@ void start_town_data_dump()
 		sprintf((char *)get_text,"\r\r");
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+	FSClose(data_dump_file_id);
+}
+
+void start_full_town_data_dump()
+{
+	short i,j;
+	char get_text[280];
+	FILE *data_dump_file_id;
+	long len;
+	char file_name;
+
+	if (NULL == (data_dump_file_id = fopen("Full Town Report.txt", "wb"))) {
+		return;
+		}
+		 	sprintf((char *)get_text,"\r\rFull Town Data Printout for town %d, %s\r\r",cur_town,town.town_name);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			sprintf((char *)get_text,"  For rectangles: \"tl\" = the top and left corner of the rectangle while \"br\" = the bottom and right corner.");
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+			sprintf((char *)get_text,"\r\r   In town rectangle: tl = (%d,%d), br = (%d,%d)\r",town.in_town_rect.left,town.in_town_rect.top,town.in_town_rect.right,town.in_town_rect.bottom);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+			sprintf((char *)get_text,"\r\r  Town Placed Specials: \r");
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			for (short i = 0; i < 60; i++) {
+				if (town.spec_id[i] < 255) {
+			sprintf((char *)get_text,"   Placed special %d:  tl = (%d,%d) br = (%d,%d), state: %d\r",i,town.special_rects[i].left,town.special_rects[i].top,town.special_rects[i].right,town.special_rects[i].bottom,town.spec_id[i]);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+		}
+			sprintf((char *)get_text,"\r\r  Town Preset Items: \r");
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+				for (short i = 0; i < 144; i++) {
+					if (town.preset_items[i].which_item > 0) {
+			sprintf((char *)get_text,"   Item %d: item type = %d,  x,y = (%d,%d), item name = %s, charges = %d, properties = %d\r",i,town.preset_items[i].which_item,town.preset_items[i].item_loc.x,town.preset_items[i].item_loc.y,scen_data.scen_items[town.preset_items[i].which_item].full_name,town.preset_items[i].charges,town.preset_items[i].properties);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+		}
+			sprintf((char *)get_text,"\r\r  Town Preset Fields: \r");
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+		for (short i = 0; i < 60; i++) {
+        if (town.preset_fields[i].field_type >= 0) {
+			sprintf((char *)get_text,"   Preset field %d: x = %d, y = %d, field type = %d\r",i,town.preset_fields[i].field_loc.x,town.preset_fields[i].field_loc.y,town.preset_fields[i].field_type);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+			}
+			sprintf((char *)get_text,"\r\r  Town Terrain Scripts: \r");
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+		for (short i = 0; i < 100; i++) {
+        if (town.ter_scripts[i].exists > 0) {
+			sprintf((char *)get_text,"   Terrain Script %d: x = %d, y = %d, script name = %s\r",i,town.ter_scripts[i].loc.x,town.ter_scripts[i].loc.y,town.ter_scripts[i].script_name);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+			}
+			sprintf((char *)get_text,"\r\r  Town Terrain Scripts: Memory Cells\r");
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+		for (short i = 0; i < 100; i++) {
+        if (town.ter_scripts[i].exists > 0) {
+			sprintf((char *)get_text,"   Terrain Script %d: Cell 0 = %d, Cell 1 = %d, Cell 2 = %d, Cell 3 = %d, Cell 4 = %d, Cell 5 = %d, Cell 6 = %d, Cell 7 = %d, Cell 8 = %d, Cell 9 = %d.\r",i,town.ter_scripts[i].memory_cells[0],town.ter_scripts[i].memory_cells[1],town.ter_scripts[i].memory_cells[2],town.ter_scripts[i].memory_cells[3],town.ter_scripts[i].memory_cells[4],town.ter_scripts[i].memory_cells[5],town.ter_scripts[i].memory_cells[6],town.ter_scripts[i].memory_cells[7],town.ter_scripts[i].memory_cells[8],town.ter_scripts[i].memory_cells[9]);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+			}
+			
+			sprintf((char *)get_text,"\r\r  Area Descriptions: \r");
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			for (short i = 0; i < 16; i++) {
+		if ((town.room_rect[i].left >= 0) && (town.room_rect[i].top >= 0) && (town.room_rect[i].right >= 0) && (town.room_rect[i].bottom >= 0)) {
+			sprintf((char *)get_text,"   Area Description %d:  tl = (%d,%d), br = (%d,%d), text: \"%s\"\r",i,town.room_rect[i].left,town.room_rect[i].top,town.room_rect[i].right,town.room_rect[i].bottom,town.info_rect_text[i]);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+		}
+			sprintf((char *)get_text,"\r\r  Town Signs: \r");
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			for (short i = 0; i < 15; i++) {
+		if ((town.room_rect[i].left >= 0) && (town.room_rect[i].top >= 0) && (town.room_rect[i].right >= 0) && (town.room_rect[i].bottom >= 0)) {
+			sprintf((char *)get_text,"   Town Sign %d:  x = %d, y = %d, text: \"%s\"\r",i,town.sign_locs[i].x,town.sign_locs[i].y,town.sign_text[i]);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+		}
+
+			sprintf((char *)get_text,"\r\r  Town Creatures: \r");
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+		for (short i = 0; i < 80; i++) {
+			if (town.creatures[i].number > 0) {
+			sprintf((char *)get_text,"   Creature %d: x = %d, y = %d, type = %d, name = %s, attitude = %d, hidden class = %d, script = %s \r",i + 6,town.creatures[i].start_loc.x,town.creatures[i].start_loc.y,town.creatures[i].number,scen_data.scen_creatures[town.creatures[i].number].name,town.creatures[i].start_attitude,town.creatures[i].hidden_class,town.creatures[i].char_script);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+		}
+			sprintf((char *)get_text,"\r\r  Town Creatures: Memory Cells\r");
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+		for (short i = 0; i < 80; i++) {
+			if (town.creatures[i].number > 0) {
+			sprintf((char *)get_text,"   Creature %d: Cell 0 = %d, Cell 1 = %d, Cell 2 = %d, Cell 3 = %d, Cell 4 = %d, Cell 5 = %d, Cell 6 = %d, Cell 7 = %d, Cell 8 = %d, Cell 9 = %d.\r",i + 6,town.creatures[i].memory_cells[0],town.creatures[i].memory_cells[1],town.creatures[i].memory_cells[2],town.creatures[i].memory_cells[3],town.creatures[i].memory_cells[4],town.creatures[i].memory_cells[5],town.creatures[i].memory_cells[6],town.creatures[i].memory_cells[7],town.creatures[i].memory_cells[8],town.creatures[i].memory_cells[9]);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+		}
+		sprintf((char *)get_text,"\r\r");
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+	FSClose(data_dump_file_id);
+}
+
+
+void start_currentout_data_dump()
+{
+	short i,j;
+	char get_text[280];
+	FILE *data_dump_file_id;
+	long len;
+	location out_sec;
+
+	if (NULL == (data_dump_file_id = fopen("Current Outdoor Zone Write Up.txt", "wb"))) {
+		return;
+		}
+	sprintf((char *)get_text,"\r\rCurrent Outdoor Zone data for %s:\r\r",scenario.scen_name);
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+			sprintf((char *)get_text,"Section X = %d, Y = %d:  %s \r\r",cur_out.x,cur_out.y,current_terrain.name);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+			sprintf((char *)get_text,"  For rectangles: \"tl\" = the top and left corner of the rectangle while \"br\" = the bottom and right corner.\r\r");
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+			for (short i = 0; i < 30; i++) {
+				if ((current_terrain.spec_id[i] > 0) && (current_terrain.spec_id[i] < 255)) {
+			sprintf((char *)get_text,"   Special rectangle %d: special %d, lt = (%d,%d) rb = (%d,%d)\r",i,current_terrain.spec_id[i],current_terrain.special_rects[i].left,current_terrain.special_rects[i].top,current_terrain.special_rects[i].right,current_terrain.special_rects[i].bottom);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+		}
+		sprintf((char *)get_text,"\r");
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+			for (short i = 0; i < 8; i++) {
+			sprintf((char *)get_text,"   Town entrance %d: town %d, lt = (%d,%d) rb = (%d,%d)\r",i,current_terrain.exit_dests[i],current_terrain.exit_rects[i].left,current_terrain.exit_rects[i].top,current_terrain.exit_rects[i].right,current_terrain.exit_rects[i].bottom);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+		sprintf((char *)get_text,"\r");
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+			for (short i = 0; i < 8; i++) {
+			sprintf((char *)get_text,"   Sign %d: location, x = %d, y = %d, text = \"%s\"\r",i,current_terrain.sign_locs[i].x,current_terrain.sign_locs[i].y,current_terrain.sign_text[i]);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+		}
+		sprintf((char *)get_text,"\r");
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+			for (short i = 0; i < 8; i++) {
+			sprintf((char *)get_text,"   Area rectangle %d: lt = (%d,%d) rb = (%d,%d), text = \"%s\"\r",i,current_terrain.info_rect[i].left,current_terrain.info_rect[i].top,current_terrain.info_rect[i].right,current_terrain.info_rect[i].bottom,current_terrain.info_rect_text[i]);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+		}
+			sprintf((char *)get_text,"\r  Is on surface  = %d \r  Region number = %d\r\r",current_terrain.is_on_surface,current_terrain.extra[0]);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+	FSClose(data_dump_file_id);
+}
+
+void start_fullout_data_dump()
+{
+	short i,j;
+	char get_text[280];
+	FILE *data_dump_file_id;
+	long len;
+	void load_outdoor();
+	location out_sec;
+	outdoor_record_type outdoor;
+
+	if (NULL == (data_dump_file_id = fopen("Outdoor Zones Write Up.txt", "wb"))) {
+		return;
+		}
+	sprintf((char *)get_text,"\r\rCurrent Outdoor Zone data for %s:\r\r",scenario.scen_name);
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+	
+			sprintf((char *)get_text,"  For rectangles: \"tl\" = the top and left corner of the rectangle while \"br\" = the bottom and right corner.\r\r");
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+	sprintf((char *)get_text,"\r\rScenario data for %s:\r\r",scenario.scen_name);
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++)
+			for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) {
+			load_outdoor(out_sec,outdoor);
+			sprintf((char *)get_text,"\rSection X = %d, Y = %d:  %s \r",(short) out_sec.x,(short) out_sec.y,outdoor.name);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			for (short i = 0; i < 30; i++) {
+				if ((current_terrain.spec_id[i] > 0) && (current_terrain.spec_id[i] < 255)) {
+			sprintf((char *)get_text,"   Special rectangle %d: special %d, lt = (%d,%d) rb = (%d,%d)\r",i,outdoor.spec_id[i],outdoor.special_rects[i].left,outdoor.special_rects[i].top,outdoor.special_rects[i].right,outdoor.special_rects[i].bottom);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+			}
+		sprintf((char *)get_text,"\r");
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+			for (short i = 0; i < 8; i++) {
+			sprintf((char *)get_text,"   Town entrance %d: town %d, lt = (%d,%d) rb = (%d,%d)\r",i,outdoor.exit_dests[i],outdoor.exit_rects[i].left,outdoor.exit_rects[i].top,outdoor.exit_rects[i].right,outdoor.exit_rects[i].bottom);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+		sprintf((char *)get_text,"\r");
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+			for (short i = 0; i < 8; i++) {
+			sprintf((char *)get_text,"   Sign %d: location, x = %d, y = %d\r",i,outdoor.sign_locs[i].x,outdoor.sign_locs[i].y);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+		}
+		}
+			sprintf((char *)get_text,"\r  Is on surface  = %d \r  Region number = %d\r\r",current_terrain.is_on_surface,current_terrain.extra[0]);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
 
 	FSClose(data_dump_file_id);
 }

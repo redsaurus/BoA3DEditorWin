@@ -1175,6 +1175,22 @@ void handle_help_menu(int item_hit)
 				redraw_screen();
 				change_made_outdoors = FALSE;
 			break;
+			
+		case 13: //   Full print out of town data
+			if (fancy_choice_dialog(886,0) == 1)
+				 start_full_town_data_dump();
+			break;
+
+		case 15: //   Lists all special rectangles, town locations for each zone.
+			if (fancy_choice_dialog(887,0) == 1)
+				 start_fullout_data_dump();
+			break;
+
+		case 16: //   Current outdoor zone write up
+			if (fancy_choice_dialog(888,0) == 1)
+				 start_currentout_data_dump();
+			break;
+
 		}
 	draw_main_screen();		
 }

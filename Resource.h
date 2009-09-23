@@ -28,7 +28,6 @@
 #define IDC_CURSOR143                   143
 #define IDC_CURSOR144                   144
 #define IDD_DIALOG1                     139
-#define ID_SCENARIO_CHANGEOUTDOORSIZE   220
 #define IDC_STATIC                      -1
 
 // Next default values for new objects

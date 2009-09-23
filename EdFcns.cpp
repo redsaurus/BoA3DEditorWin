@@ -3636,7 +3636,7 @@ void shut_down_menus()
 
 		for (short i = 101; i < 109; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 201; i < 220; i++)
+		for (short i = 201; i < 221; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 301; i < 320; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
@@ -3646,15 +3646,17 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		EnableMenuItem(menu, ID_SCENARIO_CHANGEOUTDOORSIZE ,MF_GRAYED | MF_BYCOMMAND);	// 'change outdoor size'
+		for (short i = 1503; i < 1517; i++)
+			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
+
 		return;
 	}
 	else {
 		EnableMenuItem(menu,2,MF_ENABLED | MF_BYCOMMAND);
 		EnableMenuItem(menu,3,MF_ENABLED | MF_BYCOMMAND);
-		for (short i = 201; i < 220; i++)
+		for (short i = 201; i < 221; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu, ID_SCENARIO_CHANGEOUTDOORSIZE ,MF_ENABLED | MF_BYCOMMAND);	// 'change outdoor size'
+
 	}
 
 	if (editing_town == TRUE) {
@@ -3667,6 +3669,8 @@ void shut_down_menus()
 		for (short i = 600; i < 1100; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
+			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
+		for (short i = 1503; i < 1517; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 	}
 	else {
@@ -3686,7 +3690,8 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		
+		for (short i = 1503; i < 1517; i++)
+			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 	}
 }
 

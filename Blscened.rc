@@ -15,7 +15,6 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// ニュートラル (既定) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEUD)
 #ifdef _WIN32
@@ -112,7 +111,7 @@ BEGIN
         MENUITEM "  Set Variable Town Entry",   216
         MENUITEM "  Edit Item Placement Shortcuts", 217
         MENUITEM "  Delete Last Town",          218
-        MENUITEM "  Change Outdoor Size",       ID_SCENARIO_CHANGEOUTDOORSIZE
+        MENUITEM "  Change Outdoor Size",       220
     END
     POPUP "&Town"
     BEGIN
@@ -217,7 +216,10 @@ BEGIN
         MENUITEM "Query Functions:",                   1503
         MENUITEM "Write Scenario Data To Text File", 1504
         MENUITEM "Full Write up: Outdoor/Town Names", 1505
-        MENUITEM "Town: Write Data To File", 1506
+        MENUITEM "All Outdoor Zones: Full Write up", 1515
+        MENUITEM "Current Outdoor Zone: Full Write up", 1516
+        MENUITEM "Town: Write Data To File\tCtrl+E", 1506
+        MENUITEM "Town: Full Write Data To File\tCtrl+F", 1513
         MENUITEM SEPARATOR
         MENUITEM "Increase Numerical Mode\tCtrl+G", 1507
         MENUITEM "Decrease Numerical Mode\tCtrl+H", 1508
@@ -250,12 +252,12 @@ BEGIN
     "^B",           108,                    ASCII,  NOINVERT
     "^T",           201,                    ASCII,  NOINVERT
     "^R",           202,                    ASCII,  NOINVERT
+    "^E",           1506,                   ASCII,  NOINVERT
     "^G",           1507,                   ASCII,  NOINVERT
     "^H",           1508,                   ASCII,  NOINVERT
     "^J",           1509,                   ASCII,  NOINVERT
     "^K",           1510,                   ASCII,  NOINVERT
-    "^I",           1511,                   ASCII,  NOINVERT
-    "^M",           1512,                   ASCII,  NOINVERT
+    "^F",           1513,                   ASCII,  NOINVERT
     VK_LEFT,        1509,                   VIRTKEY, CONTROL, NOINVERT
     VK_RIGHT,       1510,                   VIRTKEY, CONTROL, NOINVERT
     VK_UP,          1511,                   VIRTKEY, CONTROL, NOINVERT
@@ -265,7 +267,7 @@ BEGIN
 //    "^L",         301/401,                ASCII,  NOINVERT
 END
 
-// Currently available: F,M,P
+// Currently available: I,M,P,U,W
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
@@ -1420,6 +1422,30 @@ BEGIN
     LTEXT           "Do you want to erase all special encounters in this outdoor zone?",3,26,25,258,32
 END
 
+886 DIALOG  10, 10, 357, 108
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,228,95,66,20
+    LTEXT           "0_5",2,162,95,62,20
+    LTEXT           "This will list all placed special states, items, fields, terrain scripts and creatures (along with their locations and types) in a file called 'Full Town Report.txt'. Contents of terrain script and creature memory cells are included too.",3,22,21,271,66
+END
+
+887 DIALOG  10, 10, 357, 108
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,228,89,66,20
+    LTEXT           "0_5",2,162,89,62,20
+    LTEXT           "This will list all the placed special states, town entrances and signs, for each zone, in a file called 'Outdoor Zones Write Up.txt'.  It will also list their locations.",3,22,21,271,66
+END
+
+888 DIALOG  10, 10, 357, 108
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,228,89,66,20
+    LTEXT           "0_5",2,162,89,62,20
+    LTEXT           "This will list all placed special states, town entrances signs and area rectangles found in the current outdoor zone (along with their locations) in a file called 'Current Outdoor Zone Write Up.txt'.",3,22,21,271,66
+END
+
 970 DIALOG  10, 10, 368, 145
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
@@ -1613,12 +1639,12 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 
-#endif    // ニュートラル (既定) resources
+#endif    
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// 日本語 resources
+
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
 #ifdef _WIN32
@@ -1653,7 +1679,7 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // 日本語 resources
+#endif    
 /////////////////////////////////////////////////////////////////////////////
 
 
