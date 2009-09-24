@@ -210,24 +210,24 @@ BEGIN
     END
     POPUP "&Query"
     BEGIN
-        MENUITEM "About Blades Scenario Editor", 1501
-        MENUITEM "3D Editor Credits", 1502        
+        MENUITEM "A About Blades Scenario Editor", 1501
+        MENUITEM "B 3D Editor Credits", 1502
         MENUITEM SEPARATOR
-        MENUITEM "Query Functions:",                   1503
-        MENUITEM "Write Scenario Data To Text File", 1504
-        MENUITEM "Full Write up: Outdoor/Town Names", 1505
-        MENUITEM "All Outdoor Zones: Full Write up", 1515
-        MENUITEM "Current Outdoor Zone: Full Write up", 1516
-        MENUITEM "Town: Write Data To File\tCtrl+E", 1506
-        MENUITEM "Town: Full Write Data To File\tCtrl+F", 1513
+        MENUITEM "C Query Functions:",                   1503
+        MENUITEM "D Write Scenario Data To Text File", 1504
+        MENUITEM "E Full Write up: Outdoor/Town Names", 1505
+        MENUITEM "F All Outdoor Zones: Full Write up", 1515
+        MENUITEM "G Current Outdoor Zone: Full Write up", 1516
+        MENUITEM "H Town: Write Data To File\tCtrl+E", 1506
+        MENUITEM "I Town: Full Write Data To File\tCtrl+F", 1513
         MENUITEM SEPARATOR
-        MENUITEM "Increase Numerical Mode\tCtrl+G", 1507
-        MENUITEM "Decrease Numerical Mode\tCtrl+H", 1508
+        MENUITEM "J Increase Numerical Mode\tCtrl+G", 1507
+        MENUITEM "K Decrease Numerical Mode\tCtrl+H", 1508
         MENUITEM SEPARATOR
-        MENUITEM "Load Outdoor Zone Above\tCtrl+I", 1511
-				MENUITEM "Load Previous Outdoor Zone/Town\tCtrl+J", 1509
-        MENUITEM "Load Next Outdoor Zone/Town\tCtrl+K", 1510
-        MENUITEM "Load Outdoor Zone Below\tCtrl+M", 1512
+        MENUITEM "L Load Outdoor Zone Above\tCtrl+I", 1511
+				MENUITEM "M Load Previous Outdoor Zone/Town\tCtrl+J", 1509
+        MENUITEM "N Load Next Outdoor Zone/Town\tCtrl+K", 1510
+        MENUITEM "O Load Outdoor Zone Below\tCtrl+M", 1512
     END
 END
 

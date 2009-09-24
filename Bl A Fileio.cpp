@@ -108,6 +108,11 @@ char *old_blades_button_strs[150] = {"Done ","Ask"," "," ","Keep", "Cancel","+",
 						"General Abil.","NonSpell Use","Spell Usable","Reagents","Missiles","Abilities","Pick Picture","Animated","Enter","Burn",
 						"Insert","Remove","Accept","Refuse","Open","Close","Sit","Stand","","",
 						"18","19","20","Invisible!","","","","","",""};
+						
+char *BOAFieldnames[22] = {"Unknown","Blocked","Unknown","Force Barrier","Fire Barrier","Web","Crate","Barrel","Unknown","Unknown","Unknown","Unknown","Unknown","Unknown","Small Blood Stain","Medium Blood Stain","Large Blood Stain","Small Slime Pool","Large Slime Pool","Dried Blood","Bones","Rocks"};
+
+
+
 short old_blades_available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8, 
 								128,
 								9,10,11,12,13,
@@ -1461,7 +1466,6 @@ void start_town_data_dump()
 	FILE *data_dump_file_id;
 	long len;
 	char file_name;
-//	sprintf(file_name,"TownReport.txt");
 
 	if (NULL == (data_dump_file_id = fopen("Concise Town Report.txt", "wb"))) {
 		return;
@@ -1483,12 +1487,12 @@ void start_town_data_dump()
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
 		}
-			sprintf((char *)get_text,"\r\r  Town Preset Items: \r");
+		 	sprintf((char *)get_text,"\r\r  Town Preset Items: \r\r  Item Properties are recorded by bitwise manipulation:\r    1 =  identified\r    2 =  property\r    4 =  contained\r    8 =  cursed\r  16 =  used today\r\r");
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 				for (short i = 0; i < 144; i++) {
 					if (town.preset_items[i].which_item > 0) {
-			sprintf((char *)get_text,"   Preset item: %d: item type = %d,  x,y = (%d,%d) charges = %d, properties = %d\r",i,town.preset_items[i].which_item,town.preset_items[i].item_loc.x,town.preset_items[i].item_loc.y,town.preset_items[i].charges,town.preset_items[i].properties);
+			sprintf((char *)get_text,"   Item %d: item type = %d,  x,y = (%d,%d), charges = %d, properties = %d, full name = %s\r",i,town.preset_items[i].which_item,town.preset_items[i].item_loc.x,town.preset_items[i].item_loc.y,town.preset_items[i].charges,town.preset_items[i].properties,scen_data.scen_items[town.preset_items[i].which_item].full_name);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
@@ -1498,8 +1502,8 @@ void start_town_data_dump()
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 		for (short i = 0; i < 60; i++) {
-        if (town.preset_fields[i].field_type > 0) {
-			sprintf((char *)get_text,"   Preset field %d: x = %d, y = %d, field type = %d\r",i,town.preset_fields[i].field_loc.x,town.preset_fields[i].field_loc.y,town.preset_fields[i].field_type);
+      if (town.preset_fields[i].field_type > 0) {
+			sprintf((char *)get_text,"   Preset field %d: x = %d, y = %d, field type = %d, name = %s\r",i,town.preset_fields[i].field_loc.x,town.preset_fields[i].field_loc.y,town.preset_fields[i].field_type,BOAFieldnames[town.preset_fields[i].field_type]);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
@@ -1541,7 +1545,7 @@ void start_town_data_dump()
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 		for (short i = 0; i < 80; i++) {
 			if (town.creatures[i].number > 0) {
-			sprintf((char *)get_text,"   Creature %d: x = %d, y = %d, type = %d, attitude = %d, hidden class = %d, script = %s \r",i,town.creatures[i].start_loc.x,town.creatures[i].start_loc.y,town.creatures[i].number,town.creatures[i].start_attitude,town.creatures[i].hidden_class,town.creatures[i].char_script);
+			sprintf((char *)get_text,"   Creature %d: x = %d, y = %d, type = %d, attitude = %d, hidden class = %d, script = %s, name = %s \r",i + 6,town.creatures[i].start_loc.x,town.creatures[i].start_loc.y,town.creatures[i].number,town.creatures[i].start_attitude,town.creatures[i].hidden_class,town.creatures[i].char_script,scen_data.scen_creatures[town.creatures[i].number].name);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
@@ -1585,12 +1589,12 @@ void start_full_town_data_dump()
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
 		}
-			sprintf((char *)get_text,"\r\r  Town Preset Items: \r");
+		 	sprintf((char *)get_text,"\r\r  Town Preset Items: \r\r  Item Properties are recorded by bitwise manipulation:\r    1 =  identified\r    2 =  property\r    4 =  contained\r    8 =  cursed\r  16 =  used today\r\r");
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 				for (short i = 0; i < 144; i++) {
 					if (town.preset_items[i].which_item > 0) {
-			sprintf((char *)get_text,"   Item %d: item type = %d,  x,y = (%d,%d), item name = %s, charges = %d, properties = %d\r",i,town.preset_items[i].which_item,town.preset_items[i].item_loc.x,town.preset_items[i].item_loc.y,scen_data.scen_items[town.preset_items[i].which_item].full_name,town.preset_items[i].charges,town.preset_items[i].properties);
+			sprintf((char *)get_text,"   Item %d: item type = %d,  x,y = (%d,%d), charges = %d, properties = %d, full name = %s\r",i,town.preset_items[i].which_item,town.preset_items[i].item_loc.x,town.preset_items[i].item_loc.y,town.preset_items[i].charges,town.preset_items[i].properties,scen_data.scen_items[town.preset_items[i].which_item].full_name);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
@@ -1600,7 +1604,7 @@ void start_full_town_data_dump()
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 		for (short i = 0; i < 60; i++) {
         if (town.preset_fields[i].field_type >= 0) {
-			sprintf((char *)get_text,"   Preset field %d: x = %d, y = %d, field type = %d\r",i,town.preset_fields[i].field_loc.x,town.preset_fields[i].field_loc.y,town.preset_fields[i].field_type);
+			sprintf((char *)get_text,"   Preset field %d: x = %d, y = %d, field type = %d, name = %s\r",i,town.preset_fields[i].field_loc.x,town.preset_fields[i].field_loc.y,town.preset_fields[i].field_type,BOAFieldnames[town.preset_fields[i].field_type]);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
@@ -1625,7 +1629,7 @@ void start_full_town_data_dump()
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
 			}
-			
+
 			sprintf((char *)get_text,"\r\r  Area Descriptions: \r");
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
@@ -1652,7 +1656,7 @@ void start_full_town_data_dump()
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 		for (short i = 0; i < 80; i++) {
 			if (town.creatures[i].number > 0) {
-			sprintf((char *)get_text,"   Creature %d: x = %d, y = %d, type = %d, name = %s, attitude = %d, hidden class = %d, script = %s \r",i + 6,town.creatures[i].start_loc.x,town.creatures[i].start_loc.y,town.creatures[i].number,scen_data.scen_creatures[town.creatures[i].number].name,town.creatures[i].start_attitude,town.creatures[i].hidden_class,town.creatures[i].char_script);
+			sprintf((char *)get_text,"   Creature %d: x = %d, y = %d, type = %d, attitude = %d, hidden class = %d, script = %s, name = %s \r",i + 6,town.creatures[i].start_loc.x,town.creatures[i].start_loc.y,town.creatures[i].number,town.creatures[i].start_attitude,town.creatures[i].hidden_class,town.creatures[i].char_script,scen_data.scen_creatures[town.creatures[i].number].name);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
@@ -1673,7 +1677,6 @@ void start_full_town_data_dump()
 
 	FSClose(data_dump_file_id);
 }
-
 
 void start_currentout_data_dump()
 {
