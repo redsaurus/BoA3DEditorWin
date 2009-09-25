@@ -1557,6 +1557,102 @@ void start_town_data_dump()
 	FSClose(data_dump_file_id);
 }
 
+void scenariotext_data_dump()
+{
+	short i,j;
+	char get_text[280];
+	FILE *data_dump_file_id;
+	long len;
+	location out_sec;
+
+	if (NULL == (data_dump_file_id = fopen("Scenario Text and Data Write Up.txt", "wb"))) {
+		return;
+		}
+	sprintf((char *)get_text,"\r\rScenario Text and Data Write Up for %s:\r\r",scenario.scen_name);
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+		sprintf((char *)get_text,"  Scenario Version = %d.%d.%d\r\r  Variable Town Entries: \r",scenario.ver[0],scenario.ver[1],scenario.ver[2]);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+			for (short i = 0; i < 10; i++) {
+			sprintf((char *)get_text,"  Original Town %d:  Town Entered = %d, SDFX = %d, SDFY = %d\r",i,scenario.town_to_add_to[i],scenario.flag_to_add_to_town[i][0],scenario.flag_to_add_to_town[i][1]);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+	sprintf((char *)get_text,"\r\r  Item Placement Shortcuts: (Anyone ever use these in practice?)\r");
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+			for (short i = 0; i < 10; i++) {
+			sprintf((char *)get_text,"  Shortcut %d:  Terrain Type = %d, Property = %d, Terrain name = %s\r",i,scenario.storage_shortcuts[i].ter_type,scenario.storage_shortcuts[i].property,scen_data.scen_ter_types[scenario.storage_shortcuts[i].ter_type].ter_name);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+
+		sprintf((char *)get_text,"\r\r  Number of Outdoor Zones: %d.\r",scenario.out_width * scenario.out_height);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		sprintf((char *)get_text,"  Outdoor Width = %d, Outdoor Height = %d\r",scenario.out_width,scenario.out_height);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		sprintf((char *)get_text,"  Outdoor Start Zone: X = %d, Y = %d.\r",scenario.what_outdoor_section_start_in.x,scenario.what_outdoor_section_start_in.y);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		sprintf((char *)get_text,"  Outdoor Start Location: X = %d, Y = %d.\r",scenario.start_where_in_outdoor_section.x,scenario.start_where_in_outdoor_section.y);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		sprintf((char *)get_text,"\r  Number of towns = %d, Starting Town = %d.\r",scenario.num_towns,scenario.start_in_what_town);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		sprintf((char *)get_text,"  Starting Town Location: X = %d, Y = %d.\r",scenario.what_start_loc_in_town.x,scenario.what_start_loc_in_town.y);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		sprintf((char *)get_text,"  Last Outdoor Zone Edited: X = %d, Y = %d.\r",scenario.last_out_edited.x,scenario.last_out_edited.y);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		sprintf((char *)get_text,"  Last Town Edited = %d.\r",scenario.last_town_edited);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		sprintf((char *)get_text,"\r  All of the following paragraphs must be 255 characters long at most\r\r  Scenario Description = %s.\r\r",scenario.scen_desc);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		sprintf((char *)get_text,"  Introductory Pictures: %d, %d, %d\r\r",scenario.intro_pic_resources[0],scenario.intro_pic_resources[1],scenario.intro_pic_resources[2]);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+		sprintf((char *)get_text,"  Credits = %s.\r\r  Page 1 Introductory Text:\r",scenario.credits_text[1]);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+			for (short i = 0; i < 6; i++) {
+			sprintf((char *)get_text,"Paragraph %d:  \"%s\"\r",i,scenario.intro_text[0][i]);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+		sprintf((char *)get_text,"  \r\r  Page 2 Introductory Text:\r");
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+			for (short i = 0; i < 6; i++) {
+			sprintf((char *)get_text,"Paragraph %d:  \"%s\"\r",i,scenario.intro_text[1][i]);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+		sprintf((char *)get_text,"  \r\r  Page 3 Introductory Text:\r");
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+			for (short i = 0; i < 6; i++) {
+			sprintf((char *)get_text,"Paragraph %d:  \"%s\"\r",i,scenario.intro_text[2][i]);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+		sprintf((char *)get_text,"  \r\r\r");
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+	FSClose(data_dump_file_id);
+}
+
+
 void start_full_town_data_dump()
 {
 	short i,j;

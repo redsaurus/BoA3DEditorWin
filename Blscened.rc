@@ -210,24 +210,25 @@ BEGIN
     END
     POPUP "&Query"
     BEGIN
-        MENUITEM "A About Blades Scenario Editor", 1501
-        MENUITEM "B 3D Editor Credits", 1502
+        MENUITEM "A  About Blades Scenario Editor", 1501
+        MENUITEM "B  3D Editor Credits", 1502
         MENUITEM SEPARATOR
-        MENUITEM "C Query Functions:",                   1503
-        MENUITEM "D Write Scenario Data To Text File", 1504
-        MENUITEM "E Full Write up: Outdoor/Town Names", 1505
-        MENUITEM "F All Outdoor Zones: Full Write up", 1515
-        MENUITEM "G Current Outdoor Zone: Full Write up", 1516
-        MENUITEM "H Town: Write Data To File\tCtrl+E", 1506
-        MENUITEM "I Town: Full Write Data To File\tCtrl+F", 1513
+        MENUITEM "C  Query Functions:",                   1503
+        MENUITEM "D  Write Scenario Data To Text File", 1504
+        MENUITEM "E  Write Scenario Text To Text File", 1517
+        MENUITEM "F  Full Write up: Outdoor/Town Names", 1505
+        MENUITEM "G  All Outdoor Zones: Full Write up", 1515
+        MENUITEM "H  Current Outdoor Zone: Full Write up", 1516
+        MENUITEM "I  Town: Write Data To File\tCtrl+E", 1506
+        MENUITEM "J  Town: Full Write Data To File\tCtrl+F", 1513
         MENUITEM SEPARATOR
-        MENUITEM "J Increase Numerical Mode\tCtrl+G", 1507
-        MENUITEM "K Decrease Numerical Mode\tCtrl+H", 1508
+        MENUITEM "K  Increase Numerical Mode\tCtrl+G", 1507
+        MENUITEM "L  Decrease Numerical Mode\tCtrl+H", 1508
         MENUITEM SEPARATOR
-        MENUITEM "L Load Outdoor Zone Above\tCtrl+I", 1511
-				MENUITEM "M Load Previous Outdoor Zone/Town\tCtrl+J", 1509
-        MENUITEM "N Load Next Outdoor Zone/Town\tCtrl+K", 1510
-        MENUITEM "O Load Outdoor Zone Below\tCtrl+M", 1512
+        MENUITEM "M  Load Outdoor Zone Above\tCtrl+I", 1511
+				MENUITEM "N  Load Previous Outdoor Zone/Town\tCtrl+J", 1509
+        MENUITEM "O  Load Next Outdoor Zone/Town\tCtrl+K", 1510
+        MENUITEM "P  Load Outdoor Zone Below\tCtrl+M", 1512
     END
 END
 
@@ -1444,6 +1445,14 @@ BEGIN
     LTEXT           "1_63",1,228,89,66,20
     LTEXT           "0_5",2,162,89,62,20
     LTEXT           "This will list all placed special states, town entrances signs and area rectangles found in the current outdoor zone (along with their locations) in a file called 'Current Outdoor Zone Write Up.txt'.",3,22,21,271,66
+END
+
+889 DIALOG  10, 10, 357, 108
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,228,89,66,20
+    LTEXT           "0_5",2,162,89,62,20
+    LTEXT           "This will list all item placement shortcuts, variable town entries and introductory text in a file called 'Scenario Text and Data Write Up.txt'.",3,22,21,271,66
 END
 
 970 DIALOG  10, 10, 368, 145

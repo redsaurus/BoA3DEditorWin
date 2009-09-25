@@ -1190,6 +1190,11 @@ void handle_help_menu(int item_hit)
 			if (fancy_choice_dialog(888,0) == 1)
 				 start_currentout_data_dump();
 			break;
+			
+		case 17: //   Current outdoor zone write up
+			if (fancy_choice_dialog(889,0) == 1)
+				 scenariotext_data_dump();
+			break;
 
 		}
 	draw_main_screen();		

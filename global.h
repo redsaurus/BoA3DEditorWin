@@ -1534,6 +1534,7 @@ void start_town_data_dump();
 void start_full_town_data_dump();
 void start_fullout_data_dump();
 void start_currentout_data_dump();
+void scenariotext_data_dump();
 
 // dlogtool
 void cd_init_dialogs();
