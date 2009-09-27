@@ -33,7 +33,6 @@ short mode_count = 0;
 
 Boolean change_made_town = FALSE;
 Boolean change_made_outdoors = FALSE;
-
 Boolean file_is_loaded = FALSE;
 
 // DATA TO EDIT
@@ -65,7 +64,7 @@ short town_type = 0;  // 0 - big 1 - ave 2 - small
 short current_height_mode = 0; // 0 - no autohills, 1 - autohills
 Boolean editing_town = TRUE;
 short numerical_display_mode = 3;
-short cur_viewing_mode = 0; // 0 - big icons 1 - small icons 10 - big 3D icons 11 - 3D view as in game
+short cur_viewing_mode = 1; // 0 - big icons 1 - small icons 10 - big 3D icons 11 - 3D view as in game
 
 short overall_mode = 0;
 // 0 - 9 - different terrain painting modes

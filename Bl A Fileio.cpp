@@ -1324,11 +1324,12 @@ void start_data_dump()
 	FILE *data_dump_file_id;
 	long len;
 
-	if (NULL == (data_dump_file_id = fopen("Scenario Data.txt", "wb"))) {
+	 sprintf(get_text,"%s - Scendata.txt",scenario.scen_name);
+	if (NULL == (data_dump_file_id = fopen(get_text, "wb"))) {
 		oops_error(11);
 		return;
 		}
-		
+
 	sprintf((char *)get_text,"\r\rScenario data for %s:\r\r",scenario.scen_name);
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
@@ -1381,8 +1382,9 @@ void start_full_data_dump()
 	void load_outdoor();
 	location out_sec;
 	outdoor_record_type outdoor;
-
-	if (NULL == (data_dump_file_id = fopen("Scenario Write Up.txt", "wb"))) {
+	
+	 sprintf(get_text,"%s - Scenario Write Up.txt",scenario.scen_name);
+	if (NULL == (data_dump_file_id = fopen(get_text, "wb"))) {
 		return;
 		}
 
@@ -1565,7 +1567,8 @@ void scenariotext_data_dump()
 	long len;
 	location out_sec;
 
-	if (NULL == (data_dump_file_id = fopen("Scenario Text and Data Write Up.txt", "wb"))) {
+	 sprintf(get_text,"%s - Scenario Text and Data.txt",scenario.scen_name);
+	if (NULL == (data_dump_file_id = fopen(get_text, "wb"))) {
 		return;
 		}
 	sprintf((char *)get_text,"\r\rScenario Text and Data Write Up for %s:\r\r",scenario.scen_name);
@@ -1618,12 +1621,11 @@ void scenariotext_data_dump()
 		sprintf((char *)get_text,"  Introductory Pictures: %d, %d, %d\r\r",scenario.intro_pic_resources[0],scenario.intro_pic_resources[1],scenario.intro_pic_resources[2]);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-
 		sprintf((char *)get_text,"  Credits = %s.\r\r  Page 1 Introductory Text:\r",scenario.credits_text[1]);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 			for (short i = 0; i < 6; i++) {
-			sprintf((char *)get_text,"Paragraph %d:  \"%s\"\r",i,scenario.intro_text[0][i]);
+			sprintf((char *)get_text,"\"%s\"\r",i,scenario.intro_text[0][i]);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
@@ -1632,7 +1634,7 @@ void scenariotext_data_dump()
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 
 			for (short i = 0; i < 6; i++) {
-			sprintf((char *)get_text,"Paragraph %d:  \"%s\"\r",i,scenario.intro_text[1][i]);
+			sprintf((char *)get_text,"\"%s\"\r",i,scenario.intro_text[1][i]);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
@@ -1641,10 +1643,20 @@ void scenariotext_data_dump()
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 
 			for (short i = 0; i < 6; i++) {
-			sprintf((char *)get_text,"Paragraph %d:  \"%s\"\r",i,scenario.intro_text[2][i]);
+			sprintf((char *)get_text,"\"%s\"\r",i,scenario.intro_text[2][i]);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
+
+		sprintf((char *)get_text,"  \r\r  Page 1 Introductory Text:\r",scenario.credits_text[1]);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+			for (short i = 0; i < 6; i++) {
+			sprintf((char *)get_text,"Paragraph %d:  length = %d\r",i,len(scenario.intro_text[0][i]));
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+
 		sprintf((char *)get_text,"  \r\r\r");
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);

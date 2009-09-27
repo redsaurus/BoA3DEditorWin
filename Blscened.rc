@@ -213,22 +213,22 @@ BEGIN
         MENUITEM "A  About Blades Scenario Editor", 1501
         MENUITEM "B  3D Editor Credits", 1502
         MENUITEM SEPARATOR
-        MENUITEM "C  Query Functions:",                   1503
-        MENUITEM "D  Write Scenario Data To Text File", 1504
-        MENUITEM "E  Write Scenario Text To Text File", 1517
-        MENUITEM "F  Full Write up: Outdoor/Town Names", 1505
-        MENUITEM "G  All Outdoor Zones: Full Write up", 1515
-        MENUITEM "H  Current Outdoor Zone: Full Write up", 1516
-        MENUITEM "I  Town: Write Data To File\tCtrl+E", 1506
-        MENUITEM "J  Town: Full Write Data To File\tCtrl+F", 1513
+        MENUITEM "   Query Functions:",                   1503
+        MENUITEM "C  Write Scenario Data To Text File", 1504
+        MENUITEM "D  Write Scenario Text To Text File", 1517
+        MENUITEM "E  Full Write up: Outdoor/Town Names", 1505
+        MENUITEM "F  All Outdoor Zones: Full Write up", 1515
+        MENUITEM "G  Current Outdoor Zone: Full Write up", 1516
+        MENUITEM "H  Town: Write Data To File\tCtrl+E", 1506
+        MENUITEM "I  Town: Full Write Data To File\tCtrl+F", 1513
         MENUITEM SEPARATOR
-        MENUITEM "K  Increase Numerical Mode\tCtrl+G", 1507
-        MENUITEM "L  Decrease Numerical Mode\tCtrl+H", 1508
+        MENUITEM "J  Increase Numerical Mode\tCtrl+G", 1507
+        MENUITEM "K  Decrease Numerical Mode\tCtrl+H", 1508
         MENUITEM SEPARATOR
-        MENUITEM "M  Load Outdoor Zone Above\tCtrl+I", 1511
-				MENUITEM "N  Load Previous Outdoor Zone/Town\tCtrl+J", 1509
-        MENUITEM "O  Load Next Outdoor Zone/Town\tCtrl+K", 1510
-        MENUITEM "P  Load Outdoor Zone Below\tCtrl+M", 1512
+        MENUITEM "L  Load Outdoor Zone Above", 1511
+				MENUITEM "M  Load Previous Outdoor Zone/Town\tCtrl+J", 1509
+        MENUITEM "N  Load Next Outdoor Zone/Town\tCtrl+K", 1510
+        MENUITEM "O  Load Outdoor Zone Below", 1512
     END
 END
 
@@ -316,59 +316,61 @@ BEGIN
     LTEXT           "2_0",17,229,324,38,15
 END
 
-803 DIALOG  10, 10, 444, 387
+803 DIALOG  10, 10, 610, 387
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,579,523,31,10,WS_GROUP
     LTEXT           "6_0",2,158,98,43,16
     LTEXT           "6_0",3,211,98,43,16
     LTEXT           "6_0",4,264,98,43,16
-    LTEXT           "6_0",5,158,122,243,47
-    LTEXT           "6_0",6,158,177,243,47
-    LTEXT           "6_0",7,158,232,243,22
-    LTEXT           "6_0",8,168,266,44,16
-    LTEXT           "6_0",9,279,266,44,16
-    LTEXT           "1_63",10,348,352,54,16
-    LTEXT           "2_0",11,156,303,23,14
-    LTEXT           "2_0",12,156,320,23,14
-    LTEXT           "2_0",13,156,337,23,14
-    LTEXT           "2_0",14,156,354,32,15
-    LTEXT           "*High",15,219,267,53,15
-    LTEXT           "*Level range:   Low  ",16,26,267,135,14
-    LTEXT           "*Scenario Name",17,26,231,121,17
-    LTEXT           "*Rating:",18,26,299,54,14
-    LTEXT           "*Everyone",19,83,299,46,15
-    LTEXT           "*Teen",20,83,316,46,15
-    LTEXT           "*Mature",21,83,333,46,15
-    LTEXT           "*Adult",22,83,350,64,16
+    LTEXT           "6_0",5,158,122,380,47
+    LTEXT           "6_0",6,158,177,380,60
+    LTEXT           "6_0",7,158,252,380,22
+    LTEXT           "6_0",8,168,286,44,16
+    LTEXT           "6_0",9,279,286,44,16
+    LTEXT           "1_63",10,500,372,54,16
+    LTEXT           "2_0",11,156,323,23,14
+    LTEXT           "2_0",12,156,340,23,14
+    LTEXT           "2_0",13,156,357,23,14
+    LTEXT           "2_0",14,156,374,32,15
+    LTEXT           "*High",15,219,287,53,15
+    LTEXT           "*Level range:   Low  ",16,26,287,135,14
+    LTEXT           "*Scenario Name",17,26,251,121,17
+    LTEXT           "*Rating:",18,26,319,54,14
+    LTEXT           "*Everyone",19,83,319,46,15
+    LTEXT           "*Teen",20,83,336,46,15
+    LTEXT           "*Mature",21,83,353,46,15
+    LTEXT           "*Adult",22,83,370,64,16
     LTEXT           "This is where you can define the various pieces of information the user will see when deciding whether or not to play your scenario. The meanings of all these fields are given in the documentation.",
-                    23,27,41,372,53
+                    23,27,41,511,53
     LTEXT           "~Scenario Details",24,27,24,256,17
     LTEXT           "*Version number:",25,26,99,120,14
     LTEXT           "*Credits:",26,26,120,120,14
     LTEXT           "*Description, Part 1:",27,26,176,120,14
 END
 
-804 DIALOG  10, 10, 555, 583
+804 DIALOG  10, 10, 700, 700
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,369,337,31,10,WS_GROUP
-    LTEXT           "6_0",2,33,134,463,59
-    LTEXT           "6_0",3,33,200,463,59
-    LTEXT           "6_0",4,33,266,463,59
-    LTEXT           "6_0",5,33,332,463,59
-    LTEXT           "6_0",6,33,398,463,59
-    LTEXT           "6_0",7,33,464,463,59
-    LTEXT           "6_0",8,387,76,70,16
-    LTEXT           "1_63",9,439,536,61,16
-    LTEXT           "0_5",10,373,536,63,16
+    LTEXT           "6_0",2,33,134,520,59
+    LTEXT           "6_0",3,33,200,520,59
+    LTEXT           "6_0",4,33,266,520,59
+    LTEXT           "6_0",5,33,332,520,59
+    LTEXT           "6_0",6,33,398,520,59
+    LTEXT           "6_0",7,33,464,520,59
+    LTEXT           "6_0",8,410,76,70,16
+    LTEXT           "1_63",9,489,560,61,16
+    LTEXT           "0_5",10,423,560,63,16
     LTEXT           "~Scenario Icon/Intro",11,26,27,256,17
     LTEXT           "You can select a graphic the user sees when seeing this part of the intro. Give the resource number for a graphic which you provide. If you are not providing a custom graphic for this, leave this at -1.",
                     12,26,46,313,64
     LTEXT           "~Introductory text:",13,26,114,136,15
-    LTEXT           "*Graphic to display:",14,344,56,149,14
-    LTEXT           "*Text number (0..2):",15,273,114,136,15
-    LTEXT           "*a",16,412,114,46,15
+    LTEXT           "*Graphic to display:",14,394,56,149,14
+    LTEXT           "*Text number (0..2):",15,394,114,116,15
+    LTEXT           "*a",16,530,114,46,15
+    LTEXT           "Cut, Copy and Paste Functions: ",17,33,534,313,14
+    LTEXT           "Can only be accessed by right-clicking the text |box and choosing them from the context menu.",18,33,552,313,32
 END
 
 805 DIALOG  10, 10, 545, 172
@@ -1008,7 +1010,7 @@ BEGIN
     DEFPUSHBUTTON   "OK",1,329,223,31,10,WS_GROUP
     LTEXT           "6_0",2,139,66,151,16
     LTEXT           "6_0",3,139,90,151,16
-    LTEXT           "6_0",4,160,151,78,16
+    LTEXT           "6_0",4,185,151,58,16
     LTEXT           "*Section name:",5,22,68,101,14
     LTEXT           "*Coordinates:",6,22,44,87,14
     LTEXT           "*",7,114,44,127,14
@@ -1017,8 +1019,8 @@ BEGIN
     LTEXT           "1_63",10,232,184,63,16
     LTEXT           "*Section script:",11,22,92,109,14
     LTEXT           "~Outdoors Details",12,22,21,256,17
-    LTEXT           "*Region number: (leave at 0 if you don't know what this is)",
-                    13,22,136,127,47
+    LTEXT           "*Region number: |(leave at 0 if you don't know what this is)",
+                    13,22,136,150,47
 END
 
 852 DIALOG  10, 10, 632, 467
@@ -1099,8 +1101,8 @@ END
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,283,273,31,10,WS_GROUP
-    LTEXT           "1_63",2,165,165,61,16
-    LTEXT           "0_5",3,99,165,62,16
+    LTEXT           "1_63",2,165,170,61,16
+    LTEXT           "0_5",3,99,170,62,16
     LTEXT           "~Choose An Outdoor Section",4,26,22,185,16
     LTEXT           "Select the outdoor section you want to load.",5,44,44,
                     178,30
@@ -1120,12 +1122,12 @@ END
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
-    LTEXT           "6_0",2,77,71,62,16
-    LTEXT           "1_63",3,152,95,58,16
-    LTEXT           "0_5",4,86,95,62,16
+    LTEXT           "6_0",2,77,76,62,16
+    LTEXT           "1_63",3,152,100,58,16
+    LTEXT           "0_5",4,77,100,62,16
     LTEXT           "~Pick Town to Edit:",5,25,19,167,17
     LTEXT           "Enter the number of the town you want to edit next:",6,25,38,185,28
-    LTEXT           "0_109",7,152,68,63,13
+    LTEXT           "0_109",7,152,73,63,13
 END
 
 856 DIALOG  10, 10, 284, 149
@@ -1240,10 +1242,9 @@ END
 866 DIALOG  10, 10, 357, 108
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    LTEXT           "1_63",1,228,95,66,20
-    LTEXT           "0_5",2,162,95,62,20
-    LTEXT           "Do you want a list of all the floor, terrain, monster, and item types in your scenario to be put in a file called 'Scenario data'? You can then print out this file to act as a handy reference while designing your scenario.",
-                    3,22,21,271,66
+    LTEXT           "1_63",1,228,105,66,20
+    LTEXT           "0_5",2,162,105,62,20
+    LTEXT           "Do you want a list of all the floor, terrain, monster, and item types in your scenario to be put in a file called '(Scenario Name) - Scendata.txt'? You can then print out this file to act as a handy reference while designing your scenario.",3,22,21,271,66
 END
 
 867 DIALOG  10, 10, 337, 165
@@ -1339,9 +1340,9 @@ BEGIN
     LTEXT           "Second, all special encounters and dialogue are now handled through scripts. This editor will translate your old data into new scripts. However, this translation will require some testing and adaption on your part.",
                     6,39,168,313,67
     LTEXT           "Third, because Blades of Avernum is very different from Blades of Exile, a bit of work will be needed on each town and outdoor section to get it to work with the new system. This feature DOES NOT result in a finished, playable scenario.",
-                    7,38,236,313,67
+                    7,38,241,313,67
     LTEXT           "For more information on differences between the two systems and things you will need to do to complete the adaption, consult the documentation. If you're ready, you can now select a scenario file.",
-                    8,22,305,329,52
+                    8,22,310,329,52
 END
 
 877 DIALOG  10, 10, 341, 91
@@ -1387,7 +1388,7 @@ STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,228,95,66,20
     LTEXT           "0_5",2,162,95,62,20
-    LTEXT           "Do you want a list of all the outdoor zone and town names in your scenario to be put in a file called 'Scenario Write Up'? This will also include a list of other things like town entrances.",
+    LTEXT           "Do you want a list of all the outdoor zone and town names in your scenario to be put in a file called '(Scenario Name) - Scenario Write Up.txt'? This will also include a list of other things like town entrances.",
                     3,22,21,271,66
 END
 
@@ -1404,7 +1405,7 @@ STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,216,58,66,20
     LTEXT           "0_5",2,150,58,62,20
-    LTEXT           "Do you want to erase all fields (blocked spaces, webs, crates, barrels and barriers) in this town?",3,26,25,258,32
+    LTEXT           "Do you want to erase all fields (blocked spaces, webs, crates, barrels and barriers) in this town?",3,26,20,258,32
 END
 
 884 DIALOG  10, 10, 341, 91
@@ -1412,7 +1413,7 @@ STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,216,58,66,20
     LTEXT           "0_5",2,150,58,62,20
-    LTEXT           "Do you want to erase all stains (blood, slime pools, bones and rocks) in this town?",3,26,25,258,32
+    LTEXT           "Do you want to erase all stains (blood, slime pools, bones and rocks) in this town?",3,26,20,258,32
 END
 
 885 DIALOG  10, 10, 341, 91
@@ -1420,7 +1421,7 @@ STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,216,58,66,20
     LTEXT           "0_5",2,150,58,62,20
-    LTEXT           "Do you want to erase all special encounters in this outdoor zone?",3,26,25,258,32
+    LTEXT           "Do you want to erase all special encounters in this outdoor zone?",3,26,20,258,32
 END
 
 886 DIALOG  10, 10, 357, 108
@@ -1452,7 +1453,7 @@ STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,228,89,66,20
     LTEXT           "0_5",2,162,89,62,20
-    LTEXT           "This will list all item placement shortcuts, variable town entries and introductory text in a file called 'Scenario Text and Data Write Up.txt'.",3,22,21,271,66
+    LTEXT           "This will list all item placement shortcuts, variable town entries and introductory text in a file called '(Scenario Name) - Scenario Text and Data.txt'.",3,22,21,271,66
 END
 
 970 DIALOG  10, 10, 368, 145
@@ -1528,8 +1529,8 @@ END
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "",1,229,331,58,10,WS_GROUP
-    LTEXT           "1_63",2,221,290,62,16
-    LTEXT           "0_5",3,155,290,62,16
+    LTEXT           "1_63",2,221,300,62,16
+    LTEXT           "0_5",3,155,300,62,16
     LTEXT           "~Change Outdoor Size",4,26,22,163,16
     LTEXT           "~Warning:  If you decrease the size on any side, those sectors will be lost!",
                     5,46,44,255,32
@@ -1584,13 +1585,13 @@ END
 1063 DIALOG  10, 10, 518, 388
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    LTEXT           "1_63",1,411,349,61,20
-    LTEXT           "Blades of Avernum 3D Editor version 20.6.2009",2,22,24,425,51
-    LTEXT           "Originally created by Notus, for the Macintosh platfrom.",3,22,78,439,83
-    LTEXT           "Ported to Windows by Isaac, who is also missing in action."4,22,162,451,67
-    LTEXT           "Latest version: serious programming by Niemand.  Aesthetic touches by Ishad Nha.",5,22,230,449,50
-    LTEXT           "Any problems, be sure to consult the Editor documentation, which comes with the official Spiderweb editor.",6,22,281,371,32
-    LTEXT           "There is an official Spiderweb forum devoted exclusively to Editor issues, see: http://www.ironycentral.com/forum/ubbthreads.php?ubb=cfrm",7,22,314,353,53
+    LTEXT           "1_63",1,411,200,61,20
+    LTEXT           "Blades of Avernum 3D Editor version 2009",2,22,24,440,23
+    LTEXT           "Originally created by Notus, for the Macintosh platfrom.",3,22,48,440,23
+    LTEXT           "Ported to Windows by Isaac, who is also missing in action."4,22,72,440,22
+    LTEXT           "Latest version: serious programming by Niemand.  Aesthetic touches by Ishad Nha.",5,22,96,440,22
+    LTEXT           "Any problems, be sure to consult the Editor documentation, which comes with the official Spiderweb editor.",6,22,130,440,22
+    LTEXT           "There is an official Spiderweb forum devoted exclusively to Editor issues, see: http://www.ironycentral.com/forum/ubbthreads.php?ubb=cfrm",7,22,164,440,23
 END
 
 

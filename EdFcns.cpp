@@ -64,7 +64,7 @@ bool object_sticky_draw;
 short current_floor_drawn = 0;
 short current_terrain_drawn = 0;
 
-char hintbook_mode = 0;
+char hintbook_mode = 1;
 
 // if a terrain type has special property from 19-30, it is a slope. this
 // array says what corners for these 12 terrain types are elevated.
@@ -1446,7 +1446,7 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 						}					
 					}
 				break;		
-		case 41: // 41 - delete instance
+		case 41: // 41 - delete instance and return to mode 40: select instance.
 				for (i = 0; i < 12000; i++) {
 
 					item_to_try = (selected_item_number + i) % 12000;
@@ -1542,6 +1542,34 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 						}
 				reset_drawing_mode(); 
 				break;		
+				
+		case 51: // 51 - delete instance and remain in delete mode
+				set_cursor(7);
+				for (i = 0; i < 12000; i++) {
+
+					item_to_try = (selected_item_number + i) % 12000;
+					// select creature
+					if ((item_to_try >= 7000) && (item_to_try < 7000 + NUM_TOWN_PLACED_CREATURES) && (town.creatures[item_to_try % 1000].exists())) {
+						if (same_point(spot_hit,town.creatures[item_to_try % 1000].start_loc)) {
+							town.creatures[item_to_try % 1000].number = -1;
+							}
+						}
+
+					// select ter script
+					if ((item_to_try >= 7000) && (item_to_try < 7000 + NUM_TER_SCRIPTS) && (town.ter_scripts[item_to_try % 1000].exists)) {
+						if (same_point(spot_hit,town.ter_scripts[item_to_try % 1000].loc)) {
+							town.ter_scripts[item_to_try % 1000].exists = FALSE;
+							}
+						}
+
+					// select item
+					if ((item_to_try >= 11000) && (item_to_try < 11000 + NUM_TOWN_PLACED_ITEMS) && (town.preset_items[item_to_try % 1000].exists())) {
+						if (same_point(spot_hit,town.preset_items[item_to_try % 1000].item_loc)) {
+							town.preset_items[item_to_try % 1000].which_item = -1;
+							}
+						}
+					}
+				break;
 
 		case 57: // 57 - place nav point
 				create_navpoint(spot_hit); 
@@ -2031,12 +2059,30 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 		return FALSE;
 	}
 	
-	if (((wParam == VK_DELETE) || (wParam == VK_BACK)) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
+	if ((wParam == VK_BACK) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
+	if (selected_item_number > -1) {
+	delete_selected_instance();
+	set_string("Selected Instance Deleted","");
+	}
+	}
+
+	if ((wParam == VK_DELETE) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
 		set_string("Delete an object","Select object");
 		set_cursor(7);
 		overall_mode = 41;		
 	}
-		
+	if ((wParam == VK_HOME) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
+		set_string("Select/edit placed object","Select object to edit");
+		set_cursor(7);
+		overall_mode = 40;
+	}
+
+	if ((wParam == VK_END) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
+		set_string("Delete one object after another","Select next object to delete");
+		set_cursor(7);
+		overall_mode = 51;
+	}
+
 	return FALSE;
 // q_3DModEnd
 }
@@ -2193,11 +2239,12 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 				small_any_drawn = FALSE;
 				draw_terrain();
 	break;
-
+/*
 	case '-': // Delete selected instance
 	delete_selected_instance();
 	set_string("Selected Instance Deleted","");
 	break;
+*/
 	case '=': // Clear selected instance
 	set_string("Drawing mode","  ");
 	selected_item_number = -1;
@@ -2205,6 +2252,11 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	overall_mode = 0;
 	break;
 
+	case ';': // Clear Space
+	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][4].left;
+	pass_point.y = 6 + palette_buttons[6][4].top;
+	handle_action(pass_point,wParam,-1);
+	break;
 
 	case ',': // Cut selected instance
 			set_string("Instance copied and deleted","  ");
@@ -2238,9 +2290,8 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	handle_action(pass_point,wParam,-1);
 	break;
 
-												
 // q_3DModStart
-			case VK_TAB:	// '\t':
+	case VK_TAB:	// '\t':
 //				if (option_hit != 0) {
 				if ( ctrl_key ) {					// toggle Realistic mode
 					pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][1].left;
@@ -3646,7 +3697,7 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 1503; i < 1517; i++)
+		for (short i = 1503; i < 1518; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 
 		return;
@@ -3670,18 +3721,14 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
-		for (short i = 1503; i < 1517; i++)
+		for (short i = 1503; i < 1518; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 	}
 	else {
 		EnableMenuItem(menu,101,MF_ENABLED | MF_BYCOMMAND);
 		EnableMenuItem(menu,102,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu,103,MF_GRAYED | MF_BYCOMMAND);
-		EnableMenuItem(menu,104,MF_GRAYED | MF_BYCOMMAND);
-		EnableMenuItem(menu,105,MF_GRAYED | MF_BYCOMMAND);
-		EnableMenuItem(menu,106,MF_GRAYED | MF_BYCOMMAND);
-		EnableMenuItem(menu,107,MF_GRAYED | MF_BYCOMMAND);
-		EnableMenuItem(menu,108,MF_GRAYED | MF_BYCOMMAND);
+		for (short i = 103; i < 109; i++)
+			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 301; i < 320; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 401; i < 413; i++)
@@ -3690,7 +3737,7 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 1503; i < 1517; i++)
+		for (short i = 1503; i < 1518; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 	}
 }
