@@ -221,14 +221,15 @@ BEGIN
         MENUITEM "G  Current Outdoor Zone: Full Write up", 1516
         MENUITEM "H  Town: Write Data To File\tCtrl+E", 1506
         MENUITEM "I  Town: Full Write Data To File\tCtrl+F", 1513
+        MENUITEM "J  Repeat Printing of Last File\tCtrl+P", 1514
         MENUITEM SEPARATOR
-        MENUITEM "J  Increase Numerical Mode\tCtrl+G", 1507
-        MENUITEM "K  Decrease Numerical Mode\tCtrl+H", 1508
+        MENUITEM "K  Increase Numerical Mode\tCtrl+G", 1507
+        MENUITEM "L  Decrease Numerical Mode\tCtrl+H", 1508
         MENUITEM SEPARATOR
-        MENUITEM "L  Load Outdoor Zone Above", 1511
-				MENUITEM "M  Load Previous Outdoor Zone/Town\tCtrl+J", 1509
-        MENUITEM "N  Load Next Outdoor Zone/Town\tCtrl+K", 1510
-        MENUITEM "O  Load Outdoor Zone Below", 1512
+        MENUITEM "M  Load Outdoor Zone Above", 1511
+				MENUITEM "N  Load Previous Outdoor Zone/Town\tCtrl+J", 1509
+        MENUITEM "O  Load Next Outdoor Zone/Town\tCtrl+K", 1510
+        MENUITEM "P  Load Outdoor Zone Below", 1512
     END
 END
 
@@ -259,6 +260,7 @@ BEGIN
     "^J",           1509,                   ASCII,  NOINVERT
     "^K",           1510,                   ASCII,  NOINVERT
     "^F",           1513,                   ASCII,  NOINVERT
+    "^P",           1514,                   ASCII,  NOINVERT
     VK_LEFT,        1509,                   VIRTKEY, CONTROL, NOINVERT
     VK_RIGHT,       1510,                   VIRTKEY, CONTROL, NOINVERT
     VK_UP,          1511,                   VIRTKEY, CONTROL, NOINVERT
@@ -369,8 +371,7 @@ BEGIN
     LTEXT           "*Graphic to display:",14,394,56,149,14
     LTEXT           "*Text number (0..2):",15,394,114,116,15
     LTEXT           "*a",16,530,114,46,15
-    LTEXT           "Cut, Copy and Paste Functions: ",17,33,534,313,14
-    LTEXT           "Can only be accessed by right-clicking the text |box and choosing them from the context menu.",18,33,552,313,32
+    LTEXT           "Cut, Copy and Paste functions can only be accessed by right-clicking the relevant text box.",17,33,534,520,14
 END
 
 805 DIALOG  10, 10, 545, 172
@@ -1244,7 +1245,7 @@ STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,228,105,66,20
     LTEXT           "0_5",2,162,105,62,20
-    LTEXT           "Do you want a list of all the floor, terrain, monster, and item types in your scenario to be put in a file called '(Scenario Name) - Scendata.txt'? You can then print out this file to act as a handy reference while designing your scenario.",3,22,21,271,66
+    LTEXT           "Do you want a list of all the floor, terrain, monster, and item types in your scenario to be put in a file called '(Scenario Name) - Scenario Data.txt'? You can then print out this file to act as a handy reference while designing your scenario.",3,22,21,271,66
 END
 
 867 DIALOG  10, 10, 337, 165
@@ -1397,7 +1398,7 @@ STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,228,89,66,20
     LTEXT           "0_5",2,162,89,62,20
-    LTEXT           "This will list all items, placed special states and fields, along with their locations and types, in a file called 'Concise Town Report'. Null entries will be omitted.",3,22,21,271,66
+    LTEXT           "This will list all items, placed special states and fields, along with their locations and types, in a file called '(Scenario Name) - Concise Town Report.txt'. Null entries will be omitted.",3,22,21,271,66
 END
 
 883 DIALOG  10, 10, 341, 91
@@ -1424,12 +1425,12 @@ BEGIN
     LTEXT           "Do you want to erase all special encounters in this outdoor zone?",3,26,20,258,32
 END
 
-886 DIALOG  10, 10, 357, 108
+886 DIALOG  10, 10, 357, 140
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    LTEXT           "1_63",1,228,95,66,20
-    LTEXT           "0_5",2,162,95,62,20
-    LTEXT           "This will list all placed special states, items, fields, terrain scripts and creatures (along with their locations and types) in a file called 'Full Town Report.txt'. Contents of terrain script and creature memory cells are included too.",3,22,21,271,66
+    LTEXT           "1_63",1,228,110,66,20
+    LTEXT           "0_5",2,162,110,62,20
+    LTEXT           "This will list all placed special states, items, fields, terrain scripts and creatures (along with their locations and types) in a file called '(Scenario Name) - Full Town Report.txt'. Contents of terrain script and creature memory cells are included too.",3,22,21,271,66
 END
 
 887 DIALOG  10, 10, 357, 108
@@ -1437,15 +1438,15 @@ STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,228,89,66,20
     LTEXT           "0_5",2,162,89,62,20
-    LTEXT           "This will list all the placed special states, town entrances and signs, for each zone, in a file called 'Outdoor Zones Write Up.txt'.  It will also list their locations.",3,22,21,271,66
+    LTEXT           "This will list all the placed special states, town entrances and signs, for each zone, in a file called '(Scenario Name) - Outdoor Zones Write Up.txt'.  It will also list their locations.",3,22,21,271,66
 END
 
-888 DIALOG  10, 10, 357, 108
+888 DIALOG  10, 10, 357, 122
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    LTEXT           "1_63",1,228,89,66,20
-    LTEXT           "0_5",2,162,89,62,20
-    LTEXT           "This will list all placed special states, town entrances signs and area rectangles found in the current outdoor zone (along with their locations) in a file called 'Current Outdoor Zone Write Up.txt'.",3,22,21,271,66
+    LTEXT           "1_63",1,228,99,66,20
+    LTEXT           "0_5",2,162,99,62,20
+    LTEXT           "This will list all placed special states, town entrances signs and area rectangles found in the current outdoor zone (along with their locations) in a file called '(Scenario Name) - Current Outdoor Zone Write Up.txt'.",3,22,21,271,66
 END
 
 889 DIALOG  10, 10, 357, 108

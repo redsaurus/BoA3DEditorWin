@@ -163,7 +163,7 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam);
 // void max_window(HWND window);
 void check_colors();
 void check_game_done();
-
+short last_file_printed = 0;
 //MW specified argument and return type.
 int APIENTRY _tWinMain (HINSTANCE hInstance,
 						HINSTANCE /* hPrevInstance */,
@@ -1026,16 +1026,22 @@ void handle_help_menu(int item_hit)
 				fancy_choice_dialog(1063,0);
 			break;	
 		case 4: //   Write Scenario Data to Text File
-			if (fancy_choice_dialog(866,0) == 1)
-				start_data_dump();
+			if (fancy_choice_dialog(866,0) == 1) {
+         last_file_printed = 0;
+				 start_data_dump();
+				 }
 			break;
 		case 5: //   Do full write up
-			if (fancy_choice_dialog(881,0) == 1)
-				start_full_data_dump();
+			if (fancy_choice_dialog(881,0) == 1) {
+         last_file_printed = 5;
+				 start_full_data_dump();
+				 }
 			break;
 		case 6: //   Filtered print out of town data
-			if (fancy_choice_dialog(882,0) == 1)
-				start_town_data_dump();
+			if (fancy_choice_dialog(882,0) == 1) {
+         last_file_printed = 6;
+				 start_town_data_dump();
+				 }
 			break;
 		case 7: //   Rotate current numerical display mode: going forwards
 					numerical_display_mode = ((numerical_display_mode + 1) % 5);
@@ -1176,23 +1182,63 @@ void handle_help_menu(int item_hit)
 			break;
 			
 		case 13: //   Full print out of town data
-			if (fancy_choice_dialog(886,0) == 1)
+			if (fancy_choice_dialog(886,0) == 1) {
+			   last_file_printed = 13;
 				 start_full_town_data_dump();
+				 }
 			break;
+			
+		case 14: //   Repeat print of last file printed
+         if (last_file_printed == 0) {
+				 set_string("Repeat Printing of Last File:","Scenario Data.txt");
+				 start_data_dump();
+				 }
+         if (last_file_printed == 5) {
+				 set_string("Repeat Printing of Last File:","Scenario Write Up.txt");
+				 start_full_data_dump();
+				 }
+         if (last_file_printed == 6) {
+				 set_string("Repeat Printing of Last File:","Concise Town Report.txt");
+				 start_town_data_dump();
+				 }
+         if (last_file_printed == 13) {
+				 set_string("Repeat Printing of Last File:","Full Town Report.txt");
+				 start_full_town_data_dump();
+				 }
+         if (last_file_printed == 15) {
+				 set_string("Repeat Printing of Last File:","Outdoor Zones Write Up.txt");
+				 start_full_data_dump();
+				 }
+         if (last_file_printed == 16) {
+				 set_string("Repeat Printing of Last File:","Current Outdoor Zone Write Up.txt");
+				 start_currentout_data_dump();
+				 }
+         if (last_file_printed == 17) {
+				 set_string("Repeat Printing of Last File:","Scenario Text and Data.txt");
+				 scenariotext_data_dump();
+				 }
+
+				break;
 
 		case 15: //   Lists all special rectangles, town locations for each zone.
-			if (fancy_choice_dialog(887,0) == 1)
+			if (fancy_choice_dialog(887,0) == 1) {
+         last_file_printed = 15;
 				 start_fullout_data_dump();
+				 }
 			break;
 
 		case 16: //   Current outdoor zone write up
-			if (fancy_choice_dialog(888,0) == 1)
+			if (fancy_choice_dialog(888,0) == 1) {
+         last_file_printed = 16;
 				 start_currentout_data_dump();
+				 }
 			break;
 			
 		case 17: //   Current outdoor zone write up
-			if (fancy_choice_dialog(889,0) == 1)
+			if (fancy_choice_dialog(889,0) == 1) {
+         last_file_printed = 17;
 				 scenariotext_data_dump();
+				 }
 			break;
 
 		}
