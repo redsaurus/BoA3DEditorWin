@@ -280,17 +280,15 @@ END
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,448,410,31,10,WS_GROUP
-    LTEXT           "6_0",2,329,48,125,32
-    LTEXT           "6_0",3,329,110,125,16
-    LTEXT           "1_63",4,398,169,62,16
+    LTEXT           "6_0",2,35,90,410,20
+    LTEXT           "6_0",3,35,180,210,20
+    LTEXT           "1_63",4,398,250,62,16
     LTEXT           "~Create a new scenario:",5,28,20,194,14
-    LTEXT           "What is the file name for your new scenario? (max. length 20 characters, letters only) |  Examples: thorham, dragonq",
-                    6,30,90,292,56
-    LTEXT           "What is the name of your new scenario? (max. length 49 characters) |   Examples: 'Hammer of Thor', 'Dragon's Quest'",
-                    7,30,46,292,40
-    LTEXT           "0_5",8,332,169,62,16
-    LTEXT           "*Start with surface terrain",9,30,149,177,15
-    LTEXT           "2_0",10,211,152,38,15
+    LTEXT           "What is the file name for your new scenario? (max. length 20 characters, letters only) |  Examples: thorham, dragonq",6,30,125,292,56
+    LTEXT           "What is the name of your new scenario? (max. length 49 characters) |   Examples: 'Hammer of Thor', 'Dragon's Quest'",7,30,46,410,40
+    LTEXT           "0_5",8,332,250,62,16
+    LTEXT           "*Start with surface terrain",9,30,220,177,15
+    LTEXT           "2_0",10,211,223,38,15
 END
 
 801 DIALOG  10, 10, 467, 392
@@ -325,17 +323,17 @@ BEGIN
     LTEXT           "6_0",2,158,98,43,16
     LTEXT           "6_0",3,211,98,43,16
     LTEXT           "6_0",4,264,98,43,16
-    LTEXT           "6_0",5,158,122,380,47
-    LTEXT           "6_0",6,158,177,380,60
+    LTEXT           "6_0",5,158,124,380,47
+    LTEXT           "6_0",6,158,179,380,60
     LTEXT           "6_0",7,158,252,380,22
-    LTEXT           "6_0",8,168,286,44,16
-    LTEXT           "6_0",9,279,286,44,16
-    LTEXT           "1_63",10,500,372,54,16
+    LTEXT           "6_0",8,158,286,44,16
+    LTEXT           "6_0",9,269,286,44,16
+    LTEXT           "1_63",10,500,392,54,16
     LTEXT           "2_0",11,156,323,23,14
     LTEXT           "2_0",12,156,340,23,14
     LTEXT           "2_0",13,156,357,23,14
     LTEXT           "2_0",14,156,374,32,15
-    LTEXT           "*High",15,219,287,53,15
+    LTEXT           "*High",15,219,287,43,15
     LTEXT           "*Level range:   Low  ",16,26,287,135,14
     LTEXT           "*Scenario Name",17,26,251,121,17
     LTEXT           "*Rating:",18,26,319,54,14
@@ -347,8 +345,9 @@ BEGIN
                     23,27,41,511,53
     LTEXT           "~Scenario Details",24,27,24,256,17
     LTEXT           "*Version number:",25,26,99,120,14
-    LTEXT           "*Credits:",26,26,120,120,14
-    LTEXT           "*Description, Part 1:",27,26,176,120,14
+    LTEXT           "*Credits:",26,26,125,125,14
+    LTEXT           "*Description, Part 1:",27,26,182,120,14
+//  LTEXT           "0_5",28,432,392,62,16
 END
 
 804 DIALOG  10, 10, 700, 700
@@ -378,29 +377,29 @@ END
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,369,337,31,10,WS_GROUP
-    LTEXT           "6_0",2,387,76,70,16
+    LTEXT           "6_0",2,387,74,70,16
     LTEXT           "1_63",3,430,127,61,16
     LTEXT           "0_5",4,364,127,62,16
     LTEXT           "~Scenario Label Picture",5,26,27,256,17
-    LTEXT           "You can select what icon the user sees when selecting your scenario. Give the number of a graphics resource that contains a 64x64 icon. If you don't know what to enter, the icons available are listed in the documentation.",
+    LTEXT           "You can select what icon the user sees when |selecting your scenario. Give the number of a |graphics resource that contains a 64x64 icon. |If you don't know what to enter, the icons |available are listed in the documentation.",
                     6,26,46,313,64
-    LTEXT           "*Scenario icon number:",7,344,56,149,14
+    LTEXT           "*Scenario icon number:",7,344,49,149,14
 END
 
 810 DIALOG  10, 10, 521, 434
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,397,403,67,16,WS_GROUP
-    LTEXT           "6_0",2,120,148,67,16
-    LTEXT           "6_0",3,120,176,67,16
-    LTEXT           "6_0",4,120,204,67,16
-    LTEXT           "6_0",5,120,232,67,16
-    LTEXT           "6_0",6,120,260,67,16
-    LTEXT           "6_0",7,120,288,67,16
-    LTEXT           "6_0",8,120,316,67,16
-    LTEXT           "6_0",9,120,344,67,16
-    LTEXT           "6_0",10,120,372,67,16
-    LTEXT           "6_0",11,120,400,67,16
+    DEFPUSHBUTTON   "OK",1,397,503,67,16,WS_GROUP
+    LTEXT           "6_0",2,120,148,40,16
+    LTEXT           "6_0",3,120,176,40,16
+    LTEXT           "6_0",4,120,204,40,16
+    LTEXT           "6_0",5,120,232,40,16
+    LTEXT           "6_0",6,120,260,40,16
+    LTEXT           "6_0",7,120,288,40,16
+    LTEXT           "6_0",8,120,316,40,16
+    LTEXT           "6_0",9,120,344,40,16
+    LTEXT           "6_0",10,120,372,40,16
+    LTEXT           "6_0",11,120,400,40,16
     LTEXT           "6_0",12,232,148,40,16
     LTEXT           "6_0",13,232,176,40,16
     LTEXT           "6_0",14,232,204,40,16
@@ -421,15 +420,15 @@ BEGIN
     LTEXT           "6_0",29,318,344,40,16
     LTEXT           "6_0",30,318,372,40,16
     LTEXT           "6_0",31,318,400,40,16
-    LTEXT           "1_63",32,397,403,67,16
+    LTEXT           "1_63",32,450,430,67,16
     LTEXT           "~Variable Town Entry",33,24,24,256,17
-    LTEXT           "When the party enters a town, you can have the exact town entered vary, depending on circumstances. To do this, specify a town number below, and the Stuff Done flag to add to the town number when that town is entered.",
-                    34,24,43,439,40
+    LTEXT           "When the party enters a town, you can have the exact town entered vary, depending on circumstances. To do this, specify a town number below, and the Stuff Done Flag (X,Y) whose value will be added to the town number when that town is entered.",
+                    34,24,43,500,40
     LTEXT           "Leave the town at -1 for this to have no effect. For more information on how this works, see the documentation.",
-                    35,24,86,439,27
-    LTEXT           "*Town entered",36,105,120,100,14
-    LTEXT           "*Stuff Done Flag to add X",37,209,114,96,25
-    LTEXT           "*Stuff Done Flag to add Y",38,303,114,96,25
+                    35,24,86,500,27
+    LTEXT           "*Town entered",36,110,120,100,14
+    LTEXT           "*Stuff Done Flag: X",37,222,114,96,25
+    LTEXT           "*Stuff Done Flag: Y",38,308,114,96,25
 END
 
 812 DIALOG  10, 10, 588, 385
@@ -582,13 +581,13 @@ END
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,371,138,31,10,WS_GROUP
-    LTEXT           "6_0",2,183,90,75,16
-    LTEXT           "1_63",3,285,116,62,16
+    LTEXT           "6_0",2,143,90,75,16
+    LTEXT           "1_63",3,265,116,62,16
     LTEXT           "~Set Special Number:",4,24,29,256,17
     LTEXT           "Which special should be called when this space is entered? (Should be in the range 10 to 99.)",
-                    5,24,48,323,35
-    LTEXT           "Special node:",6,94,90,84,16
-    LTEXT           "0_5",7,219,116,62,16
+                    5,24,48,300,35
+    LTEXT           "Special node:",6,54,90,84,16
+    LTEXT           "0_5",7,199,116,62,16
 END
 
 828 DIALOG  10, 10, 325, 103
@@ -613,24 +612,24 @@ END
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,479,423,31,10,WS_GROUP
-    LTEXT           "6_0",2,118,103,152,16
-    LTEXT           "1_63",3,243,207,62,16
-    LTEXT           "~Create New Town",4,28,24,256,17
-    LTEXT           "*Town name:",5,28,104,84,14
-    LTEXT           "*Town size:",6,28,129,77,14
-    LTEXT           "*Large (64x64)",7,123,129,139,14
-    LTEXT           "*Medium (48x48)",8,123,146,139,14
-    LTEXT           "*Small (32x32)",9,123,163,139,14
-    LTEXT           "2_0",10,281,130,23,14
-    LTEXT           "2_0",11,281,147,23,14
-    LTEXT           "2_0",12,281,164,23,14
+    LTEXT           "6_0",2,123,117,180,16
+    LTEXT           "1_63",3,275,249,62,16
+    LTEXT           "~Create New Town",4,28,24,150,17
+    LTEXT           "*Town name:",5,28,116,84,14
+    LTEXT           "*Town size:",6,28,151,77,14
+    LTEXT           "*Large (64x64)",7,123,151,139,14
+    LTEXT           "*Medium (48x48)",8,123,168,139,14
+    LTEXT           "*Small (32x32)",9,123,185,139,14
+    LTEXT           "2_0",10,281,152,23,14
+    LTEXT           "2_0",11,281,169,23,14
+    LTEXT           "2_0",12,281,186,23,14
     LTEXT           "*Creating town number:",13,28,46,147,14
     LTEXT           "*",14,179,46,33,14
-    LTEXT           "0_5",15,177,207,62,16
-    LTEXT           "Note: Your new town will be tacked onto the end of your current town list.",
-                    16,44,67,260,28
-    LTEXT           "*On surface?",17,28,182,139,14
-    LTEXT           "2_0",18,206,185,23,14
+    LTEXT           "0_5",15,210,249,62,16
+    LTEXT           "Note: Your new town will be tacked onto the end|of your current town list.|Town name must be less than 20 characters long.",
+                    16,44,64,300,48
+    LTEXT           "*On surface?",17,28,214,139,14
+    LTEXT           "2_0",18,206,217,23,14
 END
 
 832 DIALOG  10, 10, 624, 566
@@ -945,10 +944,10 @@ STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,283,273,31,10,WS_GROUP
     LTEXT           "6_0",2,27,52,332,16
-    LTEXT           "0_5",3,282,104,61,16
+    LTEXT           "0_5",3,222,134,61,16
     LTEXT           "~Enter this area's description:",4,22,24,232,17
-    LTEXT           "1_63",5,347,104,62,16
-    LTEXT           "Max. length: 30 characters. To edit this later, select Edit Area Descriptions from Town/Outdoor menu.",
+    LTEXT           "1_63",5,287,134,62,16
+    LTEXT           "Max. length: 29 characters.|To edit this later, select Edit Area Descriptions from Town/Outdoor menu.",
                     6,22,78,242,42
 END
 
@@ -990,7 +989,7 @@ BEGIN
     LTEXT           "*",18,37,192,212,15
     LTEXT           "*",19,37,216,212,15
     LTEXT           "*",20,37,240,212,15
-    LTEXT           "Enter the descriptions for each of the special outdoor rectangles you may have made, or press the delete button to remove them. Maximum length: 30 characters.",
+    LTEXT           "Enter the descriptions for each of the special outdoor rectangles you may have made, or press the delete button to remove them. |Maximum length: 30 characters.",
                     21,37,262,446,37
     LTEXT           "   ",22,317,27,21,18
     LTEXT           "~Outdoor area descriptions",23,32,29,256,17
@@ -1154,7 +1153,7 @@ BEGIN
     LTEXT           "0_5",6,236,201,62,16
     LTEXT           "~Change Terrain Randomly",7,29,30,167,17
     LTEXT           "Select a terrain type and another terrain type to turn it into. Also give a percentage chance of changing it (0 - 100). Automatic corrections (like adjusting cave walls) will not be made to these changes.",
-                    8,29,49,286,67
+                    8,29,49,326,67
     LTEXT           "0_109",9,297,121,63,16
     LTEXT           "0_109",10,297,147,63,16
     LTEXT           "*Change this terrain type:",11,29,125,164,13
@@ -1233,8 +1232,8 @@ END
 865 DIALOG  10, 10, 355, 125
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    LTEXT           "1_63",1,226,102,66,20
-    LTEXT           "0_5",2,160,102,62,20
+    LTEXT           "1_63",1,226,112,66,20
+    LTEXT           "0_5",2,160,112,62,20
     LTEXT           "You are about to delete the last town in your campaign's zone list (so if you have 10 zones in your scenario, the tenth will disappear). This change will immediately be saved and can't be undone.",
                     3,23,18,271,66
     LTEXT           "Are you sure you want to do this?",4,23,86,268,14
@@ -1301,9 +1300,9 @@ END
 873 DIALOG  10, 10, 329, 140
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    LTEXT           "1_63",1,225,101,66,20
-    LTEXT           "0_5",2,159,101,62,20
-    LTEXT           "In Blades of Avernum, certain wall configurations look better then others. This command modifies your walls to make them look cleaner. For more information on what actually happens, consult the editor documentation",
+    LTEXT           "1_63",1,225,111,66,20
+    LTEXT           "0_5",2,159,111,62,20
+    LTEXT           "In Blades of Avernum, certain wall configurations look better then others. This command modifies your walls to make them look cleaner. For more information on what actually happens, consult the editor documentation.",
                     3,22,18,270,81
 END
 
@@ -1330,8 +1329,8 @@ END
 876 DIALOG  10, 10, 402, 403
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    LTEXT           "1_63",1,302,363,66,20
-    LTEXT           "0_5",2,236,363,62,20
+    LTEXT           "1_63",1,302,373,66,20
+    LTEXT           "0_5",2,236,373,62,20
     LTEXT           "Select a Blades of Exile scenario you wish to import. This editor will create a folder and, inside that folder, a new scenario file. It will then translate, as best it can, your old scenario into a scenario that will work in the new system.",
                     3,22,18,341,65
     LTEXT           "There are several things to bear in mind about this process.",
@@ -1341,7 +1340,7 @@ BEGIN
     LTEXT           "Second, all special encounters and dialogue are now handled through scripts. This editor will translate your old data into new scripts. However, this translation will require some testing and adaption on your part.",
                     6,39,168,313,67
     LTEXT           "Third, because Blades of Avernum is very different from Blades of Exile, a bit of work will be needed on each town and outdoor section to get it to work with the new system. This feature DOES NOT result in a finished, playable scenario.",
-                    7,38,241,313,67
+                    7,38,231,313,67
     LTEXT           "For more information on differences between the two systems and things you will need to do to complete the adaption, consult the documentation. If you're ready, you can now select a scenario file.",
                     8,22,310,329,52
 END
@@ -1404,8 +1403,8 @@ END
 883 DIALOG  10, 10, 341, 91
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    LTEXT           "1_63",1,216,58,66,20
-    LTEXT           "0_5",2,150,58,62,20
+    LTEXT           "1_63",1,216,68,66,20
+    LTEXT           "0_5",2,150,68,62,20
     LTEXT           "Do you want to erase all fields (blocked spaces, webs, crates, barrels and barriers) in this town?",3,26,20,258,32
 END
 
@@ -1526,12 +1525,12 @@ BEGIN
                     4,21,22,257,47
 END
 
-991 DIALOGEX 10, 10, 301, 360
+991 DIALOGEX 10, 10, 301, 340
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "",1,229,331,58,10,WS_GROUP
-    LTEXT           "1_63",2,221,300,62,16
-    LTEXT           "0_5",3,155,300,62,16
+    LTEXT           "1_63",2,231,300,62,16
+    LTEXT           "0_5",3,165,300,62,16
     LTEXT           "~Change Outdoor Size",4,26,22,163,16
     LTEXT           "~Warning:  If you decrease the size on any side, those sectors will be lost!",
                     5,46,44,255,32

@@ -77,7 +77,7 @@ short edit_make_scen_2(short *val_array);
 Boolean save_scen_details();
 void put_scen_details_in_dlog();
 
-void put_placed_terrain_script_in_dlog();
+// void put_placed_terrain_script_in_dlog();
 
 void put_placed_terrain_script_in_dlog()
 {

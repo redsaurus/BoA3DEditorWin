@@ -164,6 +164,7 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam);
 void check_colors();
 void check_game_done();
 short last_file_printed = 0;
+// extern void put_placed_terrain_script_in_dlog();
 //MW specified argument and return type.
 int APIENTRY _tWinMain (HINSTANCE hInstance,
 						HINSTANCE /* hPrevInstance */,
@@ -1277,7 +1278,7 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam)
 	POINT press;
 	short wind_hit = -1,item_hit = -1;
 	short low;
-
+	short which_m;
 	switch (message) {
 		case WM_COMMAND:
 			// pare out command messages sent from text box
@@ -1320,8 +1321,6 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam)
 		return 0;
 	switch (wind_hit) {
 		case -1: break;
-		case 970: case 971: case 972: case 973: display_strings_event_filter(item_hit); break;
-		case 857: change_ter_event_filter(item_hit); break;
 		case 800: edit_make_scen_1_event_filter(item_hit); break;
 		case 801: edit_make_scen_2_event_filter(item_hit); break;
 		case 803: edit_scen_details_event_filter(item_hit); break;
@@ -1330,7 +1329,6 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam)
 		case 810: edit_add_town_event_filter(item_hit); break;
 		case 812: edit_item_placement_event_filter(item_hit); break;
 		case 820: choose_text_res_event_filter(item_hit); break;
-
 		case 825: edit_special_num_event_filter(item_hit); break;
 		case 828: how_many_dlog_event_filter(item_hit); break;
 		case 829: get_str_dlog_event_filter(item_hit); break;
@@ -1338,7 +1336,7 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam)
 		case 832: edit_town_details_event_filter(item_hit); break;
 		case 835: edit_town_wand_event_filter(item_hit); break;
 		case 837: edit_placed_monst_event_filter(item_hit); break;
-//		case 838: edit_placed_terrain_script_event_filter(item_hit); break;
+//		case 838: put_placed_terrain_script_in_dlog(which_m); break;
 		case 839: edit_town_strs_event_filter(item_hit); break;
 		case 840: edit_area_rect_event_filter(item_hit); break;
 		case 841: pick_import_town_event_filter(item_hit); break;
@@ -1346,8 +1344,11 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam)
 		case 851: outdoor_details_event_filter(item_hit); break;
 		case 852: edit_out_wand_event_filter(item_hit); break;
 		case 854: pick_out_event_filter(item_hit); break;
-		case 855: case 856: case 872: get_a_number_event_filter(item_hit); break;
-
+		case 855: get_a_number_event_filter(item_hit); break;
+		case 856: get_a_number_event_filter(item_hit); break;
+		case 857: change_ter_event_filter(item_hit); break;
+		case 872: get_a_number_event_filter(item_hit); break;
+		case 970: case 971: case 972: case 973: display_strings_event_filter(item_hit); break;
 // q_3DModStart
 		case 991: change_outdoor_size_event_filter(item_hit); break;
 // q_3DModEnd
