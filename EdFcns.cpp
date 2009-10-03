@@ -1718,7 +1718,7 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				break;		
 			
 		case 70:
-				create_new_ter_script("door",spot_hit,NULL);
+				create_new_ter_script("specobj",spot_hit,NULL);
 				if(!object_sticky_draw)
 					reset_drawing_mode(); 				
 				break;

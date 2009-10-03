@@ -582,12 +582,12 @@ STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,371,138,31,10,WS_GROUP
     LTEXT           "6_0",2,143,90,75,16
-    LTEXT           "1_63",3,265,116,62,16
+    LTEXT           "1_63",3,265,122,62,16
     LTEXT           "~Set Special Number:",4,24,29,256,17
     LTEXT           "Which special should be called when this space is entered? (Should be in the range 10 to 99.)",
                     5,24,48,300,35
     LTEXT           "Special node:",6,54,90,84,16
-    LTEXT           "0_5",7,199,116,62,16
+    LTEXT           "0_5",7,199,122,62,16
 END
 
 828 DIALOG  10, 10, 325, 103
@@ -881,24 +881,24 @@ END
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
-    LTEXT           "6_0",2,231,67,153,16
-    LTEXT           "6_0",3,231,91,153,16
-    LTEXT           "6_0",4,231,115,153,16
-    LTEXT           "6_0",5,231,139,153,16
-    LTEXT           "6_0",6,231,163,153,16
-    LTEXT           "6_0",7,231,187,153,16
-    LTEXT           "6_0",8,231,211,153,16
-    LTEXT           "6_0",9,231,235,153,16
-    LTEXT           "6_0",10,232,259,153,16
-    LTEXT           "6_0",11,232,283,153,16
-    LTEXT           "6_0",12,232,307,153,16
-    LTEXT           "6_0",13,232,331,153,16
-    LTEXT           "6_0",14,232,355,153,16
-    LTEXT           "6_0",15,232,379,153,16
-    LTEXT           "6_0",16,232,403,153,16
-    LTEXT           "6_0",17,232,427,153,16
-    LTEXT           "1_63",18,379,487,79,16
-    LTEXT           "0_5",19,314,487,65,16
+    LTEXT           "6_0",2,231,67,220,16
+    LTEXT           "6_0",3,231,91,220,16
+    LTEXT           "6_0",4,231,115,220,16
+    LTEXT           "6_0",5,231,139,220,16
+    LTEXT           "6_0",6,231,163,220,16
+    LTEXT           "6_0",7,231,187,220,16
+    LTEXT           "6_0",8,231,211,220,16
+    LTEXT           "6_0",9,231,235,220,16
+    LTEXT           "6_0",10,232,259,220,16
+    LTEXT           "6_0",11,232,283,220,16
+    LTEXT           "6_0",12,232,307,220,16
+    LTEXT           "6_0",13,232,331,220,16
+    LTEXT           "6_0",14,232,355,220,16
+    LTEXT           "6_0",15,232,379,220,16
+    LTEXT           "6_0",16,232,403,220,16
+    LTEXT           "6_0",17,232,427,220,16
+    LTEXT           "1_63",18,450,497,79,16
+    LTEXT           "0_5",19,381,497,65,16
     LTEXT           "Descriptive message",20,229,47,140,14
     LTEXT           "*",21,27,67,200,15
     LTEXT           "*",22,27,91,200,15
@@ -916,27 +916,27 @@ BEGIN
     LTEXT           "*",34,27,380,200,15
     LTEXT           "*",35,27,404,200,15
     LTEXT           "*",36,27,428,200,15
-    LTEXT           "Enter the descriptions for each of the special town rectangles you may have made, or press the delete button to remove them.",
+    LTEXT           "Enter the descriptions for each of the special town rectangles you may have made, or press the delete button to remove them.|Each description must be less than 30 characters in length.",
                     37,30,449,428,36
     LTEXT           "  ",38,320,27,18,16
     LTEXT           "~Town area descriptions",39,26,27,256,17
     LTEXT           "Rectangle:",40,27,47,111,14
-    LTEXT           "0_53",41,390,63,66,23
-    LTEXT           "0_53",42,390,87,66,23
-    LTEXT           "0_53",43,390,111,66,23
-    LTEXT           "0_53",44,390,135,66,23
-    LTEXT           "0_53",45,390,159,66,23
-    LTEXT           "0_53",46,390,183,66,23
-    LTEXT           "0_53",47,390,207,66,23
-    LTEXT           "0_53",48,390,231,66,23
-    LTEXT           "0_53",49,390,255,66,23
-    LTEXT           "0_53",50,390,279,66,23
-    LTEXT           "0_53",51,390,303,66,23
-    LTEXT           "0_53",52,390,327,66,23
-    LTEXT           "0_53",53,390,351,66,23
-    LTEXT           "0_53",54,390,375,66,23
-    LTEXT           "0_53",55,390,399,66,23
-    LTEXT           "0_53",56,390,423,66,23
+    LTEXT           "0_53",41,457,65,66,23
+    LTEXT           "0_53",42,457,89,66,23
+    LTEXT           "0_53",43,457,113,66,23
+    LTEXT           "0_53",44,457,137,66,23
+    LTEXT           "0_53",45,457,161,66,23
+    LTEXT           "0_53",46,457,185,66,23
+    LTEXT           "0_53",47,457,209,66,23
+    LTEXT           "0_53",48,457,233,66,23
+    LTEXT           "0_53",49,457,257,66,23
+    LTEXT           "0_53",50,457,281,66,23
+    LTEXT           "0_53",51,457,305,66,23
+    LTEXT           "0_53",52,457,329,66,23
+    LTEXT           "0_53",53,457,353,66,23
+    LTEXT           "0_53",54,457,377,66,23
+    LTEXT           "0_53",55,457,401,66,23
+    LTEXT           "0_53",56,457,425,66,23
 END
 
 840 DIALOG  10, 10, 454, 146
@@ -970,16 +970,16 @@ END
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,283,250,31,10,WS_GROUP
-    LTEXT           "6_0",2,257,72,145,16
-    LTEXT           "6_0",3,257,96,145,16
-    LTEXT           "6_0",4,257,120,145,16
-    LTEXT           "6_0",5,257,144,145,16
-    LTEXT           "6_0",6,257,168,145,16
-    LTEXT           "6_0",7,257,192,145,16
-    LTEXT           "6_0",8,257,216,145,16
-    LTEXT           "6_0",9,257,240,145,16
-    LTEXT           "1_63",10,419,305,65,16
-    LTEXT           "0_5",11,353,305,62,16
+    LTEXT           "6_0",2,257,72,220,16
+    LTEXT           "6_0",3,257,96,220,16
+    LTEXT           "6_0",4,257,120,220,16
+    LTEXT           "6_0",5,257,144,220,16
+    LTEXT           "6_0",6,257,168,220,16
+    LTEXT           "6_0",7,257,192,220,16
+    LTEXT           "6_0",8,257,216,220,16
+    LTEXT           "6_0",9,257,240,220,16
+    LTEXT           "1_63",10,479,315,65,16
+    LTEXT           "0_5",11,413,315,62,16
     LTEXT           "Descriptive message",12,262,50,133,14
     LTEXT           "*",13,37,72,212,15
     LTEXT           "*",14,37,96,212,15
@@ -989,19 +989,19 @@ BEGIN
     LTEXT           "*",18,37,192,212,15
     LTEXT           "*",19,37,216,212,15
     LTEXT           "*",20,37,240,212,15
-    LTEXT           "Enter the descriptions for each of the special outdoor rectangles you may have made, or press the delete button to remove them. |Maximum length: 30 characters.",
+    LTEXT           "Enter the descriptions for each of the special outdoor rectangles you may have made, or press the delete button to remove them. |Each description must be less than 30 characters in length.",
                     21,37,262,446,37
     LTEXT           "   ",22,317,27,21,18
     LTEXT           "~Outdoor area descriptions",23,32,29,256,17
     LTEXT           "Rectangle",24,33,50,111,14
-    LTEXT           "0_53",25,411,68,71,23
-    LTEXT           "0_53",26,411,92,71,23
-    LTEXT           "0_53",27,411,116,71,23
-    LTEXT           "0_53",28,411,140,71,23
-    LTEXT           "0_53",29,411,164,71,23
-    LTEXT           "0_53",30,411,188,71,23
-    LTEXT           "0_53",31,411,212,71,23
-    LTEXT           "0_53",32,411,236,71,23
+    LTEXT           "0_53",25,487,70,71,23
+    LTEXT           "0_53",26,487,94,71,23
+    LTEXT           "0_53",27,487,118,71,23
+    LTEXT           "0_53",28,487,142,71,23
+    LTEXT           "0_53",29,487,166,71,23
+    LTEXT           "0_53",30,487,190,71,23
+    LTEXT           "0_53",31,487,214,71,23
+    LTEXT           "0_53",32,487,238,71,23
 END
 
 851 DIALOG  10, 10, 349, 213
