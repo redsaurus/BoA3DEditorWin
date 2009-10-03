@@ -206,16 +206,16 @@ void edit_placed_monst_event_filter (short item_hit)
 //			if (get_placed_monst_in_dlog() == FALSE)
 //			break;
 			store_which_placed_monst++;
-			store_placed_monst = town.creatures[store_which_placed_monst];
-			put_placed_monst_in_dlog();
+//			store_placed_monst = town.creatures[store_which_placed_monst];
+			edit_placed_monst(store_which_placed_monst);
 			break;
 
 		case 70:
 //			if (get_placed_monst_in_dlog() == FALSE)
 //			break;
 			store_which_placed_monst--;
-			store_placed_monst = town.creatures[store_which_placed_monst];
-			put_placed_monst_in_dlog();
+//			store_placed_monst = town.creatures[store_which_placed_monst];
+			edit_placed_monst(store_which_placed_monst);
 			break;
 
 		default:

@@ -1704,3 +1704,17 @@ END
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
 
+STRINGTABLE
+BEGIN
+    1201                    "always here (unless town dead)"
+    1202                    "here at time t unless town dead"
+    1203                    "disappear at time t"
+    1204                    "here if event not done by time t"
+    1205                    "gone if event not done by time t"
+    1206                    "here if event happened"
+    1207                    "gone if event happened"
+    1208                    "here on day 0-2 of every 9 days"
+    1209                    "here on day 3-5 of every 9 days"
+    1210                    "here on day 6-8 of every 9 days"
+    1211                    "here if and only if town dead"
+END

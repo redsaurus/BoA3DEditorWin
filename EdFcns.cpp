@@ -1141,17 +1141,17 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							break;
 						case 8:
 								town.preset_items[selected_item_number % 1000].item_shift.x =
-									(t_coord)how_many_dlog(town.preset_items[selected_item_number % 1000].item_shift.x,-5,5,"Horizontal Pixel Offset (-5..5)");
+									(t_coord)how_many_dlog(town.preset_items[selected_item_number % 1000].item_shift.x,-5,5,"Horizontal Pixel Offset  (-5..5)");
 							break;
 						case 9:
 								town.preset_items[selected_item_number % 1000].item_shift.y =
-									(t_coord)how_many_dlog(town.preset_items[selected_item_number % 1000].item_shift.y,-5,5,"Vertical Pixel Offset (-5..5)");
+									(t_coord)how_many_dlog(town.preset_items[selected_item_number % 1000].item_shift.y,-5,5,"Vertical Pixel Offset  (-5..5)");
 							break;
 							
 						case 10:
 							if (town.preset_items[selected_item_number % 1000].charges > 0) {
 								town.preset_items[selected_item_number % 1000].charges =
-									(unsigned char)how_many_dlog(town.preset_items[selected_item_number % 1000].charges,0,250,"How many charges?(0-255)");
+									(unsigned char)how_many_dlog(town.preset_items[selected_item_number % 1000].charges,0,250,"How many charges?  (0-255)");
 								if (town.preset_items[selected_item_number % 1000].charges <= 0)
 									town.preset_items[selected_item_number % 1000].charges = 1;
 								}
@@ -1209,21 +1209,21 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 						break;
 					case 4:
 						town.creatures[selected_item_number % 1000].personality =
-							how_many_dlog(town.creatures[selected_item_number % 1000].personality,0,3999,"What personality? (0-3999)");
+							how_many_dlog(town.creatures[selected_item_number % 1000].personality,0,3999,"What personality?  (0-3999)");
 						break;
 
 					case 5:
 						town.creatures[selected_item_number % 1000].character_id = 
-							how_many_dlog(town.creatures[selected_item_number % 1000].character_id,0,19999,"What character id? (0-19999)");						
+							how_many_dlog(town.creatures[selected_item_number % 1000].character_id,0,19999,"What character id?  (0-19999)");
 						break;
 					case 6:
 						town.creatures[selected_item_number % 1000].hidden_class =
-							how_many_dlog(town.creatures[selected_item_number % 1000].hidden_class,0,19,"What hidden class? (0-19)");
+							how_many_dlog(town.creatures[selected_item_number % 1000].hidden_class,0,19,"What hidden class?  (0-19)");
 						break;
 
 					case 8:
 						town.creatures[selected_item_number % 1000].attached_event =
-							how_many_dlog(town.creatures[selected_item_number % 1000].attached_event,0,9,"What event? (0-9)");
+							how_many_dlog(town.creatures[selected_item_number % 1000].attached_event,0,9,"What event?  (0-9)");
 						break;
 
 					case 9:
