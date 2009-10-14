@@ -158,7 +158,7 @@ char *button_strs[150] = {"Done ","Ask"," "," ","Keep", "Cancel","+","-","Buy","
 						"Go Back","Create New","General","One Shots","Affect PCs","If-Thens","Town Specs","Out Specs","Advanced","Weapon Abil",
 						"General Abil.","NonSpell Use","Spell Usable","Reagents","Missiles","Abilities","Pick Picture","Animated","Enter","Burn",
 						"Insert","Remove","Accept","Refuse","Open","Close","Sit","Stand","","",
-						"18","19","20","Invisible!","","","","","",""};
+						"18","19","20","Invisible!","3DEditor","","","","",""};
 short button_left_adj[150] = {2,0,0,0,6,0,0,0,4,5,
 							3,0,0,0,0,0,0,4,0,0,
 							0,0,0,4,0,5,0,0,0,6,
@@ -663,9 +663,9 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM /*wParam*/, L
 	// now, make a window, matching dialog
 	GetWindowRect(hDlg,&dlg_rect);
 	dlgs[store_free_slot] = CreateWindow (szWinName,
-			"Blades of Avernum Editor Dialog",
-			WS_BORDER | WS_POPUP,// was visible
-			//WS_DLGFRAME | WS_POPUP,// was visible
+			"BoA Editor Dialog",
+			// WS_BORDER | WS_POPUP,// was visible
+			WS_TILEDWINDOW,
 			0,
 			0,
 			(dlg_rect.right - dlg_rect.left * 8) / dlg_units_x,

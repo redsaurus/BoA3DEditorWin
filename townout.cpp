@@ -1208,19 +1208,22 @@ Boolean save_out_strs()
 	return TRUE;
 }
 
+
 void put_out_strs_in_dlog()
 {
 	char str[256];
 	short i;
-	
+
 	for (i = 0; i < 8; i++) {
 		if ((current_terrain.info_rect[i].right <= 0) || (str_do_delete[i] > 0)) {
 			sprintf((char *) str,"Not yet placed.");
 			cd_activate_item(850,25 + i,0);
 			}
-			else sprintf((char *) str,"L = %d, T = %d, R = %d, B = %d", (int)current_terrain.info_rect[i].left,
-				(int)current_terrain.info_rect[i].top, (int)current_terrain.info_rect[i].right, (int)current_terrain.info_rect[i].bottom);
+			else
+			sprintf((char *) str,"L = %d, T = %d", (int)current_terrain.info_rect[i].left,(int)current_terrain.info_rect[i].top);
 		csit(850,13 + i,(char *) str);
+			sprintf((char *) str,"R = %d, B = %d",(int)current_terrain.info_rect[i].right, (int)current_terrain.info_rect[i].bottom);
+		csit(850,33 + i,(char *) str);
 		CDST(850,2 + i,current_terrain.info_rect_text[i]);
 		}
 
@@ -1285,15 +1288,17 @@ void put_town_strs_in_dlog()
 {
 	char str[256];
 	short i;
-	
+
 	for (i = 0; i < 16; i++) {
 		if ((town.room_rect[i].right <= 0) || (str_do_delete[i] > 0)) {
 			sprintf((char *) str,"Not yet placed.");
 			cd_activate_item(839,41 + i,0);
 			}
-			else sprintf((char *) str,"L = %d, T = %d, R = %d, B = %d", (int)town.room_rect[i].left,
-				(int)town.room_rect[i].top, (int)town.room_rect[i].right, (int)town.room_rect[i].bottom);
+			else
+			sprintf((char *) str,"L = %d, T = %d",(int)town.room_rect[i].left,(int)town.room_rect[i].top);
 		csit(839,21 + i,(char *) str);
+			sprintf((char *) str,"R = %d, B = %d",(int)town.room_rect[i].right, (int)town.room_rect[i].bottom);
+		csit(839,57 + i,(char *) str);
 		CDST(839,2 + i,town.info_rect_text[i]);
 		}
 
