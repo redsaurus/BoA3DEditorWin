@@ -74,8 +74,8 @@ BEGIN
     BEGIN
         MENUITEM "&Open Scenario\tCtrl+O",      1
         MENUITEM "&Save Scenario\tCtrl+S",      2
-        MENUITEM "New Scenario\tCtrl+N",                3
-        MENUITEM "Import Blades of Exile Scenario\t- - - -", 4
+        MENUITEM "&New Scenario\tCtrl+N",                3
+        MENUITEM "&Import Blades of Exile Scenario\t- - - -", 4
         MENUITEM SEPARATOR
         MENUITEM "&Quit\tCtrl+Q",               6
     END
@@ -85,110 +85,113 @@ BEGIN
         MENUITEM "&Redo\tCtrl+Y",               102
  				MENUITEM SEPARATOR
         MENUITEM "Selected Objects:",           103
-        MENUITEM " &Cut\tCtrl+X",               104
+        MENUITEM " Cu&t\tCtrl+X",               104
         MENUITEM " &Copy\tCtrl+C",              105
         MENUITEM " &Paste\tCtrl+V",             106
         MENUITEM " &Delete\tCtrl+A",       			107
-        MENUITEM " &Clear\tCtrl+B", 						108
+        MENUITEM " De&Select\tCtrl+B", 						108
     END
     POPUP "&Scenario"
     BEGIN
-        MENUITEM "Edit Town\tCtrl+T",           201
-        MENUITEM "Edit Outdoor Section\tCtrl+R", 202
-        MENUITEM "Create New Town",             203
+        MENUITEM "Edit &Town\tCtrl+T",           201
+        MENUITEM "Edit Outdoo&r Section\tCtrl+R", 202
+        MENUITEM "&Create New Town",             203
         MENUITEM SEPARATOR
-        MENUITEM "Basic Scenario Details",      205
-        MENUITEM "Set Label Icon",              206
-        MENUITEM "Intro Text 1",                207
-        MENUITEM "Intro Text 2",                208
-        MENUITEM "Intro Text 3",                209
+        MENUITEM "&Basic Scenario Details",      205
+        MENUITEM "Set &Label Icon",              206
+        MENUITEM "Intro Text &1",                207
+        MENUITEM "Intro Text &2",                208
+        MENUITEM "Intro Text &3",                209
         MENUITEM SEPARATOR
         MENUITEM "Advanced:",                   211
-        MENUITEM "  Reload Scenario Script",    212
-        MENUITEM "  Clean Up Walls",            213
-        MENUITEM "  Import Town",               214
-        MENUITEM "  Import Outdoor Section",    215
-        MENUITEM "  Set Variable Town Entry",   216
-        MENUITEM "  Edit Item Placement Shortcuts", 217
-        MENUITEM "  Delete Last Town",          218
-        MENUITEM "  Change Outdoor Size",       220
+        MENUITEM "  Reload &Scenario Data Script",    212
+        MENUITEM "  Clean Up &Walls",            213
+        MENUITEM "  &Import Town",               214
+        MENUITEM "  &Import Outdoor Section",    215
+        MENUITEM "  Set &Variable Town Entry",   216
+        MENUITEM "  Edit Item &Placement Shortcuts", 217
+        MENUITEM "  &Delete Last Town",          218
+        MENUITEM "  Change &Outdoor Size",       220
     END
+
     POPUP "&Town"
     BEGIN
-        MENUITEM "Load Different Town\tCtrl+L", 301
-        MENUITEM "Town Details\tCtrl+D",        302
-        MENUITEM "Town Wandering Monsters",     303
-        MENUITEM "Set Town Boundaries",         304
-        MENUITEM "Frill Up Terrain",            305
-        MENUITEM "Remove Terrain Frills",       306
-        MENUITEM "Edit Area Descriptions",      307
+        MENUITEM "&Load Different Town\tCtrl+L", 301
+        MENUITEM "Town &Details\tCtrl+D",        302
+        MENUITEM "Town &Wandering Monsters",     303
+        MENUITEM "Set Town &Boundaries",         304
+        MENUITEM "&Frill Up Terrain",            305
+        MENUITEM "Remo&ve Terrain Frills",       306
+        MENUITEM "Edit &Area Descriptions",      307
         MENUITEM SEPARATOR
-        MENUITEM "Set Starting Location",       309
+        MENUITEM "&Set Starting Location",       309
         MENUITEM SEPARATOR
-        MENUITEM "Add Random Items",            311
-        MENUITEM "Set All Items Not Property",  312
-        MENUITEM "Set All Items Property",      313        
+        MENUITEM "Add &Random Items",            311
+        MENUITEM "Set All Items &Not Property",  312
+        MENUITEM "S&et All Items Property",      313
         MENUITEM SEPARATOR
         MENUITEM "Advanced:",                   314
-        MENUITEM "  Clear All Items",             315
-        MENUITEM "  Clear All Monsters",        316
-        MENUITEM "  Clear All Special Encounters", 317
-        MENUITEM "  Clear All Preset Fields", 318
-        MENUITEM "  Clear All Placed Stains", 319
+        MENUITEM "  Clear All &Items",             315
+        MENUITEM "  Clear All &Monsters",        316
+        MENUITEM "  &Clear All Special Encounters", 317
+        MENUITEM "  Clear All &Preset Fields", 318
+        MENUITEM "  Clear All Placed S&tains", 319
     END
+
     POPUP "&Outdoors"
     BEGIN
-        MENUITEM "Load Different Outdoor Section\tCtrl+L", 401
-        MENUITEM "Outdoor Details\tCtrl+D",     402
-        MENUITEM "Outdoor Wandering Monsters",  403
-        MENUITEM "Outdoor Special Encounters",  404
-        MENUITEM "Outdoor Preset Encounters",   405
-        MENUITEM "Frill Up Terrain",            406
-        MENUITEM "Remove Terrain Frills",       407
-        MENUITEM "Edit Area Descriptions",      408
+        MENUITEM "&Load Different Outdoor Section\tCtrl+L", 401
+        MENUITEM "Outdoor &Details\tCtrl+D",     402
+        MENUITEM "Outdoor &Wandering Monsters",  403
+        MENUITEM "&Outdoor Special Encounters",  404
+        MENUITEM "Outdoor &Preset Encounters",   405
+        MENUITEM "&Frill Up Terrain",            406
+        MENUITEM "Remo&ve Terrain Frills",       407
+        MENUITEM "Edit &Area Descriptions",      408
         MENUITEM SEPARATOR
-        MENUITEM "Set Starting Location",       410
+        MENUITEM "&Set Starting Location",       410
         MENUITEM SEPARATOR
         MENUITEM "Advanced:",                   411
-        MENUITEM "  Clear All Placed Specials", 412
+        MENUITEM "  &Clear All Placed Specials", 412
     END
-    POPUP "&I1"
+
+    POPUP "I&1"
     BEGIN
         MENUITEM "Dummy",                       600
     END
-    POPUP "&I2"
+    POPUP "I&2"
     BEGIN
         MENUITEM "Dummy",                       601
     END
-    POPUP "&I3"
+    POPUP "I&3"
     BEGIN
         MENUITEM "Dummy",                       602
     END
-    POPUP "&I4"
+    POPUP "I&4"
     BEGIN
         MENUITEM "Dummy",                       603
     END
-    POPUP "&I5"
+    POPUP "I&5"
     BEGIN
         MENUITEM "Dummy",                       604
     END
-    POPUP "&I6"
+    POPUP "I&6"
     BEGIN
         MENUITEM "Dummy",                       605
     END
-    POPUP "&I7"
+    POPUP "I&7"
     BEGIN
         MENUITEM "Dummy",                       606
     END
-    POPUP "&I8"
+    POPUP "I&8"
     BEGIN
         MENUITEM "Dummy",                       607
     END
-    POPUP "&I9"
+    POPUP "I&9"
     BEGIN
         MENUITEM "Dummy",                       608
     END
-    POPUP "&I10"
+    POPUP "I1&0"
     BEGIN
         MENUITEM "Dummy",                       609
     END
@@ -210,26 +213,26 @@ BEGIN
     END
     POPUP "&Query"
     BEGIN
-        MENUITEM "A  About Blades Scenario Editor", 1501
-        MENUITEM "B  3D Editor Credits", 1502
+        MENUITEM "  About Blades Scenario &Editor", 1501
+        MENUITEM "  3D Editor &Credits", 1502
         MENUITEM SEPARATOR
         MENUITEM "   Query Functions:",                   1503
-        MENUITEM "C  Write Scenario Data To Text File", 1504
-        MENUITEM "D  Write Scenario Text To Text File", 1517
-        MENUITEM "E  Full Write up: Outdoor/Town Names", 1505
-        MENUITEM "F  All Outdoor Zones: Full Write up", 1515
-        MENUITEM "G  Current Outdoor Zone: Full Write up", 1516
-        MENUITEM "H  Town: Write Data To File\tCtrl+E", 1506
-        MENUITEM "I  Town: Full Write Data To File\tCtrl+F", 1513
-        MENUITEM "J  Repeat Printing of Last File\tCtrl+P", 1514
+        MENUITEM "  Write Scenario Data To Text File\tCtrl+&1", 1504
+        MENUITEM "  Write Scenario Text To Text File\tCtrl+&2", 1517
+        MENUITEM "  Full Write up: Outdoor/Town Names\tCtrl+&3", 1505
+        MENUITEM "  All Outdoor Zones: Full Write up\tCtrl+&4", 1515
+        MENUITEM "  Current Outdoor Zone: Full Write up\tCtrl+&5", 1516
+        MENUITEM "  Town: Write Data To File\tCtrl+&6", 1506
+        MENUITEM "  Town: Full Write Data To File\tCtrl+&7", 1513
+        MENUITEM "  &Repeat Printing of Last File\tCtrl+P", 1514
         MENUITEM SEPARATOR
-        MENUITEM "K  Increase Numerical Mode\tCtrl+G", 1507
-        MENUITEM "L  Decrease Numerical Mode\tCtrl+H", 1508
+        MENUITEM "  &Increase Numerical Mode\tCtrl+G", 1507
+        MENUITEM "  &Decrease Numerical Mode\tCtrl+H", 1508
         MENUITEM SEPARATOR
-        MENUITEM "M  Load Outdoor Zone Above", 1511
-				MENUITEM "N  Load Previous Outdoor Zone/Town\tCtrl+J", 1509
-        MENUITEM "O  Load Next Outdoor Zone/Town\tCtrl+K", 1510
-        MENUITEM "P  Load Outdoor Zone Below", 1512
+        MENUITEM "  Load Outdoor Zone &Above\tCtrl+Up", 1511
+        MENUITEM "  Load &Previous Outdoor Zone/Town\tCtrl+Left", 1509
+        MENUITEM "  Load &Next Outdoor Zone/Town\tCtrl+Right", 1510
+        MENUITEM "  Load Outdoor Zone &Below\tCtrl+Down", 1512
     END
 END
 
@@ -254,13 +257,18 @@ BEGIN
     "^B",           108,                    ASCII,  NOINVERT
     "^T",           201,                    ASCII,  NOINVERT
     "^R",           202,                    ASCII,  NOINVERT
-    "^E",           1506,                   ASCII,  NOINVERT
     "^G",           1507,                   ASCII,  NOINVERT
     "^H",           1508,                   ASCII,  NOINVERT
     "^J",           1509,                   ASCII,  NOINVERT
     "^K",           1510,                   ASCII,  NOINVERT
-    "^F",           1513,                   ASCII,  NOINVERT
     "^P",           1514,                   ASCII,  NOINVERT
+    "^1",           1504,                   ASCII,  NOINVERT
+    "^2",           1517,                   ASCII,  NOINVERT
+    "^3",           1505,                   ASCII,  NOINVERT
+    "^4",           1515,                   ASCII,  NOINVERT
+    "^5",           1516,                   ASCII,  NOINVERT
+    "^6",           1506,                   ASCII,  NOINVERT
+    "^7",           1513,                   ASCII,  NOINVERT
     VK_LEFT,        1509,                   VIRTKEY, CONTROL, NOINVERT
     VK_RIGHT,       1510,                   VIRTKEY, CONTROL, NOINVERT
     VK_UP,          1511,                   VIRTKEY, CONTROL, NOINVERT
@@ -270,7 +278,7 @@ BEGIN
 //    "^L",         301/401,                ASCII,  NOINVERT
 END
 
-// Currently available: I,M,P,U,W
+// Currently available: E,F,M,U,W
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
@@ -897,8 +905,8 @@ BEGIN
     LTEXT           "6_0",15,260,379,260,16
     LTEXT           "6_0",16,260,403,260,16
     LTEXT           "6_0",17,260,427,260,16
-    LTEXT           "1_63",18,450,497,79,16
-    LTEXT           "0_5",19,381,497,65,16
+    LTEXT           "1_63",18,530,497,66,16
+    LTEXT           "0_5",19,456,497,66,16
     LTEXT           "Descriptive message",20,260,47,140,14
     LTEXT           "*",21,27,67,100,15
     LTEXT           "*",22,27,91,100,15
@@ -996,8 +1004,8 @@ BEGIN
     LTEXT           "6_0",7,260,187,260,16
     LTEXT           "6_0",8,260,211,260,16
     LTEXT           "6_0",9,260,235,260,16
-    LTEXT           "1_63",10,450,305,79,16
-    LTEXT           "0_5",11,381,305,65,16
+    LTEXT           "1_63",10,530,305,66,16
+    LTEXT           "0_5",11,456,305,66,16
     LTEXT           "Descriptive message",12,260,47,140,14
     LTEXT           "*",13,27,67,100,15
     LTEXT           "*",14,27,91,100,15

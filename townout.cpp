@@ -290,7 +290,7 @@ void get_a_number_event_filter (short item_hit)
 }
 
 // which_dlog is the number of a dialog box that takes a number in text edit field 2
-// gets a numnebr and returns it. returns -1 if canceled
+// gets a number and returns it. returns -1 if canceled
 short get_a_number(short which_dlog,short default_value,short min,short max)
 {
 	char temp_str[256],str2[256];
