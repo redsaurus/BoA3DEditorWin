@@ -89,7 +89,7 @@ BEGIN
         MENUITEM " &Copy\tCtrl+C",              105
         MENUITEM " &Paste\tCtrl+V",             106
         MENUITEM " &Delete\tCtrl+A",       			107
-        MENUITEM " De&Select\tCtrl+B", 						108
+        MENUITEM " Clear &Screen\tCtrl+B", 						108
     END
     POPUP "&Scenario"
     BEGIN
@@ -497,7 +497,7 @@ END
 820 DIALOG  10, 10, 530, 386
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,279,223,31,10,WS_GROUP
+    DEFPUSHBUTTON   "OK",1,407,352,31,10,WS_GROUP
     LTEXT           "1_63",2,407,352,75,16
     LTEXT           "~Select:",3,29,23,256,17
     LTEXT           "0_2",4,28,352,62,16
@@ -610,9 +610,9 @@ END
 829 DIALOG  10, 10, 337, 159
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,371,138,31,10,WS_GROUP
-    LTEXT           "6_0",2,26,46,270,67
-    LTEXT           "1_63",3,229,122,62,16
+    DEFPUSHBUTTON   "OK",1,400,138,31,10,WS_GROUP
+    LTEXT           "6_0",2,26,46,340,67
+    LTEXT           "1_63",3,299,122,62,16
     LTEXT           "~How Many?",4,23,22,256,17
 END
 
@@ -672,8 +672,8 @@ BEGIN
     LTEXT           "6_0",27,514,436,33,16
     LTEXT           "6_0",28,514,460,33,16
     LTEXT           "6_0",29,514,484,33,16
-    LTEXT           "1_63",30,505,538,63,16
-    LTEXT           "0_5",31,443,538,62,16
+    LTEXT           "1_63",30,505,558,63,16
+    LTEXT           "0_5",31,443,558,62,16
     LTEXT           "2_0",32,192,169,32,15
     LTEXT           "2_0",33,271,99,23,14
     LTEXT           "2_0",34,271,116,23,14

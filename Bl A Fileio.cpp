@@ -1336,18 +1336,16 @@ void start_data_dump()
 	sprintf((char *)get_text,"Floor types for %s:\r",scenario.scen_name);
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	for (i = 0; i < 256; i++)
-		if (scen_data.scen_floors[i].ed_pic.not_legit() == FALSE) {
-			sprintf((char *)get_text,"  Floor %d: %s\r",(int)i,scen_data.scen_floors[i].floor_name);
+	for (i = 0; i < 256; i++) {
+			sprintf((char *)get_text,"  Floor %d: \t%s\r",(int)i,scen_data.scen_floors[i].floor_name);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
 	sprintf((char *)get_text,"\r\rTerrain types for %s:\r",scenario.scen_name);
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-	for (i = 0; i < 512; i++)
-		if (scen_data.scen_ter_types[i].ed_pic.not_legit() == FALSE) {
-			sprintf((char *)get_text,"  Terrain %d: %s\r", (int)i,scen_data.scen_ter_types[i].ter_name);
+	for (i = 0; i < 512; i++) {
+			sprintf((char *)get_text,"  Terrain %d: \t%s\r", (int)i,scen_data.scen_ter_types[i].ter_name);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
@@ -1355,7 +1353,7 @@ void start_data_dump()
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 	for (i = 0; i < 256; i++) {
-		sprintf((char *)get_text,"  Creature %d: %s\r",(int)i,scen_data.scen_creatures[i].name);
+		sprintf((char *)get_text,"  Creature %d: \t%s\r",(int)i,scen_data.scen_creatures[i].name);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 		}
@@ -1363,7 +1361,7 @@ void start_data_dump()
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 	for (i = 0; i < NUM_SCEN_ITEMS; i++) {
-		sprintf((char *)get_text,"  Item %d: %s\r", (int)i,scen_data.scen_items[i].full_name);
+		sprintf((char *)get_text,"  Item %d: \t%s\r", (int)i,scen_data.scen_items[i].full_name);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 		}
@@ -1423,7 +1421,8 @@ void start_full_data_dump()
 		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) 	
 			for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) {
 			load_outdoor(out_sec,outdoor);
-			sprintf((char *)get_text,"\r  Section X = %d, Y = %d:  %s \r",(short) out_sec.x,(short) out_sec.y,outdoor.name);
+			i = (scenario.out_width * out_sec.y) + out_sec.x;
+			sprintf((char *)get_text,"\r  Section %d, X = %d, Y = %d:  %s ",i,(short) out_sec.x,(short) out_sec.y,outdoor.name);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
@@ -1432,7 +1431,7 @@ void start_full_data_dump()
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 			for (j = 0; j < scenario.num_towns; j++) {
 		load_town(j);
-		sprintf((char *)get_text,"  Town %d: %s\r",j,town.town_name);
+		sprintf((char *)get_text,"  Town %d: %s\t%s\r",j,town.town_name,town.town_script);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 		}
@@ -1445,7 +1444,8 @@ void start_full_data_dump()
 		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) 	
 			for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) {
 			load_outdoor(out_sec,outdoor);
-			sprintf((char *)get_text,"Section X = %d, Y = %d:  %s \r",(short) out_sec.x,(short) out_sec.y,outdoor.name);
+			i = (scenario.out_width * out_sec.y) + out_sec.x;
+			sprintf((char *)get_text,"Section %d, X = %d, Y = %d:  %s\t%s \r",i,(short) out_sec.x,(short) out_sec.y,outdoor.name,outdoor.section_script);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			for (short i = 0; i < 8; i++) {
@@ -1827,7 +1827,7 @@ void start_currentout_data_dump()
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
 
-			sprintf((char *)get_text,"  Section X = %d, Y = %d:  %s \r\r",cur_out.x,cur_out.y,current_terrain.name);
+			sprintf((char *)get_text,"  Section %d, X = %d, Y = %d:  %s \r\r",i,cur_out.x,cur_out.y,current_terrain.name);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 
@@ -1907,7 +1907,8 @@ void start_fullout_data_dump()
 		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++)
 			for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) {
 			load_outdoor(out_sec,outdoor);
-			sprintf((char *)get_text,"\rSection X = %d, Y = %d:  %s \r\r  Special Rectangles [maximum of 30]\r",(short) out_sec.x,(short) out_sec.y,outdoor.name);
+			i = (scenario.out_width * out_sec.y) + out_sec.x;
+			sprintf((char *)get_text,"\rSection %d, X = %d, Y = %d:  %s \r\r  Special Rectangles [maximum of 30]\r",i,(short) out_sec.x,(short) out_sec.y,outdoor.name);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			for (short i = 0; i < 30; i++) {

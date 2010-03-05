@@ -633,10 +633,9 @@ void handle_edit_menu(int item_hit)
 				change_made_outdoors = TRUE;
 			break;
 		case 8:// clear selected instance
-			if (editing_town == FALSE)
-				break;
 				selected_item_number = -1;
-			break;
+				set_string("Item De-selected","");
+		break;
 
 		}
 	draw_main_screen();
