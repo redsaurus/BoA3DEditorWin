@@ -2058,18 +2058,18 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 	if (wParam == VK_F3) {
 
 								if (current_drawing_mode == 0) {
-								   current_drawing_mode = 2;
-									 need_redraw = TRUE;
+								   set_drawing_mode(2);
+									 redraw_screen();
 									 }
 								else {
-								set_drawing_mode((current_drawing_mode - 1) % 3);
-								need_redraw = TRUE;
+								set_drawing_mode(current_drawing_mode - 1);
+								redraw_screen();
 							}
 	}
 	
 	if (wParam == VK_F4) {
 							set_drawing_mode((current_drawing_mode + 1) % 3);
-							need_redraw = TRUE;
+								redraw_screen();
 	}
 
   if (wParam == VK_F5) {
