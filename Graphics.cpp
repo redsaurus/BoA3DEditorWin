@@ -2959,7 +2959,8 @@ void draw_ter_large()
 				for (i = 0; i < NUM_TER_SCRIPTS; i++)
 					if (town.ter_scripts[i].exists) {
 						draw_ter_script(i,loc_drawn,q,r);
-						}									
+						}
+			if ((editing_town) && (hintbook_mode == 0 || hintbook_mode == 1)) {
 				// draw creatures
 				for (i = 0; i < NUM_TOWN_PLACED_CREATURES; i++)
 					if (town.creatures[i].exists()) {
@@ -2978,6 +2979,7 @@ void draw_ter_large()
 				if ((selected_item_number >= 11000) && (selected_item_number < 11000 + NUM_TOWN_PLACED_ITEMS)) {
 					draw_item(main_dc5,store_bmp,selected_item_number % 1000,loc_drawn,q,r);
 					}						
+					}
 				SelectObject(main_dc5,DibBitmapHandle(ter_draw_gworld));
 			}
 			
@@ -3462,8 +3464,7 @@ void draw_ter_small()
 			// draw creatures
 			if ((editing_town) && (hintbook_mode == 0 || hintbook_mode == 1)) {
 				for (i = 0; i < NUM_TOWN_PLACED_CREATURES; i++){
-					if ((town.creatures[i].exists()) && 
-					  (town.creatures[i].start_loc.x == q) && (town.creatures[i].start_loc.y == r)) {
+					if ((town.creatures[i].exists()) && (town.creatures[i].start_loc.x == q) && (town.creatures[i].start_loc.y == r)) {
 					  	to_rect = small_edit_ter_rects[q][r];
 					  	MacInsetRect(&to_rect,1,1);
 						if (town.creatures[i].start_attitude < 3)
