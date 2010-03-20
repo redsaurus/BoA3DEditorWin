@@ -49,6 +49,7 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define NUM_SCEN_ITEMS	500
 
 #define	SMALL_SPACE_SIZE	8
+#define	MEDIUM_SPACE_SIZE	16
 #define	BIG_SPACE_SIZE	48
 
 // q_3DModStart
@@ -1664,6 +1665,7 @@ void redraw_screen();
 void draw_main_screen();
 // void update_main_screen( void );
 void set_up_terrain_buttons();
+RECT get_template_from_medium_rect(short x,short y);
 RECT get_template_from_rect(short x,short y);
 void draw_terrain();
 void place_right_buttons(/* short mode */);

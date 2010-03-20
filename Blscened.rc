@@ -228,6 +228,8 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "  &Increase Numerical Mode\tCtrl+G", 1507
         MENUITEM "  &Decrease Numerical Mode\tCtrl+H", 1508
+        MENUITEM "  &Cycle Forward Through View Mode\tCtrl+E", 1518
+        MENUITEM "  &Cycle Backward Through View Mode\tCtrl+F", 1519
         MENUITEM SEPARATOR
         MENUITEM "  Load Outdoor Zone &Above\tCtrl+Up", 1511
         MENUITEM "  Load &Previous Outdoor Zone/Town\tCtrl+Left", 1509
@@ -262,7 +264,9 @@ BEGIN
     "^J",           1509,                   ASCII,  NOINVERT
     "^K",           1510,                   ASCII,  NOINVERT
     "^P",           1514,                   ASCII,  NOINVERT
-    "^1",           1504,                   ASCII,  NOINVERT
+    "^E",           1518,                   ASCII,  NOINVERT
+    "^F",           1519,                   ASCII,  NOINVERT
+		"^1",           1504,                   ASCII,  NOINVERT
     "^2",           1517,                   ASCII,  NOINVERT
     "^3",           1505,                   ASCII,  NOINVERT
     "^4",           1515,                   ASCII,  NOINVERT
@@ -278,7 +282,7 @@ BEGIN
 //    "^L",         301/401,                ASCII,  NOINVERT
 END
 
-// Currently available: E,F,M,U,W
+// Currently available: M,U,W
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog

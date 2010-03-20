@@ -51,8 +51,9 @@ RECT terrain_rects_3D[264];
 RECT palette_buttons[8][6];
 
 // These are the rects of the terrain spots INSIDE the terrain GWORLD, NOT the screen.
-RECT large_edit_ter_rects[9][9];
 RECT small_edit_ter_rects[MAX_TOWN_SIZE][MAX_TOWN_SIZE];
+RECT medium_edit_ter_rects[32][32];
+RECT large_edit_ter_rects[9][9];
 
 // Bottom text rectangles
 RECT left_text_lines[14];
@@ -64,8 +65,17 @@ bool object_sticky_draw;
 short current_floor_drawn = 0;
 short current_terrain_drawn = 0;
 
-char hintbook_mode = 1;
+extern char hintbook_mode1;
+extern char hintbook_mode2;
+extern char hintbook_mode3;
+extern char hintbook_mode4;
+extern char hintbook_mode5;
+extern char hintbook_mode6;
+extern char hintbook_mode7;
+extern char hintbook_mode8;
+extern char hintbook_mode9;
 
+extern char grid_mode;
 // if a terrain type has special property from 19-30, it is a slope. this
 // array says what corners for these 12 terrain types are elevated.
 // first field is nw corner
@@ -270,7 +280,7 @@ void init_screen_locs()
 // detect on which scroll area mouse click drops
 int check_scroller( POINT the_point )
 {
-	if (cur_viewing_mode == 0)
+	if ((cur_viewing_mode == 0) || (cur_viewing_mode == 2))
 		return check_scroller_2D( the_point );
 	if (cur_viewing_mode == 10 || cur_viewing_mode == 11)
 		return check_scroller_3D( the_point );
@@ -310,6 +320,7 @@ int check_scroller_3D( POINT the_point )
 bool process_scroll_click( int map_size, POINT thePoint  )
 {
 	int scrl;
+	bool alt_key;
 	bool ctrl_key;
 	bool shft_key;
 	POINT currPt;
@@ -326,8 +337,9 @@ bool process_scroll_click( int map_size, POINT thePoint  )
 		// handle movement
 		if ( GetCursorPos( &currPt ) ) {
 			ScreenToClient( mainPtr, &currPt );
-			ctrl_key = (GetAsyncKeyState( VK_CONTROL ) & 0x8000) != 0;	// check MSB for current key state
-			shft_key = (GetAsyncKeyState( VK_SHIFT ) & 0x8000) != 0;
+	ctrl_key = (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;	// check MSB for current key state
+	alt_key = (GetAsyncKeyState( VK_MENU ) & 0x8000) != 0;
+	shft_key = (GetAsyncKeyState(0xC0) & 0x8000) != 0;
 
 			if ( (scrl = check_scroller( currPt )) != eSCRL_NoScrl )
 				if ( handle_scroll( map_size, scrl, ctrl_key, shft_key ) )
@@ -376,25 +388,66 @@ bool handle_scroll( int map_size, int scrl, bool ctrl_key, bool shft_key )
 	int dx = 0;		// displacement
 	int dy = 0;
 
+
 	if (ctrl_key) {
+      if (cur_viewing_mode == 2) {
+		if ( scrl & eSCRL_Top )		dy = 16 - cen_y;		// go to the limb
+		if ( scrl & eSCRL_Left )	dx = 16 - cen_x;
+		if ( scrl & eSCRL_Bottom )	dy = map_size - 16 - cen_y;
+		if ( scrl & eSCRL_Right )	dx = map_size - 16 - cen_x;
+		}
+      else {
 		if ( scrl & eSCRL_Top )		dy = -cen_y;		// go to the limb
-		if ( scrl & eSCRL_Left )	dx = -cen_x;		
-		if ( scrl & eSCRL_Bottom )	dy = map_size - 1 - cen_y;		
+		if ( scrl & eSCRL_Left )	dx = -cen_x;
+		if ( scrl & eSCRL_Bottom )	dy = map_size - 1 - cen_y;
 		if ( scrl & eSCRL_Right )	dx = map_size - 1 - cen_x;
+			 }
 	}
 	else if (shft_key) {
-		if ( scrl & eSCRL_Top )		dy = -7;
-		if ( scrl & eSCRL_Left )	dx = -7;
-		if ( scrl & eSCRL_Bottom )	dy = 7;
-		if ( scrl & eSCRL_Right )	dx = 7;
+      if (cur_viewing_mode == 2) {
+			if ((cen_x <= 23) || (cen_y <= 23) || (cen_x >= map_size - 23) || (cen_y >= map_size - 23)) {
+					if ( scrl & eSCRL_Top )		dy = 0;
+					if ( scrl & eSCRL_Left )	dx = 0;
+					if ( scrl & eSCRL_Bottom )	dy = 0;
+					if ( scrl & eSCRL_Right )	dx = 0;
+					}
+		 else {
+		if ( scrl & eSCRL_Top )		dy = -8;
+		if ( scrl & eSCRL_Left )	dx = -8;
+		if ( scrl & eSCRL_Bottom )	dy = 8;
+		if ( scrl & eSCRL_Right )	dx = 8;
+	}
+		 }
+		 else {
+		if ( scrl & eSCRL_Top )		dy = -8;
+		if ( scrl & eSCRL_Left )	dx = -8;
+		if ( scrl & eSCRL_Bottom )	dy = 8;
+		if ( scrl & eSCRL_Right )	dx = 8;
+	}
 	}
 	else {
+      if (cur_viewing_mode == 2) {
+			if ((cen_x <= 16) || (cen_y <= 16) || (cen_x >= map_size - 16) || (cen_y >= map_size - 16)) {
+		if ( scrl & eSCRL_Top )		dy = 0;
+		if ( scrl & eSCRL_Left )	dx = 0;
+		if ( scrl & eSCRL_Bottom )	dy = 0;
+		if ( scrl & eSCRL_Right )	dx = 0;
+		 }
+		 else {
 		if ( scrl & eSCRL_Top )		dy = -1;
 		if ( scrl & eSCRL_Left )	dx = -1;
 		if ( scrl & eSCRL_Bottom )	dy = 1;
 		if ( scrl & eSCRL_Right )	dx = 1;
 	}
 
+		 }
+		 else {
+		if ( scrl & eSCRL_Top )		dy = -1;
+		if ( scrl & eSCRL_Left )	dx = -1;
+		if ( scrl & eSCRL_Bottom )	dy = 1;
+		if ( scrl & eSCRL_Right )	dx = 1;
+	}
+	}
 	if(clean_up_from_scrolling( map_size, dx, dy ))
 		return true;
 
@@ -586,6 +639,35 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 					need_redraw = TRUE;
 				}
 	}
+
+	// clicking in terrain spots, medium icon mode
+	if (cur_viewing_mode == 2) {
+		cur_point2 = cur_point;
+		cur_point2.x -= TER_RECT_UL_X; cur_point2.y -= TER_RECT_UL_Y;
+		for (i = 0; i < 32; i++)
+			for (j = 0; j < 32; j++)
+				if (POINTInRECT(cur_point2,medium_edit_ter_rects[i][j])) {
+					spot_hit.x = (t_coord)(cen_x + i - 16);
+					spot_hit.y = (t_coord)(cen_y + j - 16);
+
+					if ((mouse_button_held == TRUE) && (spot_hit.x == last_spot_hit.x) &&
+						(spot_hit.y == last_spot_hit.y))
+						return are_done;
+						else last_spot_hit = spot_hit;
+					if (mouse_button_held == FALSE)
+						last_spot_hit = spot_hit;
+
+					old_mode = overall_mode;
+					if(editing_town)
+						change_made_town = TRUE;
+					else
+						change_made_outdoors = TRUE;
+
+					handle_ter_spot_press(spot_hit,option_hit,right_click);
+					need_redraw = TRUE;
+				}
+	}
+
 
 	// clicking in terrain spots, big 3D icon mode
 	else if (cur_viewing_mode == 10 || cur_viewing_mode == 11) {
@@ -811,7 +893,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 				
 						case 100: // switch view size
 // q_3DModStart
-							if(cur_viewing_mode == 1)
+							if ((cur_viewing_mode == 1) || (cur_viewing_mode == 2))
 								cur_viewing_mode = 0;
 							else if(cur_viewing_mode == 0)
 								cur_viewing_mode = 1;
@@ -1305,7 +1387,7 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 	if(right_click) {
 		cen_x = spot_hit.x;
 		cen_y = spot_hit.y;
-		if(cur_viewing_mode == 1) {
+	if ((cur_viewing_mode == 1) || (cur_viewing_mode == 2)) {
 			cur_viewing_mode = 0;
 			set_up_terrain_buttons();
 			reset_small_drawn();
@@ -2025,24 +2107,26 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 	// num pad key handling
 
 	*handled = 0;
-	bool ctrl_key = (GetAsyncKeyState( VK_CONTROL ) & 0x8000) != 0;	// check MSB for current key state
-	bool shft_key = (GetAsyncKeyState( VK_SHIFT ) & 0x8000) != 0;
+	bool ctrl_key = (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;	// check MSB for current key state
+	bool alt_key = (GetAsyncKeyState( VK_MENU ) & 0x8000) != 0;
+	bool shft_key = (GetAsyncKeyState(0xC0) & 0x8000) != 0;
 
 	for ( int i = 0; i < kNumKeyAssign; i++) {
 		if ( wParam == num_key[i] ) {
 			kill_next_win_char = TRUE;
 			if ( i == 5 ) {		// "5" key
-				if (cur_viewing_mode == 0) {
+				if ((cur_viewing_mode == 0) || (cur_viewing_mode == 2)) {
 					handle_action( kCenterPoint, ((ctrl_key) ? MK_CONTROL : 0),-1 );
 					mouse_button_held = FALSE;
 					return FALSE;
 				}
 				break;
 			}
+			
 			else {						// other ten keys
 				int map_size = (editing_town) ? max_dim[town_type] : 48;
 				int scrl = eSCRL_NoScrl;
-				if (cur_viewing_mode == 0)
+				if ((cur_viewing_mode == 0) || (cur_viewing_mode == 2))
 					scrl = scrl_key_2D[ i ];
 				if (cur_viewing_mode == 10 || cur_viewing_mode == 11)
 					scrl = scrl_key_3D[ i ];
@@ -2055,6 +2139,178 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 		}
 	}
 	
+
+	if (((wParam == VK_LEFT) || (wParam == VK_DOWN) || (wParam == VK_UP) || (wParam == VK_RIGHT))
+	  && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
+		if ((wParam == VK_UP) && (selected_item_number >= 0))
+			shift_selected_instance(0, -1);
+		if ((wParam == VK_RIGHT) && (selected_item_number >= 0))
+			shift_selected_instance(1,0);
+		if ((wParam == VK_LEFT) && (selected_item_number >= 0))
+			shift_selected_instance(-1,0);
+		if ((wParam == VK_DOWN) && (selected_item_number >= 0))
+			shift_selected_instance(0, 1);
+		draw_terrain();
+		return FALSE;
+	}
+
+	if ((wParam == VK_BACK) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
+	if (selected_item_number > -1) {
+	delete_selected_instance();
+	set_string("Selected Instance Deleted","");
+	}
+	}
+
+	if ((wParam == VK_DELETE) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
+		set_string("Delete an object","Select object");
+		set_cursor(7);
+		overall_mode = 41;		
+	}
+	if ((wParam == VK_HOME) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
+		set_string("Select/edit placed object","Select object to edit");
+		set_cursor(7);
+		overall_mode = 40;
+	}
+
+	if ((wParam == VK_END) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
+		set_string("Delete one object after another","Select next object to delete");
+		set_cursor(7);
+		overall_mode = 51;
+	}
+	
+	if (wParam == VK_SUBTRACT) { // Zoom out
+							if(cur_viewing_mode == 0)
+								cur_viewing_mode = 2;
+							else if(cur_viewing_mode == 2)
+								cur_viewing_mode = 1;
+							else if(cur_viewing_mode == 1)
+								cur_viewing_mode = 0;
+
+							set_up_terrain_buttons();
+							reset_small_drawn();
+							redraw_screen();
+			}
+
+	if (wParam == VK_ADD) { // Zoom in
+							if(cur_viewing_mode == 1)
+								cur_viewing_mode = 2;
+							else if(cur_viewing_mode == 2)
+								cur_viewing_mode = 0;
+							else if(cur_viewing_mode == 0)
+								cur_viewing_mode = 1;
+
+							set_up_terrain_buttons();
+							reset_small_drawn();
+							redraw_screen();
+			}
+
+	if (wParam == 0x31) {
+	     hintbook_mode1 = 1;
+			 hintbook_mode2 = 0;
+		 	 hintbook_mode3 = 0;
+		 	 hintbook_mode4 = 0;
+		 	 hintbook_mode5 = 0;
+		 	 hintbook_mode6 = 0;
+		 	 hintbook_mode7 = 0;
+		 		small_any_drawn = FALSE;
+				draw_terrain();
+				}
+
+	if (wParam == 0x32) {
+	     hintbook_mode1 = 0;
+			 hintbook_mode2 = 1;
+		 	 hintbook_mode3 = 1;
+		 	 hintbook_mode4 = 1;
+		 	 hintbook_mode5 = 1;
+		 	 hintbook_mode6 = 0;
+		 	 hintbook_mode7 = 0;
+				small_any_drawn = FALSE;
+				draw_terrain();
+				}
+				
+	if ((wParam == 0x33) && (editing_town == TRUE)) {
+			 if (hintbook_mode3 == 0) {
+	     hintbook_mode1 = 0;
+			 hintbook_mode2 = 0;
+		 	 hintbook_mode3 = 1;
+			 }
+			 else if (hintbook_mode3 == 1) {
+		 	 hintbook_mode3 = 0;
+			 }
+				small_any_drawn = FALSE;
+				draw_terrain();
+				}
+				
+	if ((wParam == 0x34) && (editing_town == TRUE)) {
+			 if (hintbook_mode4 == 0) {
+	     hintbook_mode1 = 0;
+			 hintbook_mode2 = 0;
+		 	 hintbook_mode4 = 1;
+			 }
+			 else if (hintbook_mode4 == 1) {
+		 	 hintbook_mode4 = 0;
+			 }
+				small_any_drawn = FALSE;
+				draw_terrain();
+				}
+	if ((wParam == 0x35) && (editing_town == TRUE)) {
+			 if (hintbook_mode5 == 0) {
+	     hintbook_mode1 = 0;
+			 hintbook_mode2 = 0;
+		 	 hintbook_mode5 = 1;
+			 }
+			 else if (hintbook_mode5 == 1) {
+		 	 hintbook_mode5 = 0;
+			 }
+				small_any_drawn = FALSE;
+				draw_terrain();
+				}
+	if (wParam == 0x36) {
+			 if (hintbook_mode6 == 0) {
+	     hintbook_mode1 = 0;
+			 hintbook_mode2 = 0;
+		 	 hintbook_mode6 = 1;
+			 }
+			 else if (hintbook_mode6 == 1) {
+		 	 hintbook_mode6 = 0;
+			 }
+				small_any_drawn = FALSE;
+				draw_terrain();
+				}
+	if (wParam == 0x37) {
+			 if (hintbook_mode7 == 0) {
+	     hintbook_mode1 = 0;
+			 hintbook_mode2 = 0;
+		 	 hintbook_mode7 = 1;
+			 }
+			 else if (hintbook_mode7 == 1) {
+		 	 hintbook_mode7 = 0;
+			 }
+				small_any_drawn = FALSE;
+				draw_terrain();
+				}
+	if (wParam == 0x38) {
+			 if (hintbook_mode8 == 0) {
+		 	 hintbook_mode8 = 1;
+			 }
+			 else if (hintbook_mode8 == 1) {
+		 	 hintbook_mode8 = 0;
+			 }
+				small_any_drawn = FALSE;
+				draw_terrain();
+				}
+
+if (wParam == 0x39) {
+			 if (hintbook_mode9 == 0) {
+		 	 hintbook_mode9 = 1;
+			 }
+			 else if (hintbook_mode9 == 1) {
+		 	 hintbook_mode9 = 0;
+			 }
+				small_any_drawn = FALSE;
+				draw_terrain();
+				}
+
 	if (wParam == VK_F3) {
 
 								if (current_drawing_mode == 0) {
@@ -2066,7 +2322,7 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 								redraw_screen();
 							}
 	}
-	
+
 	if (wParam == VK_F4) {
 							set_drawing_mode((current_drawing_mode + 1) % 3);
 								redraw_screen();
@@ -2152,44 +2408,6 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 		else
 		current_terrain_drawn = current_terrain_drawn - 500;
 		}
-	}
-
-	if (((wParam == VK_LEFT) || (wParam == VK_DOWN) || (wParam == VK_UP) || (wParam == VK_RIGHT))
-	  && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
-		if ((wParam == VK_UP) && (selected_item_number >= 0))
-			shift_selected_instance(0, -1);
-		if ((wParam == VK_RIGHT) && (selected_item_number >= 0))
-			shift_selected_instance(1,0);
-		if ((wParam == VK_LEFT) && (selected_item_number >= 0))
-			shift_selected_instance(-1,0);
-		if ((wParam == VK_DOWN) && (selected_item_number >= 0))
-			shift_selected_instance(0, 1);
-		draw_terrain();
-		return FALSE;
-	}
-
-	if ((wParam == VK_BACK) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
-	if (selected_item_number > -1) {
-	delete_selected_instance();
-	set_string("Selected Instance Deleted","");
-	}
-	}
-
-	if ((wParam == VK_DELETE) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
-		set_string("Delete an object","Select object");
-		set_cursor(7);
-		overall_mode = 41;		
-	}
-	if ((wParam == VK_HOME) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
-		set_string("Select/edit placed object","Select object to edit");
-		set_cursor(7);
-		overall_mode = 40;
-	}
-
-	if ((wParam == VK_END) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
-		set_string("Delete one object after another","Select next object to delete");
-		set_cursor(7);
-		overall_mode = 51;
 	}
 
 	return FALSE;
@@ -2341,10 +2559,10 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	    handle_action(pass_point,wParam,-1);
 	break;
 
-	case '\\': // toggle hintbook mode
-				if (hintbook_mode == 3)
-				 hintbook_mode = 0;
-				 else  hintbook_mode =  hintbook_mode + 1;
+	case '\\': // toggle gridline mode
+				if (grid_mode == 2)
+				 grid_mode = 0;
+				 else  grid_mode =  grid_mode + 1;
 				small_any_drawn = FALSE;
 				draw_terrain();
 	break;
@@ -3791,7 +4009,7 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 1503; i < 1518; i++)
+		for (short i = 1503; i < 1520; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 
 		return;
@@ -3815,7 +4033,7 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
-		for (short i = 1503; i < 1518; i++)
+		for (short i = 1503; i < 1520; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 	}
 	else {
@@ -3831,7 +4049,7 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 1503; i < 1518; i++)
+		for (short i = 1503; i < 1520; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 	}
 }

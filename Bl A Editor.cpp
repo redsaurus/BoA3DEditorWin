@@ -54,8 +54,8 @@ outdoor_record_type border_terrains[3][3];
 short cur_town;
 location cur_out;
 short dlg_units_x,dlg_units_y;
-
 Boolean small_any_drawn = FALSE;
+Boolean medium_any_drawn = FALSE;
 Boolean kill_next_win_char = FALSE;
  
 // MAIN WHAT'S GOING ON VARIABLES
@@ -64,7 +64,12 @@ short town_type = 0;  // 0 - big 1 - ave 2 - small
 short current_height_mode = 0; // 0 - no autohills, 1 - autohills
 Boolean editing_town = TRUE;
 short numerical_display_mode = 3;
-short cur_viewing_mode = 1; // 0 - big icons 1 - small icons 10 - big 3D icons 11 - 3D view as in game
+short cur_viewing_mode = 1;
+// 0 - big icons = 9*9 view
+// 1 - small icons = 64*64 zoom-out view
+// 2 - medium icons = 32*32 view
+// 10 - big 3D icons
+// 11 - 3D view as in game
 
 short overall_mode = 0;
 // 0 - 9 - different terrain painting modes
@@ -246,7 +251,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 {
 	mainPtr = CreateWindow (
 		szAppName,
-		"3D Blades of Avernum Scenario Editor " kVersion,
+		"3D Blades of Avernum Variant Scenario Editor " kVersion,
 		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
 		0,
 		0,
@@ -1240,6 +1245,31 @@ void handle_help_menu(int item_hit)
 				 scenariotext_data_dump();
 				 }
 			break;
+		case 18: // switch view size
+							if(cur_viewing_mode == 0)
+								cur_viewing_mode = 2;
+							else if(cur_viewing_mode == 2)
+								cur_viewing_mode = 1;
+							else if(cur_viewing_mode == 1)
+								cur_viewing_mode = 0;
+
+							set_up_terrain_buttons();
+							reset_small_drawn();
+							redraw_screen();
+		break;
+
+		case 19: // switch view size
+							if(cur_viewing_mode == 1)
+								cur_viewing_mode = 2;
+							else if(cur_viewing_mode == 2)
+								cur_viewing_mode = 0;
+							else if(cur_viewing_mode == 0)
+								cur_viewing_mode = 1;
+
+							set_up_terrain_buttons();
+							reset_small_drawn();
+							redraw_screen();
+		break;
 
 		}
 	draw_main_screen();		

@@ -109,7 +109,10 @@ char *old_blades_button_strs[150] = {"Done ","Ask"," "," ","Keep", "Cancel","+",
 						"Insert","Remove","Accept","Refuse","Open","Close","Sit","Stand","","",
 						"18","19","20","Invisible!","","","","","",""};
 						
-char *BOAFieldnames[22] = {"Unknown","Blocked","Unknown","Force Barrier","Fire Barrier","Web","Crate","Barrel","Unknown","Unknown","Unknown","Unknown","Unknown","Unknown","Small Blood Stain","Medium Blood Stain","Large Blood Stain","Small Slime Pool","Large Slime Pool","Dried Blood","Bones","Rocks"};
+char *BOAFieldnames[22] = {"Unknown","Blocked","Unknown","Force Barrier",
+"Fire Barrier","Web","Crate","Barrel","Unknown","Unknown","Unknown","Unknown",
+"Unknown","Unknown","Small Blood Stain","Medium Blood Stain","Large Blood Stain",
+"Small Slime Pool","Large Slime Pool","Dried Blood","Bones","Rocks"};
 
 
 

@@ -2347,6 +2347,14 @@ RECT get_template_from_rect(short x,short y)
 	return base_rect;
 }
 
+RECT get_template_from_medium_rect(short x,short y)
+{
+	RECT base_rect = {1,1,12,17};//
+
+	OffsetRect(&base_rect,47 * x,56 * y);
+	return base_rect;
+}
+
 /*
 void showcursor(Boolean a)
 {
