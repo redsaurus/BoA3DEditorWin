@@ -83,7 +83,7 @@ extern RECT right_text_lines[6];
 
 extern short selected_item_number;
 
-extern char hintbook_mode0;
+char hintbook_mode0 = 0;
 char hintbook_mode1 = 1;
 char hintbook_mode2 = 0;
 char hintbook_mode3 = 0;
@@ -4562,12 +4562,13 @@ void place_left_text()
 			}
 		}
 		else {
-			sprintf((char *) draw_str,"Editing Outdoors"); 
-			char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);		
-			sprintf((char *) draw_str,"  %s",current_terrain.name); 
-			char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);		
-			sprintf((char *) draw_str,"  Section X = %d, Y = %d", (int)cur_out.x, (int)cur_out.y); 
-			char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);		
+       short out_num = cur_out.y * scenario.out_width + cur_out.x;
+			sprintf((char *) draw_str,"Editing Outdoors");
+			char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
+			sprintf((char *) draw_str,"  %s",current_terrain.name);
+			char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
+			sprintf((char *) draw_str,"  Section %d,  X = %d, Y = %d",out_num, (int)cur_out.x, (int)cur_out.y);
+			char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
 			sprintf((char *) draw_str,"Numerical Display Mode:  %d",numerical_display_mode);
 			char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
 		}
@@ -4624,7 +4625,8 @@ void place_right_buttons( /* short mode */ )
 			char_win_draw_string(main_dc4,right_text_lines[4],(char *) draw_str,2,12);
 		}
 		else {
-			sprintf((char *) draw_str,"Section X = %d, Y = %d", (int)cur_out.x, (int)cur_out.y);
+       short out_num = cur_out.y * scenario.out_width + cur_out.x;
+			sprintf((char *) draw_str,"  Section %d,  X = %d, Y = %d",out_num, (int)cur_out.x, (int)cur_out.y);
 			char_win_draw_string(main_dc4,right_text_lines[4],(char *) draw_str,2,12);
 		}
 		
@@ -5145,19 +5147,6 @@ void make_sfx(short i,short j,short type)
 void take_sfx(short i,short j,short type)
 {
 	take_field_type(i,j,type + 14);
-}
-
-Boolean is_placed_special(short x,short y,short i)
-{
-
-	if (editing_town == TRUE) {
-	 if ((town.special_rects[i].top == y) && (town.special_rects[i].left == x))
-	 return TRUE;
-	 }
-	if (editing_town == FALSE) {
-	 if ((current_terrain.special_rects[i].top == y) && (current_terrain.special_rects[i].left == x) && (current_terrain.special_rects[i].bottom >= 0) && (current_terrain.special_rects[i].right >= 0))
-	 return TRUE;
-	 }
 }
 
 void place_dlog_borders_around_rect(HDIB to_gworld,HWND win,RECT border_to_rect)

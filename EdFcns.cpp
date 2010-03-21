@@ -65,7 +65,7 @@ bool object_sticky_draw;
 short current_floor_drawn = 0;
 short current_terrain_drawn = 0;
 
-unsigned char hintbook_mode0;
+extern char hintbook_mode0;
 extern char hintbook_mode1;
 extern char hintbook_mode2;
 extern char hintbook_mode3;
@@ -2149,7 +2149,10 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 						eSCRL_Top		// 9
 	};
 
-	const POINT kCenterPoint = {TER_RECT_UL_Y + 15 + 4 * 48,TER_RECT_UL_X + 15 + 4 * 48};
+	const POINT kCenterPoint = {
+	TER_RECT_UL_Y + 15 + 4 * 48,
+	TER_RECT_UL_X + 15 + 4 * 48
+	};
 
 	// num pad key handling
 
@@ -2187,8 +2190,9 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 	}
 	
 
-	if (((wParam == VK_LEFT) || (wParam == VK_DOWN) || (wParam == VK_UP) || (wParam == VK_RIGHT))
-	  && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
+	if (((wParam == VK_LEFT) || (wParam == VK_DOWN) || (wParam == VK_UP) ||
+	(wParam == VK_RIGHT)) && (cur_viewing_mode == 0 || cur_viewing_mode == 10
+	|| cur_viewing_mode == 11)) {
 		if ((wParam == VK_UP) && (selected_item_number >= 0))
 			shift_selected_instance(0, -1);
 		if ((wParam == VK_RIGHT) && (selected_item_number >= 0))
@@ -2251,7 +2255,7 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 							redraw_screen();
 			}
 			
-if (wParam == 0x30) {
+	if (wParam == 0x30) {
 					 if (hintbook_mode0 > 1)
 					    hintbook_mode0 = 0;
 		 	 hintbook_mode0 = 1 - hintbook_mode0;
