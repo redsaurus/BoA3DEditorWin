@@ -65,6 +65,7 @@ bool object_sticky_draw;
 short current_floor_drawn = 0;
 short current_terrain_drawn = 0;
 
+unsigned char hintbook_mode0;
 extern char hintbook_mode1;
 extern char hintbook_mode2;
 extern char hintbook_mode3;
@@ -389,6 +390,36 @@ bool handle_scroll( int map_size, int scrl, bool ctrl_key, bool shft_key )
 	int dy = 0;
 
 
+	if (hintbook_mode0 == 1) {
+	if (ctrl_key) {
+		if ( scrl & eSCRL_Top )		dy = -cen_y;		// go to the limb
+		if ( scrl & eSCRL_Left )	dx = -cen_x;
+		if ( scrl & eSCRL_Bottom )	dy = map_size - 1 - cen_y;
+		if ( scrl & eSCRL_Right )	dx = map_size - 1 - cen_x;
+	}
+	else if (shft_key) {
+		if ( scrl & eSCRL_Top )		dy = -8;
+		if ( scrl & eSCRL_Left )	dx = -8;
+		if ( scrl & eSCRL_Bottom )	dy = 8;
+		if ( scrl & eSCRL_Right )	dx = 8;
+	}
+	else {
+		if ( scrl & eSCRL_Top )		dy = -1;
+		if ( scrl & eSCRL_Left )	dx = -1;
+		if ( scrl & eSCRL_Bottom )	dy = 1;
+		if ( scrl & eSCRL_Right )	dx = 1;
+	}
+	if(clean_up_from_scrolling( map_size, dx, dy ))
+		return true;
+
+	if ( scrl != eSCRL_NoScrl )
+		draw_main_screen();
+
+	return false;
+	
+	}
+
+	else {
 	if (ctrl_key) {
       if (cur_viewing_mode == 2) {
 		if ( scrl & eSCRL_Top )		dy = 16 - cen_y;		// go to the limb
@@ -404,50 +435,65 @@ bool handle_scroll( int map_size, int scrl, bool ctrl_key, bool shft_key )
 			 }
 	}
 	else if (shft_key) {
-      if (cur_viewing_mode == 2) {
-			if ((cen_x <= 23) || (cen_y <= 23) || (cen_x >= map_size - 23) || (cen_y >= map_size - 23)) {
-					if ( scrl & eSCRL_Top )		dy = 0;
+      if ((cur_viewing_mode == 2) && (cen_x <= 23)) {
 					if ( scrl & eSCRL_Left )	dx = 0;
-					if ( scrl & eSCRL_Bottom )	dy = 0;
+					}
+	else {
+					if ( scrl & eSCRL_Left )	dx = -8;
+		}
+
+      if ((cur_viewing_mode == 2) && (cen_y <= 23)) {
+					if ( scrl & eSCRL_Top )		dy = 0;
+					}
+	else {
+					if ( scrl & eSCRL_Top )		dy = -8;
+		}
+
+      if ((cur_viewing_mode == 2) && (cen_x >= map_size - 23)) {
 					if ( scrl & eSCRL_Right )	dx = 0;
 					}
-		 else {
-		if ( scrl & eSCRL_Top )		dy = -8;
-		if ( scrl & eSCRL_Left )	dx = -8;
-		if ( scrl & eSCRL_Bottom )	dy = 8;
-		if ( scrl & eSCRL_Right )	dx = 8;
-	}
-		 }
-		 else {
-		if ( scrl & eSCRL_Top )		dy = -8;
-		if ( scrl & eSCRL_Left )	dx = -8;
-		if ( scrl & eSCRL_Bottom )	dy = 8;
-		if ( scrl & eSCRL_Right )	dx = 8;
-	}
-	}
 	else {
-      if (cur_viewing_mode == 2) {
-			if ((cen_x <= 16) || (cen_y <= 16) || (cen_x >= map_size - 16) || (cen_y >= map_size - 16)) {
-		if ( scrl & eSCRL_Top )		dy = 0;
-		if ( scrl & eSCRL_Left )	dx = 0;
-		if ( scrl & eSCRL_Bottom )	dy = 0;
-		if ( scrl & eSCRL_Right )	dx = 0;
-		 }
-		 else {
-		if ( scrl & eSCRL_Top )		dy = -1;
-		if ( scrl & eSCRL_Left )	dx = -1;
-		if ( scrl & eSCRL_Bottom )	dy = 1;
-		if ( scrl & eSCRL_Right )	dx = 1;
-	}
+					if ( scrl & eSCRL_Right )	dx = 8;
+		}
 
-		 }
-		 else {
-		if ( scrl & eSCRL_Top )		dy = -1;
-		if ( scrl & eSCRL_Left )	dx = -1;
-		if ( scrl & eSCRL_Bottom )	dy = 1;
-		if ( scrl & eSCRL_Right )	dx = 1;
-	}
-	}
+      if ((cur_viewing_mode == 2) && (cen_y >= map_size - 23)) {
+					if ( scrl & eSCRL_Bottom )	dy = 0;
+					}
+	else {
+					if ( scrl & eSCRL_Bottom )	dy = 8;
+		}
+					}
+
+	else {
+      if ((cur_viewing_mode == 2) && (cen_x <= 16)) {
+					if ( scrl & eSCRL_Left )	dx = 0;
+					}
+	else {
+					if ( scrl & eSCRL_Left )	dx = -1;
+		}
+
+      if ((cur_viewing_mode == 2) && (cen_y <= 16)) {
+					if ( scrl & eSCRL_Top )		dy = 0;
+					}
+	else {
+					if ( scrl & eSCRL_Top )		dy = -1;
+		}
+
+      if ((cur_viewing_mode == 2) && (cen_x >= map_size - 16)) {
+					if ( scrl & eSCRL_Right )	dx = 0;
+					}
+	else {
+					if ( scrl & eSCRL_Right )	dx = 1;
+		}
+
+      if ((cur_viewing_mode == 2) && (cen_y >= map_size - 16)) {
+					if ( scrl & eSCRL_Bottom )	dy = 0;
+					}
+	else {
+					if ( scrl & eSCRL_Bottom )	dy = 1;
+		}
+					}
+
 	if(clean_up_from_scrolling( map_size, dx, dy ))
 		return true;
 
@@ -455,6 +501,7 @@ bool handle_scroll( int map_size, int scrl, bool ctrl_key, bool shft_key )
 		draw_main_screen();
 
 	return false;
+	}
 }
 
 // "Outdoor: drawing mode failure after moving section" fix
@@ -2203,6 +2250,14 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 							reset_small_drawn();
 							redraw_screen();
 			}
+			
+if (wParam == 0x30) {
+					 if (hintbook_mode0 > 1)
+					    hintbook_mode0 = 0;
+		 	 hintbook_mode0 = 1 - hintbook_mode0;
+				small_any_drawn = FALSE;
+				draw_terrain();
+				}
 
 	if (wParam == 0x31) {
 	     hintbook_mode1 = 1;
@@ -2290,23 +2345,13 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 				draw_terrain();
 				}
 	if (wParam == 0x38) {
-			 if (hintbook_mode8 == 0) {
-		 	 hintbook_mode8 = 1;
-			 }
-			 else if (hintbook_mode8 == 1) {
-		 	 hintbook_mode8 = 0;
-			 }
+		 	 hintbook_mode8 = 1 - hintbook_mode8;
 				small_any_drawn = FALSE;
 				draw_terrain();
 				}
 
 if (wParam == 0x39) {
-			 if (hintbook_mode9 == 0) {
-		 	 hintbook_mode9 = 1;
-			 }
-			 else if (hintbook_mode9 == 1) {
-		 	 hintbook_mode9 = 0;
-			 }
+		 	 hintbook_mode9 = 1 - hintbook_mode9;
 				small_any_drawn = FALSE;
 				draw_terrain();
 				}

@@ -83,6 +83,7 @@ extern RECT right_text_lines[6];
 
 extern short selected_item_number;
 
+extern char hintbook_mode0;
 char hintbook_mode1 = 1;
 char hintbook_mode2 = 0;
 char hintbook_mode3 = 0;
@@ -92,6 +93,7 @@ char hintbook_mode6 = 0;
 char hintbook_mode7 = 0;
 char hintbook_mode8 = 0;
 char hintbook_mode9 = 0;
+
 char grid_mode = 0;
 
 extern Boolean small_any_drawn;
@@ -3423,6 +3425,8 @@ void draw_ter_large()
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,200,200,255);
 				MacInsetRect(&rectangle_draw_rect,1,1);
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,0,0,255);
+				MacInsetRect(&rectangle_draw_rect,1,1);
+				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,200,200,255);
 				}
 				else {
 					MacInsetRect(&rectangle_draw_rect,1,1);
@@ -3613,7 +3617,7 @@ void draw_ter_large()
 				rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (current_terrain.info_rect[i].right - cen_x + 4 + 1) - 1;
 				rectangle_draw_rect.top = 15 + BIG_SPACE_SIZE * (current_terrain.info_rect[i].top - cen_y + 4);
 				rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (current_terrain.info_rect[i].bottom - cen_y + 4 + 1) - 1;
-				MacInsetRect(&rectangle_draw_rect,3,3);
+				MacInsetRect(&rectangle_draw_rect,4,4);
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,0,255,0);
 			}
         }
@@ -3624,7 +3628,7 @@ void draw_ter_large()
 				rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (current_terrain.exit_rects[i].right - cen_x + 4 + 1) - 1;
 				rectangle_draw_rect.top = 15 + BIG_SPACE_SIZE * (current_terrain.exit_rects[i].top - cen_y + 4);
 				rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (current_terrain.exit_rects[i].bottom - cen_y + 4 + 1) - 1;
-				MacInsetRect(&rectangle_draw_rect,4,4);
+				MacInsetRect(&rectangle_draw_rect,5,5);
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,255,0,255);
 			}
         }
@@ -4304,6 +4308,8 @@ void draw_ter_medium()
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,200,200,255);
 				MacInsetRect(&rectangle_draw_rect,1,1);
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,0,0,255);
+				MacInsetRect(&rectangle_draw_rect,1,1);
+				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,200,200,255);
 			}
         }
 	}
@@ -4313,7 +4319,7 @@ void draw_ter_medium()
 				rectangle_draw_rect.right = MEDIUM_SPACE_SIZE * (current_terrain.exit_rects[i].right - cen_x + 17) - 1;
 				rectangle_draw_rect.top = MEDIUM_SPACE_SIZE * (current_terrain.exit_rects[i].top - cen_y + 16);
 				rectangle_draw_rect.bottom = MEDIUM_SPACE_SIZE * (current_terrain.exit_rects[i].bottom - cen_y + 17) - 1;
-				MacInsetRect(&rectangle_draw_rect,3,3);
+				MacInsetRect(&rectangle_draw_rect,4,4);
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,255,0,255);
 			}
         }
@@ -4549,7 +4555,7 @@ void place_left_text()
 			char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);		
 			sprintf((char *) draw_str,"  %s",town.town_name); 
 			char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);		
-			sprintf((char *) draw_str,"Hintbook Display Mode 9:   %d ",hintbook_mode9);
+			sprintf((char *) draw_str,"Unrestricted Movement:   %d ",hintbook_mode0);
 			char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
 			sprintf((char *) draw_str,"Numerical Display Mode:  %d",numerical_display_mode);
 			char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
