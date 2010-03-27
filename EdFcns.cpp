@@ -1911,7 +1911,7 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				if (editing_town == TRUE) {
 					for (i = 0; i < NUM_TOWN_PLACED_SPECIALS; i++) {
 						if (town.spec_id[i] == kNO_TOWN_SPECIALS) {
-							town.spec_id[i] = (unsigned char)edit_special_num(/* 0,*/ i+10);
+							town.spec_id[i] = (unsigned char)edit_special_num(i+10);
 							town.special_rects[i].top = (short)working_rect.top;
 							town.special_rects[i].left = (short)working_rect.left;
 							town.special_rects[i].bottom =(short)working_rect.bottom;
@@ -2679,12 +2679,13 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 				}
 
 				handle_action(pass_point,wParam,-1);
-				break;
+	break;
 // q_3DModEnd
 
 					
 			default:
 				Boolean ctrl = control_key_down();
+				
 				// Ctrl + D = outdoor/town details
 				if ((chr == 4) && (ctrl)) {
 					if (editing_town)

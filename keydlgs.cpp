@@ -9,16 +9,17 @@
 
 #include "global.h"
 
-// Gloabl varialbes
+// Global variables
 
 short current_cursor = 0;
 
-// external gloabal variables
+// external global variables
 
 extern Boolean dialog_not_toast;
 extern short cur_viewing_mode;
 extern HINSTANCE store_hInstance;
 extern short dialog_answer;
+extern Boolean editing_town;
 
 // local variables
 
@@ -249,22 +250,37 @@ void edit_special_num_event_filter (short item_hit)
 	short i;
 	
 	switch (item_hit) {
-		case 7:
-			dialog_answer = -1;
-			dialog_not_toast = FALSE; 
-			break;
-
 		case 3:
 			i = CDGN(825,2);
+			if (editing_town == FALSE) {
+			if (i < 10 || i > 99) {
+			set_string("ERROR: Number must be greater than"," 9 and less than 100.");
+			}
+			else {
 			dialog_answer = i;
 			dialog_not_toast = FALSE;
-			break;
+			}
+			}
+			if (editing_town) {
+			if (i < 10 || i > 199) {
+			set_string("ERROR: Number must be greater","than 9 and less than 200(?).");
+			}
+			else {
+			dialog_answer = i;
+			dialog_not_toast = FALSE;
+			}
+			}
+		break;
+
+		case 7:
+			dialog_answer = -1;
+			dialog_not_toast = FALSE;
+		break;
 		}
 }
 
-// mode - unused
 // what_start - starting value
-short edit_special_num( /* short mode, */ short what_start)
+short edit_special_num(short what_start)
 {			
 	cd_create_dialog_parent_num(825,0);
 	
@@ -276,7 +292,7 @@ short edit_special_num( /* short mode, */ short what_start)
 	cd_kill_dialog(825,0);
 	
 	if (dialog_answer < 0)
-		return what_start;
+		return -1;
 	return dialog_answer;
 }
 

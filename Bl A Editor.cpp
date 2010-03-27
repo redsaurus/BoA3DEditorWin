@@ -122,6 +122,7 @@ short overall_mode = 0;
 // 70 - place, edit terrain script
 // 71 - place outdoor start point
 // 72 - place town start point
+// 73 - eyedropper
 
 // file selection editing files
 short selected_item_number = -1;
@@ -1061,6 +1062,10 @@ void handle_help_menu(int item_hit)
 			
 		case 9: // load previous town/outdoor zone
 			if (editing_town) {
+			if (change_made_town == TRUE) {
+				if (save_check(859) == FALSE)
+					break;
+			}
 			 if (cur_town == 0)
 				load_town(scenario.num_towns - 1);
 			 else load_town(cur_town - 1);
@@ -1076,6 +1081,10 @@ void handle_help_menu(int item_hit)
 				}
 
 			else {
+			if (change_made_outdoors == TRUE) {
+				if (save_check(859) == FALSE)
+					break;
+			}
 				if (cur_out.x > 0) {
 				 spot_hit.x = cur_out.x - 1;
 				 spot_hit.y = cur_out.y;
@@ -1102,6 +1111,10 @@ void handle_help_menu(int item_hit)
 			
 		case 10: // load next town/outdoor zone
 							if (editing_town) {
+			if (change_made_town == TRUE) {
+				if (save_check(859) == FALSE)
+					break;
+			}
 			if (cur_town + 1 == scenario.num_towns)
 				load_town(0);
 			else load_town(cur_town + 1);
@@ -1118,6 +1131,10 @@ void handle_help_menu(int item_hit)
 				}
 				
 				else {
+			if (change_made_outdoors == TRUE) {
+				if (save_check(859) == FALSE)
+					break;
+			}
 			if ((cur_out.x < scenario.out_width - 1) && (cur_out.y <= scenario.out_height - 1)) {
 				 spot_hit.x = cur_out.x + 1;
 				 spot_hit.y = cur_out.y;
@@ -1145,6 +1162,11 @@ void handle_help_menu(int item_hit)
 		case 11: // load outdoor zone above
 			if (editing_town)
 				break;
+
+			if (change_made_outdoors == TRUE) {
+				if (save_check(859) == FALSE)
+					break;
+			}
 				if (cur_out.y > 0) {
 				 spot_hit.x = cur_out.x;
 				 spot_hit.y = cur_out.y - 1;
@@ -1167,11 +1189,16 @@ void handle_help_menu(int item_hit)
 		case 12: // load outdoor zone below
 			if (editing_town)
 				break;
-				if (cur_out.y < scenario.out_height - 1) {
+
+			if (change_made_outdoors == TRUE) {
+				if (save_check(859) == FALSE)
+					break;
+			}
+			if (cur_out.y < scenario.out_height - 1) {
 				 spot_hit.x = cur_out.x;
 				 spot_hit.y = cur_out.y + 1;
 				 }
-				else {
+			else {
 				 spot_hit.x = cur_out.x;
 				 spot_hit.y = 0;
 				 }

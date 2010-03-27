@@ -4112,7 +4112,7 @@ void draw_ter_medium()
 	store_bmp = (HBITMAP) SelectObject(main_dc5,DibBitmapHandle(ter_draw_gworld));
 	
 	for (q = 0; q < 32; q++)
-		for (r = 0; r < 32; r++) { // check where this brace is closed.
+		for (r = 0; r < 32; r++) {
 			where_draw.x = (t_coord)q; where_draw.y = (t_coord)r;
 
 			if((editing_town == FALSE) && ((cen_x + q - 16 < 0) || (cen_x + q - 16 >= 48) || (cen_y + r - 16 < 0) || (cen_y + r - 16 >= 48)) ) {

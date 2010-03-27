@@ -261,6 +261,7 @@ BEGIN
     "^R",           202,                    ASCII,  NOINVERT
     "^G",           1507,                   ASCII,  NOINVERT
     "^H",           1508,                   ASCII,  NOINVERT
+    "^I",           1609,                   ASCII,  NOINVERT
     "^J",           1509,                   ASCII,  NOINVERT
     "^K",           1510,                   ASCII,  NOINVERT
     "^P",           1514,                   ASCII,  NOINVERT
@@ -594,12 +595,13 @@ STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,371,138,31,10,WS_GROUP
     LTEXT           "6_0",2,143,90,75,16
-    LTEXT           "1_63",3,265,122,62,16
+    LTEXT           "1_63",3,265,212,62,16
     LTEXT           "~Set Special Number:",4,24,29,256,17
-    LTEXT           "Which special should be called when this space is entered? (Should be in the range 10 to 99.)",
-                    5,24,48,300,35
+    LTEXT           "Which special should be called when this space is entered? (Should be in the range 10 to 99.)",5,24,48,300,35
     LTEXT           "Special node:",6,54,90,84,16
-    LTEXT           "0_5",7,199,122,62,16
+    LTEXT           "0_5",7,199,212,62,16
+    LTEXT           "Towns only: you may be able to place specials with numbers as high as 199.",8,24,122,300,35
+    LTEXT           "For an existing placed special: choosing Cancel removes it completely while choosing OK retains it.",9,24,162,300,35
 END
 
 828 DIALOG  10, 10, 325, 103
@@ -1167,19 +1169,20 @@ BEGIN
     LTEXT           "0_5",4,77,100,62,16
     LTEXT           "~Pick Town to Edit:",5,25,19,167,17
     LTEXT           "Enter the number of the town you want to edit next:",6,25,38,185,28
-    LTEXT           "0_109",7,152,73,63,13
+//    LTEXT           "0_109",7,152,73,63,13
 END
 
 856 DIALOG  10, 10, 284, 149
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
-    LTEXT           "6_0",2,92,85,62,16
-    LTEXT           "1_63",3,179,109,58,16
-    LTEXT           "0_5",4,113,109,62,16
+    LTEXT           "6_0",2,92,90,62,16
+    LTEXT           "1_63",3,259,172,58,16
+    LTEXT           "0_5",4,193,172,62,16
     LTEXT           "~Entrance to what town?",5,23,20,167,17
-    LTEXT           "What town do you want the party to end up in when they walk into this rectangle?",6,23,39,213,42
-    LTEXT           "0_109",7,179,85,63,13
+    LTEXT           "What town do you want the party to end up in when they walk into this rectangle?",6,23,39,300,42
+//    LTEXT           "0_109",7,179,85,63,13
+    LTEXT           "For an existing town entrance: choosing Cancel removes it completely while choosing OK retains it.",8,24,122,300,35
 END
 
 857 DIALOG  10, 10, 401, 230
