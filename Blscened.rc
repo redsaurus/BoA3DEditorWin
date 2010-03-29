@@ -1372,20 +1372,17 @@ END
 876 DIALOG  10, 10, 402, 403
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    LTEXT           "1_63",1,302,373,66,20
-    LTEXT           "0_5",2,236,373,62,20
-    LTEXT           "Select a Blades of Exile scenario you wish to import. This editor will create a folder and, inside that folder, a new scenario file. It will then translate, as best it can, your old scenario into a scenario that will work in the new system.",
-                    3,22,18,341,65
-    LTEXT           "There are several things to bear in mind about this process.",
-                    4,22,84,337,36
-    LTEXT           "First, Blades of Avernum does not use scenario passwords. You don't need a password to import an old scenario.",
-                    5,39,122,313,45
-    LTEXT           "Second, all special encounters and dialogue are now handled through scripts. This editor will translate your old data into new scripts. However, this translation will require some testing and adaption on your part.",
-                    6,39,168,313,67
-    LTEXT           "Third, because Blades of Avernum is very different from Blades of Exile, a bit of work will be needed on each town and outdoor section to get it to work with the new system. This feature DOES NOT result in a finished, playable scenario.",
-                    7,38,231,313,67
-    LTEXT           "For more information on differences between the two systems and things you will need to do to complete the adaption, consult the documentation. If you're ready, you can now select a scenario file.",
-                    8,22,310,329,52
+    LTEXT           "1_63",1,302,460,66,20
+    LTEXT           "0_5",2,170,460,62,20
+    LTEXT           "Select a Blades of Exile scenario you wish to import. This editor will create a folder and, inside that folder, a new scenario file. It will then translate, as best it can, your old scenario into a scenario that will work in the new system.",3,22,18,341,65
+    LTEXT           "There are several things to bear in mind about this process.",4,22,84,337,36
+    LTEXT           "First, Blades of Avernum does not use scenario passwords. You don't need a password to import an old scenario.",5,39,122,313,45
+    LTEXT           "Second, all special encounters and dialogue are now handled through scripts. This editor will translate your old data into new scripts. However, this translation will require some testing and adaption on your part.",6,39,168,313,67
+    LTEXT           "Third, because Blades of Avernum is very different from Blades of Exile, a bit of work will be needed on each town and outdoor section to get it to work with the new system. This feature DOES NOT result in a finished, playable scenario.",7,38,231,313,67
+    LTEXT           "For more information on differences between the two systems and things you will need to do to complete the adaption, consult the documentation. If you're ready, you can now select a scenario file.",8,22,310,329,52
+    LTEXT           "1_52",9,236,460,66,20
+    LTEXT           "If you want to use your own names for the towns, outdoor zones and their scripts choose Create below, otherwise choose OK to use truncated forms of the BoE names. For more information see the file Revised Win3D Readme.rtf.",10,22,370,329,52
+
 END
 
 877 DIALOG  10, 10, 341, 91

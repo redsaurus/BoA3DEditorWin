@@ -170,6 +170,8 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam);
 void check_colors();
 void check_game_done();
 short last_file_printed = 0;
+extern Boolean use_custom_name;
+
 // extern void put_placed_terrain_script_in_dlog();
 //MW specified argument and return type.
 int APIENTRY _tWinMain (HINSTANCE hInstance,
@@ -584,10 +586,19 @@ void handle_file_menu(int item_hit)
 					"",0);
 				return;
 			}
-			if (fancy_choice_dialog(876,0) == 2)
-				break;
-			import_blades_of_exile_scenario();
+			switch (fancy_choice_dialog(876,0)) {
+			case 1:
+					 import_blades_of_exile_scenario();
 			break;
+			case 2:
+			break;
+			case 9:
+					use_custom_name = 1;
+					import_blades_of_exile_scenario();
+			break;
+			}
+		break;
+			
 		case 6: // quit
 			if (save_check(869) == FALSE)
 				break;

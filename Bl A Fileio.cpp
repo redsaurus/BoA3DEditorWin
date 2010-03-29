@@ -118,6 +118,9 @@ char *BOAPortTownnames[200] = {"t000Town name~~~~~~","t001Town name~~~~~~","t002
 
 char *BOAPortTownScriptnames[200] = {"t000Townscrip","t001Townscrip","t002Townscrip","t003Townscrip","t004Townscrip","t005Townscrip","t006Townscrip","t007Townscrip","t008Townscrip","t009Townscrip","t010Townscrip","t011Townscrip","t012Townscrip","t013Townscrip","t014Townscrip","t015Townscrip","t016Townscrip","t017Townscrip","t018Townscrip","t019Townscrip","t020Townscrip","t021Townscrip","t022Townscrip","t023Townscrip","t024Townscrip","t025Townscrip","t026Townscrip","t027Townscrip","t028Townscrip","t029Townscrip","t030Townscrip","t031Townscrip","t032Townscrip","t033Townscrip","t034Townscrip","t035Townscrip","t036Townscrip","t037Townscrip","t038Townscrip","t039Townscrip","t040Townscrip","t041Townscrip","t042Townscrip","t043Townscrip","t044Townscrip","t045Townscrip","t046Townscrip","t047Townscrip","t048Townscrip","t049Townscrip","t050Townscrip","t051Townscrip","t052Townscrip","t053Townscrip","t054Townscrip","t055Townscrip","t056Townscrip","t057Townscrip","t058Townscrip","t059Townscrip","t060Townscrip","t061Townscrip","t062Townscrip","t063Townscrip","t064Townscrip","t065Townscrip","t066Townscrip","t067Townscrip","t068Townscrip","t069Townscrip","t070Townscrip","t071Townscrip","t072Townscrip","t073Townscrip","t074Townscrip","t075Townscrip","t076Townscrip","t077Townscrip","t078Townscrip","t079Townscrip","t080Townscrip","t081Townscrip","t082Townscrip","t083Townscrip","t084Townscrip","t085Townscrip","t086Townscrip","t087Townscrip","t088Townscrip","t089Townscrip","t090Townscrip","t091Townscrip","t092Townscrip","t093Townscrip","t094Townscrip","t095Townscrip","t096Townscrip","t097Townscrip","t098Townscrip","t099Townscrip","t100Townscrip","t101Townscrip","t102Townscrip","t103Townscrip","t104Townscrip","t105Townscrip","t106Townscrip","t107Townscrip","t108Townscrip","t109Townscrip","t110Townscrip","t111Townscrip","t112Townscrip","t113Townscrip","t114Townscrip","t115Townscrip","t116Townscrip","t117Townscrip","t118Townscrip","t119Townscrip","t120Townscrip","t121Townscrip","t122Townscrip","t123Townscrip","t124Townscrip","t125Townscrip","t126Townscrip","t127Townscrip","t128Townscrip","t129Townscrip","t130Townscrip","t131Townscrip","t132Townscrip","t133Townscrip","t134Townscrip","t135Townscrip","t136Townscrip","t137Townscrip","t138Townscrip","t139Townscrip","t140Townscrip","t141Townscrip","t142Townscrip","t143Townscrip","t144Townscrip","t145Townscrip","t146Townscrip","t147Townscrip","t148Townscrip","t149Townscrip","t150Townscrip","t151Townscrip","t152Townscrip","t153Townscrip","t154Townscrip","t155Townscrip","t156Townscrip","t157Townscrip","t158Townscrip","t159Townscrip","t160Townscrip","t161Townscrip","t162Townscrip","t163Townscrip","t164Townscrip","t165Townscrip","t166Townscrip","t167Townscrip","t168Townscrip","t169Townscrip","t170Townscrip","t171Townscrip","t172Townscrip","t173Townscrip","t174Townscrip","t175Townscrip","t176Townscrip","t177Townscrip","t178Townscrip","t179Townscrip","t180Townscrip","t181Townscrip","t182Townscrip","t183Townscrip","t184Townscrip","t185Townscrip","t186Townscrip","t187Townscrip","t188Townscrip","t189Townscrip","t190Townscrip","t191Townscrip","t192Townscrip","t193Townscrip","t194Townscrip","t195Townscrip","t196Townscrip","t197Townscrip","t198Townscrip","t199Townscrip"};
 
+char *BOAPortOutScriptnames[200] = {"o00Outdorname","o01Outdorname","o02Outdorname","o03Outdorname","o04Outdorname","o05Outdorname","o06Outdorname","o07Outdorname","o08Outdorname","o09Outdorname","o10Outdorname","o11Outdorname","o12Outdorname","o13Outdorname","o14Outdorname","o15Outdorname","o16Outdorname","o17Outdorname","o18Outdorname","o19Outdorname","o20Outdorname","o21Outdorname","o22Outdorname","o23Outdorname","o24Outdorname","o25Outdorname","o26Outdorname","o27Outdorname","o28Outdorname","o29Outdorname","o30Outdorname","o31Outdorname","o32Outdorname","o33Outdorname","o34Outdorname","o35Outdorname","o36Outdorname","o37Outdorname","o38Outdorname","o39Outdorname","o40Outdorname","o41Outdorname","o42Outdorname","o43Outdorname","o44Outdorname","o45Outdorname","o46Outdorname","o47Outdorname","o48Outdorname","o49Outdorname","o50Outdorname","o51Outdorname","o52Outdorname","o53Outdorname","o54Outdorname","o55Outdorname","o56Outdorname","o57Outdorname","o58Outdorname","o59Outdorname","o60Outdorname","o61Outdorname","o62Outdorname","o63Outdorname","o64Outdorname","o65Outdorname","o66Outdorname","o67Outdorname","o68Outdorname","o69Outdorname","o70Outdorname","o71Outdorname","o72Outdorname","o73Outdorname","o74Outdorname","o75Outdorname","o76Outdorname","o77Outdorname","o78Outdorname","o79Outdorname","o80Outdorname","o81Outdorname","o82Outdorname","o83Outdorname","o84Outdorname","o85Outdorname","o86Outdorname","o87Outdorname","o88Outdorname","o89Outdorname","o90Outdorname","o91Outdorname","o92Outdorname","o93Outdorname","o94Outdorname","o95Outdorname","o96Outdorname","o97Outdorname","o98Outdorname","o99Outdorname"};
+
+char *BOAPortOutnames[200] = {"o00Outdoorzone name","o01Outdoorzone name","o02Outdoorzone name","o03Outdoorzone name","o04Outdoorzone name","o05Outdoorzone name","o06Outdoorzone name","o07Outdoorzone name","o08Outdoorzone name","o09Outdoorzone name","o10Outdoorzone name","o11Outdoorzone name","o12Outdoorzone name","o13Outdoorzone name","o14Outdoorzone name","o15Outdoorzone name","o16Outdoorzone name","o17Outdoorzone name","o18Outdoorzone name","o19Outdoorzone name","o20Outdoorzone name","o21Outdoorzone name","o22Outdoorzone name","o23Outdoorzone name","o24Outdoorzone name","o25Outdoorzone name","o26Outdoorzone name","o27Outdoorzone name","o28Outdoorzone name","o29Outdoorzone name","o30Outdoorzone name","o31Outdoorzone name","o32Outdoorzone name","o33Outdoorzone name","o34Outdoorzone name","o35Outdoorzone name","o36Outdoorzone name","o37Outdoorzone name","o38Outdoorzone name","o39Outdoorzone name","o40Outdoorzone name","o41Outdoorzone name","o42Outdoorzone name","o43Outdoorzone name","o44Outdoorzone name","o45Outdoorzone name","o46Outdoorzone name","o47Outdoorzone name","o48Outdoorzone name","o49Outdoorzone name","o50Outdoorzone name","o51Outdoorzone name","o52Outdoorzone name","o53Outdoorzone name","o54Outdoorzone name","o55Outdoorzone name","o56Outdoorzone name","o57Outdoorzone name","o58Outdoorzone name","o59Outdoorzone name","o60Outdoorzone name","o61Outdoorzone name","o62Outdoorzone name","o63Outdoorzone name","o64Outdoorzone name","o65Outdoorzone name","o66Outdoorzone name","o67Outdoorzone name","o68Outdoorzone name","o69Outdoorzone name","o70Outdoorzone name","o71Outdoorzone name","o72Outdoorzone name","o73Outdoorzone name","o74Outdoorzone name","o75Outdoorzone name","o76Outdoorzone name","o77Outdoorzone name","o78Outdoorzone name","o79Outdoorzone name","o80Outdoorzone name","o81Outdoorzone name","o82Outdoorzone name","o83Outdoorzone name","o84Outdoorzone name","o85Outdoorzone name","o86Outdoorzone name","o87Outdoorzone name","o88Outdoorzone name","o89Outdoorzone name","o90Outdoorzone name","o91Outdoorzone name","o92Outdoorzone name","o93Outdoorzone name","o94Outdoorzone name","o95Outdoorzone name","o96Outdoorzone name","o97Outdoorzone name","o98Outdoorzone name","o99Outdoorzone name"};
 
 short old_blades_available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8, 
 								128,
@@ -365,6 +368,7 @@ void add_ishtrs_string_to_file(FILE *file_id,char *str1,char *str2,char *str3);
 void add_short_string_to_file(FILE *file_id,char *str1,short num,char *str2);
 void add_ish_string_to_file(FILE *file_id,char *str1,short num1,char *str2,short num2,char *str3);
 void add_big_string_to_file(FILE *file_id,char *str1,short num1,char *str2,short num2,char *str3,short num3,char *str4);
+void add_ishqns_string_to_file(FILE *file_id,char *str1,char *str2,char *str3,char *str4,char *str5);
 void add_string_to_file(FILE *file_id,char *str);
 void add_cr(FILE *file_id);
 void add_string(FILE *file_id,char *str);
@@ -385,6 +389,9 @@ short FSWrite(FILE *file_id, long *len, char *data);
 // registry constant
 const char* kRegistryKey = "Software\\Spiderweb Software\\BoA 3D Editor";
 const char* kRegistryName = "BoA DATA Dirctory";
+
+Boolean use_custom_name = 0;
+
 
 bool read_BoAFilesFolder_from_Pref( char * boaFolder )
 {
@@ -2531,6 +2538,8 @@ void import_blades_of_exile_scenario()
 			// port outdoor scripts
 			char out_script_name[256];
 			char dummy_str[256];
+			
+	if (use_custom_name == 0) {
 			trunc_str(current_terrain.name);
 			sprintf((char *) dummy_str,"o%d%d%s",n,m,current_terrain.name);
 			clean_str(dummy_str);
@@ -2538,7 +2547,17 @@ void import_blades_of_exile_scenario()
 			strcpy(current_terrain.section_script,dummy_str);
 			sprintf((char *) out_script_name,"%s.txt",dummy_str);
 			port_outdoor_script(out_script_name,new_scen_path,n,m);
-			
+	}
+
+	else {
+      short out_num = m * boe_scenario.out_width + n;
+			sprintf((char *) dummy_str,"%s",BOAPortOutScriptnames[out_num]);
+			dummy_str[SCRIPT_NAME_LEN - 1] = 0;
+			strcpy(current_terrain.section_script,dummy_str);
+			sprintf((char *) out_script_name,"%s.txt",dummy_str);
+			port_outdoor_script(out_script_name,new_scen_path,n,m);
+	}
+
 			// write ported outdoor section
 			current_terrain.port();
 			len = kSizeOfOutdoor_record_type;
@@ -2608,13 +2627,23 @@ void import_blades_of_exile_scenario()
 		// Port town scripts
 		char town_script_name[256];
 		char dummy_str[256];
-//		trunc_str(town.town_name);
-		sprintf((char *) dummy_str,"t%d%s",m,BOAPortTownScriptnames[m]);
-//		clean_str(dummy_str);
+		
+		if (use_custom_name == 0) {
+		trunc_str(town.town_name);
+		sprintf((char *) dummy_str,"t%d%s", (int)m,town.town_name);
+		clean_str(dummy_str);
 		dummy_str[SCRIPT_NAME_LEN - 1] = 0;
 		strcpy(town.town_script,dummy_str);
 		sprintf((char *) town_script_name,"%s.txt",dummy_str);
 		port_town_script(town_script_name,new_scen_path,m);
+		}
+		else {
+		sprintf((char *) dummy_str,"%s",BOAPortTownScriptnames[m]);
+		strcpy(town.town_script,dummy_str);
+		sprintf((char *) town_script_name,"%s.txt",dummy_str);
+		port_town_script(town_script_name,new_scen_path,m);
+		}
+
 
 		// port town dlog script
 		char town_dlg_script_name[256];
@@ -2725,7 +2754,7 @@ void port_boe_scenario_data()
 	
 }
 
-void port_boe_out_data() 
+void port_boe_out_data()
 {
 	short i,j;
 	Boolean current_section_on_surface = TRUE;
@@ -2733,9 +2762,15 @@ void port_boe_out_data()
 	current_terrain.clear_outdoor_record_type();
 
 	boe_scen_text.out_strs[0][19] = 0;
-	strcpy(current_terrain.name,boe_scen_text.out_strs[0]);
-	trunc_str(current_terrain.name);
-	
+	if (use_custom_name == 0) {
+		strcpy(current_terrain.name,boe_scen_text.out_strs[0]);
+		trunc_str(current_terrain.name);
+		}
+  else {
+    short out_num = cur_out.y * boe_scenario.out_width + cur_out.x;
+		strcpy(town.town_name,BOAPortOutnames[out_num]);
+// out_num needs to be made a parameter?
+	 }
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) {
 			current_terrain.floor[i][j] = (unsigned char)old_ter_to_floor[boe_outdoor.terrain[i][j]];
@@ -2892,7 +2927,10 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 	t_d.clear_big_tr_type();
 	
 	boe_scen_text.town_strs[0][19] = 0;
+		if (use_custom_name == 0)
 	strcpy(town.town_name,boe_scen_text.town_strs[0]);
+	  else
+	strcpy(town.town_name,BOAPortTownnames[which_town]);
 
 	for (i = 0; i < 4; i++)
 		for (j = 0; j < 4; j++)
@@ -2907,9 +2945,6 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 			town.special_rects[i].left = town.special_rects[i].right = boe_town.special_locs[i].x;
 			town.special_rects[i].top = town.special_rects[i].bottom = boe_town.special_locs[i].y;
 			
-//			if (is_mac_scen == FALSE)
-//				alter_rect(&town.special_rects[i]);
-				
 			town.spec_id[i] = boe_town.spec_id[i] + 10;
 			}
 
@@ -3782,7 +3817,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				add_string(file_id,"\tif (is_outdoor()) {");
 				add_string(file_id,"\t\tblock_entry(1);");
 				add_string(file_id,"\t\t end();");				
-				add_string(file_id,"\t\t };");
+				add_string(file_id,"\t\t }");
                }
 			else {
                 add_string(file_id,"\tif (is_outdoor())");
@@ -3795,7 +3830,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				add_string(file_id,"\tif (is_town()) {");
 				add_string(file_id,"\t\tblock_entry(1);");
 				add_string(file_id,"\t\t end();");				
-				add_string(file_id,"\t\t };");								
+				add_string(file_id,"\t\t }");
                 }
 			else {
                 add_string(file_id,"\tif (is_town())");
@@ -3808,7 +3843,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				add_string(file_id,"\tif (is_combat()) {");
 				add_string(file_id,"\t\tblock_entry(1);");
 				add_string(file_id,"\t\t end();");				
-				add_string(file_id,"\t\t };");								
+				add_string(file_id,"\t\t }");
                 }	
 			else {
                 add_string(file_id,"\tif (is_combat())");
@@ -3850,7 +3885,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_ish_string_to_file(file_id,"\tset_town_visibility(",node->ex1a,",",node->ex1b,");");		
 			break;
 		case 18: // major event occured
-			add_short_string_to_file(file_id,"\tday_event_happened(",node->ex1a,") = what_day_of_scenario();");
+			add_short_string_to_file(file_id,"\tset_event_happened(",node->ex1a,",what_day_of_scenario());");
 			break;
 			
 		case 19: // forced give
@@ -3864,9 +3899,10 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 					}
 			break;
 		case 20: // buy items of type
-			add_ish_string_to_file(file_id,"\tif (take_all_of_item_class(",node->ex1a,",",node->ex2a,") > 0) ");		
-			if (node->ex1b >= 0) 
-				add_short_string_to_file(file_id,"\telse set_state_continue(",node->ex1b + 10,");");
+			add_ish_string_to_file(file_id,"\ttake_all_of_item_class(",node->ex1a,",",node->ex2a,");");
+			if (node->ex1b >= 0)
+				add_ish_string_to_file(file_id,"\tif (take_all_of_item_class(",node->ex1a,",",node->ex2a,") <= 0) ");
+				add_short_string_to_file(file_id,"\tset_state_continue(",node->ex1b + 10,");");
 			break;
 		case 21: // global special
 			add_short_string_to_file(file_id,"\trun_scenario_script(",node->jumpto + 10,");");
@@ -3904,7 +3940,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				aa = old_item_to_new_item[node->ex1a];
 			add_short_string_to_file(file_id,"\tif (reward_give(",aa,") > 0) {");	
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
-				add_ish_string_to_file(file_id,"\t\tset_flag(",node->sd1,",",node->sd2,");");
+				add_ish_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",250);");
 				if (node->ex1b > 0) 
 					add_short_string_to_file(file_id,"\t\t\tchange_coins(",node->ex1b,");");
 				if (node->ex2a != 0) 
@@ -3940,15 +3976,15 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				}
 				}
 				if (node->ex1a >= 0) {
-					sprintf(new_line,"\tadd_dialog_choice(0,\"%s\".);", old_blades_button_strs[old_blades_available_dlog_buttons[node->ex1a]]);
+					sprintf(new_line,"\tadd_dialog_choice(0,\"%s.\");", old_blades_button_strs[old_blades_available_dlog_buttons[node->ex1a]]);
 						add_string(file_id,new_line);
 				}
 				if (node->ex2a >= 0) {
-					sprintf(new_line,"\tadd_dialog_choice(1,\"%s\".);", old_blades_button_strs[old_blades_available_dlog_buttons[node->ex2a]]);
+					sprintf(new_line,"\tadd_dialog_choice(1,\"%s.\");", old_blades_button_strs[old_blades_available_dlog_buttons[node->ex2a]]);
 						add_string(file_id,new_line);
 					}
 			if (node->m2 > 0) 
-				add_string(file_id,"\tadd_dialog_choice(2,OK.);");
+				add_string(file_id,"\tadd_dialog_choice(2,\"OK.\");");
 			add_string(file_id,"\tchoice = run_dialog(1);");
 			if (node->ex1a >= 0) {
 					add_string(file_id,"\tif (choice == 1)");
@@ -4159,8 +4195,8 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 		case 101: // gold
 					if (node->ex1b == 0)
-					add_short_string_to_file(file_id,"\tchange_coins(i,",node->ex1a,");");
-					else add_short_string_to_file(file_id,"\tchange_coins(i,-",node->ex1a,");");
+					add_short_string_to_file(file_id,"\tchange_coins(",node->ex1a,");");
+					else add_short_string_to_file(file_id,"\tchange_coins(-",node->ex1a,");");
 			break;
 		case 102: // food
 			add_string(file_id,"// OBSOLETE NODE: Food works completely differently now.");
@@ -4306,11 +4342,15 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				else add_string(file_id,"\t\tend();");			
 			break;
 		case 146: // equip item of class, take
-			add_short_string_to_file(file_id,"\tif (char_has_item_of_class_equip(",node->ex1a,",1) > 0)");
+			add_string(file_id,"\ti = 0;");
+			add_string(file_id,"\twhile (i < 4) {");
+			add_short_string_to_file(file_id,"\t\tif (char_has_item_of_class_equip(i,",node->ex1a,",1) > 0)");
 			if (node->ex1b >= 0)
-				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");			
-				else add_string(file_id,"\t\tend();");			
-			break;
+				add_short_string_to_file(file_id,"\t\t\tset_state_continue(",node->ex1b + 10,");");
+			else add_string(file_id,"\t\t\tend();");
+			add_string(file_id,"\t\ti = i + 1;");
+			add_string(file_id,"\t\t}");
+
 		case 147: // day reached
 			add_short_string_to_file(file_id,"\tif (what_day_of_scenario() >= ",node->ex1a,")");
 			if (node->ex1b >= 0)
@@ -4365,14 +4405,14 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"// WARNING, NODE ALTERED: The program now looks for exact matches of text");
 			add_string(file_id,"//   (not just the first few characters). It is not case sensitive ");
 			add_string(file_id,"//   (so CHEese counts the same as CHEESE or cheESE). ");
-			add_string(file_id,"\tget_text_response(You Respond:);");
+			add_string(file_id,"\tget_text_response(\"You Respond:\");");
 			if (node->ex1a >= 0) {
-				add_ishtrs_string_to_file(file_id,"\t\tcheck_text_response_match(",boe_scen_text.scen_strs[node->ex1a],");");
+				add_ishtrs_string_to_file(file_id,"\t\tcheck_text_response_match(\"",boe_scen_text.scen_strs[node->ex1a],"\");");
 				add_string(file_id,"\t\t if (got_text_match())");
 				add_short_string_to_file(file_id,"\t\t\tset_state_continue(",node->ex1b + 10,");");			
 				}
 			if (node->ex2a >= 0) {
-				add_ishtrs_string_to_file(file_id,"\t\tcheck_text_response_match(",boe_scen_text.scen_strs[node->ex2a],");");
+				add_ishtrs_string_to_file(file_id,"\t\tcheck_text_response_match(\"",boe_scen_text.scen_strs[node->ex2a],"\");");
 				add_string(file_id,"\t\t if (got_text_match())");
 				add_short_string_to_file(file_id,"\t\t\tset_state_continue(",node->ex2b + 10,");");			
 				}
@@ -4688,25 +4728,27 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 					add_string(file_id,"// Potential translation problems");										  											  					
 					break;
 				}	
-				case 217:  // Lock Rectangle  
-				add_string(file_id,"// OBSOLETE NODE: Doors are handled completely differently in BoA.");
-				add_string(file_id,"//   You may need to use flip_terrain to change the doors, or send.");
-				add_string(file_id,"//   messages to the door scripts. Here it is lock terrain.");
-				add_string(file_id,"\t// flip_terrain(i,j);");
-				break;
-				case 218: // Unlock Rectangle  
-				add_string(file_id,"// OBSOLETE NODE: Doors are handled completely differently in BoA.");
-				add_string(file_id,"//   You may need to use flip_terrain to change the doors, or send.");
-				add_string(file_id,"//   messages to the door scripts.  Here it is unlock terrain."  );
-				add_string(file_id,"\t// flip_terrain(i,j);");
-				add_string(file_id,"// set_terrain_memory_cell(which_ter_scripts,0,0);");
-				break;
+
 			add_string(file_id,"\t\t\tj = j + 1;");					
 			add_string(file_id,"\t\t\t}");					
 			add_string(file_id,"\t\ti = i + 1;");					
 			add_string(file_id,"\t\t}");					
 			break;
-			
+
+		case 217:  // Lock Rectangle
+			add_string(file_id,"// OBSOLETE NODE: Doors are handled completely differently in BoA.");
+			add_string(file_id,"//   You may need to use flip_terrain to change the doors, or send.");
+			add_string(file_id,"//   messages to the door scripts. Here it is lock terrain.");
+			add_string(file_id,"\t// flip_terrain(i,j);");
+		break;
+		case 218: // Unlock Rectangle
+			add_string(file_id,"// OBSOLETE NODE: Doors are handled completely differently in BoA.");
+			add_string(file_id,"//   You may need to use flip_terrain to change the doors, or send.");
+			add_string(file_id,"//   messages to the door scripts.  Here it is unlock terrain."  );
+			add_string(file_id,"\t// flip_terrain(i,j);");
+			add_string(file_id,"// set_terrain_memory_cell(which_ter_scripts,0,0);");
+		break;
+
 		case 225: // wand monst
 			add_string(file_id,"\tmake_wandering_monst();");
 			break;
@@ -4948,7 +4990,7 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			add_string(file_id,"\tcode =");
 			add_string(file_id,"\t\tclear_strings();");
 			add_short_string_to_file(file_id,"\t\tif (coins_amount() >= ",boe_talk_data.talk_nodes[which_node].extras[0],") {");
-			add_ish_string_to_file(file_id,"\t\t\tif (set_boat_range_property(",boe_talk_data.talk_nodes[which_node].extras[1],",",boe_talk_data.talk_nodes[which_node].extras[1] + boe_talk_data.talk_nodes[which_node].extras[2]," >= 0) {");
+			add_ish_string_to_file(file_id,"\t\t\tif (set_boat_range_property(",boe_talk_data.talk_nodes[which_node].extras[1],",",boe_talk_data.talk_nodes[which_node].extras[1] + boe_talk_data.talk_nodes[which_node].extras[2],") >= 0) {");
 			add_string(file_id,"\t\t\t\tadd_string(1);");	
 			add_short_string_to_file(file_id,"\t\t\t\tchange_coins(-",boe_talk_data.talk_nodes[which_node].extras[0],");");
 			add_string(file_id,"\t\t\t\t}");
@@ -4964,7 +5006,7 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			add_string(file_id,"\tcode =");
 			add_string(file_id,"\t\tclear_strings();");
 			add_short_string_to_file(file_id,"\t\tif (coins_amount() >= ",boe_talk_data.talk_nodes[which_node].extras[0],") {");
-			add_ish_string_to_file(file_id,"\t\t\tif (set_horse_range_property(",boe_talk_data.talk_nodes[which_node].extras[1],",",boe_talk_data.talk_nodes[which_node].extras[1] + boe_talk_data.talk_nodes[which_node].extras[2]," >= 0) {");
+			add_ish_string_to_file(file_id,"\t\t\tif (set_horse_range_property(",boe_talk_data.talk_nodes[which_node].extras[1],",",boe_talk_data.talk_nodes[which_node].extras[1] + boe_talk_data.talk_nodes[which_node].extras[2],") >= 0) {");
 			add_string(file_id,"\t\t\t\tadd_string(1);");	
 			add_short_string_to_file(file_id,"\t\t\t\tchange_coins(-",boe_talk_data.talk_nodes[which_node].extras[0],");");
 			add_string(file_id,"\t\t\t\t}");
@@ -5006,14 +5048,14 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			add_ishtrs_string_to_file(file_id,"\ttext3 = \"",str2,"\";");
 			add_string(file_id,"\tcode =");
 			add_string(file_id,"\t\tclear_strings();");
-			add_string(file_id,"\t\t\telse {");	
 			add_short_string_to_file(file_id,"\t\t\t\tif (pay_coins(",boe_talk_data.talk_nodes[which_node].extras[0],")) {");
 			add_string(file_id,"\t\t\t\t\tadd_string(1);");	
 			add_short_string_to_file(file_id,"\t\t\t\t\tset_town_visibility(",boe_talk_data.talk_nodes[which_node].extras[1],",1);");
 			add_string(file_id,"\t\t\t\t\t}");	
 			add_string(file_id,"\t\t\t\t\telse add_string(3);");	
-			add_string(file_id,"\t\t\t\t}");	
-			add_string(file_id,"\tbreak;");			
+			add_string(file_id,"\tbreak;");
+			add_string(file_id,"// This calls a non existent function: get_town visibility");
+			add_string(file_id,"get_town visibility();");
 			break;
 		case 25: // force conv end
 			if (strlen(str) > 0)
@@ -5084,14 +5126,18 @@ void handle_messages(FILE *file_id,short node_type,short message_1,short message
 	
 	if ((message_1 < 0) && (message_2 < 0))
 		return;
-
-	if (message_1 >= 0) {
+	if ((message_1 >= 0) && (message_2 < 0)) {
 		get_bl_str(str1,node_type,message_1);
-		add_ishtrs_string_to_file(file_id,"\tmessage_dialog(\"",str1,"\");");
+		add_ishtrs_string_to_file(file_id,"\tmessage_dialog(\"",str1,"\",\"\");");
 		}
-	if (message_2 >= 0) {
+	if ((message_1 < 0) && (message_2 >= 0)) {
+		get_bl_str(str1,node_type,message_2);
+		add_ishtrs_string_to_file(file_id,"\tmessage_dialog(\"",str1,"\",\"\");");
+		}
+	if ((message_1 >= 0) && (message_2 >= 0)) {
+		get_bl_str(str1,node_type,message_1);
 		get_bl_str(str2,node_type,message_2);
-		add_ishtrs_string_to_file(file_id,"\tmessage_dialog(\"",str2,"\");");
+		add_ishqns_string_to_file(file_id,"\tmessage_dialog(\"",str1," \",\"",str2,"\");");
 		}
 }
 
@@ -5164,6 +5210,16 @@ void add_big_string_to_file(FILE *file_id,char *str1,short num1,char *str2,short
 		else if (num3 == -999)
 			sprintf(message,"%s%d%s%d%s%s", str1, num1, str2, num2, str3, str4);
 		else sprintf(message,"%s%d%s%d%s%d%s",str1, num1,str2,num2,str3,num3,str4);
+	add_string_to_file(file_id,message);
+	add_cr(file_id);
+}
+
+void add_ishqns_string_to_file(FILE *file_id,char *str1,char *str2,char *str3,char *str4,char *str5)
+{
+	char message[512];
+
+		sprintf(message,"%s%s%s%s%s",str1,str2,str3,str4,str5);
+
 	add_string_to_file(file_id,message);
 	add_cr(file_id);
 }
