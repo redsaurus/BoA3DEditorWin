@@ -588,7 +588,8 @@ void handle_file_menu(int item_hit)
 			}
 			switch (fancy_choice_dialog(876,0)) {
 			case 1:
-					 import_blades_of_exile_scenario();
+					use_custom_name = 0;
+					import_blades_of_exile_scenario();
 			break;
 			case 2:
 			break;

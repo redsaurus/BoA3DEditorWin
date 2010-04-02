@@ -4522,9 +4522,10 @@ void create_new_creature(short c_to_create,location create_loc,creature_start_ty
 		return;
 	if (loc_in_active_area(create_loc) == FALSE) {
 		give_error("You can't place a creature here. This space is outside of the active town area.","",0);
+//				set_string("You can't place a creature here:","outside of the active town area.");
 		return;
 	}
-	
+
 	for (i = 0; i < NUM_TOWN_PLACED_CREATURES; i++){
 		if ((town.creatures[i].exists()) && (same_point(town.creatures[i].start_loc,create_loc)))  {
 		  	beep();
@@ -4570,6 +4571,7 @@ Boolean create_new_item(short item_to_create,location create_loc,Boolean propert
 		return TRUE;
 	if (loc_in_active_area(create_loc) == FALSE) {
 		give_error("You can't place an item here. This space is outside of the active town area.","",0);
+//		set_string("You can't place an item here:","outside of the active town area.");
 		return TRUE;
 	}
 	
@@ -4611,7 +4613,8 @@ Boolean create_new_ter_script(char *ter_script_name,location create_loc,in_town_
 	if (strlen(ter_script_name) >= SCRIPT_NAME_LEN)	
 		return TRUE;
 	if (loc_in_active_area(create_loc) == FALSE) {
-		give_error("You can't place a terrain script here. This space is outside of the active town area.","",0);
+	give_error("You can't place a terrain script here. This space is outside of the active town area.","",0);
+//		set_string("You can't place a script here:","outside of the active town area.");
 		return TRUE;
 	}
 	
@@ -4638,6 +4641,7 @@ Boolean create_new_ter_script(char *ter_script_name,location create_loc,in_town_
 			return TRUE;
 		}	
 	}
+//	set_string("You can only have 100 terrain scripts.","No terrain script has been created.");
 	give_error("You can only have 100 active terrain scripts in a zone. No terrain script has been created.","",0);
 	return FALSE;
 }

@@ -1,16 +1,12 @@
 // Note about windows and Mac file formats.
-
 // Windows and Mac write short (2 byte) integers differently. One does
 // high byte first, one does low byte first. In the Blades of Exile days, there
 // were two scenario formats, one Mac and one Windows, and the first four bytes
 // in a scenario file identified which was which.
-
 // Of course, the game was savvy enough to tell which sort of scenario it was loading and
 // adjust the value accordingly.
-
 // But this was stupid. In BoA, it is done a much smarter way. Every file is
 // written in Mac format, and only the Windows version has to flip the formats.
-
 // Just FYI.
 
 #include "stdafx.h"
@@ -18,6 +14,7 @@
 #include <commdlg.h>
 #include "Global.h"
 #include "CMemStream.h"
+#include "Bl A Fileio.h"
 
 #define	DONE_BUTTON_ITEM	1
 #define	NIL		0L
@@ -93,36 +90,24 @@ OPENFILENAME ofn;
 OPENFILENAME ofn_import_boe;
 OFSTRUCT store;
 
-char *old_blades_button_strs[150] = {"Done ","Ask"," "," ","Keep", "Cancel","+","-","Buy","Leave",
-						"Get","1","2","3","4","5","6","Cast"," "," ",
-						" "," "," ","Buy","Sell","Other Spells","Buy x10"," "," ","Save",
-						"Race","Train","Items","Spells","Heal Party","1","2","3","4","5",
-						"6","7","8","9","10","11","12","13","14","15",
-				/*50*/  "16","Take","Create","Delete","Race/Special","Skill","Name","Graphic","Bash Door","Pick Lock",
-						"Leave","Steal","Attack","OK","Yes","No","Step In"," ","Record","Climb",
-						"Flee","Onward","Answer","Drink","Approach","Mage Spells","Priest Spells","Advantages","New Game","Land",
-						"Under","Restore","Restart","Quit","Save First","Just Quit","Rest","Read","Pull","Alchemy",
-						"17","Push","Pray","Wait","","","Delete","Graphic","Create","Give",
-				/*100*/		"Destroy","Pay","Free","Next Tip","Touch", "Select Icon","Create/Edit","Clear Special","Edit Abilities","Choose",
-						"Go Back","Create New","General","One Shots","Affect PCs","If-Thens","Town Specs","Out Specs","Advanced","Weapon Abil",
-						"General Abil.","NonSpell Use","Spell Usable","Reagents","Missiles","Abilities","Pick Picture","Animated","Enter","Burn",
-						"Insert","Remove","Accept","Refuse","Open","Close","Sit","Stand","","",
-						"18","19","20","Invisible!","","","","","",""};
-						
-char *BOAFieldnames[22] = {"Unknown","Blocked","Unknown","Force Barrier",
-"Fire Barrier","Web","Crate","Barrel","Unknown","Unknown","Unknown","Unknown",
-"Unknown","Unknown","Small Blood Stain","Medium Blood Stain","Large Blood Stain",
-"Small Slime Pool","Large Slime Pool","Dried Blood","Bones","Rocks"};
+char *old_blades_button_strs[150] = {"Done ","Ask"," "," ","Keep", "Cancel",
+"+","-","Buy","Leave","Get","1","2","3","4","5","6","Cast"," "," "," "," "," ",
+"Buy","Sell","Other Spells","Buy x10"," "," ","Save","Race","Train","Items",
+"Spells","Heal Party","1","2","3","4","5","6","7","8","9","10","11","12","13",
+"14","15","16","Take","Create","Delete","Race/Special","Skill","Name","Graphic",
+"Bash Door","Pick Lock","Leave","Steal","Attack","OK","Yes","No","Step In"," ",
+"Record","Climb","Flee","Onward","Answer","Drink","Approach","Mage Spells",
+"Priest Spells","Advantages","New Game","Land","Under","Restore","Restart",
+"Quit","Save First","Just Quit","Rest","Read","Pull","Alchemy","17","Push",
+"Pray","Wait","","","Delete","Graphic","Create","Give","Destroy","Pay","Free",
+"Next Tip","Touch", "Select Icon","Create/Edit","Clear Special","Edit Abilities",
+"Choose","Go Back","Create New","General","One Shots","Affect PCs","If-Thens",
+"Town Specs","Out Specs","Advanced","Weapon Abil","General Abil.","NonSpell Use",
+"Spell Usable","Reagents","Missiles","Abilities","Pick Picture","Animated",
+"Enter","Burn","Insert","Remove","Accept","Refuse","Open","Close","Sit","Stand",
+"","","18","19","20","Invisible!","","","","","",""};
 
-char *BOAPortTownnames[200] = {"t000Town name~~~~~~","t001Town name~~~~~~","t002Town name~~~~~~","t003Town name~~~~~~","t004Town name~~~~~~","t005Town name~~~~~~","t006Town name~~~~~~","t007Town name~~~~~~","t008Town name~~~~~~","t009Town name~~~~~~","t010Town name~~~~~~","t011Town name~~~~~~","t012Town name~~~~~~","t013Town name~~~~~~","t014Town name~~~~~~","t015Town name~~~~~~","t016Town name~~~~~~","t017Town name~~~~~~","t018Town name~~~~~~","t019Town name~~~~~~","t020Town name~~~~~~","t021Town name~~~~~~","t022Town name~~~~~~","t023Town name~~~~~~","t024Town name~~~~~~","t025Town name~~~~~~","t026Town name~~~~~~","t027Town name~~~~~~","t028Town name~~~~~~","t029Town name~~~~~~","t030Town name~~~~~~","t031Town name~~~~~~","t032Town name~~~~~~","t033Town name~~~~~~","t034Town name~~~~~~","t035Town name~~~~~~","t036Town name~~~~~~","t037Town name~~~~~~","t038Town name~~~~~~","t039Town name~~~~~~","t040Town name~~~~~~","t041Town name~~~~~~","t042Town name~~~~~~","t043Town name~~~~~~","t044Town name~~~~~~","t045Town name~~~~~~","t046Town name~~~~~~","t047Town name~~~~~~","t048Town name~~~~~~","t049Town name~~~~~~","t050Town name~~~~~~","t051Town name~~~~~~","t052Town name~~~~~~","t053Town name~~~~~~","t054Town name~~~~~~","t055Town name~~~~~~","t056Town name~~~~~~","t057Town name~~~~~~","t058Town name~~~~~~","t059Town name~~~~~~","t060Town name~~~~~~","t061Town name~~~~~~","t062Town name~~~~~~","t063Town name~~~~~~","t064Town name~~~~~~","t065Town name~~~~~~","t066Town name~~~~~~","t067Town name~~~~~~","t068Town name~~~~~~","t069Town name~~~~~~","t070Town name~~~~~~","t071Town name~~~~~~","t072Town name~~~~~~","t073Town name~~~~~~","t074Town name~~~~~~","t075Town name~~~~~~","t076Town name~~~~~~","t077Town name~~~~~~","t078Town name~~~~~~","t079Town name~~~~~~","t080Town name~~~~~~","t081Town name~~~~~~","t082Town name~~~~~~","t083Town name~~~~~~","t084Town name~~~~~~","t085Town name~~~~~~","t086Town name~~~~~~","t087Town name~~~~~~","t088Town name~~~~~~","t089Town name~~~~~~","t090Town name~~~~~~","t091Town name~~~~~~","t092Town name~~~~~~","t093Town name~~~~~~","t094Town name~~~~~~","t095Town name~~~~~~","t096Town name~~~~~~","t097Town name~~~~~~","t098Town name~~~~~~","t099Town name~~~~~~","t100Town name~~~~~~","t101Town name~~~~~~","t102Town name~~~~~~","t103Town name~~~~~~","t104Town name~~~~~~","t105Town name~~~~~~","t106Town name~~~~~~","t107Town name~~~~~~","t108Town name~~~~~~","t109Town name~~~~~~","t110Town name~~~~~~","t111Town name~~~~~~","t112Town name~~~~~~","t113Town name~~~~~~","t114Town name~~~~~~","t115Town name~~~~~~","t116Town name~~~~~~","t117Town name~~~~~~","t118Town name~~~~~~","t119Town name~~~~~~","t120Town name~~~~~~","t121Town name~~~~~~","t122Town name~~~~~~","t123Town name~~~~~~","t124Town name~~~~~~","t125Town name~~~~~~","t126Town name~~~~~~","t127Town name~~~~~~","t128Town name~~~~~~","t129Town name~~~~~~","t130Town name~~~~~~","t131Town name~~~~~~","t132Town name~~~~~~","t133Town name~~~~~~","t134Town name~~~~~~","t135Town name~~~~~~","t136Town name~~~~~~","t137Town name~~~~~~","t138Town name~~~~~~","t139Town name~~~~~~","t140Town name~~~~~~","t141Town name~~~~~~","t142Town name~~~~~~","t143Town name~~~~~~","t144Town name~~~~~~","t145Town name~~~~~~","t146Town name~~~~~~","t147Town name~~~~~~","t148Town name~~~~~~","t149Town name~~~~~~","t150Town name~~~~~~","t151Town name~~~~~~","t152Town name~~~~~~","t153Town name~~~~~~","t154Town name~~~~~~","t155Town name~~~~~~","t156Town name~~~~~~","t157Town name~~~~~~","t158Town name~~~~~~","t159Town name~~~~~~","t160Town name~~~~~~","t161Town name~~~~~~","t162Town name~~~~~~","t163Town name~~~~~~","t164Town name~~~~~~","t165Town name~~~~~~","t166Town name~~~~~~","t167Town name~~~~~~","t168Town name~~~~~~","t169Town name~~~~~~","t170Town name~~~~~~","t171Town name~~~~~~","t172Town name~~~~~~","t173Town name~~~~~~","t174Town name~~~~~~","t175Town name~~~~~~","t176Town name~~~~~~","t177Town name~~~~~~","t178Town name~~~~~~","t179Town name~~~~~~","t180Town name~~~~~~","t181Town name~~~~~~","t182Town name~~~~~~","t183Town name~~~~~~","t184Town name~~~~~~","t185Town name~~~~~~","t186Town name~~~~~~","t187Town name~~~~~~","t188Town name~~~~~~","t189Town name~~~~~~","t190Town name~~~~~~","t191Town name~~~~~~","t192Town name~~~~~~","t193Town name~~~~~~","t194Town name~~~~~~","t195Town name~~~~~~","t196Town name~~~~~~","t197Town name~~~~~~","t198Town name~~~~~~","t199Town name~~~~~~"};
-
-char *BOAPortTownScriptnames[200] = {"t000Townscrip","t001Townscrip","t002Townscrip","t003Townscrip","t004Townscrip","t005Townscrip","t006Townscrip","t007Townscrip","t008Townscrip","t009Townscrip","t010Townscrip","t011Townscrip","t012Townscrip","t013Townscrip","t014Townscrip","t015Townscrip","t016Townscrip","t017Townscrip","t018Townscrip","t019Townscrip","t020Townscrip","t021Townscrip","t022Townscrip","t023Townscrip","t024Townscrip","t025Townscrip","t026Townscrip","t027Townscrip","t028Townscrip","t029Townscrip","t030Townscrip","t031Townscrip","t032Townscrip","t033Townscrip","t034Townscrip","t035Townscrip","t036Townscrip","t037Townscrip","t038Townscrip","t039Townscrip","t040Townscrip","t041Townscrip","t042Townscrip","t043Townscrip","t044Townscrip","t045Townscrip","t046Townscrip","t047Townscrip","t048Townscrip","t049Townscrip","t050Townscrip","t051Townscrip","t052Townscrip","t053Townscrip","t054Townscrip","t055Townscrip","t056Townscrip","t057Townscrip","t058Townscrip","t059Townscrip","t060Townscrip","t061Townscrip","t062Townscrip","t063Townscrip","t064Townscrip","t065Townscrip","t066Townscrip","t067Townscrip","t068Townscrip","t069Townscrip","t070Townscrip","t071Townscrip","t072Townscrip","t073Townscrip","t074Townscrip","t075Townscrip","t076Townscrip","t077Townscrip","t078Townscrip","t079Townscrip","t080Townscrip","t081Townscrip","t082Townscrip","t083Townscrip","t084Townscrip","t085Townscrip","t086Townscrip","t087Townscrip","t088Townscrip","t089Townscrip","t090Townscrip","t091Townscrip","t092Townscrip","t093Townscrip","t094Townscrip","t095Townscrip","t096Townscrip","t097Townscrip","t098Townscrip","t099Townscrip","t100Townscrip","t101Townscrip","t102Townscrip","t103Townscrip","t104Townscrip","t105Townscrip","t106Townscrip","t107Townscrip","t108Townscrip","t109Townscrip","t110Townscrip","t111Townscrip","t112Townscrip","t113Townscrip","t114Townscrip","t115Townscrip","t116Townscrip","t117Townscrip","t118Townscrip","t119Townscrip","t120Townscrip","t121Townscrip","t122Townscrip","t123Townscrip","t124Townscrip","t125Townscrip","t126Townscrip","t127Townscrip","t128Townscrip","t129Townscrip","t130Townscrip","t131Townscrip","t132Townscrip","t133Townscrip","t134Townscrip","t135Townscrip","t136Townscrip","t137Townscrip","t138Townscrip","t139Townscrip","t140Townscrip","t141Townscrip","t142Townscrip","t143Townscrip","t144Townscrip","t145Townscrip","t146Townscrip","t147Townscrip","t148Townscrip","t149Townscrip","t150Townscrip","t151Townscrip","t152Townscrip","t153Townscrip","t154Townscrip","t155Townscrip","t156Townscrip","t157Townscrip","t158Townscrip","t159Townscrip","t160Townscrip","t161Townscrip","t162Townscrip","t163Townscrip","t164Townscrip","t165Townscrip","t166Townscrip","t167Townscrip","t168Townscrip","t169Townscrip","t170Townscrip","t171Townscrip","t172Townscrip","t173Townscrip","t174Townscrip","t175Townscrip","t176Townscrip","t177Townscrip","t178Townscrip","t179Townscrip","t180Townscrip","t181Townscrip","t182Townscrip","t183Townscrip","t184Townscrip","t185Townscrip","t186Townscrip","t187Townscrip","t188Townscrip","t189Townscrip","t190Townscrip","t191Townscrip","t192Townscrip","t193Townscrip","t194Townscrip","t195Townscrip","t196Townscrip","t197Townscrip","t198Townscrip","t199Townscrip"};
-
-char *BOAPortOutScriptnames[200] = {"o00Outdorname","o01Outdorname","o02Outdorname","o03Outdorname","o04Outdorname","o05Outdorname","o06Outdorname","o07Outdorname","o08Outdorname","o09Outdorname","o10Outdorname","o11Outdorname","o12Outdorname","o13Outdorname","o14Outdorname","o15Outdorname","o16Outdorname","o17Outdorname","o18Outdorname","o19Outdorname","o20Outdorname","o21Outdorname","o22Outdorname","o23Outdorname","o24Outdorname","o25Outdorname","o26Outdorname","o27Outdorname","o28Outdorname","o29Outdorname","o30Outdorname","o31Outdorname","o32Outdorname","o33Outdorname","o34Outdorname","o35Outdorname","o36Outdorname","o37Outdorname","o38Outdorname","o39Outdorname","o40Outdorname","o41Outdorname","o42Outdorname","o43Outdorname","o44Outdorname","o45Outdorname","o46Outdorname","o47Outdorname","o48Outdorname","o49Outdorname","o50Outdorname","o51Outdorname","o52Outdorname","o53Outdorname","o54Outdorname","o55Outdorname","o56Outdorname","o57Outdorname","o58Outdorname","o59Outdorname","o60Outdorname","o61Outdorname","o62Outdorname","o63Outdorname","o64Outdorname","o65Outdorname","o66Outdorname","o67Outdorname","o68Outdorname","o69Outdorname","o70Outdorname","o71Outdorname","o72Outdorname","o73Outdorname","o74Outdorname","o75Outdorname","o76Outdorname","o77Outdorname","o78Outdorname","o79Outdorname","o80Outdorname","o81Outdorname","o82Outdorname","o83Outdorname","o84Outdorname","o85Outdorname","o86Outdorname","o87Outdorname","o88Outdorname","o89Outdorname","o90Outdorname","o91Outdorname","o92Outdorname","o93Outdorname","o94Outdorname","o95Outdorname","o96Outdorname","o97Outdorname","o98Outdorname","o99Outdorname"};
-
-char *BOAPortOutnames[200] = {"o00Outdoorzone name","o01Outdoorzone name","o02Outdoorzone name","o03Outdoorzone name","o04Outdoorzone name","o05Outdoorzone name","o06Outdoorzone name","o07Outdoorzone name","o08Outdoorzone name","o09Outdoorzone name","o10Outdoorzone name","o11Outdoorzone name","o12Outdoorzone name","o13Outdoorzone name","o14Outdoorzone name","o15Outdoorzone name","o16Outdoorzone name","o17Outdoorzone name","o18Outdoorzone name","o19Outdoorzone name","o20Outdoorzone name","o21Outdoorzone name","o22Outdoorzone name","o23Outdoorzone name","o24Outdoorzone name","o25Outdoorzone name","o26Outdoorzone name","o27Outdoorzone name","o28Outdoorzone name","o29Outdoorzone name","o30Outdoorzone name","o31Outdoorzone name","o32Outdoorzone name","o33Outdoorzone name","o34Outdoorzone name","o35Outdoorzone name","o36Outdoorzone name","o37Outdoorzone name","o38Outdoorzone name","o39Outdoorzone name","o40Outdoorzone name","o41Outdoorzone name","o42Outdoorzone name","o43Outdoorzone name","o44Outdoorzone name","o45Outdoorzone name","o46Outdoorzone name","o47Outdoorzone name","o48Outdoorzone name","o49Outdoorzone name","o50Outdoorzone name","o51Outdoorzone name","o52Outdoorzone name","o53Outdoorzone name","o54Outdoorzone name","o55Outdoorzone name","o56Outdoorzone name","o57Outdoorzone name","o58Outdoorzone name","o59Outdoorzone name","o60Outdoorzone name","o61Outdoorzone name","o62Outdoorzone name","o63Outdoorzone name","o64Outdoorzone name","o65Outdoorzone name","o66Outdoorzone name","o67Outdoorzone name","o68Outdoorzone name","o69Outdoorzone name","o70Outdoorzone name","o71Outdoorzone name","o72Outdoorzone name","o73Outdoorzone name","o74Outdoorzone name","o75Outdoorzone name","o76Outdoorzone name","o77Outdoorzone name","o78Outdoorzone name","o79Outdoorzone name","o80Outdoorzone name","o81Outdoorzone name","o82Outdoorzone name","o83Outdoorzone name","o84Outdoorzone name","o85Outdoorzone name","o86Outdoorzone name","o87Outdoorzone name","o88Outdoorzone name","o89Outdoorzone name","o90Outdoorzone name","o91Outdoorzone name","o92Outdoorzone name","o93Outdoorzone name","o94Outdoorzone name","o95Outdoorzone name","o96Outdoorzone name","o97Outdoorzone name","o98Outdoorzone name","o99Outdoorzone name"};
-
-short old_blades_available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8, 
+short old_blades_available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8,
 								128,
 								9,10,11,12,13,
 								14,15,16,17,29, 51,60,61,62,
@@ -130,208 +115,11 @@ short old_blades_available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8,
 								80,83,86,87,88, 91,92,93,99,100,
 								101,102,104, 129,130,131,132,133,
 								134,135,136,137};
-short old_monst_to_new[256] = {
-	0,1,74,76,78, 2,75,77,79,86,
-	86,3,4,6,5, 131,20,175,7,8,
-	132,10,11,12,88, 13,89,14,15,16,
-	105,17,82,81,81, 19,133,187,21,134,
-	22,23,24,25,26, 32,33,34,35,36,
-	
-	37,85,182,38,39, 40,41,135,42,136,
-	43,48,44,45,137, 46,47,138,87,49,
-	139,140,51,52,141, 50,142,143,53,54,
-	72,144,56,58,59, 60,95,61,145,146,
-	148,149,150,151,152, 153,154,155,156,62,
-	
-	63,64,93,84,90, 66,66,157,67,80, // 100
-	186,68,188,189,190, 191,192,193,69,70,
-	130,91,99,158,55, 120,121,166,167,168,
-	159,160,169,170,171, 172,173,174,195,196,
-	197,198,199,200,201, 202,202,204,205,206,
-	
-	207,208,209,210,211, 212,213,214,215,216, // 150
-	217,218,219,220,221, 222,223,224,225,226,
-	227,228,229,230,231, 232,233,101,161,162,
-	163,164,65,94,129, 102,103,128,235,236,
-	237,238,239,240,241, 242,243,244,245,246,
 
-	247,248,249,250,251, 252,253,254,255,255,
-	255,255,255,255,255, 255,255,255,255,255,
-	255,255,255,255,255, 255,255,255,255,255,
-	255,255,255,255,255, 255,255,255,255,255,
-	255,255,255,255,255, 255,255,255,255,255,
-
-	255,255,255,255,255, 255
-};
-
-short old_ter_to_floor[256] = {
-	0,1,37,38,39, 255,255,0,255,255,
-	0,255,255,0,255, 255,0,255,255,255,
-	255,255,255,255,255, 255,255,255,255,255,
-	255,255,255,255,255, 255,41,42,47,48,
-	49,50,51,52,45, 46,53,54,55,56,
-	
-	57,65,68,59,67, 61,70,63,69,64, //50,
-	62,60,66,23,23, 63,23,59,61,23,
-	65,58,58,58,58, 79,80,58,0,0,
-	37,41,123,123,0, 0,0,37,37,37,
-	71,0,0,0,0, 0,75,0,0,0,
-
-	0,0,0,0,0, 0,0,0,0,0, // 100
-	37,77,37,37,37, 37,37,37,72,37,
-	37,37,95,95,95, 95,95,95,95,95, 
-	95,95,95,95,95, 95,95,95,95,95, 
-	95,95,95,95,95, 95,95,95,95,95, 
-	
-	95,95,95,95,95, 95,95,95,95,95, // 150
-	95,95,95,95,95, 95,95,95,95,95, 
-	95,129,95,95,95, 95,95,95,95,95, 
-	95,95,95,95,95, 95,95,95,95,95, 
-	95,95,95,95,95, 95,95,95,95,95, 
-
-	95,95,95,95,95, 95,95,95,95,95,// 200
-	98,130,98,98,98, 98,98,100,100,100,
-	100,100,100,100,100, 100,100,100,100,100, 
-	100,100,0,0,37, 37,37,37,37,37,
-	37,37,37,0,0, 0,0,95,98,100,
-	37,41,0,0,0, 0
-
-};	
-
-short old_ter_to_ter[256] = {
-	0,0,0,0,0,  0,40,56,44,41,
-	57,45,38,54,42, 39,55,43,0,0,
-	0,0,0,0,40, 44,41,45,38,42,
-	39,43,0,0,0, 0,0,0,0,0,
-	0,0,0,0,0, 0,0,0,0,0,
-	
-	0,0,0,0,0, 0,0,0,0,0, // 50
-	0,0,0,300,301, 298,298,298,299,299,
-	299,0,299,298,300, 0,0,336,268,0,
-	0,0,0,0,155, 156,155,157,158,157,
-	0,147,148,141,142, 285,0,167,166,170,
-
-	171,200,269,223,209, 211,213,215,216,243, // 100
-	128,0,151,152,153, 144,319,318,283,170,
-	171,214,0,0,0, 0,0,0,0,0,
-	0,0,0,0,0, 0,0,0,0,0,
-	0,0,0,0,0, 0,0,0,0,0, 
-	
-	0,0,0,0,0, 0,0,0,0,0, // 150
-	0,0,0,0,0, 0,0,0,0,0,
-	0,0,0,270,218, 229,257,257,257,258,
-	258,258,221,222,221, 222,217,231,208,242,
-	243,234,267,276,202, 225,226,227,228,206,
-	
-	278,238,248,277,240, 247,189,188,374,375,  // 200
-	0,0,276,277,267, 278,232,0,345,346,
-	241,348,349,350,270, 225,355,355,355,355,
-	355,286,323,304,329, 305,0,332,333,332,
-	333,302,305,311,313, 311,0,0,0,0, 
-	
-	0,0,0,0,0, 0
-
-
-};
-	
-short old_item_to_new_item[400] = 
-{
-0,0,0,0,18, 19,20,21,22,109, 
-109,79,79,163,168, 165,165,170,172,196,
-197,198,196,192,191, 171,171,0,0,0,
-385,45,45,50,50, 65,65,45,50,50,
-55,55,65,55,55, 55,60,70,75,60,
-
-60,46,51,56,56, 66,56,56,56,61,
-71,76,61,61,47, 52,57,57,67,57,
-57,57,62,72,77, 62,62,48,53,58,
-58,68,58,58,58, 63,73,78,63,63,
-370,371,380,380,381, 381,383,384,85,87,
-
-88,85,86,100,101, 103,86,87,90,91, // 100
-92,93,95,96,98, 105,106,108,314,315, 
-25,26,25,30,35, 40,26,31,36,41,
-27,32,37,42,28, 33,38,43,38,121,
-122,122,123,124,126, 127,127,128,129,131,
-
-132,132,133,134,136, 137,137,138,139,141,
-142,142,143,144,146, 0,0,0,0,114,
-114,174,499,499,499, 499,205,204,175,176,
-499,499,326,499,499, 499,327,499,499,435,
-436,437,499,499,499, 499,244,247,0,0,
-
-246,248,251,254,499, 499,257,499,499,499, // 200
-499,236,238,239,243, 0,204,140,356,357,
-358,359,386,201,202, 420,360,361,362,363,
-364,365,115,366,367, 368,113,421,422,423,
-424,425,426,427,428, 130,229,228,231,235,
-
-233,234,236,221,223, 231,227,225,226,236,
-221,223,231,227,225, 226,236,237,395,242,
-243,243,237,499,499, 499,353,354,352,355,
-441,499,499,282,285, 282,499,284,286,289,
-289,499,499,499,276, 281,278,264,208,499,
-
-499,270,275,272,265, 207,499,499,270,275, // 300
-272,266,206,499,430, 431,432,433,434,499,
-499,303,305,499,499, 212,211,499,499,499,
-311,212,211,499,420, 240,241,390,499,499,
-343,342,351,346,369, 344,348,499,499,499,
-
-438,439,499,308,273, 306,499,287,440,429,
-499,499,280,215,214, 215,216,216,217,218,
-219,499,49,49,54, 44,125,69,269,74,
-389,388,442,450,451, 452,453,454,455,456,
-457,458,459,460,461, 462,463,464,465,466
-};
-
-
-//    1     secret door
-//    2     door
-//    3     locked door
-//    4     m locked door
-//    5     impass door
-//    6     open door
-//    7     window
-//    8     closed gate
-//    9     open gate
-//  10     cracked
-//  11     Sign and wall
-//  12     wall
-//  13     road
-//  14     bridge
-//  15     floor
-//  16     terrain
-
-short old_ter_variety[256] = {
-15,15,15,15,15,12,12,12,12,12,
-12,12,12,12,12,12,12,12,12,12,
-12,12,12,12,12,12,12,12,12,12,
-12,12,12,12,12,12,15,15,15,15,
-15,15,15,15,15,15,15,15,15,15,
-15,15,15,15,15,15,15,15,15,15,
-15,15,15,15,15,14,14,14,14,14,
-14,15,14,14,15,15,15,15,15,13,
-13,13,15,15,15,15,15,15,15,15,
-15,15,15,15,15,15,15,15,15,15,
-15,15,15,15,15,15,15,15,15,15,
-15,15,15,15,15,15,15,15,15,15,
-15,15,12,1,1,2,3,4,5,6,
-8,9,11,10,10,10,12,12,7,12,
-1,1,2,3,4,5,6,8,9,11,
-10,10,10,7,12,1,1,2,3,4,
-5,6,8,9,11,10,10,10,12,7,
-15,15,15,15,15,15,15,15,15,15,
-15,15,15,15,15,15,15,15,15,15,
-15,15,15,15,15,15,15,15,15,15,
-15,15,15,15,15,15,15,15,15,15,
-15,15,15,15,15,15,15,15,15,15,
-15,15,15,15,15,15,15,15,15,15,
-15,15,15,15,15,15,15,15,15,15,
-15,15,15,15,15,15,15,15,15,15,
-15,15,15,15,15,15
-};
-
+char *BOAFieldnames[22] = {"Unknown","Blocked","Unknown","Force Barrier",
+"Fire Barrier","Web","Crate","Barrel","Unknown","Unknown","Unknown","Unknown",
+"Unknown","Unknown","Small Blood Stain","Medium Blood Stain","Large Blood Stain",
+"Small Slime Pool","Large Slime Pool","Dried Blood","Bones","Rocks"};
 
 // function prototype
 bool read_BoAFilesFolder_from_Pref( char * boaFolder );
@@ -364,6 +152,7 @@ void boe_flip_spec_node(old_blades_special_node_type *spec);
 void port_scenario_script(char *script_name,char *directory_id);
 void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE *file_id,short node_type);
 void get_bl_str(char *str,short str_type,short str_num);
+void get_all_bl_str(char *str,short str_type,short str_num);
 void add_ishtrs_string_to_file(FILE *file_id,char *str1,char *str2,char *str3);
 void add_short_string_to_file(FILE *file_id,char *str1,short num,char *str2);
 void add_ish_string_to_file(FILE *file_id,char *str1,short num1,char *str2,short num2,char *str3);
@@ -1321,12 +1110,12 @@ void oops_error(short error)
 {
 	char error_str[256];
 	
-	beep();
+//	beep();
 
 	sprintf((char *) error_str,"Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: %d.", (int)error);
-	give_error("The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
-	file_is_loaded = FALSE;
-	redraw_screen();
+	give_error("MAR The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
+//	file_is_loaded = FALSE;
+//	redraw_screen();
 }
 
 
@@ -2358,7 +2147,9 @@ void import_blades_of_exile_scenario()
 	char import_source[_MAX_FNAME + _MAX_EXT] = ""; // full path and file name
 	char slash[3] = " ";
 	slash[0] = 92;
-	
+	char str1[512] = "";
+	char str2[512] = "";
+
 	// Initialize scen data. We'll need it.
 	load_core_scenario_data();
 	
@@ -2376,7 +2167,7 @@ void import_blades_of_exile_scenario()
 		}
 					
 	if (NULL == (file_id = fopen(importFileName, "rb"))) {
-		SysBeep(/* 2 */);
+		SysBeep();
 		return;
 		}	
 
@@ -2406,7 +2197,7 @@ void import_blades_of_exile_scenario()
 	 if (file_ok == FALSE) {
 		FSClose(file_id); 
 		give_error("This is not a legitimate Blades of Exile scenario.","",0);
-		return;	 
+		return;
 		}
 
 	len = sizeof(old_blades_scen_item_data_type); // item data
@@ -2459,26 +2250,16 @@ void import_blades_of_exile_scenario()
 	char new_directory[_MAX_PATH];
 	sprintf(new_directory,"%s%s%s",store_editor_path,slash,new_scen_name);
 	error = (short)CreateDirectory(new_directory,NULL);
-		// failed to make scenario, try another name, construct name of new scenario	
-		if (error == FALSE) { 
-				for (i = 0; i < _MAX_PATH - 6; i++)
-			if (new_directory[i] == 0) {
-				new_directory[i] = ' ';
-				new_directory[i + 1] = 'c';
-				new_directory[i + 2] = 'o';
-				new_directory[i + 3] = 'n';
-				new_directory[i + 4] = 'v';
-				new_directory[i + 5] = 0;
-				i = _MAX_PATH;
-				}
-		error = (short)CreateDirectory(new_directory,NULL);
 		if (error == FALSE) {
-			char error[256];
-			sprintf(error,"Tried to create scenario with name %s, but there was already a file or folder there with that name.",(char *) new_scen_name);
-			give_error(error,"",0);
-			return;
+       	for (j = 0; j < 1000; j++) {
+				sprintf(new_directory,"%s%s%s%d",store_editor_path,slash,new_scen_name,j);
+				error = (short)CreateDirectory(new_directory,NULL);
+				if (error == TRUE) {
+				break;
+				}
+				}
 			}
-		}
+
 	char new_scen_path[_MAX_PATH];
 	sprintf(new_scen_path,"%s%s",new_directory,slash);
 	char new_scen_path_and_name[_MAX_PATH];
@@ -2487,7 +2268,7 @@ void import_blades_of_exile_scenario()
 		oops_error(11);
 		return;
 		}	
-		
+
 	currently_editing_windows_scenario = FALSE;
 	
 	// initialize data and write scenario data
@@ -2503,8 +2284,10 @@ void import_blades_of_exile_scenario()
 	scenario.port();
 	len = kSizeOfScenario_data_type; 
 	if ((error = FSWrite(new_scen_id, &len, (char *) &scenario)) != 0) 
-		{oops_error(307); 
-		return;}	
+		{
+		oops_error(307);
+		return;
+		}	
 	scenario.port();
 		
 	// STEP 3 Load in old outdoor sections, one at a time, and port them.
@@ -2551,19 +2334,29 @@ void import_blades_of_exile_scenario()
 
 	else {
       short out_num = m * boe_scenario.out_width + n;
+      if (BOAPortOutWriteallow[out_num] == 1) {
 			sprintf((char *) dummy_str,"%s",BOAPortOutScriptnames[out_num]);
 			dummy_str[SCRIPT_NAME_LEN - 1] = 0;
 			strcpy(current_terrain.section_script,dummy_str);
 			sprintf((char *) out_script_name,"%s.txt",dummy_str);
-			port_outdoor_script(out_script_name,new_scen_path,n,m);
-	}
 
+		try {
+		port_outdoor_script(out_script_name,new_scen_path,n,m);
+		}
+		catch(...) {
+			sprintf(str1,"Tried to create an outdoor script for zone X %d, Y = %d,but there was an error.",n,m);
+			give_error(str1,"",0);
+		}
+	}
+}
 			// write ported outdoor section
 			current_terrain.port();
 			len = kSizeOfOutdoor_record_type;
-			if ((error = FSWrite(new_scen_id, &len, (char *) &current_terrain)) != 0) 
-				{oops_error(309); 
-				return;}	
+			if ((error = FSWrite(new_scen_id, &len, (char *) &current_terrain)) != 0)
+				{
+				oops_error(309);
+				return;
+				}
 			current_terrain.port();
 			}
 
@@ -2571,31 +2364,35 @@ void import_blades_of_exile_scenario()
 	for (short m = 0; m < boe_scenario.num_towns; m++) {
 		len = sizeof(old_blades_town_record_type);
 		error = FSRead(file_id, &len , (char *) &boe_town);
-		if (error != 0) 
-		   {FSClose(file_id);oops_error(310); 
-		   return;
-		   }
+		if (error != 0) {
+			 FSClose(file_id);
+			 oops_error(310);
+			 return;
+			 }
 		if (cur_scen_is_mac == TRUE)
 			boe_port_town();
-		
+
 		switch (boe_scenario.town_size[m]) {
 			case 0:
 				len =  sizeof(old_blades_big_tr_type);
 				error = FSRead(file_id, &len, (char *) &boe_big_town);
 				break;
-				
+
 			case 1:
 				len = sizeof(old_blades_ave_tr_type);
 				error = FSRead(file_id, &len, (char *) &boe_ave_town);
 				break;
-				
+
 			case 2:
 				len = sizeof(old_blades_tiny_tr_type);
 				error = FSRead(file_id,&len , (char *) &boe_tiny_town);
 				break;
 			}
-		if (error != 0) {FSClose(file_id);oops_error(311); }
-		
+		if (error != 0) {
+			 FSClose(file_id);
+			 oops_error(311);
+			 }
+
 		for (i = 0; i < 140; i++) {
 			len = (long) (boe_town.strlens[i]);
 			FSRead(file_id, &len, (char *) &(boe_scen_text.town_strs[i]));
@@ -2604,14 +2401,10 @@ void import_blades_of_exile_scenario()
 
 		len = sizeof(old_blades_talking_record_type);
 		error = FSRead(file_id, &len , (char *) &boe_talk_data);
-		if (error != 0) {
-		   		  FSClose(file_id);
-	 			  oops_error(312); 
-  				  return;
-				  }
+		if (error != 0) {FSClose(file_id);oops_error(312); return;}
 		if (cur_scen_is_mac == TRUE)
 			boe_port_talk_nodes();
-		
+
 		for (i = 0; i < 170; i++) {
 			len = (long) (boe_talk_data.strlens[i]);
 			FSRead(file_id, &len, (char *) &(boe_scen_text.talk_strs[i]));
@@ -2627,8 +2420,8 @@ void import_blades_of_exile_scenario()
 		// Port town scripts
 		char town_script_name[256];
 		char dummy_str[256];
-		
-		if (use_custom_name == 0) {
+
+	if (use_custom_name == 0) {
 		trunc_str(town.town_name);
 		sprintf((char *) dummy_str,"t%d%s", (int)m,town.town_name);
 		clean_str(dummy_str);
@@ -2636,14 +2429,27 @@ void import_blades_of_exile_scenario()
 		strcpy(town.town_script,dummy_str);
 		sprintf((char *) town_script_name,"%s.txt",dummy_str);
 		port_town_script(town_script_name,new_scen_path,m);
+		// port town dlog script
+		char town_dlg_script_name[256];
+		char dummy_str2[256];
+		sprintf((char *) dummy_str2,"%sdlg",dummy_str);
+		sprintf((char *) town_dlg_script_name,"%s.txt",dummy_str2);
+		port_town_dialogue_script(town_dlg_script_name,new_scen_path,m);
 		}
-		else {
+
+	else {
+    if (BOAPortTownWriteallow[m] == 1) {
 		sprintf((char *) dummy_str,"%s",BOAPortTownScriptnames[m]);
 		strcpy(town.town_script,dummy_str);
 		sprintf((char *) town_script_name,"%s.txt",dummy_str);
+
+		try {
 		port_town_script(town_script_name,new_scen_path,m);
 		}
-
+		catch(...) {
+		sprintf(str1,"Tried to create a town script for town %d, %s, but there was an error.",m,dummy_str);
+		give_error(str1,"",0);
+		}
 
 		// port town dlog script
 		char town_dlg_script_name[256];
@@ -2651,16 +2457,19 @@ void import_blades_of_exile_scenario()
 		sprintf((char *) dummy_str2,"%sdlg",dummy_str);
 		sprintf((char *) town_dlg_script_name,"%s.txt",dummy_str2);
 		port_town_dialogue_script(town_dlg_script_name,new_scen_path,m);
+			}
+	}
 
 		// write ported town
 		town.port();
 		len = kSizeOfTown_record_type;
-		if ((error = FSWrite(new_scen_id, &len, (char *) &town)) != 0) 
-			{oops_error(313); 
-			return;
-			}
+		if ((error = FSWrite(new_scen_id, &len, (char *) &town)) != 0)
+			{
+			 oops_error(313);
+			 return;
+			 }
 		town.port();
-		
+
 		town_type = scenario.town_size[m];
 		set_up_lights();
 
@@ -2670,28 +2479,28 @@ void import_blades_of_exile_scenario()
 				len = kSizeOfBig_tr_type;
 				FSWrite(new_scen_id, &len, (char *) &t_d);
 				break;
-		
+
 			case 1:
 				for (i = 0; i < 48; i++)
 					for (j = 0; j < 48; j++) {
 						ave_t.terrain[i][j] = t_d.terrain[i][j];
 						ave_t.floor[i][j] = t_d.floor[i][j];
 						ave_t.height[i][j] = t_d.height[i][j];
-						ave_t.lighting[i][j] = t_d.lighting[i][j];					
-						}					
+						ave_t.lighting[i][j] = t_d.lighting[i][j];
+						}
 
 				len = kSizeOfAve_tr_type;
 				FSWrite(new_scen_id, &len, (char *) &ave_t);
 			break;
-		
-		
+
+
 			case 2:
 				for (i = 0; i < 32; i++)
 					for (j = 0; j < 32; j++) {
 						tiny_t.terrain[i][j] = t_d.terrain[i][j];
 						tiny_t.floor[i][j] = t_d.floor[i][j];
 						tiny_t.height[i][j] = t_d.height[i][j];
-						tiny_t.lighting[i][j] = t_d.lighting[i][j];					
+						tiny_t.lighting[i][j] = t_d.lighting[i][j];
 						}
 
 				len = kSizeOfTiny_tr_type;
@@ -2700,13 +2509,13 @@ void import_blades_of_exile_scenario()
 
 			}
 		t_d.port();
-			
+
 		}
-		
+
 	// STEP 5 close stuff up
 	FSClose(new_scen_id);
 	FSClose(file_id);
-	
+
 	// copy over needed generic scripts
 	copy_script("trap.txt","trap.txt",new_directory);
 	copy_script("door.txt","door.txt",new_directory);
@@ -2971,10 +2780,10 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 	if (is_mac_scen == FALSE)
 		alter_rect(&town.in_town_rect);
 
-	
+
 	// process old fields
 	for (i = 0; i < 50; i++)
-		if (boe_town.preset_fields[i].field_type >= 0) {
+		if (boe_town.preset_fields[i].field_type > 2) {
 			switch (boe_town.preset_fields[i].field_type) {
 				case 3: make_web(boe_town.preset_fields[i].field_loc.x,boe_town.preset_fields[i].field_loc.y); 
 				break;
@@ -2989,6 +2798,9 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 				case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 21: 
 					make_sfx(boe_town.preset_fields[i].field_loc.x,boe_town.preset_fields[i].field_loc.y,
 					  boe_town.preset_fields[i].field_type - 14); 
+				break;
+				default:
+				set_string("There has been an error:","Default case for town fields.");
 				break;
 				}
 			}
@@ -3480,65 +3292,59 @@ void port_scenario_script(char *script_name,char *directory_id)
 	FILE *file_id;
 	char new_line[500];
 	char file_name[_MAX_PATH];
-
+	char temp_str1[400];
+	char temp_str2[400];
+	char error[256];
 	sprintf(file_name,"%s%s",directory_id,script_name);
 	if (NULL == (file_id = fopen(file_name, "wb"))) {
-		oops_error(11);
-		return;
-		}	
+			give_error("There was an error, the Scenario Script could not be written.","",0);
+		}
 
-	add_string(file_id,"// SCENARIO SCRIPT");
-	add_cr(file_id);
+	add_string(file_id,"// SCENARIO SCRIPT\r");
 	add_string(file_id,"// This is the special script for your scenario, where you will");
 	add_string(file_id,"// write special encounters that can happen anywhere in the scenario.");
 	add_string(file_id,"// The states LOAD_SCEN_STATE, START_SCEN_STATE, and START_STATE have");
 	add_string(file_id,"// meanings that are described in the documenation. States you write");
-	add_string(file_id,"// yourself should be numbered from 10-100.");
-	add_cr(file_id);
-	add_string(file_id,"beginscenarioscript;");
-	add_cr(file_id);
-	add_string(file_id,"variables;");
-	add_cr(file_id);
-	add_string(file_id,"short i,j,k,r1,choice;");
-	add_cr(file_id);
-	add_string(file_id,"body;");
-	add_cr(file_id);
+	add_string(file_id,"// yourself should be numbered from 10-100.\r");
+	add_string(file_id,"beginscenarioscript;\r");
+	add_string(file_id,"variables;\r");
+	add_string(file_id,"short i,j,k,r1,choice;\r");
+	add_string(file_id,"body;\r");
 	add_string(file_id,"beginstate LOAD_SCEN_STATE;");
 	add_string(file_id,"// This state called whenever this scenario is loaded, including when");
 	add_string(file_id,"// a save file is loaded.");
 
 		for (short i = 0; i < 50; i++)
 		if (same_string( boe_scen_text.scen_strs[60 + i * 2],"Unused Special Item") == FALSE) {
-			sprintf(new_line,"\tinit_special_item(%d,\"%s\",\"%s\");",i,boe_scen_text.scen_strs[60 + i * 2],boe_scen_text.scen_strs[61 + i * 2]);
+				get_all_bl_str(temp_str1,0,(i * 2) + 60);
+				get_all_bl_str(temp_str2,0,(i * 2) + 61);
+			sprintf(new_line,"\tinit_special_item(%d,\"%s\",\"%s\");",i,temp_str1,temp_str2);
 			add_string(file_id,new_line);
 			if (boe_scenario.special_items[i] % 10 == 1) {
 				add_string(file_id,"// WARNING: Usable special items no longer supported. Make this special item a regular item with a custom effect.");
 				}
 			}
-	
+
 	for (short i = 0; i < 50; i++)
 		if (same_string( boe_scen_text.scen_strs[60 + i * 2],"Unused Special Item") == FALSE) {
 			if (boe_scenario.special_item_special[i] >= 0) {
-				sprintf(new_line,"// Special Item %d invokes scenario state %d when used.", i, 
+				sprintf(new_line,"// Special Item %d invokes scenario state %d when used.", i,
 				boe_scenario.special_item_special[i] + 10);
-				add_string(file_id,new_line);				
+				add_string(file_id,new_line);
 				}
 			}
 
-	add_string(file_id,"break;");
-	add_cr(file_id);
+	add_string(file_id,"break;\r");
 	add_string(file_id,"beginstate START_SCEN_STATE;");
 	add_string(file_id,"// This state called whenever this scenario is started, and only");
 	add_string(file_id,"// when it's started.");
-	
-	for (short i = 0; i < 30; i++) 
+
+	for (short i = 0; i < 30; i++)
 		if (boe_scenario.scen_boats[i].which_town >= 0) {
-			sprintf(new_line,"\tcreate_boat(%d,%d,%d,%d,%d);", i,
-				boe_scenario.scen_boats[i].which_town, boe_scenario.scen_boats[i].boat_loc.x,
-				boe_scenario.scen_boats[i].boat_loc.y, boe_scenario.scen_boats[i].property);
+			sprintf(new_line,"\tcreate_boat(%d,%d,%d,%d,%d);", i,boe_scenario.scen_boats[i].which_town, boe_scenario.scen_boats[i].boat_loc.x,boe_scenario.scen_boats[i].boat_loc.y, boe_scenario.scen_boats[i].property);
 			add_string(file_id,new_line);
 			}
-	for (short i = 0; i < 30; i++) 
+	for (short i = 0; i < 30; i++)
 		if (boe_scenario.scen_horses[i].which_town >= 0) {
 			sprintf(new_line,"\tcreate_horse(%d,%d,%d,%d,%d);", i,
 				boe_scenario.scen_horses[i].which_town, boe_scenario.scen_horses[i].horse_loc.x,
@@ -3554,23 +3360,61 @@ void port_scenario_script(char *script_name,char *directory_id)
 				}
 			}
 
-	add_string(file_id,"break;");
-	add_cr(file_id);
+	add_string(file_id,"break;\r");
 	add_string(file_id,"beginstate START_STATE;");
 	add_string(file_id,"// This state will be called every turn the player is in the scenario,");
 	add_string(file_id,"// whether in town, combat, or outdoors.");
-	for (short i = 0; i < 20; i++) 
+	for (short i = 0; i < 20; i++)
 		if (boe_scenario.scenario_timer_times[i] > 0) {
 			sprintf(new_line,"\t// Scenario timer %d: %d moves till scenario state %d", i,
 			boe_scenario.scenario_timer_times[i], boe_scenario.scenario_timer_specs[i] + 10);
 			add_string(file_id,new_line);
 			}
-	add_string(file_id,"break;");
-	add_cr(file_id);
+	add_string(file_id,"break;\r");
 
 	for (short i = 0; i < 256; i++)
 			port_a_special_node(&boe_scenario.scen_specials[i],i,file_id,0);
-	
+
+	FSClose(file_id);
+}
+
+void port_outdoor_script(char *script_name,char *directory_id,short sector_x,short sector_y)
+{
+	FILE *file_id;
+	char file_name[_MAX_PATH];
+	char str[500];
+	char error[256];
+	sprintf(file_name,"%s%s",directory_id,script_name);
+	if (NULL == (file_id = fopen(file_name, "wb"))) {
+			sprintf(error,"Tried to create an outdoor script for zone X %d, Y = %d,but there was an error.",sector_x, sector_y);
+			give_error(error,"",0);
+			return;
+		}
+
+	add_string(file_id,"// OUTDOOR SECTION SCRIPT");
+  short out_num = sector_y * scenario.out_width + sector_x;
+	sprintf(str,"//    Section %d: X = %d, Y = %d, name = %s.\r", out_num,sector_x, sector_y,boe_scen_text.out_strs[0]);
+	add_string(file_id,str);
+	add_string(file_id,"// This is the special encounter script for this town.");
+	add_string(file_id,"// The states INIT_STATE and START_STATE have");
+	add_string(file_id,"// meanings that are described in the documenation. States you write");
+	add_string(file_id,"// yourself should be numbered from 10-100.\r");
+	add_string(file_id,"beginoutdoorscript;\r");
+	add_string(file_id,"variables;\r");
+	add_string(file_id,"short i,j,k,r1,choice;\r");
+	add_string(file_id,"body;\r");
+	add_string(file_id,"beginstate INIT_STATE;");
+	add_string(file_id,"// This state called whenever this section is loaded into memory.");
+	add_string(file_id,"break;\r");
+	add_string(file_id,"beginstate START_STATE;");
+	add_string(file_id,"// This state is called every turn the party is in this outdoor section. ");
+	add_string(file_id,"break;\r");
+
+	for (short i = 0; i < 60; i++)
+		if ((boe_outdoor.specials[i].type > 0) || (boe_outdoor.specials[i].jumpto > 0)) {
+			port_a_special_node(&boe_outdoor.specials[i],i,file_id,2);
+			}
+
 	FSClose(file_id);
 }
 
@@ -3579,48 +3423,38 @@ void port_town_script(char *script_name,char *directory_id,short which_town)
 	FILE *file_id;
 	char file_name[_MAX_PATH];
 	char str[512];
-	char new_line[512];	
+	char new_line[512];
+	char error[256];
 	short which_slot;
 	sprintf(file_name,"%s%s",directory_id,script_name);
 	if (NULL == (file_id = fopen(file_name, "wb"))) {
-		oops_error(11);
+		sprintf(error,"Tried to create a town script for town %d, %s, but there was an error.",which_town,town.town_name);
+		give_error(error,"",0);
 		return;
+	FSClose(file_id);
 		}
-		
+
 	add_string(file_id,"// TOWN SCRIPT");
-	sprintf(str,"//    Town %d: %s", which_town,town.town_name);
+	sprintf(str,"//    Town %d: %s\r", which_town,town.town_name);
 	add_string(file_id,str);
-	add_cr(file_id);
 	add_string(file_id,"// This is the special encounter script for this town.");
 	add_string(file_id,"// The states INIT_STATE, EXIT_STATE, and START_STATE have");
 	add_string(file_id,"// meanings that are described in the documenation. States you write");
-	add_string(file_id,"// yourself should be numbered from 10-100.");
-	add_cr(file_id);
-	add_string(file_id,"begintownscript;");
-	add_cr(file_id);
-	add_string(file_id,"variables;");
-	add_cr(file_id);
-	add_string(file_id,"short i,j,k,r1,choice;");
-	add_cr(file_id);
-	add_string(file_id,"body;");
-	add_cr(file_id);
+	add_string(file_id,"// yourself should be numbered from 10-100.\r");
+	add_string(file_id,"begintownscript;\r");
+	add_string(file_id,"variables;\r");
+	add_string(file_id,"short i,j,k,r1,choice;\r");
+	add_string(file_id,"body;\r");
 	add_string(file_id,"beginstate INIT_STATE;");
 	add_string(file_id,"// This state called whenever this town is entered.");
-	add_string(file_id,"\t// BoA numbers, BoE personality numbers");
 	for (short i = 0; i < 60; i++) {
-		if ((boe_big_town.creatures[i].personality >= 0) && (boe_big_town.creatures[i].number > 0)) {		
-			sprintf(str,"\t// set_name(%d,\"%d\");", i + 6, boe_big_town.creatures[i].personality);
+		if ((boe_big_town.creatures[i].personality >= 0) && (boe_big_town.creatures[i].number > 0)) {
+		short j = boe_big_town.creatures[i].personality % 10;
+			sprintf(str,"\t set_name(%d,\"%s\");", i + 6, boe_scen_text.talk_strs[which_slot = j]);
 			add_string(file_id,str);
-		}  
-		} 
-	add_string(file_id,"\t// BoE personality numbers and names.");		
-	for (short i = 0; i < 10; i++) {
-		if (same_string(boe_scen_text.talk_strs[i],"Unused") == FALSE) {
-			sprintf(new_line,"\t// set_name(%d,\"%s\");", (10 * which_town + i), boe_scen_text.talk_strs[which_slot = i]);
-			add_string(file_id,new_line);
-			}
-			}
-	add_string(file_id,"\t// Any town entry states.");			
+		}
+		}
+	add_string(file_id,"\t// Any town entry states.");
 	if (boe_town.spec_on_entry >= 0) {
 		add_string(file_id,"\tif (town_status(ME) < 3)");
 		add_short_string_to_file(file_id,"\t\tset_state_continue(",10 + boe_town.spec_on_entry,");");
@@ -3630,27 +3464,24 @@ void port_town_script(char *script_name,char *directory_id,short which_town)
 		add_short_string_to_file(file_id,"\t\tset_state_continue(",10 + boe_town.spec_on_entry_if_dead,");");
 		}
 
-	add_string(file_id,"break;");
-	add_cr(file_id);
+	add_string(file_id,"break;\r");
 	add_string(file_id,"beginstate EXIT_STATE;");
 	add_string(file_id,"// Always called when the town is left.");
-	add_string(file_id,"break;");
-	add_cr(file_id);
+	add_string(file_id,"break;\r");
 	add_string(file_id,"beginstate START_STATE;");
 	add_string(file_id,"// This state is called every turn the party is in this town.");
-	for (short i = 0; i < 8; i++) 
+	for (short i = 0; i < 8; i++)
 		if (boe_town.timer_spec_times[i] > 0) {
 			sprintf(new_line,"\t// Town timer %d: %d moves till town state %d", i,
 			boe_town.timer_spec_times[i], boe_town.timer_specs[i] + 10);
 			add_string(file_id,new_line);
 			}
-	add_string(file_id,"break;");
-	add_cr(file_id);
-	
+	add_string(file_id,"break;\r");
+
 	for (short i = 0; i < 100; i++)
 		if ((boe_town.specials[i].type > 0) || (boe_town.specials[i].jumpto > 0))
 			port_a_special_node(&boe_town.specials[i],i,file_id,1);
-	
+
 	FSClose(file_id);
 }
 
@@ -3659,11 +3490,11 @@ void port_town_dialogue_script(char *script_name,char *directory_id,short which_
 	FILE *file_id;
 	char file_name[_MAX_PATH];
 	char str[500];
-		
+	char error[256];
 	// first, we have dialogue at all?
 	Boolean have_dialogue = FALSE;
 	for (short i = 0; i < 10; i++)
-		if (same_string(boe_scen_text.talk_strs[i],"Unused") == FALSE) 
+		if (same_string(boe_scen_text.talk_strs[i],"Unused") == FALSE)
 			have_dialogue = TRUE;
 	if (have_dialogue == FALSE)
 		return;
@@ -3671,35 +3502,31 @@ void port_town_dialogue_script(char *script_name,char *directory_id,short which_
 
 	sprintf(file_name,"%s%s",directory_id,script_name);
 	if (NULL == (file_id = fopen(file_name, "wb"))) {
-		oops_error(11);
-		return;
+			sprintf(error,"Tried to create a town dialog script for town %d, %s, but there was an error.",which_town,town.town_name);
+			give_error(error,"",0);
+			return;
 		}
 
 	add_string(file_id,"// TOWN DIALOGUE SCRIPT");
-	sprintf(str,"//    Town %d: %s", which_town,town.town_name);
+	sprintf(str,"//    Town %d: %s\r", which_town,town.town_name);
 	add_string(file_id,str);
-	add_cr(file_id);
 	add_string(file_id,"// This is the dialogue for this town.");
-	add_string(file_id,"// You can use states numbered from 1 to 199.");
-	add_cr(file_id);
-	add_string(file_id,"begintalkscript;");
-	add_cr(file_id);
-	add_string(file_id,"variables;");
-	add_cr(file_id);
-	add_string(file_id,"short i,j,k,r1,choice;");
-	add_cr(file_id);
+	add_string(file_id,"// You can use states numbered from 1 to 199.\r");
+	add_string(file_id,"begintalkscript;\r");
+	add_string(file_id,"variables;\r");
+	add_string(file_id,"short i,j,k,r1,choice;\r");
 
 	short current_dialogue_node = 1;
-	
+
 	for (short i = 0; i < 10; i++)
 		if (same_string(boe_scen_text.talk_strs[i],"Unused") == FALSE) {
 			port_dialogue_intro_text(&current_dialogue_node,i,file_id,which_town);
-			
+
 			for (short j = 0; j < 60 ; j++) {
 				if (boe_talk_data.talk_nodes[j].personality % 10 == i)
 					port_dialogue_node(&current_dialogue_node,i,file_id,j,which_town);
 				}
-			
+
 			current_dialogue_node++;
 			current_dialogue_node++;
 			}
@@ -3708,55 +3535,6 @@ void port_town_dialogue_script(char *script_name,char *directory_id,short which_
 			port_dialogue_node(&current_dialogue_node,0,file_id,j,which_town);
 		}
 
-	FSClose(file_id);
-}
-
-
-void port_outdoor_script(char *script_name,char *directory_id,short sector_x,short sector_y)
-{
-	FILE *file_id;
-	char file_name[_MAX_PATH];
-	char str[500];
-
-	sprintf(file_name,"%s%s",directory_id,script_name);
-	if (NULL == (file_id = fopen(file_name, "wb"))) {
-		oops_error(11);
-		return;
-		}
-
-	add_string(file_id,"// OUTDOOR SECTION SCRIPT");
-	sprintf(str,"//    Section: X = %d, Y = %d", sector_x, sector_y);
-	add_string(file_id,str);
-	add_cr(file_id);
-	add_string(file_id,"// This is the special encounter script for this town.");
-	add_string(file_id,"// The states INIT_STATE and START_STATE have");
-	add_string(file_id,"// meanings that are described in the documenation. States you write");
-	add_string(file_id,"// yourself should be numbered from 10-100.");
-	add_cr(file_id);
-	add_string(file_id,"beginoutdoorscript;");
-	add_cr(file_id);
-	add_string(file_id,"variables;");
-	add_cr(file_id);
-	add_string(file_id,"short i,j,k,r1,choice;");
-	add_cr(file_id);
-	add_string(file_id,"body;");
-	add_cr(file_id);
-	add_string(file_id,"beginstate INIT_STATE;");
-	add_string(file_id,"// This state called whenever this section is loaded into memory.");
-	add_string(file_id,"break;");
-	add_cr(file_id);
-	add_string(file_id,"beginstate START_STATE;");
-	add_string(file_id,"// This state is called every turn the party is in this outdoor section. ");
-	add_string(file_id,"break;");
-	add_cr(file_id);
-		
-//			if ((sector_x == 2) & (sector_y == 1))
-//				short dbug = 1;
-	for (short i = 0; i < 60; i++)
-		if ((boe_outdoor.specials[i].type > 0) || (boe_outdoor.specials[i].jumpto > 0)) {
-			port_a_special_node(&boe_outdoor.specials[i],i,file_id,2);
-			}
-	
 	FSClose(file_id);
 }
 
@@ -3786,7 +3564,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 2: // inc_flag
 			if (node->ex1b == 0)
 				add_big_string_to_file(file_id,"\tinc_flag(",node->sd1,",",node->sd2,",",node->ex1a,");");
-				else add_big_string_to_file(file_id,"\tinc_flag(",node->sd1,",",node->sd2,",",-1 * node->ex1a,");");
+				else add_big_string_to_file(file_id,"\tinc_flag(",node->sd1,",",node->sd2,",-",node->ex1a,");");
 			break;
 		case 3: // display mess
 
@@ -3889,12 +3667,11 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 			
 		case 19: // forced give
-				aa = old_item_to_new_item[node->ex1a];
 			if (node->ex2b < 0) {
-				add_short_string_to_file(file_id,"\treward_give(",aa,");")	;	
+				add_short_string_to_file(file_id,"\treward_give(",old_item_to_new_item[node->ex1a],");");
 				}
 				else {
-					add_short_string_to_file(file_id,"\tif (reward_give(",aa,") == FALSE)");			
+					add_short_string_to_file(file_id,"\tif (reward_give(",old_item_to_new_item[node->ex1a],") == FALSE)");
 					add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");
 					}
 			break;
@@ -3937,8 +3714,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 		   
 		case 50: // give item
-				aa = old_item_to_new_item[node->ex1a];
-			add_short_string_to_file(file_id,"\tif (reward_give(",aa,") > 0) {");	
+			add_short_string_to_file(file_id,"\tif (reward_give(",old_item_to_new_item[node->ex1a],") > 0) {");	
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
 				add_ish_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",250);");
 				if (node->ex1b > 0) 
@@ -3987,27 +3763,29 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				add_string(file_id,"\tadd_dialog_choice(2,\"OK.\");");
 			add_string(file_id,"\tchoice = run_dialog(1);");
 			if (node->ex1a >= 0) {
-					add_string(file_id,"\tif (choice == 1)");
+					add_string(file_id,"\tif (choice == 1) {");
 					if ((node->sd1 >= 0) && (node->sd2 >= 0))  
 						add_ish_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",250);");
 					if (node->ex1b >= 0)
 						add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");
 					else add_string(file_id,"\t\tend();");
+					add_string(file_id,"\t}");
 					}
 				if (node->ex2a >= 0) {
-					add_string(file_id,"\tif (choice == 2)");
+					add_string(file_id,"\tif (choice == 2) {");
 					if ((node->sd1 >= 0) && (node->sd2 >= 0))  
 						add_ish_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",250);");
 					if (node->ex2b >= 0)
 						add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");
 					else add_string(file_id,"\t\tend();");
+					add_string(file_id,"\t}");
 					}
 					if ((node->ex1a < 0) || (node->ex2a < 0))
+					add_short_string_to_file(file_id,"\t// Dialog picture number: ",node->pic,".");
 					add_string(file_id,"\t// BLANK CHOICES: the numbering of choices may need to be reviewed.");
 			break;	
 			
 		case 58: case 59: case 60: // display item dialog
-				aa = old_item_to_new_item[node->ex1a];		
 				add_string(file_id,"\treset_dialog();");
 			for (short i = 0; i < 6; i++) {
 				get_bl_str(temp_str1,node_type,node->m1 + i);
@@ -4020,7 +3798,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\tchoice = run_dialog(1);");
 			add_string(file_id,"\tif (choice == 2) {");
 			if (node->ex1a > 0) {
-				add_short_string_to_file(file_id,"\t\tif (reward_give(",aa,")) {");
+				add_short_string_to_file(file_id,"\t\tif (reward_give(",old_item_to_new_item[node->ex1a],")) {");
 				if (node->ex1b > 0) 
 					add_short_string_to_file(file_id,"\t\t\tchange_coins(",node->ex1b,");");
 				if (node->ex2a > 0) 
@@ -4064,16 +3842,11 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 
 		case 80: // select pc 
-			if (node->ex1a == 2) {
-				add_string(file_id,"\trun_select_a_pc(2);");		
-				}
-				else {
 					add_short_string_to_file(file_id,"\tchoice = run_select_a_pc(",node->ex1a,");");
 					if (node->ex1b >= 0) {
 						add_string(file_id,"\tif (choice == 0)");		
 						add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");
 						}
-					}
 			break;
 		case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88: case 89: 
 		case 90: case 92: case 93: case 94: case 95: case 96: case 97: case 98: case 99: 
@@ -4201,7 +3974,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 102: // food
 			add_string(file_id,"// OBSOLETE NODE: Food works completely differently now.");
 			add_short_string_to_file(file_id,"\t// give food(",node->ex1a,");");
-			add_short_string_to_file(file_id,"\t// node extra 1b = ",node->ex1a,", if it is 0 give food, else take away.");								
+			add_short_string_to_file(file_id,"\t// node extra 1b = ",node->ex1b,", if it is 0 give food, else take away.");
 			break;
 		case 103: // recipe
 			add_short_string_to_file(file_id,"\tgive_recipe(",node->ex1a,");");
@@ -4211,15 +3984,14 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"// OBSOLETE NODE: Stealth doesn't exist anymore.");
 			break;
 		case 105: // firewalk
-			add_short_string_to_file(file_id,"\tset_party_status(27,",node->ex1a,");");
+			add_short_string_to_file(file_id,"\tset_party_status(27,",node->ex1a,",1);");
 			break;
 		case 106: // flying
-			add_short_string_to_file(file_id,"\tset_party_status(25,",node->ex1a,");");
+			add_short_string_to_file(file_id,"\tset_party_status(25,",node->ex1a,",1);");
 			break;
 		case 130: // sdf?
 			if ((node->ex1a >= 0) && (node->ex1b >= 0)) {
-				add_big_string_to_file(file_id,"\tif (get_flag(",
-				  node->sd1,",",node->sd2,") >= ",node->ex1a,")");
+				add_big_string_to_file(file_id,"\tif (get_flag(",node->sd1,",",node->sd2,") >= ",node->ex1a,")");
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");			
 				}
 			if ((node->ex2a >= 0) && (node->ex2b >= 0)) {
@@ -4724,7 +4496,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 					add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
 					add_string(file_id,"// You will need to find a new value for this function. Also, the swap terrain");
 					add_string(file_id,"// values for the terrain types might work differently in BoA");
-					add_string_to_file(file_id,"\t flip_terrain(i,j);");
+					add_string(file_id,"\t flip_terrain(i,j);");
 					add_string(file_id,"// Potential translation problems");										  											  					
 					break;
 				}	
@@ -4771,6 +4543,11 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_short_string_to_file(file_id,"// Store type (see docs. for list) = (",node->ex1b,");");
 			add_short_string_to_file(file_id,"// Number of items in store (1 .. 40) = (",node->ex2a,");");
 			add_short_string_to_file(file_id,"// Cost adjust (0 .. 6, lower = cheaper) = (",node->ex2b,");");
+			break;
+
+			default: // catch any errors or new BoE node types
+			add_string(file_id,"This is the Default case: there has been some sort of error.");			
+			add_short_string_to_file(file_id,"// Error was for node type: ",node->type,".");
 			break;
 
 		}
@@ -4883,7 +4660,7 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 		case 3: // inn
 			add_ishtrs_string_to_file(file_id,"\ttext1 = \"",str,"\";");
 			add_ishtrs_string_to_file(file_id,"\ttext3 = \"",str2,"\";");
-			add_string_to_file(file_id,"\ttext5 = \"You can't stay in an inn when on horseback.\";");
+			add_string(file_id,"\ttext5 = \"You can't stay in an inn when on horseback.\";");
 			add_big_string_to_file(file_id,"\taction = INN ",boe_talk_data.talk_nodes[which_node].extras[0]," ",boe_talk_data.talk_nodes[which_node].extras[2]," ",boe_talk_data.talk_nodes[which_node].extras[3],";");
 			add_short_string_to_file(file_id,"\t\t// Quality of inn, 0 to 3, = ",boe_talk_data.talk_nodes[which_node].extras[1],".");
 			break;
@@ -5042,21 +4819,27 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 			add_short_string_to_file(file_id,"\t\t// Total number of items in shop = ",boe_talk_data.talk_nodes[which_node].extras[2],".");
 			add_string(file_id,"\tbreak;");			
 			break;
-			
+
 		case 24: // buy town location
 			add_ishtrs_string_to_file(file_id,"\ttext1 = \"",str,"\";");
 			add_ishtrs_string_to_file(file_id,"\ttext3 = \"",str2,"\";");
+			add_string(file_id,"\ttext5 =\"You already know where this town is.\"");
 			add_string(file_id,"\tcode =");
 			add_string(file_id,"\t\tclear_strings();");
+			add_short_string_to_file(file_id,"\t\tif (get_town_visibility(",boe_talk_data.talk_nodes[which_node].extras[1],") > 0)");
+			add_string(file_id,"\t\t// if (get_flag(a,b) > 0)");
+			add_string(file_id,"\t\t\tadd_string(5);");
+			add_string(file_id,"\t\t\telse {");
 			add_short_string_to_file(file_id,"\t\t\t\tif (pay_coins(",boe_talk_data.talk_nodes[which_node].extras[0],")) {");
-			add_string(file_id,"\t\t\t\t\tadd_string(1);");	
+			add_string(file_id,"\t\t\t\t\tadd_string(1);");
 			add_short_string_to_file(file_id,"\t\t\t\t\tset_town_visibility(",boe_talk_data.talk_nodes[which_node].extras[1],",1);");
-			add_string(file_id,"\t\t\t\t\t}");	
-			add_string(file_id,"\t\t\t\t\telse add_string(3);");	
+			add_string(file_id,"\t\t\t\t\t}");
+			add_string(file_id,"\t\t\t\t\telse add_string(3);");
+			add_string(file_id,"\t\t\t\t}");
 			add_string(file_id,"\tbreak;");
 			add_string(file_id,"// This calls a non existent function: get_town visibility");
-			add_string(file_id,"get_town visibility();");
 			break;
+			
 		case 25: // force conv end
 			if (strlen(str) > 0)
 				add_ishtrs_string_to_file(file_id,"\ttext1 = \"",str,"\";");
@@ -5145,10 +4928,12 @@ void handle_messages(FILE *file_id,short node_type,short message_1,short message
 //str_type: 0 - scenario, 1 - town, 2 - outdoor 3 - dialogue
 void get_bl_str(char *str,short str_type,short str_num)
 {
+
 	if (str_num < 0) {
 		str[0] = 0;
 		return;
 		}
+
 	switch (str_type) {
 		case 0: 
 		strcpy(str,boe_scen_text.scen_strs[str_num + 160]); 
@@ -5161,6 +4946,34 @@ void get_bl_str(char *str,short str_type,short str_num)
 		break;
 		case 3: 
 		strcpy(str,boe_scen_text.talk_strs[str_num]); 
+		break;
+		}
+	for (short i = 0; i < (short)strlen(str); i++)
+		if (str[i] == 34)
+			str[i] = '_';
+}
+
+//str_type: 0 - scenario, 1 - town, 2 - outdoor 3 - dialogue
+void get_all_bl_str(char *str,short str_type,short str_num)
+{
+
+	if (str_num < 0) {
+		str[0] = 0;
+		return;
+		}
+
+	switch (str_type) {
+		case 0:
+		strcpy(str,boe_scen_text.scen_strs[str_num]);
+		break;
+		case 1:
+		strcpy(str,boe_scen_text.town_strs[str_num]);
+		break;
+		case 2:
+		strcpy(str,boe_scen_text.out_strs[str_num]);
+		break;
+		case 3:
+		strcpy(str,boe_scen_text.talk_strs[str_num]);
 		break;
 		}
 	for (short i = 0; i < (short)strlen(str); i++)
