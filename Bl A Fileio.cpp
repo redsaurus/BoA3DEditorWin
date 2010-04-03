@@ -90,7 +90,8 @@ OPENFILENAME ofn;
 OPENFILENAME ofn_import_boe;
 OFSTRUCT store;
 
-char *old_blades_button_strs[150] = {"Done ","Ask"," "," ","Keep", "Cancel",
+char *old_blades_button_strs[150] = {
+"Done ","Ask"," "," ","Keep", "Cancel",
 "+","-","Buy","Leave","Get","1","2","3","4","5","6","Cast"," "," "," "," "," ",
 "Buy","Sell","Other Spells","Buy x10"," "," ","Save","Race","Train","Items",
 "Spells","Heal Party","1","2","3","4","5","6","7","8","9","10","11","12","13",
@@ -107,19 +108,17 @@ char *old_blades_button_strs[150] = {"Done ","Ask"," "," ","Keep", "Cancel",
 "Enter","Burn","Insert","Remove","Accept","Refuse","Open","Close","Sit","Stand",
 "","","18","19","20","Invisible!","","","","","",""};
 
-short old_blades_available_dlog_buttons[NUM_DLOG_B] = {0,63,64,65,1,4,5,8,
-								128,
-								9,10,11,12,13,
-								14,15,16,17,29, 51,60,61,62,
-								66,69,70, 71,72,73,74,79,
-								80,83,86,87,88, 91,92,93,99,100,
-								101,102,104, 129,130,131,132,133,
-								134,135,136,137};
+short old_blades_available_dlog_buttons[NUM_DLOG_B] = {
+			0,63,64,65,1,4,5,8,128,9,10,11,12,13,14,15,16,17,29,51,60,61,62,
+			66,69,70,71,72,73,74,79,80,83,86,87,88,91,92,93,99,100,101,102,104,
+			129,130,131,132,133,134,135,136,137};
 
-char *BOAFieldnames[22] = {"Unknown","Blocked","Unknown","Force Barrier",
-"Fire Barrier","Web","Crate","Barrel","Unknown","Unknown","Unknown","Unknown",
-"Unknown","Unknown","Small Blood Stain","Medium Blood Stain","Large Blood Stain",
-"Small Slime Pool","Large Slime Pool","Dried Blood","Bones","Rocks"};
+
+char *BOAFieldnames[22] = {
+		 "Unknown","Blocked","Unknown","Force Barrier","Fire Barrier","Web",
+		 "Crate","Barrel","Unknown","Unknown","Unknown","Unknown","Unknown",
+		 "Unknown","Small Blood Stain","Medium Blood Stain","Large Blood Stain",
+		 "Small Slime Pool","Large Slime Pool","Dried Blood","Bones","Rocks"};
 
 // function prototype
 bool read_BoAFilesFolder_from_Pref( char * boaFolder );
@@ -1915,14 +1914,12 @@ bool import_boa_town()
 	temp_scenario.port();
 		
 	if (temp_scenario.num_towns <= which_town) {
-		give_error("The town number you picked is too high. The scenario you selected doesn't have enough towns.",
-			"",0);
+		give_error("The town number you picked is too high. The scenario you selected doesn't have enough towns.","",0);
 		FSClose(file_id);
 		return(false);
 	}
 	if (temp_scenario.town_size[which_town] != scenario.town_size[cur_town]) {
-		give_error("You must import a town of the same size/type as the current one.",
-			"",0);
+		give_error("You must import a town of the same size/type as the current one.","",0);
 		FSClose(file_id);
 		return(false);
 	}
@@ -3385,11 +3382,21 @@ void port_outdoor_script(char *script_name,char *directory_id,short sector_x,sho
 	char str[500];
 	char error[256];
 	sprintf(file_name,"%s%s",directory_id,script_name);
-	if (NULL == (file_id = fopen(file_name, "wb"))) {
+		try {
+				file_id = fopen(file_name, "wb");
+		}
+		catch(...) {
+//			sprintf(str1,"Tried to create an outdoor script for zone X %d, Y = %d,but there was an error.",n,m);
+//			give_error(str1,"",0);
+				give_error("Maybe this will work, str1","",0);
+		}
+
+/*	if (NULL == (file_id = fopen(file_name, "wb"))) {
 			sprintf(error,"Tried to create an outdoor script for zone X %d, Y = %d,but there was an error.",sector_x, sector_y);
 			give_error(error,"",0);
 			return;
 		}
+*/
 
 	add_string(file_id,"// OUTDOOR SECTION SCRIPT");
   short out_num = sector_y * scenario.out_width + sector_x;
@@ -3417,6 +3424,7 @@ void port_outdoor_script(char *script_name,char *directory_id,short sector_x,sho
 
 	FSClose(file_id);
 }
+
 
 void port_town_script(char *script_name,char *directory_id,short which_town)
 {
@@ -3567,7 +3575,6 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				else add_big_string_to_file(file_id,"\tinc_flag(",node->sd1,",",node->sd2,",-",node->ex1a,");");
 			break;
 		case 3: // display mess
-
 			break;
 		case 4: // secret door
 			add_string(file_id,"// OBSOLETE NODE: Secret door special encounters no longer supported. Manually");
@@ -3648,7 +3655,6 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_short_string_to_file(file_id,"// Number of moves = (",node->ex1a,");");			
 			add_short_string_to_file(file_id,"// Scenario state called: (",node->ex1b + 10,");");						
 			break;
-			
 		case 14: // play sound
 			add_string(file_id,"// WARNING: Many sounds have changed from Blades of Exile.");
 			add_short_string_to_file(file_id,"\tplay_sound(",node->ex1a,");");
@@ -3693,16 +3699,18 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,temp_str1);
 			break;
 		case 24: // ritual of sanct
-			add_string(file_id,"// OBSOLETE NODE: Special encounters caused by Ritual of Sanctification");
+			add_string(file_id,"// Obsolete Node: Special encounters caused by Ritual of Sanctification");
 			add_string(file_id,"// are now handled in terrain scripts. When a ritual is used, nearby terrain ");
 			add_string(file_id,"// scripts have the state SANCTIFICATION_STATE called.");
 			add_short_string_to_file(file_id,"// Sanctification calls state: (",node->jumpto + 10,");");			
 			add_short_string_to_file(file_id,"// Otherwise: (",node->ex1b + 10,");");						
 			break;
 		case 25: // have rest
-			add_string(file_id,"\trevive_party();");
+			add_string(file_id,"\tif (is_combat())");
+			add_string(file_id,"\t\t end();");				
 			add_short_string_to_file(file_id,"\tset_ticks_forward(",node->ex1a,");");
-			add_short_string_to_file(file_id,"// Health and spell points to give: ",node->ex1b,".");									
+			add_short_string_to_file(file_id,"\t change_char_energy(1000,",node->ex1b,");");
+			add_short_string_to_file(file_id,"\t change_char_health(1000,",node->ex1b,");");
 			break;
 		case 26: // wandering will fight
 			if (node->ex1a == 0)
@@ -3720,7 +3728,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				if (node->ex1b > 0) 
 					add_short_string_to_file(file_id,"\t\t\tchange_coins(",node->ex1b,");");
 				if (node->ex2a != 0) 
-					add_short_string_to_file(file_id,"\t\t\t// OBSOLETE NODE: give ",node->ex2a," food.");
+					add_short_string_to_file(file_id,"\t\t\t// Obsolete Node: give ",node->ex2a," food.");
 			add_string(file_id,"\t\t}");
 			if (node->ex2b >= 0) {
 				add_short_string_to_file(file_id,"\t\telse set_state_continue(",node->ex2b + 10,");");
@@ -3802,7 +3810,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				if (node->ex1b > 0) 
 					add_short_string_to_file(file_id,"\t\t\tchange_coins(",node->ex1b,");");
 				if (node->ex2a > 0) 
-					add_short_string_to_file(file_id,"\t\t\t// OBSOLETE NODE: give ",node->ex2a," food.");
+					add_short_string_to_file(file_id,"\t\t\t// Obsolete Node: give ",node->ex2a," food.");
 				if (node->m2 >= 0) 
 					add_short_string_to_file(file_id,"\t\tchange_spec_item(",node->m2,",1);");
 				if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
@@ -3815,13 +3823,14 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				if (node->ex1b > 0) 
 					add_short_string_to_file(file_id,"\t\tchange_coins(",node->ex1b,");");
 				if (node->ex2a != 0) 
-					add_short_string_to_file(file_id,"\t\t\t// OBSOLETE NODE: give ",node->ex2a," food.");
+					add_short_string_to_file(file_id,"\t\t\t// Obsolete Node: give ",node->ex2a," food.");
 				if (node->m2 >= 0) 
 					add_short_string_to_file(file_id,"\t\tchange_spec_item(",node->m2,",1);");
 				if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
 					add_big_string_to_file(file_id,"\t\tset_flag(",node->sd1,",",node->sd2,",",250,");");
 					}			
-			add_string(file_id,"\t\t\t}");					
+			add_string(file_id,"\t\t\t}");
+			add_short_string_to_file(file_id,"\t// Dialog picture number: ",node->pic,".");			
 			break;
 		case 61: // place outdoor enc
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
@@ -3836,9 +3845,9 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 63: // trap
 			add_string(file_id,"// OBSOLETE NODE: Traps are now handled by terrain type scripts.");
 			add_string(file_id,"// Use the predefined script trap.txt.");
+			add_short_string_to_file(file_id,"// Trap disarming penalty, 0 thru 100, = (",node->ex2a,");");
 			add_short_string_to_file(file_id,"// Trap type = (",node->ex1a,");");			
 			add_short_string_to_file(file_id,"// Trap severity, 0 thru 3, = (",node->ex1b,");");			
-			add_short_string_to_file(file_id,"// Trap disarming penalty, 0 thru 100, = (",node->ex2a,");");									
 			break;
 
 		case 80: // select pc 
@@ -3893,18 +3902,17 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,0,",node->ex1a,",0,1);");
 					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,0,-",node->ex1a,",0,1);");
 					break;
-					
 				case 88: // slow/haste
 					if (node->ex1b == 0)
 					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,3,",node->ex1a,",0,1);");
 					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,3,-",node->ex1a,",0,1);");
 					break;
-				case 89: // invuln
+				case 89: // invulnerability
 					if (node->ex1b == 0)
 					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,4,",node->ex1a,",0,1);");
 					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,4,-",node->ex1a,",0,1);");
 					break;
-				case 90: // mr
+				case 90: // magic resistance
 					if (node->ex1b == 0)
 					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,5,",node->ex1a,",0,1);");
 					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,5,-",node->ex1a,",0,1);");
@@ -3919,7 +3927,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,7,",node->ex1a,",0,1);");
 					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,7,-",node->ex1a,",0,1);");
 					break;
-				case 93: // sanct
+				case 93: // sanctuary
 					if (node->ex1b == 0)
 					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,14,",node->ex1a,",0,1);");
 					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,14,-",node->ex1a,",0,1);");
@@ -3939,18 +3947,17 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,10,",node->ex1a,",0,1);");
 					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,10,-",node->ex1a,",0,1);");
 					break;
-				case 97: // paral
+				case 97: // paralysis
 					if (node->ex1b == 0)
 					add_short_string_to_file(file_id,"\t\t\tset_char_status(i,11,",node->ex1a,",0,1);");
 					else 	add_short_string_to_file(file_id,"\t\t\tset_char_status(i,11,-",node->ex1a,",0,1);");
 					break;
 				case 98: // stat
-					add_string(file_id,"// OBSOLETE VALUE WARNING: Many statistics have changed between");
-					add_string(file_id,"// BoE and BoA. Make sure you're adjusting right statistic.");
 					add_short_string_to_file(file_id,"\t\t\tif (get_ran(1,0,100) < ",node->pic,")");
 					if (node->ex1b == 0)
-					add_ish_string_to_file(file_id,"\t\t\t\talter_stat(i,",node->ex2a,",",node->ex1a,");");
-					else add_ish_string_to_file(file_id,"\t\t\t\talter_stat(i,",node->ex2a,",-",node->ex1a,");");
+					add_ish_string_to_file(file_id,"\t\t\t\talter_stat(i,",old_stat_to_new[node->ex2a],",",node->ex1a,");");
+					else add_ish_string_to_file(file_id,"\t\t\t\talter_stat(i,",old_stat_to_new[node->ex2a],",-",node->ex1a,");");
+					add_short_string_to_file(file_id,"\t// Original stat number was: ",node->ex2a,".");					
 					break;
 				case 99: // mage spell
 					add_short_string_to_file(file_id,"\t\tchange_spell_level(i,0,",node->ex1a,",1);");				
@@ -3973,15 +3980,18 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 		case 102: // food
 			add_string(file_id,"// OBSOLETE NODE: Food works completely differently now.");
-			add_short_string_to_file(file_id,"\t// give food(",node->ex1a,");");
-			add_short_string_to_file(file_id,"\t// node extra 1b = ",node->ex1b,", if it is 0 give food, else take away.");
+					if (node->ex1b == 0)
+					add_short_string_to_file(file_id,"\t// give this much food: ",node->ex1a,"");
+					else add_short_string_to_file(file_id,"\t// take away this much food: ",node->ex1a,"");
 			break;
 		case 103: // recipe
-			add_short_string_to_file(file_id,"\tgive_recipe(",node->ex1a,");");
-			add_string(file_id,"// Potential translation problems");						
+			add_short_string_to_file(file_id,"\tgive_recipe(",old_potion_to_new[node->ex1a],");");
+			add_short_string_to_file(file_id,"\t// Original recipe number was: ",node->ex1a,".");
+			add_string(file_id,"// Potential plot or translation problems");						
 			break;
 		case 104: // stealth
-			add_string(file_id,"// OBSOLETE NODE: Stealth doesn't exist anymore.");
+			add_string(file_id,"// Obsolete Node: Stealth doesn't exist anymore, Sanctuary may be a substitute.");
+			add_short_string_to_file(file_id,"\t\t\tset_char_status(i,14,",node->ex1a,",0,1);");
 			break;
 		case 105: // firewalk
 			add_short_string_to_file(file_id,"\tset_party_status(27,",node->ex1a,",1);");
@@ -4005,13 +4015,13 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");			
 				else add_string(file_id,"\t\tend();");			
 			break;
-		case 132: // rand
+		case 132: // random number
 			add_short_string_to_file(file_id,"\tif (get_ran(1,1,100) < ",node->ex1a,")");
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");			
 				else add_string(file_id,"\t\tend();");			
 			break;
-		case 133: // spec i
+		case 133: // spec item
 			add_short_string_to_file(file_id,"\tif (has_special_item(",node->ex1a,") > 0)");
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");			
@@ -4025,30 +4035,25 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				else add_string(file_id,"\t\tend();");			
 			break;
 		case 135: // ter is type, town
-				add_string(file_id,"\tif (is_town() == 1) {");		
-				aa = old_ter_to_floor[node->ex2a];
-				bb = old_ter_to_ter[node->ex2a];
-				add_short_string_to_file(file_id,"\t// original value of the BoE terrain: ",node->ex2a,".");
-				add_big_string_to_file(file_id,"\t// if (get_floor(",node->ex1a,",",node->ex1b,") == ",aa,")");
-				add_big_string_to_file(file_id,"\t// if (get_terrain(",node->ex1a,",",node->ex1b,") == ",bb,")");
+				add_string(file_id,"\tif (is_town() == 1) {");
+				add_big_string_to_file(file_id,"\t // if (get_floor(",node->ex1a,",",node->ex1b,") == ",old_ter_to_floor[node->ex2a],")");
+				add_big_string_to_file(file_id,"\t // if (get_terrain(",node->ex1a,",",node->ex1b,") == ",old_ter_to_ter[node->ex2a],")");
 			if (node->ex2b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");			
 				else add_string(file_id,"\t\tend();");			
-			add_string(file_id,"// Potential translation problems");
-				add_string(file_id,"\t}");		
+				add_string(file_id,"\t}");
+			add_string(file_id,"// Potential translation problem: is floor or terrain the more apt translation?");				
 			break;
+			
 		case 136: // ter is type, outdoors
 				add_string(file_id,"\tif (is_outdoor() == 1) {");		
-				aa = old_ter_to_floor[node->ex2a];
-				bb = old_ter_to_ter[node->ex2a];
-				add_short_string_to_file(file_id,"\t// original value of the BoE terrain: ",node->ex2a,".");
-				add_big_string_to_file(file_id,"\t// if (get_floor(",node->ex1a,",",node->ex1b,") == ",aa,")");
-				add_big_string_to_file(file_id,"\t// if (get_terrain(",node->ex1a,",",node->ex1b,") == ",bb,")");
+				add_big_string_to_file(file_id,"\t// if (get_floor(",node->ex1a,",",node->ex1b,") == ",old_ter_to_floor[node->ex2a],")");
+				add_big_string_to_file(file_id,"\t// if (get_terrain(",node->ex1a,",",node->ex1b,") == ",old_ter_to_ter[node->ex2a],")");
 			if (node->ex2b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");			
 				else add_string(file_id,"\t\tend();");			
-			add_string(file_id,"// Potential translation problems");
-				add_string(file_id,"\t}");		
+				add_string(file_id,"\t}");
+				add_string(file_id,"// Potential translation problem: is floor or terrain the more apt translation?");				
 			break;
 		case 137: // has gold
 			add_short_string_to_file(file_id,"\tif (coins_amount() >= ",node->ex1a,")");
@@ -4057,7 +4062,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				else add_string(file_id,"\t\tend();");			
 			break;
 		case 138: // has food
-			add_string(file_id,"// OBSOLETE NODE: Food works completely differently now.");
+			add_string(file_id,"// Obsolete Node: Food works completely differently now.");
 			add_short_string_to_file(file_id,"\t// if amount of food >= ",node->ex1a,"");
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\t// set_state_continue(",node->ex1b + 10,");");			
@@ -4198,31 +4203,21 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 170: // town host
 			add_string(file_id,"\tmake_town_hostile();");
 			break;
-		case 171: // set ter
-			add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
-				aa = old_ter_to_floor[node->ex2a];
-				bb = old_ter_to_ter[node->ex2a];
-				add_short_string_to_file(file_id,"\t// original value of the BoE terrain: ",node->ex2a,".");
-				add_big_string_to_file(file_id,"\t// set_floor(",node->ex1a,",",node->ex1b,",",aa,")");
-				add_big_string_to_file(file_id,"\t// set_terrain(",node->ex1a,",",node->ex1b,",",bb,")");
-				add_string(file_id,"// Potential translation problem: the relevant BoA terrain could be floor or terrain");
+		case 171: // set terrain
+				add_big_string_to_file(file_id,"\t// set_floor(",node->ex1a,",",node->ex1b,",",old_ter_to_floor[node->ex2a],");");
+				add_big_string_to_file(file_id,"\t// set_terrain(",node->ex1a,",",node->ex1b,",",old_ter_to_ter[node->ex2a],");");
+				add_string(file_id,"// Potential problem: is the best translation BoA floor or terrain?");
 			break;
-		case 172: // swap ter
-			add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
-			add_string(file_id,"// Potential translation problems for this swap terrain function.");
-				add_short_string_to_file(file_id,"\t// aa = old_ter_to_floor[",node->ex2a,"].");
-				add_short_string_to_file(file_id,"\t// bb = old_ter_to_ter[",node->ex2a,"].");
-				add_short_string_to_file(file_id,"\t// cc = old_ter_to_floor[",node->ex2b,"].");
-				add_short_string_to_file(file_id,"\t// dd = old_ter_to_ter[",node->ex2b,"].");
-				add_short_string_to_file(file_id,"\t// original value of the first BoE terrain type: ",node->ex2a,".");				
-				add_short_string_to_file(file_id,"\t// original value of the second BoE terrain type: ",node->ex2b,".");
-			add_big_string_to_file(file_id,"\t if (get_terrain(",node->ex1a,",",node->ex1b,") == ",node->ex2a,")");
-			add_big_string_to_file(file_id,"\t\t set_terrain(",node->ex1a,",",node->ex1b,",",node->ex2b,");");
-			add_big_string_to_file(file_id,"\t else if (get_terrain(",node->ex1a,",",node->ex1b,") == ",node->ex2b,")");
-			add_big_string_to_file(file_id,"\t\t set_terrain(",node->ex1a,",",node->ex1b,",",node->ex2a,");");
+		case 172: // swap terrain
+			add_big_string_to_file(file_id,"\t if (get_terrain(",node->ex1a,",",node->ex1b,") == ",old_ter_to_ter[node->ex2a],")");
+			add_big_string_to_file(file_id,"\t\t set_terrain(",node->ex1a,",",node->ex1b,",",old_ter_to_ter[node->ex2b],");");
+			add_big_string_to_file(file_id,"\t else if (get_terrain(",node->ex1a,",",node->ex1b,") == ",old_ter_to_ter[node->ex2b],")");
+			add_big_string_to_file(file_id,"\t\t set_terrain(",node->ex1a,",",node->ex1b,",",old_ter_to_ter[node->ex2a],");");
+			add_string(file_id,"// Potential translation problem: should floor be swapped or terrain?.");
+			add_ish_string_to_file(file_id,"// old_ter_to_floor[ ] values are: ",old_ter_to_floor[node->ex2a]," and ",old_ter_to_floor[node->ex2b],".");
 			break;
-		case 173: // transform ter
-			add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
+		case 173: // transform terrain
+			add_string(file_id,"// Flip terrain pairings must be set in a data script.");
 			add_ish_string_to_file(file_id,"\t flip_terrain(",node->ex1a,",",node->ex1b,");");			
 			break;
 		
@@ -4241,18 +4236,19 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,temp_str1);
 			add_string(file_id,"\t//   Translation problems may affect damage types 6 and 7, rightmost number above.");							
 			break;
-		case 177:  // lock fcns
+		case 177:  // lock door
 			add_string(file_id,"// OBSOLETE NODE: Doors are handled completely differently in BoA.");
 			add_string(file_id,"//   You may need to use flip_terrain to change the doors, or send.");
 			add_string(file_id,"//   messages to the door scripts. Here it is lock terrain.");
-			add_ish_string_to_file(file_id,"\t// flip_terrain(",node->ex1a,",",node->ex1b,");");
+			add_string(file_id,"// set_terrain_memory_cell(which_ter_script,0,5);");
+			add_ish_string_to_file(file_id,"// x,y values are: ",node->ex1a," and ",node->ex1b,".");
 			break;
-		case 178: // unlock fcns
+		case 178: // unlock door
 			add_string(file_id,"// OBSOLETE NODE: Doors are handled completely differently in BoA.");
 			add_string(file_id,"//   You may need to use flip_terrain to change the doors, or send.");
 			add_string(file_id,"//   messages to the door scripts.  Here it is unlock terrain."  );
-			add_ish_string_to_file(file_id,"\t// flip_terrain(",node->ex1a,",",node->ex1b,");");
-			add_string(file_id,"// set_terrain_memory_cell(short which_ter_script,0,0);");
+			add_string(file_id,"// set_terrain_memory_cell(which_ter_script,0,0);");
+			add_ish_string_to_file(file_id,"// x,y values are: ",node->ex1a," and ",node->ex1b,".");			
 			break;
 
 		case 179: // sfx burst
@@ -4268,24 +4264,22 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,temp_str1);
 			add_string(file_id,"\trun_animation();");			
 			break;
-		case 180: // wand monst
+		case 180: // wandering monster
 			add_string(file_id,"\tmake_wandering_monst();");
 			break;
-		case 181: // place m
-			aa = old_monst_to_new[node->ex2a];		
-			add_big_string_to_file(file_id,"\tplace_monster(",node->ex1a,",",node->ex1b,",",aa,",0);");
+		case 181: // place monster
+			add_big_string_to_file(file_id,"\tplace_monster(",node->ex1a,",",node->ex1b,",",old_monst_to_new[node->ex2a],",0);");
 			add_string(file_id,"// This assumes that the monster is meant to be hostile.");
 			break;
-		case 182: // destroy m
-			aa = old_monst_to_new[node->ex1a];				
+		case 182: // destroy monster
 			add_string(file_id,"\ti = 6;");
 			add_string(file_id,"\twhile (i < NUM_CHARS) {");
-			add_short_string_to_file(file_id,"\t\tif ((char_ok(i)) && (creature_type(i) == ",aa,"))");			
+			add_short_string_to_file(file_id,"\t\tif ((char_ok(i)) && (creature_type(i) == ",old_monst_to_new[node->ex1a],"))");
 			add_string(file_id,"\t\t\terase_char(i);");					
 			add_string(file_id,"\t\ti = i + 1;");					
 			add_string(file_id,"\t\t}");					
 			break;
-		case 183: // destroy all m
+		case 183: // destroy all monsters
 			add_string(file_id,"\ti = 6;");
 			add_string(file_id,"\twhile (i < NUM_CHARS) {");
 			if (node->ex1a == 0) {
@@ -4302,7 +4296,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\t\ti = i + 1;");					
 			add_string(file_id,"\t\t}");					
 			break;
-		case 184: // levers
+		case 184: // lever
 			add_string(file_id,"\treset_dialog_preset_options(2);");
 			add_string(file_id,"\tchoice = run_dialog(0);");
 			add_string(file_id,"\tif (choice == 2) {");
@@ -4340,8 +4334,6 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 			
 		case 188: // lever
-			add_string(file_id,"// OBSOLETE NODE: Levers are now handled by terrain scripts.");
-			add_string(file_id,"//   Look for examples of levers in the scenarios that come with Blades.");
 			add_string(file_id,"\treset_dialog_preset_options(2);");
 			add_string(file_id,"\tchoice = run_dialog(0);");
 			add_string(file_id,"\tif (choice == 2) {");
@@ -4390,14 +4382,12 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 					}
 			break;
 			
-		case 191: // move outd
+		case 191: // move outdoors
 			sprintf(temp_str1,"\tchange_outdoor_location(%d,%d,%d,%d);", node->ex1a, node->ex1b, node->ex2a, node->ex2b);
 			add_string(file_id,temp_str1);
 			break;
 		case 192: // place item
-				aa = old_item_to_new_item[node->ex2a];
-			add_big_string_to_file(file_id,"\t\tput_item_on_spot(",node->ex1a,",",node->ex1b,",",aa,");");			
-			add_string(file_id,"// Potential translation problems");										  						
+			add_big_string_to_file(file_id,"\t\tput_item_on_spot(",node->ex1a,",",node->ex1b,",",old_item_to_new_item[node->ex2a],");");
 			break;
 		case 193: // split party
 			add_string(file_id,"\tblock_entry(1);");
@@ -4415,7 +4405,6 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"// for the timer, and have it be decreased 1 in state START_STATE in the scenario script.");
 			add_short_string_to_file(file_id,"// Number of moves = (",node->ex1a,");");			
 			add_short_string_to_file(file_id,"// Town state called: (",node->ex1b + 10,");");						
-			
 			break;
 
 		case 200: case 201: case 202: case 203: case 204: case 205: case 206: case 207: case 208: 
@@ -4476,31 +4465,26 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				case 213: // Destroy items
 					add_string(file_id,"\t\t\tmove_item_on_spot(i,j,-1,-1);");
 					break;
+
 				case 214: // Change Rectangle Terrain  
-					add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
-					add_string(file_id,"// You will need to find a new value for this function.");
 					add_short_string_to_file(file_id,"\t\t\tif (get_ran(1,1,100) <= ",node->sd2,")");
-					add_short_string_to_file(file_id,"\t\t\t//set_terrain(i,j,",node->sd1,");");
-					add_string(file_id,"// Potential translation problems");										  											  					
+					add_short_string_to_file(file_id,"\t\t\tset_terrain(i,j,",old_ter_to_ter[node->sd1],");");
+					add_string(file_id,"// Potential translation problem: is floor or terrain the best choice?");
+					add_short_string_to_file(file_id,"// \t\t\tset_floor(i,j,",old_ter_to_floor[node->sd1],");");					
 					break;
 				case 215: // Swap Rectangle Terrain  
-					add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
-					add_string(file_id,"// You will need to find a new value for this function.");
-					add_short_string_to_file(file_id,"\t// if (get_terrain(i,j) == ",node->sd1,")");
-					add_short_string_to_file(file_id,"\t\t// set_terrain(i,j,",node->sd2,");");
-					add_short_string_to_file(file_id,"\t// else if (get_terrain(i,j) == ",node->sd2,")");
-					add_short_string_to_file(file_id,"\t\t// set_terrain(i,j,",node->sd1,");");
-					add_string(file_id,"// Potential translation problems");										  											  
+					add_short_string_to_file(file_id,"\t if (get_terrain(i,j) == ",old_ter_to_ter[node->sd1],")");
+					add_short_string_to_file(file_id,"\t\t set_terrain(i,j,",old_ter_to_ter[node->sd2],");");
+					add_short_string_to_file(file_id,"\t else if (get_terrain(i,j) == ",old_ter_to_ter[node->sd2],")");
+					add_short_string_to_file(file_id,"\t\t set_terrain(i,j,",old_ter_to_ter[node->sd1],");");
+					add_string(file_id,"// Potential translation problem: is floor or terrain the best choice?");
+					add_ish_string_to_file(file_id,"// old_ter_to_floor[ ] values are: ",old_ter_to_floor[node->sd1]," and ",old_ter_to_floor[node->sd2],".");
 					break;
 				case 216: // Transform Rectangle Terrain  
-					add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
-					add_string(file_id,"// You will need to find a new value for this function. Also, the swap terrain");
-					add_string(file_id,"// values for the terrain types might work differently in BoA");
 					add_string(file_id,"\t flip_terrain(i,j);");
-					add_string(file_id,"// Potential translation problems");										  											  					
+					add_string(file_id,"// Potential translation problem: is floor or terrain the best choice?");
 					break;
 				}	
-
 			add_string(file_id,"\t\t\tj = j + 1;");					
 			add_string(file_id,"\t\t\t}");					
 			add_string(file_id,"\t\ti = i + 1;");					
@@ -4508,27 +4492,23 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 
 		case 217:  // Lock Rectangle
-			add_string(file_id,"// OBSOLETE NODE: Doors are handled completely differently in BoA.");
 			add_string(file_id,"//   You may need to use flip_terrain to change the doors, or send.");
 			add_string(file_id,"//   messages to the door scripts. Here it is lock terrain.");
-			add_string(file_id,"\t// flip_terrain(i,j);");
+			add_string(file_id,"// set_terrain_memory_cell(which_ter_scripts,0,5);");
 		break;
 		case 218: // Unlock Rectangle
-			add_string(file_id,"// OBSOLETE NODE: Doors are handled completely differently in BoA.");
 			add_string(file_id,"//   You may need to use flip_terrain to change the doors, or send.");
 			add_string(file_id,"//   messages to the door scripts.  Here it is unlock terrain."  );
-			add_string(file_id,"\t// flip_terrain(i,j);");
 			add_string(file_id,"// set_terrain_memory_cell(which_ter_scripts,0,0);");
 		break;
 
 		case 225: // wand monst
 			add_string(file_id,"\tmake_wandering_monst();");
 			break;
-		case 226: // set ter
-			add_string(file_id,"// OBSOLETE VALUE WARNING: Terrain works completely differently now.");
-				add_short_string_to_file(file_id,"\t// aa = old_ter_to_floor[",node->ex2a,"].");
-				add_short_string_to_file(file_id,"\t// bb = old_ter_to_ter[",node->ex2a,"].");
-			add_big_string_to_file(file_id,"\t set_terrain(",node->ex1a,",",node->ex1b,",",node->ex2a,");");
+		case 226: // set terrain
+			add_big_string_to_file(file_id,"\t set_terrain(",node->ex1a,",",node->ex1b,",",old_ter_to_ter[node->ex2a],");");
+			add_string(file_id,"// Potential translation problem: is floor or terrain the best choice?");
+			add_big_string_to_file(file_id,"// \t set_floor(",node->ex1a,",",node->ex1b,",",old_ter_to_floor[node->ex2a],");");
 			break;
 		case 227: // out special
 			add_short_string_to_file(file_id,"\tcreate_out_spec_enc(",node->ex1a,");");			
@@ -4540,8 +4520,8 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 229: // out store
 			add_string(file_id,"// OBSOLETE VALUE WARNING: Shops work very differently now.");
 			add_short_string_to_file(file_id,"// Number of first item in store = (",node->ex1a,");");
-			add_short_string_to_file(file_id,"// Store type (see docs. for list) = (",node->ex1b,");");
 			add_short_string_to_file(file_id,"// Number of items in store (1 .. 40) = (",node->ex2a,");");
+			add_short_string_to_file(file_id,"// Store type (0 - items, 1 - mage spells, 2 - priest spells, 3 - alchemy, 4 - healing) = (",node->ex1b,");");
 			add_short_string_to_file(file_id,"// Cost adjust (0 .. 6, lower = cheaper) = (",node->ex2b,");");
 			break;
 

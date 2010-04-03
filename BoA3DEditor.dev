@@ -239,16 +239,6 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit24]
-FileName=Bl A Fileio.cpp
-CompileCpp=1
-Folder=3D BoA Editor Windows
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [VersionInfo]
 Major=0
 Minor=1
@@ -287,6 +277,16 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit25]
+FileName=..\Copy of Tortoise Variant\Bl A Fileio.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit24]
 FileName=Bl A Fileio.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
