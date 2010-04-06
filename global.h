@@ -100,8 +100,6 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define SDF_RANGE_Y	30
 
 
-
-
 typedef char Boolean;
 
 typedef struct
@@ -1732,7 +1730,8 @@ void load_sounds ();
 void play_sound(short which);
 
 // townout
-
+void edit_placed_script_event_filter (short item_hit);
+void edit_placed_script(short which_m);
 void edit_placed_monst_event_filter (short item_hit);
 void edit_placed_monst(short which_m);
 // void put_placed_terrain_script_in_dlog(short which_m);

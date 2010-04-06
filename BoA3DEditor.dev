@@ -277,7 +277,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit25]
-FileName=..\Copy of Tortoise Variant\Bl A Fileio.cpp
+FileName=Bl A Fileio.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
 Compile=1

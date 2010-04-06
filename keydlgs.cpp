@@ -113,7 +113,7 @@ Boolean string_not_clean(char *str,short max_length,short strict_file_naming,cha
 
 void give_error(char *text1, char *text2,short parent_num)
 {
-	display_strings(text1,text2,"Error!", /* 57, 716,*/ parent_num);
+	display_strings(text1,text2,"Error!",parent_num);
 }
 
 void display_strings_event_filter (short item_hit)
@@ -125,8 +125,7 @@ void display_strings_event_filter (short item_hit)
 	}
 }
 
-void display_strings(char *text1, char *text2,
-	char *title, /* short sound_num, short graphic_num, */ short parent_num)
+void display_strings(char *text1, char *text2,char *title,short parent_num)
 {
 	if ((text1 == NULL) && (text2 == NULL))
 		return;

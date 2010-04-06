@@ -54,11 +54,6 @@ short data_dump_file_id;
 char start_name[256];
 short start_volume;
 long start_dir;
-short aa = 0;
-short bb = 0;
-short cc = 0;
-short dd = 0;
-
 
 ave_tr_type ave_t;
 tiny_tr_type tiny_t;
@@ -177,9 +172,6 @@ short FSWrite(FILE *file_id, long *len, char *data);
 // registry constant
 const char* kRegistryKey = "Software\\Spiderweb Software\\BoA 3D Editor";
 const char* kRegistryName = "BoA DATA Dirctory";
-
-Boolean use_custom_name = 0;
-
 
 bool read_BoAFilesFolder_from_Pref( char * boaFolder )
 {
@@ -3417,12 +3409,26 @@ void port_outdoor_script(char *script_name,char *directory_id,short sector_x,sho
 	add_string(file_id,"// This state is called every turn the party is in this outdoor section. ");
 	add_string(file_id,"break;\r");
 
+		try {
 	for (short i = 0; i < 60; i++)
 		if ((boe_outdoor.specials[i].type > 0) || (boe_outdoor.specials[i].jumpto > 0)) {
 			port_a_special_node(&boe_outdoor.specials[i],i,file_id,2);
 			}
 
-	FSClose(file_id);
+		}
+		catch(...) {
+				give_error("Maybe this will work, Nodes","",0);
+		}
+
+		try {
+//	FSClose(file_id);
+		fclose(file_id);
+		}
+		catch(...) {
+				give_error("Maybe this will work, 	FSClose","",0);
+		}
+
+
 }
 
 
@@ -3857,9 +3863,9 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 						add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");
 						}
 			break;
-		case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88: case 89: 
-		case 90: case 92: case 93: case 94: case 95: case 96: case 97: case 98: case 99: 
-		case 100: 
+		case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88:
+		case 89: case 90: case 91: case 92: case 93: case 94: case 95: case 96:
+		case 97: case 98: case 99: case 100:
 			add_string(file_id,"\tj = get_selected_pc();");		
 			add_string(file_id,"\t// Note that if run_select_a_pc hasn't been called then j is -1 and");		
 			add_string(file_id,"\t//   effect happens on whole party.");		
@@ -4408,7 +4414,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			break;
 
 		case 200: case 201: case 202: case 203: case 204: case 205: case 206: case 207: case 208: 
-		case 209: case 210: case 212: case 213: case 214: case 215: case 216: 
+		case 209: case 210: case 211: case 212: case 213: case 214: case 215: case 216:
 			add_short_string_to_file(file_id,"\ti = ",node->ex1b,";");
 			add_short_string_to_file(file_id,"\twhile (i <= ",node->ex2b,") {");
 			add_short_string_to_file(file_id,"\t\tj = ",node->ex1a,";");
@@ -4453,7 +4459,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 					if (node->sd1 != 0)
 						add_string(file_id,"\t\t\tput_object_on_space(i,j,-1);");
 					break;
-				case 210: // Place sfx, ash becomes dried blood  
+				case 210: // Place sfx, ash becomes dried blood
 					add_short_string_to_file(file_id,"\t\t\tput_stain_on_space(i,j,",node->sd2,");");
 					break;
 				case 211: // Place barrels, etc

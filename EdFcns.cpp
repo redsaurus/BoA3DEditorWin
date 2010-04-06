@@ -1,11 +1,4 @@
 #include "stdafx.h"
-/*
-#include <Windows.h>
-#include <stdio.h>
-#include "math.h"
-#include "stdlib.h"
-*/
-
 #include "Resource.h"
 #include "global.h"
 
@@ -75,7 +68,7 @@ extern char hintbook_mode6;
 extern char hintbook_mode7;
 extern char hintbook_mode8;
 extern char hintbook_mode9;
-
+extern Boolean use_custom_name;
 extern char grid_mode;
 // if a terrain type has special property from 19-30, it is a slope. this
 // array says what corners for these 12 terrain types are elevated.
@@ -595,7 +588,6 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 	short i,j;
 	Boolean are_done = FALSE;
 	char str_response[256] = "";
-	void put_placed_terrain_script_in_dlog();
 	Boolean need_redraw = FALSE, option_hit = FALSE, right_click = FALSE;
 
 	location spot_hit;
@@ -1292,7 +1284,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 				if ((selected_item_number >= 9000) && (selected_item_number < 9000 + NUM_TER_SCRIPTS)) {
 					switch (i) {
 						case 1:
-//						put_placed_terrain_script_in_dlog(selected_item_number % 1000);
+						edit_placed_script(selected_item_number % 1000);
 						break;
 						case 2: case 3: case 4: case 5: case 6:
 							town.ter_scripts[selected_item_number % 1000].memory_cells[i - 2] =
@@ -4521,8 +4513,9 @@ void create_new_creature(short c_to_create,location create_loc,creature_start_ty
 	if (c_to_create < 0)	
 		return;
 	if (loc_in_active_area(create_loc) == FALSE) {
-		give_error("You can't place a creature here. This space is outside of the active town area.","",0);
-//				set_string("You can't place a creature here:","outside of the active town area.");
+		 if (use_custom_name == 0)
+		 		give_error("You can't place a creature here. This space is outside of the active town area.","",0);
+		 else set_string("You can't place a creature here:","outside of the active town area.");
 		return;
 	}
 
@@ -4570,8 +4563,10 @@ Boolean create_new_item(short item_to_create,location create_loc,Boolean propert
 	if (item_to_create < 0)	
 		return TRUE;
 	if (loc_in_active_area(create_loc) == FALSE) {
-		give_error("You can't place an item here. This space is outside of the active town area.","",0);
-//		set_string("You can't place an item here:","outside of the active town area.");
+		 if (use_custom_name == 0)
+		 		give_error("You can't place an item here. This space is outside of the active town area.","",0);
+		 else
+		 		set_string("You can't place an item here:","outside of the active town area.");
 		return TRUE;
 	}
 	
@@ -4613,8 +4608,9 @@ Boolean create_new_ter_script(char *ter_script_name,location create_loc,in_town_
 	if (strlen(ter_script_name) >= SCRIPT_NAME_LEN)	
 		return TRUE;
 	if (loc_in_active_area(create_loc) == FALSE) {
-	give_error("You can't place a terrain script here. This space is outside of the active town area.","",0);
-//		set_string("You can't place a script here:","outside of the active town area.");
+ 		 if (use_custom_name == 0)
+		 			give_error("You can't place a terrain script here. This space is outside of the active town area.","",0);
+		 else set_string("You can't place a script here:","outside of the active town area.");
 		return TRUE;
 	}
 	
@@ -4641,8 +4637,10 @@ Boolean create_new_ter_script(char *ter_script_name,location create_loc,in_town_
 			return TRUE;
 		}	
 	}
-//	set_string("You can only have 100 terrain scripts.","No terrain script has been created.");
-	give_error("You can only have 100 active terrain scripts in a zone. No terrain script has been created.","",0);
+		 if (use_custom_name == 0)
+		 		 	give_error("You can only have 100 active terrain scripts in a zone. No terrain script has been created.","",0);
+		 else set_string("You can only have 100 terrain scripts.","No terrain script has been created.");
+
 	return FALSE;
 }
 

@@ -141,7 +141,7 @@ extern HBITMAP main_bitmap;
 extern short max_dim[3];
 extern RECT terrain_buttons_rect;
 extern RECT terrain_rects[264];
-
+extern Boolean use_custom_name;
 // local variables
 
 char szAppName[] = "Blades of Avernum Scenario Editor";
@@ -170,7 +170,6 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam);
 void check_colors();
 void check_game_done();
 short last_file_printed = 0;
-extern Boolean use_custom_name;
 
 // extern void put_placed_terrain_script_in_dlog();
 //MW specified argument and return type.
@@ -1404,7 +1403,7 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam)
 		case 832: edit_town_details_event_filter(item_hit); break;
 		case 835: edit_town_wand_event_filter(item_hit); break;
 		case 837: edit_placed_monst_event_filter(item_hit); break;
-//		case 838: put_placed_terrain_script_in_dlog(which_m); break;
+		case 838: edit_placed_script_event_filter(item_hit); break;
 		case 839: edit_town_strs_event_filter(item_hit); break;
 		case 840: edit_area_rect_event_filter(item_hit); break;
 		case 841: pick_import_town_event_filter(item_hit); break;

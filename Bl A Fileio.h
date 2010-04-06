@@ -2,7 +2,7 @@
 // The intention is to eventually replace this header file with an external file that is loaded at run-time and
 // can be edited by the user.
 #pragma once
-
+Boolean use_custom_name;
 char *BOAPortOutScriptnames[100] = {"o00Outdscript","o01Outdscript","o02Outdscript",
 "o03Outdscript","o04Outdscript","o05Outdscript","o06Outdscript","o07Outdscript",
 "o08Outdscript","o09Outdscript","o10Outdscript","o11Outdscript","o12Outdscript",
