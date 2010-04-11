@@ -63,7 +63,8 @@ short current_drawing_mode = 0; // 0 - floor 1 - terrain 2 - height
 short town_type = 0;  // 0 - big 1 - ave 2 - small
 short current_height_mode = 0; // 0 - no autohills, 1 - autohills
 Boolean editing_town = TRUE;
-short numerical_display_mode = 3;
+short numerical_display_mode = 0;
+short object_display_mode = 0;
 short cur_viewing_mode = 1;
 // 0 - big icons = 9*9 view
 // 1 - small icons = 64*64 zoom-out view
@@ -972,16 +973,32 @@ void handle_outdoor_menu(int item_hit)
 				change_made_outdoors = TRUE;
 				break;
 
-		case 3: edit_out_wand(0); change_made_outdoors = TRUE; break;
-		case 4: edit_out_wand(1);  change_made_outdoors = TRUE; break;
-		case 5: edit_out_wand(2);
-				draw_terrain();
-				change_made_outdoors = TRUE;
-				break;
+		case 3:
+				 edit_out_wand(0);
+				 change_made_outdoors = TRUE;
+				 break;
+		case 4:
+				 edit_out_wand(1);
+				 change_made_outdoors = TRUE;
+				 break;
+		case 5:
+				 edit_out_wand(2);
+				 draw_terrain();
+				 change_made_outdoors = TRUE;
+				 break;
 
-		case 6: frill_terrain(); change_made_outdoors = TRUE; break;
-		case 7: unfrill_terrain(); change_made_outdoors = TRUE; break;
-		case 8: edit_out_strs(); change_made_outdoors = TRUE; break; //Edit Area Descriptions
+		case 6:
+				 frill_terrain();
+				 change_made_outdoors = TRUE;
+		break;
+		case 7:
+				 unfrill_terrain();
+				 change_made_outdoors = TRUE;
+				 break;
+		case 8://Edit Area Descriptions
+				 edit_out_strs();
+				 change_made_outdoors = TRUE;
+				 break; 
 		case 10: 					//Set Starting Location
 			if (fancy_choice_dialog(864,0) == 2)
 				return;
@@ -1062,12 +1079,14 @@ void handle_help_menu(int item_hit)
 			break;
 		case 7: //   Rotate current numerical display mode: going forwards
 					numerical_display_mode = ((numerical_display_mode + 1) % 5);
+					object_display_mode = 0;
 					need_redraw = TRUE;
 			break; 
 		case 8: //   Rotate current numerical display mode: going backwards
 				 if (numerical_display_mode == 0)
 				    numerical_display_mode = 4;
 					else numerical_display_mode = ((numerical_display_mode - 1) % 5);
+					object_display_mode = 0;
 					need_redraw = TRUE;
 			break;
 			
@@ -1308,6 +1327,18 @@ void handle_help_menu(int item_hit)
 							reset_small_drawn();
 							redraw_screen();
 		break;
+		case 20: //   Rotate current object display mode: going forwards
+					object_display_mode = ((object_display_mode + 1) % 6);
+					numerical_display_mode = 0;
+					need_redraw = TRUE;
+			break;
+		case 21: //   Rotate current object display mode: going backwards
+				 if (object_display_mode == 0)
+				    object_display_mode = 5;
+					else object_display_mode = ((object_display_mode - 1) % 6);
+					numerical_display_mode = 0;
+					need_redraw = TRUE;
+			break;
 
 		}
 	draw_main_screen();		

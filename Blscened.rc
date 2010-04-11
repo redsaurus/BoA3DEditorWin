@@ -226,10 +226,12 @@ BEGIN
         MENUITEM "  Town: Full Write Data To File\tCtrl+&7", 1513
         MENUITEM "  &Repeat Printing of Last File\tCtrl+P", 1514
         MENUITEM SEPARATOR
-        MENUITEM "  &Increase Numerical Mode\tCtrl+G", 1507
-        MENUITEM "  &Decrease Numerical Mode\tCtrl+H", 1508
         MENUITEM "  &Cycle Forward Through View Mode\tCtrl+E", 1518
         MENUITEM "  &Cycle Backward Through View Mode\tCtrl+F", 1519
+        MENUITEM "  &Increase Numerical Mode\tCtrl+G", 1507
+        MENUITEM "  &Decrease Numerical Mode\tCtrl+H", 1508
+        MENUITEM "  &Increase Object Display Mode\tCtrl+[", 1520
+        MENUITEM "  &Decrease Object Display Mode\tCtrl+]", 1521
         MENUITEM SEPARATOR
         MENUITEM "  Load Outdoor Zone &Above\tCtrl+Up", 1511
         MENUITEM "  Load &Previous Outdoor Zone/Town\tCtrl+Left", 1509
@@ -274,6 +276,8 @@ BEGIN
     "^5",           1516,                   ASCII,  NOINVERT
     "^6",           1506,                   ASCII,  NOINVERT
     "^7",           1513,                   ASCII,  NOINVERT
+    "^9",           1520,                   ASCII,  NOINVERT
+    "^0",           1521,                   ASCII,  NOINVERT
     VK_LEFT,        1509,                   VIRTKEY, CONTROL, NOINVERT
     VK_RIGHT,       1510,                   VIRTKEY, CONTROL, NOINVERT
     VK_UP,          1511,                   VIRTKEY, CONTROL, NOINVERT
@@ -818,7 +822,7 @@ BEGIN
     LTEXT           "0_109",34,229,256,75,16
     LTEXT           "0_109",35,229,281,75,16
     LTEXT           "0_109",36,283,481,75,16
-    LTEXT           "*",37,416,36,50,15
+    LTEXT           "*",37,416,30,50,15
     LTEXT           "+",38,156,109,155,15
     LTEXT           "+",39,44,484,229,15
     LTEXT           "~Edit Placed Creature",40,25,30,138,17
@@ -827,9 +831,9 @@ BEGIN
     LTEXT           "*Extra Items",43,34,219,183,14
     LTEXT           "*Personality",44,34,310,143,14
     LTEXT           "Enter the information for this monster/townsperson. You only need to worry about the personality if this is not a hostile monster. ",45,25,53,480,33
-    LTEXT           "*Creature number:",46,288,36,126,15
+    LTEXT           "*Creature number:",46,288,30,126,15
     LTEXT           "~Creature type:",47,34,109,115,15
-    LTEXT           "*Creature starting attitude:",48,34,131,169,15
+    LTEXT           "*Creature starting attitude:",48,34,134,169,15
     LTEXT           "~Creature Appearance Type:",49,33,461,187,15
     LTEXT           "*Character ID",50,34,335,144,14
     LTEXT           "*BASIC TRAITS",51,25,90,120,14

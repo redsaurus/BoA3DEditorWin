@@ -134,7 +134,14 @@ void edit_placed_script_event_filter (short item_hit)
 			dialog_not_toast = FALSE;
 			break;
 		case 41: // Delete this script
-				store_placed_script.clear_in_town_on_ter_script_type();
+			store_placed_script.exists = 0;
+			store_placed_script.loc.x = 0;
+			store_placed_script.loc.y = 0;
+			for (i = 0; i < SCRIPT_NAME_LEN; i++)
+					store_placed_script.script_name[i] = 0;
+			for (i = 0; i < 10; i++)
+					store_placed_script.memory_cells[i] = 0;
+					put_placed_terrain_script_in_dlog();
 			break;
 		default:
 		break;
@@ -188,10 +195,6 @@ void edit_placed_monst(short which_m)
 
 	for (i = 0; i < 4; i++)
 		cd_add_label(837,27 + i,attitude_types[i],57);
-	//for (i = 0; i < 10; i++) {
-	//	sprintf((char *) temp_str,"Cell %d",i);
-	//	cd_add_label(837,15 + i,(char *) temp_str,30);
-	//	}
 
 	while (dialog_not_toast)
 		ModalDialog();
@@ -251,22 +254,21 @@ void edit_placed_monst_event_filter (short item_hit)
 				}
 			break;
 		case 69:
-			if (store_which_placed_monst == 85)
-	   			store_which_placed_monst = 6;
+			if (store_which_placed_monst == 79)
+	   			store_which_placed_monst = 0;
 			else store_which_placed_monst++;
 			edit_placed_monst(store_which_placed_monst);
 		break;
 
 		case 70:
-			if (store_which_placed_monst == 6)
-	   			store_which_placed_monst = 85;
+			if (store_which_placed_monst == 0)
+	   			store_which_placed_monst = 79;
 			else store_which_placed_monst--;
 			edit_placed_monst(store_which_placed_monst);
 			break;
 
 		default:
-			cd_hit_led_range(837,27,30,item_hit);
-			break;
+		break;
 		}
 }
 

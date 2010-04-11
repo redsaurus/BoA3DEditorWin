@@ -2109,36 +2109,36 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 	const int kNumKeyAssign = 10;	// number of key assignment
 
 	// virtual key code of ten key
-	const WPARAM num_key[ kNumKeyAssign ] =
-		{	VK_NUMPAD0,VK_NUMPAD1, VK_NUMPAD2, VK_NUMPAD3, VK_NUMPAD4,	// num pad key 0-9
+	const WPARAM num_key[ kNumKeyAssign ] = // num pad key 0-9
+		{	VK_NUMPAD0,VK_NUMPAD1, VK_NUMPAD2, VK_NUMPAD3, VK_NUMPAD4,	
 			VK_NUMPAD5, VK_NUMPAD6, VK_NUMPAD7, VK_NUMPAD8, VK_NUMPAD9
 		};
 
 	// num pad key scroller assignment
 	const int scrl_key_2D[ kNumKeyAssign ] = {
-				eSCRL_NoScrl,			// 0 num pad
+		eSCRL_NoScrl,			// 0 num pad
 		eSCRL_Left	|	eSCRL_Bottom,	// 1
-						eSCRL_Bottom,	// 2
+		eSCRL_Bottom,	// 2
 		eSCRL_Right |	eSCRL_Bottom,	// 3
 		eSCRL_Left,						// 4
-				eSCRL_NoScrl,			// 5
+		eSCRL_NoScrl,			// 5
 		eSCRL_Right,					// 6
 		eSCRL_Left	|	eSCRL_Top,		// 7
-						eSCRL_Top,		// 8
+		eSCRL_Top,		// 8
 		eSCRL_Right |	eSCRL_Top,		// 9
 	};
 
 	const int scrl_key_3D[ kNumKeyAssign ] = {
-				eSCRL_NoScrl,			// 0 num pad
-						eSCRL_Bottom,	// 1
+		eSCRL_NoScrl,			// 0 num pad
+		eSCRL_Bottom,	// 1
 		eSCRL_Right |	eSCRL_Bottom,	// 2
 		eSCRL_Right,					// 3
 		eSCRL_Left |	eSCRL_Bottom,	// 4
-				eSCRL_NoScrl,			// 5
+		eSCRL_NoScrl,			// 5
 		eSCRL_Right	|	eSCRL_Top,		// 6
 		eSCRL_Left,						// 7
 		eSCRL_Left |	eSCRL_Top,		// 8
-						eSCRL_Top		// 9
+		eSCRL_Top		// 9
 	};
 
 	const POINT kCenterPoint = {
@@ -2152,16 +2152,23 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 	bool ctrl_key = (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;	// check MSB for current key state
 	bool alt_key = (GetAsyncKeyState( VK_MENU ) & 0x8000) != 0;
 	bool shft_key = (GetAsyncKeyState(0xC0) & 0x8000) != 0;
-
+	POINT cur_point;
+	
 	for ( int i = 0; i < kNumKeyAssign; i++) {
 		if ( wParam == num_key[i] ) {
 			kill_next_win_char = TRUE;
 			if ( i == 5 ) {		// "5" key
-				if ((cur_viewing_mode == 0) || (cur_viewing_mode == 2)) {
+				if (cur_viewing_mode == 0) {
 					handle_action( kCenterPoint, ((ctrl_key) ? MK_CONTROL : 0),-1 );
 					mouse_button_held = FALSE;
 					return FALSE;
 				}
+				if (cur_viewing_mode == 2) {
+					handle_action( cur_point, ((ctrl_key) ? MK_CONTROL : 0),-1 );
+					mouse_button_held = FALSE;
+					return FALSE;
+				}
+
 				break;
 			}
 			
@@ -2341,10 +2348,12 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 				draw_terrain();
 				}
 	if (wParam == 0x38) {
-		 	 hintbook_mode8 = 1 - hintbook_mode8;
-				small_any_drawn = FALSE;
-				draw_terrain();
-				}
+		 if (hintbook_mode8 == 2) 
+	     hintbook_mode8 = 0;
+		 else hintbook_mode8 = 1 + hintbook_mode8;
+			 small_any_drawn = FALSE;
+			 draw_terrain();
+			}
 
 if (wParam == 0x39) {
 		 	 hintbook_mode9 = 1 - hintbook_mode9;
