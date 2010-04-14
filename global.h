@@ -1563,6 +1563,8 @@ short cd_retrieve_text_edit_num(short dlog_num, short item_num);
 void ModalDialog();
 void center_window(HWND window);
 short cd_process_syskeystroke(HWND window,WPARAM wparam,/* LPARAM lparam,*/ short *item);
+RECT get_template_from_medium_rect(short x,short y);
+RECT get_template_from_rect(short x,short y);
 
 // EdFcns
 void init_screen_locs();
@@ -1659,20 +1661,18 @@ void SetMacRect(macRECT *rect,short top, short left, short bottom, short right);
 
 // Graphics.c
 void Set_up_win ();
+void lose_graphics();
 void redraw_screen();
 void draw_main_screen();
-// void update_main_screen( void );
 void set_up_terrain_buttons();
-RECT get_template_from_medium_rect(short x,short y);
-RECT get_template_from_rect(short x,short y);
+void reset_small_drawn();
 void draw_terrain();
 void place_right_buttons(/* short mode */);
 void set_string(char *string,char *string2);
 void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height);
-// void c2p(char *str) ;
 void get_str(char *str,short i, short j);
-// short string_length(char *str,HDC hdc);
 Boolean refresh_graphics_library();
+Boolean is_web(short i,short j);
 void make_web(short i,short j);
 void take_web(short i,short j);
 Boolean is_crate(short i,short j);
@@ -1689,10 +1689,7 @@ void make_blocked(short i,short j);
 void take_blocked(short i,short j);
 void make_sfx(short i,short j,short type);
 void take_sfx(short i,short j,short type);
-void reset_small_drawn();
-void place_dlog_borders_around_rect(HDIB to_gworld,HWND win,
-	RECT border_to_rect);
-void lose_graphics();
+void place_dlog_borders_around_rect(HDIB to_gworld,HWND win,RECT border_to_rect);
 
 // graphutl
 HDIB load_pict(short which_pict);
