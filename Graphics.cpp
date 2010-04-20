@@ -3679,7 +3679,7 @@ void draw_ter_medium()
 						if (town.creatures[i].hidden_class == 0)
 							 a.which_icon = town.creatures[i].start_attitude - 2;
 						else
-							 a.which_icon = town.creatures[i].start_attitude + 1;
+							 a.which_icon = town.creatures[i].start_attitude + 2;
 							 
 						place_terrain_icon_into_ter_medium(a,q,r);
 						}
@@ -3956,7 +3956,8 @@ void draw_ter_small()
 
 	if (editing_town == FALSE) {
 
-		if (hintbook_mode8 == 0) {
+	if (hintbook_mode9 == 1) {
+
 			 for (i = 0; i < NUM_OUT_PLACED_SPECIALS; i++) {
 			 if (current_terrain.spec_id[i] != kNO_OUT_SPECIALS) {
 				rectangle_draw_rect.left = SMALL_SPACE_SIZE * (current_terrain.special_rects[i].left);
@@ -3971,26 +3972,7 @@ void draw_ter_small()
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,200,200,255);
 				    }
 					}
-				}
 
-		if (hintbook_mode8 == 1) {
-				for (i = 0; i < 8; i++) {
-				if (current_terrain.sign_locs[i].x >= 0) {
-				rectangle_draw_rect.left = SMALL_SPACE_SIZE * (current_terrain.sign_locs[i].x);
-				rectangle_draw_rect.right = SMALL_SPACE_SIZE * (current_terrain.sign_locs[i].x+ 1) - 1;
-				rectangle_draw_rect.top = SMALL_SPACE_SIZE * (current_terrain.sign_locs[i].y);
-				rectangle_draw_rect.bottom = SMALL_SPACE_SIZE * (current_terrain.sign_locs[i].y + 1) - 1;
-				MacInsetRect(&rectangle_draw_rect,1,1);
-				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,255,0,0);
-				MacInsetRect(&rectangle_draw_rect,1,1);
-				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,0,255,0);
-				MacInsetRect(&rectangle_draw_rect,1,1);
-				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,0,0,255);
-				}
-			}
-		}
-
-	if (hintbook_mode9 == 1) {
 		// description rects
 			 for (i = 0; i < 8; i++){
 			 if (current_terrain.info_rect[i].right > 0) {
@@ -4021,7 +4003,26 @@ void draw_ter_small()
 			// draw creatures
 			if (editing_town) {
 
-	if (hintbook_mode8 == 0) {
+			if ((hintbook_mode2 == 0) && (hintbook_mode3 == 0)) {
+				for (i = 0; i < NUM_TOWN_PLACED_CREATURES; i++){
+					if ((town.creatures[i].exists()) && (town.creatures[i].start_loc.x == q) && (town.creatures[i].start_loc.y == r)) {
+					  	to_rect = small_edit_ter_rects[q][r];
+					  	MacInsetRect(&to_rect,1,1);
+						if (town.creatures[i].start_attitude < 3)
+      				put_rect_in_gworld(main_dc5,to_rect,0,0,255);
+						else if (town.creatures[i].start_attitude == 3)
+							put_rect_in_gworld(main_dc5,to_rect,0,255,0);
+						else if (town.creatures[i].start_attitude == 4)
+							put_rect_in_gworld(main_dc5,to_rect,255,0,0);
+						else
+							put_rect_in_gworld(main_dc5,to_rect,255,128,0);
+
+					}
+				}
+			}
+
+	if (hintbook_mode9 == 1) {
+		// description rects
 		for (i = 0; i < NUM_TOWN_PLACED_SPECIALS; i++) {
 			if (town.spec_id[i] != kNO_TOWN_SPECIALS) {
 				rectangle_draw_rect.left = SMALL_SPACE_SIZE * (town.special_rects[i].left);
@@ -4036,42 +4037,7 @@ void draw_ter_small()
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,200,200,255);
 				}
 			}
-		}
 
-	if (hintbook_mode8 == 1) {
-		for (i = 0; i < 15; i++) {
-			if (town.sign_locs[i].x >= 0) {
-				rectangle_draw_rect.left = SMALL_SPACE_SIZE * (town.sign_locs[i].x);
-				rectangle_draw_rect.right = SMALL_SPACE_SIZE * (town.sign_locs[i].x + 1) - 1;
-				rectangle_draw_rect.top = SMALL_SPACE_SIZE * (town.sign_locs[i].y);
-				rectangle_draw_rect.bottom = SMALL_SPACE_SIZE * (town.sign_locs[i].y + 1) - 1;
-				MacInsetRect(&rectangle_draw_rect,1,1);
-				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,255,0,0);
-				MacInsetRect(&rectangle_draw_rect,1,1);
-				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,0,255,0);
-				MacInsetRect(&rectangle_draw_rect,1,1);
-				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,0,0,255);
-				}
-			}
-		}
-
-			if ((hintbook_mode2 == 0) && (hintbook_mode3 == 0)) {
-				for (i = 0; i < NUM_TOWN_PLACED_CREATURES; i++){
-					if ((town.creatures[i].exists()) && (town.creatures[i].start_loc.x == q) && (town.creatures[i].start_loc.y == r)) {
-					  	to_rect = small_edit_ter_rects[q][r];
-					  	MacInsetRect(&to_rect,1,1);
-						if (town.creatures[i].start_attitude < 3)
-      				put_rect_in_gworld(main_dc5,to_rect,0,0,255);
-						else if (town.creatures[i].start_attitude == 3)
-							put_rect_in_gworld(main_dc5,to_rect,0,255,0);
-						else
-							put_rect_in_gworld(main_dc5,to_rect,255,0,0);
-					}
-				}
-			}
-
-	if (hintbook_mode9 == 1) {
-		// description rects
 			 for (i = 0; i < 16; i++) {
 			 if (town.room_rect[i].right > 0) {
 				rectangle_draw_rect.left = SMALL_SPACE_SIZE * (town.room_rect[i].left);
@@ -4247,15 +4213,40 @@ void draw_creature(HDC ter_hdc,HBITMAP store_bmp,short creature_num,location loc
 		else 
             rect_draw_some_item(graphics_library[obj_index], from_rect,ter_draw_gworld,to_rect,0,0);
 
-		if (town.creatures[creature_num].start_attitude < 3)
-			b = 255;
-		else if (town.creatures[creature_num].start_attitude >= 4)
-			r = 255;
-		if (town.creatures[creature_num].hidden_class > 0)
-			g = 255;
+		if (town.creatures[creature_num].start_attitude < 3) {
+			if (town.creatures[creature_num].hidden_class == 0)
+				r = 0, g = 0, b = 255;
+			if (town.creatures[creature_num].hidden_class > 0)
+				r = 0, g = 255, b = 255;
+			SelectObject(ter_hdc,DibBitmapHandle(ter_draw_gworld));
+			put_rect_in_gworld(ter_hdc,to_rect,r,g,b);
+			}
+		if (town.creatures[creature_num].start_attitude == 3) {
+			if (town.creatures[creature_num].hidden_class == 0)
+				r = 0, g = 0, b = 0;
+			if (town.creatures[creature_num].hidden_class > 0)
+				r = 0, g = 255, b = 0;
+			SelectObject(ter_hdc,DibBitmapHandle(ter_draw_gworld));
+			put_rect_in_gworld(ter_hdc,to_rect,r,g,b);
+			}
 
-		SelectObject(ter_hdc,DibBitmapHandle(ter_draw_gworld));
-		put_rect_in_gworld(ter_hdc,to_rect,r,g,b);
+		if (town.creatures[creature_num].start_attitude == 4) {
+			if (town.creatures[creature_num].hidden_class == 0)
+				r = 255, g = 0, b = 0;
+			if (town.creatures[creature_num].hidden_class > 0)
+				r = 255, g = 255, b = 0;
+			SelectObject(ter_hdc,DibBitmapHandle(ter_draw_gworld));
+			put_rect_in_gworld(ter_hdc,to_rect,r,g,b);
+			}
+
+		if (town.creatures[creature_num].start_attitude > 4) {
+			if (town.creatures[creature_num].hidden_class == 0)
+				r = 255, g = 128, b = 0;
+			if (town.creatures[creature_num].hidden_class > 0)
+				r = 215, g = 215, b = 215;
+			SelectObject(ter_hdc,DibBitmapHandle(ter_draw_gworld));
+			put_rect_in_gworld(ter_hdc,to_rect,r,g,b);
+			}
 
 		// do facing
 		RECT facing_to_rect = to_rect;
@@ -4305,8 +4296,10 @@ void draw_creature_medium(HDC ter_hdc,HBITMAP store_bmp,short creature_num,locat
 
 		if (town.creatures[creature_num].start_attitude < 3)
 			b = 255;
-		else if (town.creatures[creature_num].start_attitude >= 4)
+		else if (town.creatures[creature_num].start_attitude == 4)
 			r = 255;
+		else if (town.creatures[creature_num].start_attitude > 4)
+			r = 155;
 		if (town.creatures[creature_num].hidden_class > 0)
 			g = 255;
 

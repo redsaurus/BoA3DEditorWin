@@ -2847,11 +2847,13 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 	for (i = 0; i < 60; i++) 
 		if (boe_big_town.creatures[i].number > 0) {
 			town.creatures[i].number = old_monst_to_new[boe_big_town.creatures[i].number];
-			if (boe_big_town.creatures[i].start_attitude == 1)
+					if (boe_big_town.creatures[i].start_attitude == 0)
+				town.creatures[i].start_attitude = 3;
+			else if (boe_big_town.creatures[i].start_attitude == 1)
 				town.creatures[i].start_attitude = 4;
-				else if (boe_big_town.creatures[i].start_attitude == 3)
-					town.creatures[i].start_attitude = 5;
-					else town.creatures[i].start_attitude = 2;
+			else if (boe_big_town.creatures[i].start_attitude == 2)
+				town.creatures[i].start_attitude = 2;
+			else town.creatures[i].start_attitude = 5;
 			town.creatures[i].start_loc = boe_big_town.creatures[i].start_loc;
 			town.creatures[i].personality = 20 * which_town + (boe_big_town.creatures[i].personality % 10);
 			town.creatures[i].hidden_class = boe_big_town.creatures[i].spec_enc_code;
@@ -3451,6 +3453,11 @@ void port_town_script(char *script_name,char *directory_id,short which_town)
 	add_string(file_id,"// TOWN SCRIPT");
 	sprintf(str,"//    Town %d: %s\r", which_town,town.town_name);
 	add_string(file_id,str);
+	add_string(file_id,"// The BoE personality numbers and names for this town.");
+	for (short i = 0; i < 10; i++) {
+			sprintf(str,"\t // %d,\"%s\"", 10 * which_town + i,boe_scen_text.talk_strs[which_slot = i]);
+			add_string(file_id,str);
+		}
 	add_string(file_id,"// This is the special encounter script for this town.");
 	add_string(file_id,"// The states INIT_STATE, EXIT_STATE, and START_STATE have");
 	add_string(file_id,"// meanings that are described in the documenation. States you write");
@@ -3461,12 +3468,19 @@ void port_town_script(char *script_name,char *directory_id,short which_town)
 	add_string(file_id,"body;\r");
 	add_string(file_id,"beginstate INIT_STATE;");
 	add_string(file_id,"// This state called whenever this town is entered.");
+
 	for (short i = 0; i < 60; i++) {
 		if ((boe_big_town.creatures[i].personality >= 0) && (boe_big_town.creatures[i].number > 0)) {
 		short j = boe_big_town.creatures[i].personality % 10;
+		if ((boe_big_town.creatures[i].personality >= which_town * 10) && (boe_big_town.creatures[i].personality -10 < which_town * 10)) {
 			sprintf(str,"\t set_name(%d,\"%s\");", i + 6, boe_scen_text.talk_strs[which_slot = j]);
 			add_string(file_id,str);
 		}
+		else {
+			sprintf(str,"\t set_name(%d,\"%d\");", i + 6,boe_big_town.creatures[i].personality);
+			add_string(file_id,str);
+				}
+			}
 		}
 	add_string(file_id,"\t// Any town entry states.");
 	if (boe_town.spec_on_entry >= 0) {
