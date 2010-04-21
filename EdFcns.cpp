@@ -70,6 +70,7 @@ extern char hintbook_mode8;
 extern char hintbook_mode9;
 extern Boolean use_custom_name;
 extern char grid_mode;
+extern short last_large_mode;
 // if a terrain type has special property from 19-30, it is a slope. this
 // array says what corners for these 12 terrain types are elevated.
 // first field is nw corner
@@ -2229,12 +2230,14 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 	}
 	
 	if (wParam == VK_SUBTRACT) { // Zoom out
-							if(cur_viewing_mode == 0)
+							if ((cur_viewing_mode == 0) || (cur_viewing_mode > 9)) {
+								last_large_mode = cur_viewing_mode;
 								cur_viewing_mode = 2;
+								}
 							else if(cur_viewing_mode == 2)
 								cur_viewing_mode = 1;
 							else if(cur_viewing_mode == 1)
-								cur_viewing_mode = 0;
+								cur_viewing_mode = last_large_mode;
 
 							set_up_terrain_buttons();
 							reset_small_drawn();
@@ -2245,10 +2248,11 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 							if(cur_viewing_mode == 1)
 								cur_viewing_mode = 2;
 							else if(cur_viewing_mode == 2)
-								cur_viewing_mode = 0;
-							else if(cur_viewing_mode == 0)
+								cur_viewing_mode = last_large_mode;
+							else {
+								last_large_mode = cur_viewing_mode;
 								cur_viewing_mode = 1;
-
+								}
 							set_up_terrain_buttons();
 							reset_small_drawn();
 							redraw_screen();
@@ -2356,7 +2360,9 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 			}
 
 if (wParam == 0x39) {
-		 	 hintbook_mode9 = 1 - hintbook_mode9;
+		 if (hintbook_mode9 == 2)
+	     hintbook_mode9 = 0;
+		 else hintbook_mode9 = 1 + hintbook_mode9;
 				small_any_drawn = FALSE;
 				draw_terrain();
 				}

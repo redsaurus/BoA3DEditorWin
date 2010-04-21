@@ -55,7 +55,6 @@ short cur_town;
 location cur_out;
 short dlg_units_x,dlg_units_y;
 Boolean small_any_drawn = FALSE;
-Boolean medium_any_drawn = FALSE;
 Boolean kill_next_win_char = FALSE;
  
 // MAIN WHAT'S GOING ON VARIABLES
@@ -65,6 +64,7 @@ short current_height_mode = 0; // 0 - no autohills, 1 - autohills
 Boolean editing_town = TRUE;
 short numerical_display_mode = 0;
 short object_display_mode = 0;
+short last_large_mode = 0;
 short cur_viewing_mode = 1;
 // 0 - big icons = 9*9 view
 // 1 - small icons = 64*64 zoom-out view

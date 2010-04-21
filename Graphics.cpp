@@ -1312,25 +1312,22 @@ void draw_creature_3D(short creature_num,short at_point_center_x,short at_point_
 			break;
 		case 3:
 			if(hidden)
-				r = g = b = 29;
+				g = 31;
 			break;
 		case 4:
-			r = 23;
-			//b = 4;
-			if(hidden) {
+			r = 31;
+			if(hidden)
 				g = 31;
-				b = 4;
-			}
 			break;
 		case 5:
-			if(hidden) {
-				r = 31;
-				g = 29;
-			}
-			else {
 				r = 23;
 				g = 12;
-			}
+			if(hidden) {
+				r = 31;
+				g = 0;
+				b = 16;
+				}
+			break;
 	}
 	/*if (town.creatures[creature_num].start_attitude >= 4) {
 		r = 23;
@@ -1348,9 +1345,7 @@ void draw_creature_3D(short creature_num,short at_point_center_x,short at_point_
 		a.which_icon = t_d.terrain[square_x][square_y] - 225 + 30;
 	}
 	if (a.not_legit() == FALSE)
-		if(place_creature_icon_into_ter_3D_large(a, at_point_center_x,
-													at_point_center_y
-														- scen_data.scen_ter_types[t_d.terrain[square_x][square_y]].height_adj,to_whole_area_rect,lighting,r,g,b) == FALSE)
+		if(place_creature_icon_into_ter_3D_large(a, at_point_center_x,at_point_center_y	- scen_data.scen_ter_types[t_d.terrain[square_x][square_y]].height_adj,to_whole_area_rect,lighting,r,g,b) == FALSE)
 			cant_draw_graphics_error(a,"Error was for creature type",town.creatures[creature_num].number);
 	
 	//draw second (top) icon if it exists (tall creatures like giants)
@@ -1940,7 +1935,7 @@ void draw_ter_3D_large()
 	graphic_id_type a;
 	short sheet;
 	HFONT store_font;
-
+	short last_large_mode = cur_viewing_mode;
 	short current_size = ((editing_town) ? max_dim[town_type] : 48);
 	short center_area_x, center_area_y;
 	short center_of_current_square_x, center_of_current_square_y;
@@ -2796,6 +2791,7 @@ void draw_ter_large()
 	char str[256];
 	HBITMAP store_bmp;
 	HFONT store_font;
+	short last_large_mode = 0;
 
  	paint_pattern(ter_draw_gworld,0,terrain_rect_gr_size,1);
 
@@ -3972,7 +3968,8 @@ void draw_ter_small()
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,200,200,255);
 				    }
 					}
-
+				}
+	if (hintbook_mode9 == 2) {
 		// description rects
 			 for (i = 0; i < 8; i++){
 			 if (current_terrain.info_rect[i].right > 0) {
@@ -4015,7 +4012,7 @@ void draw_ter_small()
 						else if (town.creatures[i].start_attitude == 4)
 							put_rect_in_gworld(main_dc5,to_rect,255,0,0);
 						else
-							put_rect_in_gworld(main_dc5,to_rect,255,128,0);
+							put_rect_in_gworld(main_dc5,to_rect,190,100,0);
 
 					}
 				}
@@ -4037,7 +4034,9 @@ void draw_ter_small()
 				put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,200,200,255);
 				}
 			}
-
+		}
+		
+	if (hintbook_mode9 == 2) {
 			 for (i = 0; i < 16; i++) {
 			 if (town.room_rect[i].right > 0) {
 				rectangle_draw_rect.left = SMALL_SPACE_SIZE * (town.room_rect[i].left);
@@ -4214,39 +4213,28 @@ void draw_creature(HDC ter_hdc,HBITMAP store_bmp,short creature_num,location loc
             rect_draw_some_item(graphics_library[obj_index], from_rect,ter_draw_gworld,to_rect,0,0);
 
 		if (town.creatures[creature_num].start_attitude < 3) {
-			if (town.creatures[creature_num].hidden_class == 0)
-				r = 0, g = 0, b = 255;
-			if (town.creatures[creature_num].hidden_class > 0)
-				r = 0, g = 255, b = 255;
-			SelectObject(ter_hdc,DibBitmapHandle(ter_draw_gworld));
-			put_rect_in_gworld(ter_hdc,to_rect,r,g,b);
+			b = 255;
+				if (town.creatures[creature_num].hidden_class > 0)
+				g = 255;
+		}
+		else if (town.creatures[creature_num].start_attitude == 3) {
+			r = 0, g = 0, b = 0;
+				if (town.creatures[creature_num].hidden_class > 0)
+				g = 255;
 			}
-		if (town.creatures[creature_num].start_attitude == 3) {
-			if (town.creatures[creature_num].hidden_class == 0)
-				r = 0, g = 0, b = 0;
-			if (town.creatures[creature_num].hidden_class > 0)
-				r = 0, g = 255, b = 0;
-			SelectObject(ter_hdc,DibBitmapHandle(ter_draw_gworld));
-			put_rect_in_gworld(ter_hdc,to_rect,r,g,b);
+		else if (town.creatures[creature_num].start_attitude == 4) {
+			r = 255;
+				if (town.creatures[creature_num].hidden_class > 0)
+				g = 255;
 			}
-
-		if (town.creatures[creature_num].start_attitude == 4) {
-			if (town.creatures[creature_num].hidden_class == 0)
-				r = 255, g = 0, b = 0;
+		else {
+			r = 190, g = 100, b = 0;
 			if (town.creatures[creature_num].hidden_class > 0)
-				r = 255, g = 255, b = 0;
-			SelectObject(ter_hdc,DibBitmapHandle(ter_draw_gworld));
-			put_rect_in_gworld(ter_hdc,to_rect,r,g,b);
+			r = 255, g = 0, b = 128;
 			}
-
-		if (town.creatures[creature_num].start_attitude > 4) {
-			if (town.creatures[creature_num].hidden_class == 0)
-				r = 255, g = 128, b = 0;
-			if (town.creatures[creature_num].hidden_class > 0)
-				r = 215, g = 215, b = 215;
-			SelectObject(ter_hdc,DibBitmapHandle(ter_draw_gworld));
-			put_rect_in_gworld(ter_hdc,to_rect,r,g,b);
-			}
+			
+		SelectObject(ter_hdc,DibBitmapHandle(ter_draw_gworld));
+		put_rect_in_gworld(ter_hdc,to_rect,r,g,b);
 
 		// do facing
 		RECT facing_to_rect = to_rect;
@@ -4294,14 +4282,26 @@ void draw_creature_medium(HDC ter_hdc,HBITMAP store_bmp,short creature_num,locat
 		else
             rect_draw_some_item(graphics_library[obj_index], from_rect,ter_draw_gworld,to_rect,0,0);
 
-		if (town.creatures[creature_num].start_attitude < 3)
+		if (town.creatures[creature_num].start_attitude < 3) {
 			b = 255;
-		else if (town.creatures[creature_num].start_attitude == 4)
+				if (town.creatures[creature_num].hidden_class > 0)
+				g = 255;
+		}
+		else if (town.creatures[creature_num].start_attitude == 3) {
+			r = 0, g = 0, b = 0;
+				if (town.creatures[creature_num].hidden_class > 0)
+				g = 255;
+			}
+		else if (town.creatures[creature_num].start_attitude == 4) {
 			r = 255;
-		else if (town.creatures[creature_num].start_attitude > 4)
-			r = 155;
-		if (town.creatures[creature_num].hidden_class > 0)
-			g = 255;
+				if (town.creatures[creature_num].hidden_class > 0)
+				g = 255;
+			}
+		else {
+			r = 190, g = 100, b = 0;
+			if (town.creatures[creature_num].hidden_class > 0)
+			r = 255, g = 0, b = 128;
+			}
 
 		SelectObject(ter_hdc,DibBitmapHandle(ter_draw_gworld));
 		put_rect_in_gworld(ter_hdc,to_rect,r,g,b);
@@ -5289,8 +5289,8 @@ typedef unsigned short UInt16;
 //+128 - Tint the  graphic red 
 //+256 - Tint the  graphic  green 
 //+512 - Tint the  graphic  blue 
-void adjust_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short graphic_adjust/*,
-		short light_level, Boolean has_border, short border_r, short border_g, short border_b*/)
+void adjust_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short graphic_adjust)
+// short light_level, Boolean has_border, short border_r, short border_g, short border_b
 {
 	//don't waste time on the common untinted graphic
 	if(!graphic_adjust)
