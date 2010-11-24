@@ -109,7 +109,6 @@ extern short object_display_mode;
 
 HBITMAP main_bitmap = NULL;
 HBITMAP main_bitmap_save;
-HDIB numbered_cells = NULL;
 HDIB editor_mixed = NULL;
 HDIB terrain_buttons_gworld = NULL;
 HDIB ter_draw_gworld = NULL;
@@ -322,7 +321,6 @@ void load_main_screen()
 	pattern_gworld = DibCreate (192,256, 16,0);
 	dialog_pattern_gworld = DibCreate (192,256, 16,0);
 	pat_source_gworld = load_pict(4900);
-	numbered_cells = load_pict(4919);
 	editor_mixed = load_pict(4915);
 
 	mixed_gworld = load_pict(903);
