@@ -978,8 +978,9 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							break;		
 						case 106: // make town entrance
 							if (editing_town == TRUE) {
-								beep();
-								set_string("This only used outdoors","");
+								overall_mode = 74;
+								set_cursor(0);
+								set_string("Place Oblique Mirror","");
 								break;
 								}
 							set_string("Create town entrance","Select upper left corner");
@@ -989,8 +990,9 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							break;		
 						case 107: // edit town entrance
 							if (editing_town == TRUE) {
-								beep();
-								set_string("This only used outdoors","");
+              	overall_mode = 75;
+								set_cursor(0);
+								set_string("Place Facing Mirror","");
 								break;
 								}
 							set_string("Edit town entrance","");
@@ -1817,11 +1819,13 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				break;		
 		case 67: // 67 - clean space
 				take_blocked(spot_hit.x,spot_hit.y); 
+				take_oblique_mirror(spot_hit.x,spot_hit.y);
 				take_force_barrier(spot_hit.x,spot_hit.y); 
 				take_fire_barrier(spot_hit.x,spot_hit.y); 
 				take_barrel(spot_hit.x,spot_hit.y); 
 				take_crate(spot_hit.x,spot_hit.y); 
 				take_web(spot_hit.x,spot_hit.y); 
+				take_facing_mirror(spot_hit.x,spot_hit.y);
 				for (i = 0; i < 8; i++)
 					take_sfx(spot_hit.x,spot_hit.y,i);
 				if(!object_sticky_draw)
@@ -1871,7 +1875,16 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				set_cursor(0);
 				overall_mode = 0;
 				break;
-
+		case 74: 
+				make_oblique_mirror(spot_hit.x,spot_hit.y);
+				if(!object_sticky_draw)
+					reset_drawing_mode();
+				break;
+		case 75:
+				make_facing_mirror(spot_hit.x,spot_hit.y);
+				if(!object_sticky_draw)
+					reset_drawing_mode();
+				break;
 		}
 		
 	// rectangle commands
@@ -4066,7 +4079,7 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 1503; i < 1520; i++)
+		for (short i = 1503; i < 1522; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 
 		return;
@@ -4090,7 +4103,7 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
-		for (short i = 1503; i < 1520; i++)
+		for (short i = 1503; i < 1522; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 	}
 	else {
@@ -4106,7 +4119,7 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 1503; i < 1520; i++)
+		for (short i = 1503; i < 1522; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 	}
 }

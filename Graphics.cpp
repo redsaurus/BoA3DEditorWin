@@ -1847,6 +1847,13 @@ void draw_town_objects_3D(short x, short y, short at_point_center_x, short at_po
 				field_of_type[ftype] = TRUE;
 		}
 
+	if (/*is_oblique_mirror(x,y)*/  field_of_type[2]) {
+		a.which_sheet = 790;
+		a.which_icon = 13;//this probably doesn't look different enough - it's just another animation picture
+		place_icon_into_ter_3D_large(a,at_point_center_x,at_point_center_y
+			- scen_data.scen_ter_types[t_d.terrain[x][y]].height_adj,to_whole_area_rect,lighting);
+	}
+		
 	if (/*is_force_barrier(x,y)*/  field_of_type[3]) {
 		a.which_sheet = 743;
 		a.which_icon = 6;//this probably doesn't look different enough - it's just another animation picture
@@ -1880,24 +1887,57 @@ void draw_town_objects_3D(short x, short y, short at_point_center_x, short at_po
 		place_icon_into_ter_3D_large(a,at_point_center_x,at_point_center_y
 			- scen_data.scen_ter_types[t_d.terrain[x][y]].height_adj,to_whole_area_rect,lighting);
 	}
+	if (/*is_facing_mirror(x,y)*/  field_of_type[8]) {
+		a.which_sheet = 790;
+		a.which_icon = 12;//this probably doesn't look different enough - it's just another animation picture
+		place_icon_into_ter_3D_large(a,at_point_center_x,at_point_center_y
+			- scen_data.scen_ter_types[t_d.terrain[x][y]].height_adj,to_whole_area_rect,lighting);
 	}
+	
+	}
+	
 	// draw stains
-	for (short j = 0; j < 8; j++) {
-		if (/*is_sfx(x,y,j)*/  field_of_type[j + 14]) {
+for (short j = 14; j < 22; j++) {
+	if ( field_of_type[j]) {
+
+		if(j == 14) {
 			a.which_sheet = 706;
-			a.which_icon = 3 + j;
-			if(a.which_icon == 8)
-				a.which_icon = 6;
-			else if(a.which_icon == 6 || a.which_icon == 7)
-				a.which_icon++;
-			else if(a.which_icon == 10) {
-				a.which_sheet = 707;
-				a.which_icon = 0;
-			}
+			a.which_icon = 3;
+		}
+		if(j == 15) {
+			a.which_sheet = 706;
+			a.which_icon = 4;
+		}
+		if(j == 16) {
+			a.which_sheet = 706;
+			a.which_icon = 5;
+		}
+		if(j == 17) {
+			a.which_sheet = 706;
+			a.which_icon = 7;
+		}
+		if(j == 18) {
+			a.which_sheet = 706;
+			a.which_icon = 8;
+		}
+		if(j == 19) {
+			a.which_sheet = 707;
+			a.which_icon = 2;
+		}
+		if(j == 20) {
+			a.which_sheet = 706;
+			a.which_icon = 9;
+		}
+		if(j == 21) {
+			a.which_sheet = 707;
+			a.which_icon = 0;
+		}
+
+		}
 			place_icon_into_ter_3D_large(a,at_point_center_x,at_point_center_y
 				- scen_data.scen_ter_types[t_d.terrain[x][y]].height_adj,to_whole_area_rect,lighting);
-		}
 	}
+	
 	// draw creatures
 			if ((hintbook_mode2 == 0) && (hintbook_mode3 == 0)) {
 	for (i = 0; i < NUM_TOWN_PLACED_CREATURES; i++)
@@ -2952,6 +2992,17 @@ void draw_ter_large()
 					a.which_icon = 41;
 					place_terrain_icon_into_ter_large(a,q,r);
 					}
+				if (is_oblique_mirror(loc_drawn.x,loc_drawn.y)) {
+					a.which_sheet = 689;
+					a.which_icon = 13;
+					place_terrain_icon_into_ter_large(a,q,r);
+					}
+				if (is_facing_mirror(loc_drawn.x,loc_drawn.y)) {
+					a.which_sheet = 689;
+					a.which_icon = 12;
+					place_terrain_icon_into_ter_large(a,q,r);
+					}
+
 					}
 
 				// draw stains
@@ -3661,6 +3712,17 @@ void draw_ter_medium()
 					a.which_icon = 41;
 					place_terrain_icon_into_ter_medium(a,q,r);
 					}
+				if (is_oblique_mirror(loc_drawn.x,loc_drawn.y)) {
+					a.which_sheet = 689;
+					a.which_icon = 13;
+					place_terrain_icon_into_ter_medium(a,q,r);
+					}
+				if (is_facing_mirror(loc_drawn.x,loc_drawn.y)) {
+					a.which_sheet = 689;
+					a.which_icon = 12;
+					place_terrain_icon_into_ter_medium(a,q,r);
+					}
+					
 					}
 					}
 					
@@ -5078,6 +5140,31 @@ void take_field_type(short i,short j,short field_type)
 				town.preset_fields[k].field_type = -1;
 				return;
 		}
+}
+
+Boolean is_oblique_mirror(short i,short j)
+{
+	return is_field_type(i,j,2);
+}
+void make_oblique_mirror(short i,short j)
+{
+	make_field_type(i,j,2);
+}
+void take_oblique_mirror(short i,short j)
+{
+	take_field_type(i,j,2);
+}
+Boolean is_facing_mirror(short i,short j)
+{
+	return is_field_type(i,j,8);
+}
+void make_facing_mirror(short i,short j)
+{
+	make_field_type(i,j,8);
+}
+void take_facing_mirror(short i,short j)
+{
+	take_field_type(i,j,8);
 }
 
 Boolean is_web(short i,short j)

@@ -110,8 +110,8 @@ short old_blades_available_dlog_buttons[NUM_DLOG_B] = {
 
 
 char *BOAFieldnames[22] = {
-		 "Unknown","Blocked","Unknown","Force Barrier","Fire Barrier","Web",
-		 "Crate","Barrel","Unknown","Unknown","Unknown","Unknown","Unknown",
+		 "Unknown","Blocked","Oblique Mirror","Force Barrier","Fire Barrier","Web",
+		 "Crate","Barrel","Facing Mirror","Unknown","Unknown","Unknown","Unknown",
 		 "Unknown","Small Blood Stain","Medium Blood Stain","Large Blood Stain",
 		 "Small Slime Pool","Large Slime Pool","Dried Blood","Bones","Rocks"};
 
@@ -3019,10 +3019,7 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 								}
 							}
 					}
-				if (wall_type == 0)
-					t_d.floor[i][j] = t_d.floor[i - 1][j];
-					else t_d.floor[i][j] = t_d.floor[i][j - 1];
-					
+
 				}
 			}
 		}
@@ -3396,7 +3393,7 @@ void port_outdoor_script(char *script_name,char *directory_id,short sector_x,sho
   short out_num = sector_y * scenario.out_width + sector_x;
 	sprintf(str,"//    Section %d: X = %d, Y = %d, name = %s.\r", out_num,sector_x, sector_y,boe_scen_text.out_strs[0]);
 	add_string(file_id,str);
-	add_string(file_id,"// This is the special encounter script for this town.");
+	add_string(file_id,"// This is the special encounter script for this section.");
 	add_string(file_id,"// The states INIT_STATE and START_STATE have");
 	add_string(file_id,"// meanings that are described in the documenation. States you write");
 	add_string(file_id,"// yourself should be numbered from 10-100.\r");
@@ -3458,6 +3455,7 @@ void port_town_script(char *script_name,char *directory_id,short which_town)
 			sprintf(str,"\t // %d,\"%s\"", 10 * which_town + i,boe_scen_text.talk_strs[which_slot = i]);
 			add_string(file_id,str);
 		}
+
 	add_string(file_id,"// This is the special encounter script for this town.");
 	add_string(file_id,"// The states INIT_STATE, EXIT_STATE, and START_STATE have");
 	add_string(file_id,"// meanings that are described in the documenation. States you write");
@@ -3482,7 +3480,8 @@ void port_town_script(char *script_name,char *directory_id,short which_town)
 				}
 			}
 		}
-	add_string(file_id,"\t// Any town entry states.");
+
+	add_string(file_id,"\r\t// Any town entry states.");
 	if (boe_town.spec_on_entry >= 0) {
 		add_string(file_id,"\tif (town_status(ME) < 3)");
 		add_short_string_to_file(file_id,"\t\tset_state_continue(",10 + boe_town.spec_on_entry,");");
@@ -3506,9 +3505,10 @@ void port_town_script(char *script_name,char *directory_id,short which_town)
 			}
 	add_string(file_id,"break;\r");
 
-	for (short i = 0; i < 100; i++)
+	for (short i = 0; i < 100; i++) {
 		if ((boe_town.specials[i].type > 0) || (boe_town.specials[i].jumpto > 0))
 			port_a_special_node(&boe_town.specials[i],i,file_id,1);
+			}
 
 	FSClose(file_id);
 }
@@ -3770,6 +3770,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
 				add_ish_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",250);");
 			break;
+
 		case 55: case 56: case 57: // display dialog
 			add_string(file_id,"\treset_dialog();");
 			for (short i = 0; i < 6; i++) {
@@ -3847,11 +3848,12 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				if (node->m2 >= 0) 
 					add_short_string_to_file(file_id,"\t\tchange_spec_item(",node->m2,",1);");
 				if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
-					add_big_string_to_file(file_id,"\t\tset_flag(",node->sd1,",",node->sd2,",",250,");");
+					add_ish_string_to_file(file_id,"\t\tset_flag(",node->sd1,",",node->sd2,",250);");
 					}			
 			add_string(file_id,"\t\t\t}");
 			add_short_string_to_file(file_id,"\t// Dialog picture number: ",node->pic,".");			
 			break;
+
 		case 61: // place outdoor enc
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
 				add_ish_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",250);");
@@ -3865,9 +3867,9 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 		case 63: // trap
 			add_string(file_id,"// OBSOLETE NODE: Traps are now handled by terrain type scripts.");
 			add_string(file_id,"// Use the predefined script trap.txt.");
-			add_short_string_to_file(file_id,"// Trap disarming penalty, 0 thru 100, = (",node->ex2a,");");
-			add_short_string_to_file(file_id,"// Trap type = (",node->ex1a,");");			
-			add_short_string_to_file(file_id,"// Trap severity, 0 thru 3, = (",node->ex1b,");");			
+			add_short_string_to_file(file_id,"// Trap disarming penalty, 0 thru 100, = ",node->ex2a,".");
+			add_short_string_to_file(file_id,"// Trap type = ",node->ex1a,".");			
+			add_short_string_to_file(file_id,"// Trap severity, 0 thru 3, = ",node->ex1b,".");
 			break;
 
 		case 80: // select pc 
@@ -3890,7 +3892,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				case 81: // damage
 					add_ish_string_to_file(file_id,"\t\t\tr1 = get_ran(",node->ex1a,",1,",node->ex1b,");");
 					add_ish_string_to_file(file_id,"\t\t\tdamage_char(i,r1 + ",node->ex2a,",",node->ex2b,");");
-			add_string(file_id,"\t//   Translation problems may affect damage types 6 and 7, rightmost number above.");							
+					add_string(file_id,"\t//   Translation problems may affect damage types 6 and 7, rightmost number above.");							
 					break;
 				case 82: // change health
 					if (node->ex1b == 0)
@@ -4116,7 +4118,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_short_string_to_file(file_id,"\t\tchange_coins(-",node->ex1a,");");			
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");			
-				else add_string(file_id,"\t\tend();");			
+			else add_string(file_id,"\t\tend();");			
 			add_string(file_id,"\t\t}");
 			break;
 		case 143: // has food
@@ -4124,19 +4126,19 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_short_string_to_file(file_id,"\t// if amount of food >= ",node->ex1a,", this much is taken.");
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\t// set_state_continue(",node->ex1b + 10,");");			
-				else add_string(file_id,"\t\t// end();");			
+			else add_string(file_id,"\t\t// end();");			
 			
 		case 144: // item class on space, take
-			add_big_string_to_file(file_id,"\tif (take_item_of_class_on_spot(",node->ex1a,",",node->ex1b,",",node->ex2a,") > 0)");
+				add_big_string_to_file(file_id,"\tif (take_item_of_class_on_spot(",node->ex1a,",",node->ex1b,",",node->ex2a,") > 0)");
 				if (node->ex2b >= 0)			
-				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");			
+					add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");			
 				else add_string(file_id,"\t\tend();");			
 			break;
 		case 145: // has item of class, take
 			add_short_string_to_file(file_id,"\tif (has_item_of_class(",node->ex1a,",1) > 0)");
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");			
-				else add_string(file_id,"\t\tend();");			
+			else add_string(file_id,"\t\tend();");			
 			break;
 		case 146: // equip item of class, take
 			add_string(file_id,"\ti = 0;");
@@ -4152,7 +4154,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_short_string_to_file(file_id,"\tif (what_day_of_scenario() >= ",node->ex1a,")");
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");			
-				else add_string(file_id,"\t\tend();");			
+			else add_string(file_id,"\t\tend();");			
 			break;
 		case 148: case 149: // any barrels/crates
 			add_string(file_id,"\ti = 0;");		
@@ -4162,7 +4164,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_string(file_id,"\t\twhile (j < current_town_size()) {");		
 			if (node->type == 148)
 				add_string(file_id,"\t\t\tif (is_object_on_space(i,j,1))");					
-				else add_string(file_id,"\t\t\tif (is_object_on_space(i,j,2))");					
+			else add_string(file_id,"\t\t\tif (is_object_on_space(i,j,2))");					
 			add_string(file_id,"\t\t\t\tk = 1;");					
 			add_string(file_id,"\t\t\tj = j + 1;");					
 			add_string(file_id,"\t\t\t}");					
@@ -4176,10 +4178,10 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 				add_ish_string_to_file(file_id,"\tif ((what_day_of_scenario() >= ",node->ex1a,") && (day_event_happened(",node->ex1b," < 0))"); 
 				add_short_string_to_file(file_id,"\t\t\tset_state_continue(",node->ex2b + 10,");");			
 				}
-				else {
-					add_short_string_to_file(file_id,"\tif (what_day_of_scenario() >= ",node->ex1a,")");
-					add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");			
-					}
+			else {
+				add_short_string_to_file(file_id,"\tif (what_day_of_scenario() >= ",node->ex1a,")");
+				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex2b + 10,");");			
+				}
 			break;
 		case 151: // Cave Lore present
 			add_string(file_id,"// OBSOLETE NODE: Cave Lore Trait doesn't exist anymore.");
@@ -4218,7 +4220,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_big_string_to_file(file_id,"\tif (get_flag(",node->sd1,",",node->sd2,") == ",node->ex1a,")");
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\tset_state_continue(",node->ex1b + 10,");");			
-				else add_string(file_id,"\t\tend();");			
+			else add_string(file_id,"\t\tend();");			
 			break;
 		case 170: // town host
 			add_string(file_id,"\tmake_town_hostile();");
@@ -4636,6 +4638,7 @@ void port_dialogue_node(short *current_dialogue_node,short which_slot,FILE *file
 	
 	get_bl_str(str,3,which_node * 2 + 40);
 	get_bl_str(str2,3,which_node * 2 + 40 + 1);
+	
 	switch (boe_talk_data.talk_nodes[which_node].type) {
 		case 0: // talk
 			if (strlen(str) > 0) 

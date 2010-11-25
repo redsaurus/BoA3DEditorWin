@@ -915,7 +915,7 @@ void handle_town_menu(int item_hit)
 			if (fancy_choice_dialog(883,0) == 2)
 				break;
 			for (short i = 0; i < 60; i++) {
-			if ((town.preset_fields[i].field_type >= 0) && (town.preset_fields[i].field_type < 8)) {
+			if ((town.preset_fields[i].field_type >= 0) && (town.preset_fields[i].field_type < 9)) {
 			town.preset_fields[i].field_loc.x = 0;
 			town.preset_fields[i].field_loc.y = 0;
 			town.preset_fields[i].field_type = -1;
