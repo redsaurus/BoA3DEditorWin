@@ -978,8 +978,8 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							break;		
 						case 106: // make town entrance
 							if (editing_town == TRUE) {
+								set_cursor(15);
 								overall_mode = 74;
-								set_cursor(0);
 								set_string("Place Oblique Mirror","");
 								break;
 								}
@@ -990,8 +990,8 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							break;		
 						case 107: // edit town entrance
 							if (editing_town == TRUE) {
+								set_cursor(16);
               	overall_mode = 75;
-								set_cursor(0);
 								set_string("Place Facing Mirror","");
 								break;
 								}
@@ -4069,7 +4069,7 @@ void shut_down_menus()
 
 		for (short i = 101; i < 109; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 201; i < 221; i++)
+		for (short i = 201; i < 223; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 301; i < 320; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
@@ -4087,7 +4087,7 @@ void shut_down_menus()
 	else {
 		EnableMenuItem(menu,2,MF_ENABLED | MF_BYCOMMAND);
 		EnableMenuItem(menu,3,MF_ENABLED | MF_BYCOMMAND);
-		for (short i = 201; i < 221; i++)
+		for (short i = 201; i < 223; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 
 	}

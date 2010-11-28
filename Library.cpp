@@ -958,7 +958,7 @@ void boat_record_type::clear_boat_record_type()
 	boat_loc_in_sec.x = 0; boat_loc_in_sec.y = 0;
 	boat_sector.x = 0; boat_sector.y = 0;
 
-	 which_town = 0;
+	 which_town = -1;
 	 exists = FALSE;
 	property = FALSE;
 }
@@ -974,7 +974,7 @@ void horse_record_type::clear_horse_record_type()
 	horse_loc_in_sec.x = 0; horse_loc_in_sec.y = 0;
 	horse_sector.x = 0; horse_sector.y = 0;
 
-	 which_town = 0;
+	 which_town = -1;
 	 exists = FALSE;
 	property = FALSE;
 }

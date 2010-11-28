@@ -32,7 +32,7 @@ short store_cur_t ;
 // short num_specs[3] = {256,60,100};
 Boolean store_strict_string;
 
-HCURSOR cursors[15] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
+HCURSOR cursors[17] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
 
 // function prototype
 
@@ -382,7 +382,7 @@ void set_cursor(short which_c)
 
 	if (cursors[0] == NULL) {
 // q_3DModStart
-		for (i = 0; i < 15; i++)
+		for (i = 0; i < 17; i++)
 			cursors[i] = LoadCursor(store_hInstance,MAKEINTRESOURCE(130 + i));
 // q_3DModEnd
 	}

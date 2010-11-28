@@ -808,6 +808,12 @@ void handle_campaign_menu(int item_hit)
 				redraw_screen();
 			}
 			break;
+		case 21:
+			edit_horses();
+			break;
+		case 22:
+			edit_boats();
+			break;
 		}
 }
 
@@ -1424,6 +1430,8 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam)
 		case 803: edit_scen_details_event_filter(item_hit); break;
 		case 804: edit_scen_intro_event_filter(item_hit); break;
 		case 805: edit_scen_intro_pic_event_filter(item_hit); break;
+		case 808: edit_horses_event_filter (item_hit); break;
+		case 809: edit_boats_event_filter (item_hit); break;
 		case 810: edit_add_town_event_filter(item_hit); break;
 		case 812: edit_item_placement_event_filter(item_hit); break;
 		case 820: choose_text_res_event_filter(item_hit); break;

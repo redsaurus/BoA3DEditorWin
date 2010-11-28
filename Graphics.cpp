@@ -528,7 +528,11 @@ void set_up_terrain_buttons()
 	// palette buttons
 
 	const RECT kRealisticButtonRect = {PALETTE_BUT_WIDTH * 7,PALETTE_BUT_HEIGHT * 6,
-				PALETTE_BUT_WIDTH * (7 + 1),PALETTE_BUT_HEIGHT * (6 + 1) + 1};
+				PALETTE_BUT_WIDTH * 8,PALETTE_BUT_HEIGHT * 7 + 1};
+	const RECT kObliqueButtonRect = {PALETTE_BUT_WIDTH * 5,PALETTE_BUT_HEIGHT * 6,
+				PALETTE_BUT_WIDTH * 6,PALETTE_BUT_HEIGHT * 7 + 1};
+	const RECT kFacingButtonRect = {PALETTE_BUT_WIDTH * 6,PALETTE_BUT_HEIGHT * 6,
+				PALETTE_BUT_WIDTH * 7,PALETTE_BUT_HEIGHT * 7 + 1};
 
 	for (i = 0; i < 8; i++){
 		for (j = 0; j < ((editing_town == TRUE) ? 6 : 3); j++) {
@@ -537,6 +541,11 @@ void set_up_terrain_buttons()
 			RECT to_rect = palette_buttons[i][j];
 			if(cur_viewing_mode >= 10 && i == 0 && j == 1)		// realistic mode palette icon
 				from_rect = kRealisticButtonRect;
+			if(editing_town == TRUE && i == 6 && j == 1)
+				from_rect = kObliqueButtonRect;
+			if(editing_town == TRUE && i == 7 && j == 1)
+				from_rect = kFacingButtonRect;
+
 			to_rect.right++;
 			from_rect.right++;
 			
@@ -1015,6 +1024,7 @@ void place_ter_icons_3D(location which_outdoor_sector, outdoor_record_type *draw
 			place_ter_icon_on_tile_3D(at_point_center_x,at_point_center_y,small_icon_position,22,to_whole_area_rect);
 			small_icon_position++;
 		}
+
 	}
 			
 	// Outdoor mode: draw tiny icons
@@ -1836,7 +1846,8 @@ void draw_town_objects_3D(short x, short y, short at_point_center_x, short at_po
 	graphic_id_type a;
 	Boolean field_of_type[22] = {};//initialize to 0 (FALSE)
 	short ftype;
-
+	location loc_drawn;
+	Boolean same_point(location l1,location l2);
 	short k;
 
 			if ((editing_town) && (hintbook_mode2 == 0) && (hintbook_mode5 == 0)) {
@@ -1893,7 +1904,21 @@ void draw_town_objects_3D(short x, short y, short at_point_center_x, short at_po
 		place_icon_into_ter_3D_large(a,at_point_center_x,at_point_center_y
 			- scen_data.scen_ter_types[t_d.terrain[x][y]].height_adj,to_whole_area_rect,lighting);
 	}
-	
+
+				for (short i = 0; i < 30; i++)
+				if ((x == scenario.scen_boats[i].boat_loc.x) && (y == scenario.scen_boats[i].boat_loc.y) && (cur_town == scenario.scen_boats[i].which_town)) {
+					a.which_sheet = 741;
+					a.which_icon = 7;
+					place_icon_into_ter_3D_large(a,at_point_center_x,at_point_center_y
+			- scen_data.scen_ter_types[t_d.terrain[x][y]].height_adj,to_whole_area_rect,lighting);
+					}
+				for (short i = 0; i < 30; i++)
+				if ((x == scenario.scen_horses[i].horse_loc.x) && (y == scenario.scen_horses[i].horse_loc.y) && (cur_town == scenario.scen_horses[i].which_town)) {
+					a.which_sheet = 768;
+					a.which_icon = 3;
+					place_icon_into_ter_3D_large(a,at_point_center_x,at_point_center_y
+			- scen_data.scen_ter_types[t_d.terrain[x][y]].height_adj,to_whole_area_rect,lighting);
+					}
 	}
 	
 	// draw stains
@@ -1902,7 +1927,7 @@ for (short j = 14; j < 22; j++) {
 
 		if(j == 14) {
 			a.which_sheet = 706;
-			a.which_icon = 3;
+			a.which_icon = 4;
 		}
 		if(j == 15) {
 			a.which_sheet = 706;
@@ -3002,6 +3027,18 @@ void draw_ter_large()
 					a.which_icon = 12;
 					place_terrain_icon_into_ter_large(a,q,r);
 					}
+				for (short i = 0; i < 30; i++)
+				if ((same_point(loc_drawn,scenario.scen_boats[i].boat_loc)) && (cur_town == scenario.scen_boats[i].which_town)){
+					a.which_sheet = 683;
+					a.which_icon = 17;
+					place_terrain_icon_into_ter_large(a,q,r);
+					}
+				for (short i = 0; i < 30; i++)
+				if ((same_point(loc_drawn,scenario.scen_horses[i].horse_loc)) && (cur_town == scenario.scen_horses[i].which_town)){
+					a.which_sheet = 686;
+					a.which_icon = 83;
+					place_terrain_icon_into_ter_large(a,q,r);
+					}
 
 					}
 
@@ -3065,7 +3102,7 @@ void draw_ter_large()
 
 			// sign numbers, placed special numbers, (town) terrain script numbers,
 			if (numerical_display_mode == 0)
-				sprintf(str,"");
+				 sprintf(str,"");
 			if (numerical_display_mode == 1)
 				sprintf(str,"%d",floor_to_draw);
 			if (numerical_display_mode == 2)
@@ -3722,7 +3759,19 @@ void draw_ter_medium()
 					a.which_icon = 12;
 					place_terrain_icon_into_ter_medium(a,q,r);
 					}
-					
+				for (short i = 0; i < 30; i++)
+				if ((same_point(loc_drawn,scenario.scen_boats[i].boat_loc)) && (cur_town == scenario.scen_boats[i].which_town)){
+					a.which_sheet = 683;
+					a.which_icon = 17;
+					place_terrain_icon_into_ter_medium(a,q,r);
+					}
+				for (short i = 0; i < 30; i++)
+				if ((same_point(loc_drawn,scenario.scen_horses[i].horse_loc)) && (cur_town == scenario.scen_horses[i].which_town)){
+					a.which_sheet = 686;
+					a.which_icon = 83;
+					place_terrain_icon_into_ter_medium(a,q,r);
+					}
+
 					}
 					}
 					
@@ -4736,7 +4785,8 @@ void place_right_buttons( /* short mode */ )
 				OffsetRect(&from_rect,PALETTE_BUT_WIDTH * 7,PALETTE_BUT_HEIGHT * 6);
 			else
 				OffsetRect(&from_rect,PALETTE_BUT_WIDTH * i,PALETTE_BUT_HEIGHT * j);
-
+// "realistic mode palette icon - not working", no wonder it is not working, this code does nothing
+// the palette buttons are handled up the page in the function void set_up_terrain_buttons()
 			to_rect.right++;
 			from_rect.right++;
 			

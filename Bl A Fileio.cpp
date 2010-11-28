@@ -818,6 +818,16 @@ void load_campaign()
 		return;
 		}
 	set_up_terrain_buttons();
+	
+				for (short i = 0; i < 30; i++) {
+				if ((scenario.scen_boats[i].boat_loc.x == 0) && (scenario.scen_boats[i].boat_loc.y == 0) && (scenario.scen_boats[i].which_town == 0))
+					scenario.scen_boats[i].which_town = -1;
+					}
+				for (short i = 0; i < 30; i++) {
+				if ((scenario.scen_horses[i].horse_loc.x == 0) && (scenario.scen_horses[i].horse_loc.y == 0) && (scenario.scen_horses[i].which_town == 0))
+					scenario.scen_horses[i].which_town = -1;
+					}
+
 }
 
 // returns the name fo the currently edited scenario, with the extension stripped off
@@ -1364,6 +1374,27 @@ void scenariotext_data_dump()
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
+
+	sprintf((char *)get_text,"\r\r//  Scenario Boat Records\r");
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+			for (short i = 0; i < 30; i++) {
+				if(scenario.scen_boats[i].which_town >= 0) {
+			sprintf((char *)get_text,"  		create_boat(%d,%d,%d,%d,%d);\r",i,scenario.scen_boats[i].which_town,scenario.scen_boats[i].boat_loc.x,scenario.scen_boats[i].boat_loc.y,scenario.scen_boats[i].property);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+	}
+	sprintf((char *)get_text,"\r//  Scenario Horse Records\r");
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+			for (short i = 0; i < 30; i++) {
+			if(scenario.scen_horses[i].which_town >= 0) {
+			sprintf((char *)get_text,"  		create_horse(%d,%d,%d,%d,%d);\r",i,scenario.scen_horses[i].which_town,scenario.scen_horses[i].horse_loc.x,scenario.scen_horses[i].horse_loc.y,scenario.scen_horses[i].property);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+	}
 
 		sprintf((char *)get_text,"  \r\r");
 		len = (long) (strlen((char *)get_text));

@@ -1,1 +1,1 @@
-#define kVersion "  Version November  2010"
+#define kVersion "   Version:  28  November  2010"

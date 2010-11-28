@@ -772,7 +772,6 @@ public:
 	Boolean exists,property;
 	} ;
 
-
 class scenario_data_type {
 public:
 	scenario_data_type();
@@ -1737,6 +1736,15 @@ void edit_placed_script_event_filter (short item_hit);
 void edit_placed_script(short which_m);
 void edit_placed_monst_event_filter (short item_hit);
 void edit_placed_monst(short which_m);
+void edit_boats();
+void edit_boats_event_filter (short item_hit);
+void put_boats_in_dlog();
+Boolean save_boats();
+void edit_horses();
+void edit_horses_event_filter (short item_hit);
+void put_horses_in_dlog();
+Boolean save_horses();
+
 // void put_placed_terrain_script_in_dlog(short which_m);
 void edit_sign(short which_sign);
 void get_a_number_event_filter (short item_hit);
