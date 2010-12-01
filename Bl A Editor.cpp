@@ -662,6 +662,8 @@ void handle_edit_menu(int item_hit)
 
 void handle_campaign_menu(int item_hit)
 {
+		 short i;
+		 
 	switch (item_hit) {
 		case 1: // edit town
 			small_any_drawn = FALSE;
@@ -813,6 +815,26 @@ void handle_campaign_menu(int item_hit)
 			break;
 		case 22:
 			edit_boats();
+			break;
+		case 23: // Place a Horse
+			set_string("Place a Horse in this town","Click on the location");
+			overall_mode = 77;
+			break;
+		case 24: // Place a Boat
+			set_string("Place a Boat in this town","Click on the location");
+			overall_mode = 76;
+			break;
+		case 25: // Clear All Horses
+			if (fancy_choice_dialog(890,0) == 2)
+				break;
+				for (i = 0; i < 30; i++)
+				scenario.scen_horses[i].clear_horse_record_type();
+			break;
+		case 26: // Clear All Boats
+			if (fancy_choice_dialog(891,0) == 2)
+				break;
+				for (i = 0; i < 30; i++)
+				scenario.scen_boats[i].clear_boat_record_type();
 			break;
 		}
 }

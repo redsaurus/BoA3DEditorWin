@@ -44,6 +44,8 @@ IDC_CURSOR143           CURSOR                  "resources/barrel.cur"
 IDC_CURSOR144           CURSOR                  "resources/barrier.cur"
 IDC_CURSOR145           CURSOR                  "resources/oblique.cur"
 IDC_CURSOR146           CURSOR                  "resources/facing.cur"
+IDC_CURSOR147           CURSOR                  "resources/boat.cur"
+IDC_CURSOR148           CURSOR                  "resources/horse.cur"
 /////////////////////////////////////////////////////////////////////////////
 //
 // Icon
@@ -107,7 +109,11 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Advanced:",                   211
 				MENUITEM "  Edit &Horses", 221
-  			MENUITEM "  &Edit Boats", 222
+  			MENUITEM "  Place a &Horse", 223
+  			MENUITEM "  Clear All &Horses", 225
+				MENUITEM "  &Edit Boats", 222
+  			MENUITEM "  Plac&e a Boat", 224
+  			MENUITEM "  Cl&ear All Boats", 226
         MENUITEM "  Reload &Scenario Data Script",    212
         MENUITEM "  Clean Up &Walls",            213
         MENUITEM "  &Import Town",               214
@@ -407,110 +413,124 @@ BEGIN
     LTEXT           "*Scenario icon number:",7,344,49,149,14
 END
 
-808 DIALOG 10,10,576,349
+808 DIALOG 10,10,610,449
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-	   DEFPUSHBUTTON "OK",1,292,337,31,10,WS_GROUP
-     LTEXT "6_0",2,214,143,67,16
-     LTEXT "6_0",3,214,171,67,16
-     LTEXT "6_0",4,214,199,67,16
-     LTEXT "6_0",5,214,227,67,16
-     LTEXT "6_0",6,214,255,67,16
-     LTEXT "6_0",7,214,283,67,16
-     LTEXT "6_0",8,329,143,39,16
-     LTEXT "6_0",9,329,171,39,16
-     LTEXT "6_0",10,329,199,39,16
-     LTEXT "6_0",11,329,227,39,16
-     LTEXT "6_0",12,329,255,39,16
-     LTEXT "6_0",13,329,283,39,16
-     LTEXT "6_0",14,410,143,39,16
-     LTEXT "6_0",15,410,171,39,16
-     LTEXT "6_0",16,410,199,39,16
-     LTEXT "6_0",17,410,227,39,16
-     LTEXT "6_0",18,410,255,39,16
-     LTEXT "6_0",19,410,283,39,16
-     LTEXT "1_63",20,473,314,75,16
-     LTEXT "0_2",21,52,314,63,16
-     LTEXT "0_3",22,115,314,75,16
-     LTEXT "*",23,152,143,46,14
-     LTEXT "*",24,152,171,46,14
-     LTEXT "*",25,153,199,46,14
-     LTEXT "*",26,153,227,46,14
-     LTEXT "*",27,153,254,46,14
-     LTEXT "*",28,153,282,46,14
-     LTEXT "5_716",29,8,8,36,36
-     LTEXT "~Edit Horses",30,50,6,256,17
-     LTEXT "There can be up to 30 horses in your scenario,each of which must start in some town. The horses can start as the parties property,if you want.",31,50,25,479,39
-     LTEXT "Leave the town at -1 to make the horse not exist. Note that horses can't walk over certain terrain types (like floors). Be careful not to place horses where they're stuck and can't get out. This makes them sad.",32,50,65,479,41
-     LTEXT "*Town to start in",33,199,113,106,14
-     LTEXT "*X Location in town",34,310,107,76,25
-     LTEXT "*Y Location in town",35,392,107,81,26
-     LTEXT "*Horse number",36,50,143,97,14
-     LTEXT "*Horse number",37,50,171,97,14
-     LTEXT "*Horse number",38,51,199,97,14
-     LTEXT "*Horse number",39,51,227,97,14
-     LTEXT "*Horse number",40,51,254,97,14
-     LTEXT "*Horse number",41,51,282,97,14
-     LTEXT "*Not Party Property",42,477,107,70,26
-     LTEXT "2_0",43,488,143,46,14
-     LTEXT "2_0",44,488,171,46,14
-     LTEXT "2_0",45,488,199,46,14
-     LTEXT "2_0",46,488,227,46,14
-     LTEXT "2_0",47,488,255,46,14
-     LTEXT "2_0",48,488,283,46,14
+   DEFPUSHBUTTON "OK", 1, 272, 357, 31, 10, WS_GROUP
+     LTEXT "6_0", 2, 184, 163, 67, 16
+     LTEXT "6_0", 3, 184, 191, 67, 16
+     LTEXT "6_0", 4, 184, 219, 67, 16
+     LTEXT "6_0", 5, 184, 247, 67, 16
+     LTEXT "6_0", 6, 184, 275, 67, 16
+     LTEXT "6_0", 7, 184, 303, 67, 16
+     LTEXT "6_0", 8, 299, 163, 39, 16
+     LTEXT "6_0", 9, 299, 191, 39, 16
+     LTEXT "6_0", 10, 299, 219, 39, 16
+     LTEXT "6_0", 11, 299, 247, 39, 16
+     LTEXT "6_0", 12, 299, 275, 39, 16
+     LTEXT "6_0", 13, 299, 303, 39, 16
+     LTEXT "6_0", 14, 380, 163, 39, 16
+     LTEXT "6_0", 15, 380, 191, 39, 16
+     LTEXT "6_0", 16, 380, 219, 39, 16
+     LTEXT "6_0", 17, 380, 247, 39, 16
+     LTEXT "6_0", 18, 380, 275, 39, 16
+     LTEXT "6_0", 19, 380, 303, 39, 16
+     LTEXT "1_63", 20, 520, 394, 75, 16
+     LTEXT "0_2", 21, 32, 394, 63, 16
+     LTEXT "0_3", 22, 95, 394, 75, 16
+     LTEXT "*", 23, 132, 163, 46, 14
+     LTEXT "*", 24, 132, 191, 46, 14
+     LTEXT "*", 25, 133, 219, 46, 14
+     LTEXT "*", 26, 133, 247, 46, 14
+     LTEXT "*", 27, 133, 274, 46, 14
+     LTEXT "*", 28, 133, 302, 46, 14
+     LTEXT "5_716", 29, -12, 28, 36, 36
+     LTEXT "~Edit Horses", 30, 30, 26, 256, 17
+     LTEXT "There can be up to 30 horses in your scenario, each of which must start in some town. The horses can start as the party's property, if you want.", 31, 30, 45, 479, 30
+     LTEXT "Leave the town at -1 to make the horse not exist. |Note that horses can't walk over certain terrain types (like floors). Be careful not to place horses where they're stuck and can't escape. This makes them sad.", 32, 30, 77, 479, 41
+     LTEXT "*Town to start in", 33, 169, 133, 106, 14
+     LTEXT "*X Location in town", 34, 280, 127, 76, 25
+     LTEXT "*Y Location in town", 35, 362, 127, 81, 26
+     LTEXT "*Horse number", 36, 30, 163, 97, 14
+     LTEXT "*Horse number", 37, 30, 191, 97, 14
+     LTEXT "*Horse number", 38, 31, 219, 97, 14
+     LTEXT "*Horse number", 39, 31, 247, 97, 14
+     LTEXT "*Horse number", 40, 31, 274, 97, 14
+     LTEXT "*Horse number", 41, 31, 302, 97, 14
+     LTEXT "*Not Party Property", 42, 447, 127, 70, 26
+     LTEXT "2_0", 43, 458, 163, 46, 14
+     LTEXT "2_0", 44, 458, 191, 46, 14
+     LTEXT "2_0", 45, 458, 219, 46, 14
+     LTEXT "2_0", 46, 458, 247, 46, 14
+     LTEXT "2_0", 47, 458, 275, 46, 14
+     LTEXT "2_0", 48, 458, 303, 46, 14
+     LTEXT "0_53", 49, 520, 161, 66, 23
+     LTEXT "0_53", 50, 520, 189, 66, 23
+     LTEXT "0_53", 51, 520, 217, 66, 23
+     LTEXT "0_53", 52, 520, 245, 66, 23
+     LTEXT "0_53", 53, 520, 273, 66, 23
+     LTEXT "0_53", 54, 520, 301, 66, 23
+     LTEXT "This collection of horse records will have no effect in the game itself, unless you insert the printout into the Start scen state of your scenario. Printout is found at the bottom of the file created by the Write Scenario Text To Text File command.", 55, 30, 334, 479, 41
 END
 
-809 DIALOG 10,10,572,297
+809 DIALOG 10,10,610,449
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-	   DEFPUSHBUTTON "OK",1,292,337,31,10,WS_GROUP
-     LTEXT "6_0",2,214,100,67,16
-     LTEXT "6_0",3,214,128,67,16
-     LTEXT "6_0",4,214,156,67,16
-     LTEXT "6_0",5,214,184,67,16
-     LTEXT "6_0",6,214,212,67,16
-     LTEXT "6_0",7,214,240,67,16
-     LTEXT "6_0",8,329,100,39,16
-     LTEXT "6_0",9,329,128,39,16
-     LTEXT "6_0",10,329,156,39,16
-     LTEXT "6_0",11,329,184,39,16
-     LTEXT "6_0",12,329,212,39,16
-     LTEXT "6_0",13,329,240,39,16
-     LTEXT "6_0",14,410,100,39,16
-     LTEXT "6_0",15,410,128,39,16
-     LTEXT "6_0",16,410,156,39,16
-     LTEXT "6_0",17,410,184,39,16
-     LTEXT "6_0",18,410,212,39,16
-     LTEXT "6_0",19,410,240,39,16
-     LTEXT "1_63",20,478,268,68,16
-     LTEXT "*",21,381,268,75,16
-     LTEXT "0_2",22,51,268,63,16
-     LTEXT "0_3",23,114,268,75,16
-     LTEXT "*",24,152,100,46,14
-     LTEXT "*",25,152,128,46,14
-     LTEXT "*",26,153,156,46,14
-     LTEXT "*",27,153,184,46,14
-     LTEXT "*",28,153,211,46,14
-     LTEXT "*",29,153,239,46,14
-     LTEXT "5_716",30,8,8,36,36
-     LTEXT "~Edit Boats",31,50,6,256,17
-     LTEXT "There can be up to 30 boats in your scenario,each of which must start in some town. The boats can start as the party's property,if you want. If the town is left at -1,the boat won't exist.",32,50,25,480,38
-     LTEXT "*Town to start in",33,199,70,106,14
-     LTEXT "*X Location in town",34,310,64,76,25
-     LTEXT "*Y Location in town",35,392,64,81,26
-     LTEXT "*Boat number",36,50,100,97,14
-     LTEXT "*Boat number",37,50,128,97,14
-     LTEXT "*Boat number",38,51,156,97,14
-     LTEXT "*Boat number",39,51,184,97,14
-     LTEXT "*Boat number",40,51,211,97,14
-     LTEXT "*Boat number",41,51,239,97,14
-     LTEXT "*Not Party Property",42,477,64,69,26
-     LTEXT "2_0",43,488,100,46,14
-     LTEXT "2_0",44,488,128,46,14
-     LTEXT "2_0",45,488,156,46,14
-     LTEXT "2_0",46,488,184,46,14
-     LTEXT "2_0",47,488,212,46,14
-     LTEXT "2_0",48,488,240,46,14
+   DEFPUSHBUTTON "OK", 1, 272, 357, 31, 10, WS_GROUP
+     LTEXT "6_0", 2, 184, 163, 67, 16
+     LTEXT "6_0", 3, 184, 191, 67, 16
+     LTEXT "6_0", 4, 184, 219, 67, 16
+     LTEXT "6_0", 5, 184, 247, 67, 16
+     LTEXT "6_0", 6, 184, 275, 67, 16
+     LTEXT "6_0", 7, 184, 303, 67, 16
+     LTEXT "6_0", 8, 299, 163, 39, 16
+     LTEXT "6_0", 9, 299, 191, 39, 16
+     LTEXT "6_0", 10, 299, 219, 39, 16
+     LTEXT "6_0", 11, 299, 247, 39, 16
+     LTEXT "6_0", 12, 299, 275, 39, 16
+     LTEXT "6_0", 13, 299, 303, 39, 16
+     LTEXT "6_0", 14, 380, 163, 39, 16
+     LTEXT "6_0", 15, 380, 191, 39, 16
+     LTEXT "6_0", 16, 380, 219, 39, 16
+     LTEXT "6_0", 17, 380, 247, 39, 16
+     LTEXT "6_0", 18, 380, 275, 39, 16
+     LTEXT "6_0", 19, 380, 303, 39, 16
+     LTEXT "1_63", 20, 520, 394, 75, 16
+     LTEXT "0_2", 21, 32, 394, 63, 16
+     LTEXT "0_3", 22, 95, 394, 75, 16
+     LTEXT "*", 23, 132, 163, 46, 14
+     LTEXT "*", 24, 132, 191, 46, 14
+     LTEXT "*", 25, 133, 219, 46, 14
+     LTEXT "*", 26, 133, 247, 46, 14
+     LTEXT "*", 27, 133, 274, 46, 14
+     LTEXT "*", 28, 133, 302, 46, 14
+     LTEXT "5_716", 29, -12, 28, 36, 36
+     LTEXT "~Edit Boats", 30, 30, 26, 256, 17
+     LTEXT "There can be up to 30 boats in your scenario, each of which must start in some town. The boats can start as the party's property, if you want.", 31, 30, 45, 479, 30
+     LTEXT "Leave the town at -1 to make the boat not exist.", 32, 30, 77, 479, 41
+     LTEXT "*Town to start in", 33, 169, 133, 106, 14
+     LTEXT "*X Location in town", 34, 280, 127, 76, 25
+     LTEXT "*Y Location in town", 35, 362, 127, 81, 26
+     LTEXT "*Boat number", 36, 30, 163, 97, 14
+     LTEXT "*Boat number", 37, 30, 191, 97, 14
+     LTEXT "*Boat number", 38, 31, 219, 97, 14
+     LTEXT "*Boat number", 39, 31, 247, 97, 14
+     LTEXT "*Boat number", 40, 31, 274, 97, 14
+     LTEXT "*Boat number", 41, 31, 302, 97, 14
+     LTEXT "*Not Party Property", 42, 447, 127, 70, 26
+     LTEXT "2_0", 43, 458, 163, 46, 14
+     LTEXT "2_0", 44, 458, 191, 46, 14
+     LTEXT "2_0", 45, 458, 219, 46, 14
+     LTEXT "2_0", 46, 458, 247, 46, 14
+     LTEXT "2_0", 47, 458, 275, 46, 14
+     LTEXT "2_0", 48, 458, 303, 46, 14
+     LTEXT "0_53", 49, 520, 161, 66, 23
+     LTEXT "0_53", 50, 520, 189, 66, 23
+     LTEXT "0_53", 51, 520, 217, 66, 23
+     LTEXT "0_53", 52, 520, 245, 66, 23
+     LTEXT "0_53", 53, 520, 273, 66, 23
+     LTEXT "0_53", 54, 520, 301, 66, 23
+     LTEXT "This collection of boat records will have no effect in the game itself, unless you insert the printout into the Start scen state of your scenario. Printout is found at the bottom of the file created by the Write Scenario Text To Text File command.", 55, 30, 334, 479, 41
 END
 
 810 DIALOG  10, 10, 521, 434
@@ -1618,6 +1638,22 @@ BEGIN
     LTEXT           "1_63",1,228,89,66,20
     LTEXT           "0_5",2,162,89,62,20
     LTEXT           "This will list all item placement shortcuts, variable town entries and introductory text in a file called '(Scenario Name) - Scenario Text and Data.txt'.",3,22,21,271,66
+END
+
+890 DIALOG  10, 10, 341, 91
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,216,58,66,20
+    LTEXT           "0_5",2,150,58,62,20
+    LTEXT           "Do you want to erase all horses in your scenario?",3,26,20,258,32
+END
+
+891 DIALOG  10, 10, 341, 91
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,216,58,66,20
+    LTEXT           "0_5",2,150,58,62,20
+    LTEXT           "Do you want to erase all boats in your scenario?",3,26,20,258,32
 END
 
 970 DIALOG 10, 10, 368, 145

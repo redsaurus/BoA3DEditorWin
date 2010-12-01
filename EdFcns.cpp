@@ -1792,27 +1792,27 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				if(!object_sticky_draw)
 					reset_drawing_mode(); 
 				break;		
-		case 62: // 62-66 - barrels, atc
+		case 62: // 62-66 - barrels, etc
 				make_web(spot_hit.x,spot_hit.y); 
 				if(!object_sticky_draw)
 					reset_drawing_mode(); 
 				break;		
-		case 63: // 62-66 - barrels, atc
+		case 63: // 62-66 - barrels, etc
 				make_crate(spot_hit.x,spot_hit.y);
 				if(!object_sticky_draw)
 					reset_drawing_mode(); 
 				break;		
-		case 64: // 62-66 - barrels, atc
+		case 64: // 62-66 - barrels, etc
 				make_barrel(spot_hit.x,spot_hit.y);
 				if(!object_sticky_draw)
 					reset_drawing_mode(); 
 				break;		
-		case 65: // 62-66 - barrels, atc
+		case 65: // 62-66 - barrels, etc
 				make_fire_barrier(spot_hit.x,spot_hit.y);
 				if(!object_sticky_draw)
 					reset_drawing_mode(); 
 				break;		
-		case 66: // 62-66 - barrels, atc
+		case 66: // 62-66 - barrels, etc
 				make_force_barrier(spot_hit.x,spot_hit.y);
 				if(!object_sticky_draw)
 					reset_drawing_mode(); 
@@ -1826,6 +1826,8 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				take_crate(spot_hit.x,spot_hit.y); 
 				take_web(spot_hit.x,spot_hit.y); 
 				take_facing_mirror(spot_hit.x,spot_hit.y);
+				take_Horse(spot_hit.x,spot_hit.y);
+				take_Boat(spot_hit.x,spot_hit.y);
 				for (i = 0; i < 8; i++)
 					take_sfx(spot_hit.x,spot_hit.y,i);
 				if(!object_sticky_draw)
@@ -1885,6 +1887,15 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				if(!object_sticky_draw)
 					reset_drawing_mode();
 				break;
+		case 76:
+				set_cursor(17);
+				make_Boat(spot_hit.x,spot_hit.y);
+				break;
+		case 77:
+		    set_cursor(18);
+				make_Horse(spot_hit.x,spot_hit.y);
+				break;
+
 		}
 		
 	// rectangle commands
@@ -4069,7 +4080,7 @@ void shut_down_menus()
 
 		for (short i = 101; i < 109; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 201; i < 223; i++)
+		for (short i = 201; i < 227; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 301; i < 320; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
@@ -4087,7 +4098,7 @@ void shut_down_menus()
 	else {
 		EnableMenuItem(menu,2,MF_ENABLED | MF_BYCOMMAND);
 		EnableMenuItem(menu,3,MF_ENABLED | MF_BYCOMMAND);
-		for (short i = 201; i < 223; i++)
+		for (short i = 201; i < 227; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 
 	}

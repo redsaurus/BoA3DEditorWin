@@ -1695,6 +1695,10 @@ void take_blocked(short i,short j);
 void make_sfx(short i,short j,short type);
 void take_sfx(short i,short j,short type);
 void place_dlog_borders_around_rect(HDIB to_gworld,HWND win,RECT border_to_rect);
+void make_Horse(short i,short j);
+void make_Boat(short i,short j);
+void take_Horse(short i,short j);
+void take_Boat(short i,short j);
 
 // graphutl
 HDIB load_pict(short which_pict);

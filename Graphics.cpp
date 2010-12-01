@@ -214,6 +214,7 @@ void cant_draw_graphics_error(graphic_id_type a,char *bonus_string,short bonus_n
 void adjust_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short graphic_adjust);
 void apply_lighting_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short lighting);
 void add_border_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short border_r, short border_g, short border_b);
+//void make_Boat(short i,short j);
 // declared elsewhere but still found here:
 // void set_blitter_color(UInt16 color);
 // void tint_graphic( GWorldPtr dest,short tint_strength);
@@ -5305,6 +5306,74 @@ void make_sfx(short i,short j,short type)
 void take_sfx(short i,short j,short type)
 {
 	take_field_type(i,j,type + 14);
+}
+
+void make_Horse(short i,short j)
+{
+	short k;
+	for (k = 0; k < 30; k++) {
+	if ((scenario.scen_horses[k].horse_loc.x == i) && (scenario.scen_horses[k].horse_loc.y == j) && (scenario.scen_horses[k].which_town == cur_town)) {
+		set_string("A Horse already exists here","Choose another square.");
+		return;
+	}
+	if (scenario.scen_horses[k].which_town == -1) {
+			scenario.scen_horses[k].horse_loc.x = (t_coord)i;
+			scenario.scen_horses[k].horse_loc.y = (t_coord)j;
+			scenario.scen_horses[k].which_town = cur_town;
+			scenario.scen_horses[k].exists = TRUE;
+			set_string("Default: party can use this horse","Hit '=' to resume drawing.");
+			return;
+			}
+	}
+}
+
+void make_Boat(short i,short j)
+{
+	short k;
+	for (k = 0; k < 30; k++) {
+	if ((scenario.scen_boats[k].boat_loc.x == i) && (scenario.scen_boats[k].boat_loc.y == j) && (scenario.scen_boats[k].which_town == cur_town)) {
+		set_string("A Boat already exists here","Choose another square.");
+		return;
+	}
+	if (scenario.scen_boats[k].which_town == -1) {
+			scenario.scen_boats[k].boat_loc.x = (t_coord)i;
+			scenario.scen_boats[k].boat_loc.y = (t_coord)j;
+			scenario.scen_boats[k].which_town = cur_town;
+			scenario.scen_boats[k].exists = TRUE;
+			set_string("Default: party can use this boat","Hit '=' to resume drawing.");
+			return;
+			}
+	}
+}
+
+void take_Horse(short i,short j)
+{
+	short k;
+	for (k = 0; k < 30; k++) {
+	if ((scenario.scen_horses[k].horse_loc.x == i) && (scenario.scen_horses[k].horse_loc.y == j) && (scenario.scen_horses[k].which_town == cur_town)) {
+		scenario.scen_horses[k].horse_loc.x = 0;
+		scenario.scen_horses[k].horse_loc.y = 0;
+		scenario.scen_horses[k].which_town = -1;
+		scenario.scen_horses[k].exists = FALSE;
+		scenario.scen_horses[k].property = FALSE;
+			set_string("Horse deleted.","");
+	}
+	}
+}
+
+void take_Boat(short i,short j)
+{
+	short k;
+	for (k = 0; k < 30; k++) {
+	if ((scenario.scen_boats[k].boat_loc.x == i) && (scenario.scen_boats[k].boat_loc.y == j) && (scenario.scen_boats[k].which_town == cur_town)) {
+		scenario.scen_boats[k].boat_loc.x = 0;
+		scenario.scen_boats[k].boat_loc.y = 0;
+		scenario.scen_boats[k].which_town = -1;
+		scenario.scen_boats[k].exists = FALSE;
+		scenario.scen_boats[k].property = FALSE;
+			set_string("Boat deleted.","");
+	}
+	}
 }
 
 void place_dlog_borders_around_rect(HDIB to_gworld,HWND win,RECT border_to_rect)

@@ -29,6 +29,8 @@
 #define IDC_CURSOR144                   144
 #define IDC_CURSOR145                   145
 #define IDC_CURSOR146                   146
+#define IDC_CURSOR147                   147
+#define IDC_CURSOR148                   148
 #define IDD_DIALOG1                     139
 #define IDC_STATIC                      -1
 

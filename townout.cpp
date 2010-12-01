@@ -1840,6 +1840,74 @@ void edit_scen_intro_pic()
 	cd_kill_dialog(805,0);
 }
 
+void edit_horses()
+// ignore parent in Mac version
+{
+	store_horse_page = 0;
+
+	cd_create_dialog_parent_num(808,0);
+
+	put_horses_in_dlog();
+
+	while (dialog_not_toast)
+		ModalDialog();
+
+	cd_kill_dialog(808,0);
+}
+
+void put_horses_in_dlog()
+{
+	short i;
+
+	for (i = 0; i < 6; i++) {
+		cdsin(808,23 + i,6 * store_horse_page + i);
+		CDSN(808,2 + i,scenario.scen_horses[6 * store_horse_page + i].which_town);
+		CDSN(808,8 + i,scenario.scen_horses[6 * store_horse_page + i].horse_loc.x);
+		CDSN(808,14 + i,scenario.scen_horses[6 * store_horse_page + i].horse_loc.y);
+		cd_set_led(808,43 + i,scenario.scen_horses[6 * store_horse_page + i].property);
+		}
+
+}
+
+void edit_horses_event_filter (short item_hit)
+{
+	short i;
+	short j;
+	
+	switch (item_hit) {
+		case 20:
+			if (save_horses() == TRUE)
+				 dialog_not_toast = FALSE;
+		break;
+		case 21:
+			if (save_horses() == FALSE) break;
+			store_horse_page--;
+			if (store_horse_page < 0)
+				 store_horse_page = 4;
+			put_horses_in_dlog();
+		break;
+		case 22:
+			if (save_horses() == FALSE) break;
+			store_horse_page++;
+			if (store_horse_page > 4)
+				 store_horse_page = 0;
+			put_horses_in_dlog();
+		break;
+		
+		case 49: case 50: case 51: case 52: case 53: case 54:
+				 i = (item_hit - 49);
+				 CDSN(808,2 + i,-1);
+				 CDSN(808,8 + i,0);
+				 CDSN(808,14 + i,0);
+				 cd_set_led(808,43 + i,0);
+		break;
+
+		default:
+			for (i = 0; i < 6; i++)
+				cd_flip_led(808,43 + i,item_hit);
+		break;
+		}
+}
 
 Boolean save_horses()
 {
@@ -1860,66 +1928,6 @@ Boolean save_horses()
 	return TRUE;
 }
 
-void put_horses_in_dlog()
-{
-	short i;
-
-	for (i = 0; i < 6; i++) {
-		cdsin(808,23 + i,6 * store_horse_page + i);
-		CDSN(808,2 + i,scenario.scen_horses[6 * store_horse_page + i].which_town);
-		CDSN(808,8 + i,scenario.scen_horses[6 * store_horse_page + i].horse_loc.x);
-		CDSN(808,14 + i,scenario.scen_horses[6 * store_horse_page + i].horse_loc.y);
-		cd_set_led(808,43 + i,scenario.scen_horses[6 * store_horse_page + i].property);
-		}
-
-}
-
-void edit_horses_event_filter (short item_hit)
-{
-	short i;
-
-	switch (item_hit) {
-		case 20:
-			if (save_horses() == TRUE)
-				 dialog_not_toast = FALSE;
-		break;
-		case 21:
-			if (save_horses() == FALSE) break;
-			store_horse_page--;
-			if (store_horse_page < 0)
-				 store_horse_page = 4;
-			put_horses_in_dlog();
-		break;
-		case 22:
-			if (save_horses() == FALSE) break;
-			store_horse_page++;
-			if (store_horse_page > 4)
-				 store_horse_page = 0;
-			put_horses_in_dlog();
-		break;
-		default:
-			for (i = 0; i < 6; i++)
-				cd_flip_led(808,43 + i,item_hit);
-		break;
-		}
-}
-
-void edit_horses()
-// ignore parent in Mac version
-{
-	store_horse_page = 0;
-
-	cd_create_dialog_parent_num(808,0);
-
-	put_horses_in_dlog();
-
-	while (dialog_not_toast)
-		ModalDialog();
-
-	cd_kill_dialog(808,0);
-}
-
-
 void edit_boats()
 // ignore parent in Mac version
 {
@@ -1935,6 +1943,20 @@ void edit_boats()
 	cd_kill_dialog(809,0);
 }
 
+void put_boats_in_dlog()
+{
+	short i;
+
+	for (i = 0; i < 6; i++) {
+		cdsin(809,23 + i,6 * store_boat_page + i);
+		CDSN(809,2 + i,scenario.scen_boats[6 * store_boat_page + i].which_town);
+		CDSN(809,8 + i,scenario.scen_boats[6 * store_boat_page + i].boat_loc.x);
+		CDSN(809,14 + i,scenario.scen_boats[6 * store_boat_page + i].boat_loc.y);
+		cd_set_led(809,43 + i,scenario.scen_boats[6 * store_boat_page + i].property);
+		}
+
+}
+
 void edit_boats_event_filter (short item_hit)
 {
 	short i;
@@ -1944,7 +1966,7 @@ void edit_boats_event_filter (short item_hit)
 			if (save_boats() == TRUE)
 				 dialog_not_toast = FALSE;
 		break;
-		case 22:
+		case 21:
 			if (save_boats() == FALSE)
 		break;
 			store_boat_page--;
@@ -1952,7 +1974,7 @@ void edit_boats_event_filter (short item_hit)
 				 store_boat_page = 4;
 			put_boats_in_dlog();
 		break;
-		case 23:
+		case 22:
 			if (save_boats() == FALSE)
 			break;
 			store_boat_page++;
@@ -1960,25 +1982,20 @@ void edit_boats_event_filter (short item_hit)
 				 store_boat_page = 0;
 			put_boats_in_dlog();
 		break;
+
+		case 49: case 50: case 51: case 52: case 53: case 54:
+				 i = (item_hit - 49);
+				 CDSN(809,2 + i,-1);
+				 CDSN(809,8 + i,0);
+				 CDSN(809,14 + i,0);
+				 cd_set_led(809,43 + i,0);
+		break;
+
 		default:
 			for (i = 0; i < 6; i++)
 				cd_flip_led(809,43 + i,item_hit);
 		break;
 		}
-}
-
-void put_boats_in_dlog()
-{
-	short i;
-
-	for (i = 0; i < 6; i++) {
-		cdsin(809,24 + i,6 * store_boat_page + i);
-		CDSN(809,2 + i,scenario.scen_boats[6 * store_boat_page + i].which_town);
-		CDSN(809,8 + i,scenario.scen_boats[6 * store_boat_page + i].boat_loc.x);
-		CDSN(809,14 + i,scenario.scen_boats[6 * store_boat_page + i].boat_loc.y);
-		cd_set_led(809,43 + i,scenario.scen_boats[6 * store_boat_page + i].property);
-		}
-
 }
 
 Boolean save_boats()
@@ -1991,10 +2008,10 @@ Boolean save_boats()
 			-1,199,"Town number must be from 0 to 199 (or -1 for boat to not exist).","",809) == TRUE) return FALSE;
 		scenario.scen_boats[6 * store_boat_page + i].boat_loc.x = CDGN(809,8 + i);
 		if (cre(scenario.scen_boats[6 * store_boat_page + i].boat_loc.x,
-			0,63,"boat location coordinates must be from 0 to 63.","",809) == TRUE) return FALSE;
+			0,63,"Boat location coordinates must be from 0 to 63.","",809) == TRUE) return FALSE;
 		scenario.scen_boats[6 * store_boat_page + i].boat_loc.y = CDGN(809,14 + i);
 		if (cre(scenario.scen_boats[6 * store_boat_page + i].boat_loc.y,
-			0,63,"boat location coordinates must be from 0 to 63.","",809) == TRUE) return FALSE;
+			0,63,"Boat location coordinates must be from 0 to 63.","",809) == TRUE) return FALSE;
 		scenario.scen_boats[6 * store_boat_page + i].property = cd_get_led(809,43 + i);
 		}
 	return TRUE;
