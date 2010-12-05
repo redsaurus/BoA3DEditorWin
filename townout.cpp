@@ -103,6 +103,21 @@ void edit_placed_script(short which_script)
 	overall_mode = 40;
 }
 
+void put_placed_terrain_script_in_dlog()
+{
+	char str[256];
+	short i;
+
+	cdsin(838,4,store_which_placed_script);
+ 	CDST(838,6,store_placed_script.script_name);
+ 	for (i = 0; i < 10; i++)
+ 	CDSN(838,18 + i,store_placed_script.memory_cells[i]);
+ 	cdsin(838,34,store_placed_script.exists);
+ 	cdsin(838,36,store_placed_script.loc.x);
+ 	cdsin(838,38,store_placed_script.loc.y);
+
+}
+
 void edit_placed_script_event_filter (short item_hit)
 {
 	short i;
@@ -110,21 +125,30 @@ void edit_placed_script_event_filter (short item_hit)
 	switch (item_hit) {
 		case 28:
 			if (store_which_placed_script == 0)
-			   			store_which_placed_script = 99;
-			else store_which_placed_script--;
-			edit_placed_script(store_which_placed_script);
+			   	store_which_placed_script = 99;
+			else
+				store_which_placed_script--;
+
+				store_placed_script = town.ter_scripts[store_which_placed_script];
+				put_placed_terrain_script_in_dlog();
 			break;
 		case 29:
 			if (store_which_placed_script == 99)
-			   			store_which_placed_script = 0;
-			else store_which_placed_script++;
-			edit_placed_script(store_which_placed_script);
+			   	store_which_placed_script = 0;
+			else
+				store_which_placed_script++;
+
+				store_placed_script = town.ter_scripts[store_which_placed_script];
+				put_placed_terrain_script_in_dlog();
 			break;
 		case 30: // Save: save this script record, but don't exit the dialog.
-			if (get_placed_terrain_script_in_dlog() == FALSE)
+			if (get_placed_terrain_script_in_dlog() == FALSE) {
+					set_string("Save attempt failed","");
 				break;
-				get_placed_terrain_script_in_dlog();
-				break;
+				}
+				else
+					set_string("Save succeeded.","");
+			break;
 		case 31: // Cancel
 			dialog_not_toast = FALSE;
 			break;
@@ -146,20 +170,6 @@ void edit_placed_script_event_filter (short item_hit)
 		default:
 		break;
 		}
-}
-
-void put_placed_terrain_script_in_dlog()
-{
-	char str[256];
-	short i;
-
- 	CDST(838,6,store_placed_script.script_name);
- 	for (i = 0; i < 10; i++)
- 	CDSN(838,18 + i,store_placed_script.memory_cells[i]);
- 	cdsin(838,34,store_placed_script.exists);
- 	cdsin(838,36,store_placed_script.loc.x);
- 	cdsin(838,38,store_placed_script.loc.y);
-
 }
 
 Boolean get_placed_terrain_script_in_dlog()
@@ -186,25 +196,49 @@ void edit_placed_monst(short which_m)
 
 	store_placed_monst = town.creatures[which_m];
 	store_which_placed_monst = which_m;
-
 	cd_create_dialog_parent_num(837,0);
-
 	cdsin(837,37,which_m + 6);
-
 	put_placed_monst_in_dlog();
-
 	for (i = 0; i < 4; i++)
 		cd_add_label(837,27 + i,attitude_types[i],57);
-
 	while (dialog_not_toast)
 		ModalDialog();
-
 	cd_kill_dialog(837,0);
 
 	set_string("Select/edit placed object","Select object to edit");
 	set_cursor(7);
 	overall_mode = 40;
 
+}
+
+void put_placed_monst_in_dlog()
+{
+	char str[256];
+	short i;
+
+ 	CDST(837,2,store_placed_monst.char_script);
+ 	CDSN(837,3,store_placed_monst.extra_item_chance_1);
+ 	CDSN(837,4,store_placed_monst.extra_item);
+ 	CDSN(837,5,store_placed_monst.extra_item_chance_2);
+ 	CDSN(837,6,store_placed_monst.extra_item_2);
+ 	CDSN(837,7,store_placed_monst.personality);
+ 	CDSN(837,8,store_placed_monst.character_id);
+ 	CDSN(837,9,store_placed_monst.hidden_class);
+ 	CDSN(837,10,store_placed_monst.act_at_distance);
+ 	CDSN(837,11,store_placed_monst.unique_char);
+	cdsin(837,12,store_placed_monst.number);
+ 	CDSN(837,13,store_placed_monst.creature_time);
+ 	CDSN(837,14,store_placed_monst.attached_event);
+
+ 	for (i = 0; i < 10; i++)
+	 	CDSN(837,15 + i,store_placed_monst.memory_cells[i]);
+ 	cd_set_led_range(837,27,30,store_placed_monst.start_attitude - 2);
+	cdsin(837,37,store_which_placed_monst);
+	csit(837,38,scen_data.scen_creatures[store_placed_monst.number].name);
+ 	get_str(str,4,store_placed_monst.time_flag + 1);
+ 	csit(837,39,(char *) str);
+	csit(837,51,scen_data.scen_items[store_placed_monst.extra_item].full_name);
+	csit(837,52,scen_data.scen_items[store_placed_monst.extra_item_2].full_name);
 }
 
 void edit_placed_monst_event_filter (short item_hit)
@@ -256,15 +290,21 @@ void edit_placed_monst_event_filter (short item_hit)
 		case 69:
 			if (store_which_placed_monst == 79)
 	   			store_which_placed_monst = 0;
-			else store_which_placed_monst++;
-			edit_placed_monst(store_which_placed_monst);
+			else
+					store_which_placed_monst++;
+					
+					store_placed_monst = town.creatures[store_which_placed_monst];
+					put_placed_monst_in_dlog();
 		break;
 
 		case 70:
 			if (store_which_placed_monst == 0)
 	   			store_which_placed_monst = 79;
-			else store_which_placed_monst--;
-			edit_placed_monst(store_which_placed_monst);
+			else
+					store_which_placed_monst--;
+					
+					store_placed_monst = town.creatures[store_which_placed_monst];
+					put_placed_monst_in_dlog();
 			break;
 
 		default:
@@ -272,35 +312,6 @@ void edit_placed_monst_event_filter (short item_hit)
 		}
 }
 
-void put_placed_monst_in_dlog()
-{
-	char str[256];
-	short i;
-
-	csit(837,38,scen_data.scen_creatures[store_placed_monst.number].name);
- 	cd_set_led_range(837,27,30,store_placed_monst.start_attitude - 2);
- 	CDST(837,2,store_placed_monst.char_script);
-
- 	CDSN(837,3,store_placed_monst.extra_item_chance_1);
- 	CDSN(837,4,store_placed_monst.extra_item);
- 	CDSN(837,5,store_placed_monst.extra_item_chance_2);
- 	CDSN(837,6,store_placed_monst.extra_item_2);
-
- 	CDSN(837,7,store_placed_monst.personality);
- 	CDSN(837,8,store_placed_monst.character_id);
- 	CDSN(837,9,store_placed_monst.hidden_class);
- 	CDSN(837,10,store_placed_monst.act_at_distance);
- 	CDSN(837,11,store_placed_monst.unique_char);
-
- 	CDSN(837,13,store_placed_monst.creature_time);
- 	CDSN(837,14,store_placed_monst.attached_event);
-
- 	for (i = 0; i < 10; i++)
-	 	CDSN(837,15 + i,store_placed_monst.memory_cells[i]);
-
- 	get_str(str,4,store_placed_monst.time_flag + 1);
- 	csit(837,39,(char *) str);
-}
 
 Boolean get_placed_monst_in_dlog()
 {
@@ -313,25 +324,20 @@ Boolean get_placed_monst_in_dlog()
 		return FALSE;
 
  	CDGT(837,2,store_placed_monst.char_script);
- 	store_placed_monst.start_attitude = cd_get_led_range(837,27,30) + 2;
-
- 	store_placed_monst.extra_item = CDGN(837,4);
- 	store_placed_monst.extra_item_2 = CDGN(837,6);
  	store_placed_monst.extra_item_chance_1 = CDGN(837,3);
- 	store_placed_monst.extra_item_chance_2 = CDGN(837,5);
-
+ 	store_placed_monst.extra_item = CDGN(837,4);
+	store_placed_monst.extra_item_chance_2 = CDGN(837,5);
+ 	store_placed_monst.extra_item_2 = CDGN(837,6);
  	store_placed_monst.personality = CDGN(837,7);
  	store_placed_monst.character_id = CDGN(837,8);
  	store_placed_monst.hidden_class = CDGN(837,9);
  	store_placed_monst.act_at_distance = CDGN(837,10);
  	store_placed_monst.unique_char = CDGN(837,11);
-
  	store_placed_monst.creature_time = CDGN(837,13);
  	store_placed_monst.attached_event = CDGN(837,14);
-
  	for (i = 0; i < 10; i++)
 	 	store_placed_monst.memory_cells[i] = CDGN(837,15 + i);
-
+ 	store_placed_monst.start_attitude = cd_get_led_range(837,27,30) + 2;
 	town.creatures[store_which_placed_monst] = store_placed_monst;
 	return TRUE;
 }

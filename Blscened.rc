@@ -917,77 +917,76 @@ END
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,600,336,31,10,WS_GROUP
-    LTEXT           "6_0",2,171,194,164,16
-    LTEXT           "6_0",3,44,259,89,16
-    LTEXT           "6_0",4,148,259,70,16
-    LTEXT           "6_0",5,44,284,89,16
-    LTEXT           "6_0",6,148,284,70,16
-    LTEXT           "6_0",7,194,310,72,16
-    LTEXT           "6_0",8,194,334,72,16
-    LTEXT           "6_0",9,194,358,72,16
-    LTEXT           "6_0",10,194,382,72,16
-    LTEXT           "6_0",11,194,406,72,16
-    LTEXT           "6_0",12,194,430,72,16
-    LTEXT           "6_0",13,276,511,67,16
-    LTEXT           "6_0",14,276,535,67,16
-    LTEXT           "6_0",15,418,211,72,16
-    LTEXT           "6_0",16,418,235,72,16
-    LTEXT           "6_0",17,418,259,72,16
-    LTEXT           "6_0",18,418,283,72,16
-    LTEXT           "6_0",19,418,307,72,16
-    LTEXT           "6_0",20,418,331,72,16
-    LTEXT           "6_0",21,418,355,72,16
-    LTEXT           "6_0",22,418,379,72,16
-    LTEXT           "6_0",23,418,403,72,16
-    LTEXT           "6_0",24,418,427,72,16
-    LTEXT           "*Day For Appear/Disappear:",25,40,511,221,15
-    LTEXT           "*Event Creature Linked To (-1 - none)",26,40,535,223,17
-    LTEXT           "2_0",27,327,136,23,14
-    LTEXT           "2_0",28,327,152,23,14
-    LTEXT           "2_0",29,462,136,23,14
-    LTEXT           "2_0",30,462,152,23,14
-    LTEXT           "1_63",31,478,580,63,16
-    LTEXT           "0_5",32,412,580,62,16
-    LTEXT           "0_109",33,318,106,75,16
-    LTEXT           "0_109",34,229,256,75,16
-    LTEXT           "0_109",35,229,281,75,16
-    LTEXT           "0_109",36,283,481,75,16
+    LTEXT           "6_0",2,171,256,164,16
+    LTEXT           "6_0",3,44,196,89,16
+    LTEXT           "6_0",4,148,196,70,16
+    LTEXT           "6_0",5,44,221,89,16
+    LTEXT           "6_0",6,148,221,70,16
+    LTEXT           "6_0",7,194,282,72,16
+    LTEXT           "6_0",8,194,306,72,16
+    LTEXT           "6_0",9,194,330,72,16
+    LTEXT           "6_0",10,194,354,72,16
+    LTEXT           "6_0",11,194,378,72,16
+    LTEXT           "*",12,148,95,40,16
+    LTEXT           "6_0",13,276,483,67,16
+    LTEXT           "6_0",14,276,507,67,16
+    LTEXT           "6_0",15,438,282,72,16
+    LTEXT           "6_0",16,438,306,72,16
+    LTEXT           "6_0",17,438,330,72,16
+    LTEXT           "6_0",18,438,354,72,16
+    LTEXT           "6_0",19,438,378,72,16
+    LTEXT           "6_0",20,438,402,72,16
+    LTEXT           "6_0",21,438,426,72,16
+    LTEXT           "6_0",22,438,450,72,16
+    LTEXT           "6_0",23,438,474,72,16
+    LTEXT           "6_0",24,438,498,72,16
+    LTEXT           "*Day For Appear/Disappear:",25,40,483,221,15
+    LTEXT           "*Event Creature Linked To (-1 = none)",26,40,507,223,17
+    LTEXT           "2_0",27,327,122,23,14
+    LTEXT           "2_0",28,327,138,23,14
+    LTEXT           "2_0",29,462,122,23,14
+    LTEXT           "2_0",30,462,138,23,14
+    LTEXT           "1_63",31,478,552,63,16
+    LTEXT           "0_5",32,410,552,62,16
+    LTEXT           "0_109",33,450,92,75,16
+    LTEXT           "0_109",34,450,193,75,16
+    LTEXT           "0_109",35,450,218,75,16
+    LTEXT           "0_109",36,283,453,75,16
     LTEXT           "*",37,416,30,50,15
-    LTEXT           "+",38,156,109,155,15
-    LTEXT           "+",39,44,484,229,15
+    LTEXT           "+",38,200,95,210,16
+    LTEXT           "+",39,44,456,229,15
     LTEXT           "~Edit Placed Creature",40,25,30,138,17
-    LTEXT           "*Creature script:",41,34,195,120,14
-    LTEXT           "*Memory Cells",42,352,191,109,14
-    LTEXT           "*Extra Items",43,34,219,183,14
-    LTEXT           "*Personality",44,34,310,143,14
+    LTEXT           "*Creature script:",41,34,256,120,14
+    LTEXT           "*Memory Cells",42,377,256,109,14
+    LTEXT           "*Extra Items",43,34,156,183,14
+    LTEXT           "*Personality",44,34,282,143,14
     LTEXT           "Enter the information for this monster/townsperson. You only need to worry about the personality if this is not a hostile monster. ",45,25,53,480,33
     LTEXT           "*Creature number:",46,288,30,126,15
-    LTEXT           "~Creature type:",47,34,109,115,15
-    LTEXT           "*Creature starting attitude:",48,34,134,169,15
-    LTEXT           "~Creature Appearance Type:",49,33,461,187,15
-    LTEXT           "*Character ID",50,34,335,144,14
-    LTEXT           "*BASIC TRAITS",51,25,90,120,14
-    LTEXT           "*ADVANCED TRAITS",52,24,173,120,14
-    LTEXT           "*Chance",53,41,238,90,14
-    LTEXT           "*Item Type",54,144,238,90,14
-    LTEXT           "*Hidden Class",55,34,358,143,14
-    LTEXT           "*Act at distance",56,34,383,144,14
-    LTEXT           "*Unique NPC",57,34,407,144,14
-    LTEXT           "*Reserved, Don't Use",58,34,431,144,14
-    LTEXT           "*Cell 0",59,361,212,50,14
-    LTEXT           "*Cell 1",60,361,236,50,14
-    LTEXT           "*Cell 2",61,361,260,50,14
-    LTEXT           "*Cell 3",62,361,284,50,14
-    LTEXT           "*Cell 4",63,361,309,50,14
-    LTEXT           "*Cell 5",64,361,333,50,14
-    LTEXT           "*Cell 6",65,361,357,50,14
-    LTEXT           "*Cell 7",66,361,381,50,14
-    LTEXT           "*Cell 8",67,361,405,50,14
-    LTEXT           "*Cell 9",68,361,428,50,14
-    LTEXT           "0_3",69,89,580,75,16
-    LTEXT           "0_2",70,27,580,62,16
+    LTEXT           "~Creature type:",47,34,95,115,15
+    LTEXT           "*Creature starting attitude:",48,34,122,169,15
+    LTEXT           "~Creature Appearance Type:",49,33,433,187,15
+    LTEXT           "*Character ID",50,34,307,144,14
+    LTEXT           "+",51,229,196,210,16
+    LTEXT           "+",52,229,221,210,16
+    LTEXT           "*Chance",53,41,175,90,14
+    LTEXT           "*Item Type",54,144,175,90,14
+    LTEXT           "*Hidden Class",55,34,330,143,14
+    LTEXT           "*Act at distance",56,34,355,144,14
+    LTEXT           "*Unique NPC",57,34,379,144,14
+    LTEXT           "*Arrow keys don't save any data.",58,34,408,144,14
+    LTEXT           "*Cell 0",59,381,282,50,14
+    LTEXT           "*Cell 1",60,381,306,50,14
+    LTEXT           "*Cell 2",61,381,330,50,14
+    LTEXT           "*Cell 3",62,381,354,50,14
+    LTEXT           "*Cell 4",63,381,378,50,14
+    LTEXT           "*Cell 5",64,381,402,50,14
+    LTEXT           "*Cell 6",65,381,426,50,14
+    LTEXT           "*Cell 7",66,381,450,50,14
+    LTEXT           "*Cell 8",67,381,474,50,14
+    LTEXT           "*Cell 9",68,381,498,50,14
+    LTEXT           "0_3",69,89,552,75,16
+    LTEXT           "0_2",70,27,552,62,16
 END
-
 
 838 DIALOG  10,10,576,571
 STYLE WS_POPUP | WS_DLGFRAME
@@ -1030,9 +1029,9 @@ BEGIN
     LTEXT           "*",36,170,82,20,15
     LTEXT           "*y = ",37,220,81,20,15
     LTEXT           "*",38,245,82,20,15
-    LTEXT           "Left and right buttons do not save the contents of the current dialog screen. |Both the Save and the OK buttons save the contents of the current screen.",39,190,211,200,80
+    LTEXT           "Left and right buttons do not save the contents of the current dialog screen. |This can be done by either one of the Save and the OK buttons.",39,190,211,200,80
     LTEXT           "OK then closes this dialog screen while Save leaves it open. ||Press Delete to clear this particular terrain script.",40,190,301,200,80
-    LTEXT           "1_53",41,240,424,69,16
+    LTEXT           "1_53",41,220,384,69,16
 END
 
 839 DIALOG  10, 10, 521, 526
