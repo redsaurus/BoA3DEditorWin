@@ -52,6 +52,8 @@ short cur_shortcut;
 
 void put_placed_monst_in_dlog();
 Boolean get_placed_monst_in_dlog();
+void put_placed_item_in_dlog();
+Boolean get_placed_item_in_dlog();
 
 void put_out_wand_in_dlog();
 Boolean get_out_wand_in_dlog();
@@ -81,6 +83,161 @@ Boolean get_placed_terrain_script_in_dlog();
 short which_script;
 short store_which_placed_script;
 in_town_on_ter_script_type store_placed_script;
+
+short which_item;
+short store_which_placed_item;
+item_type store_placed_item;
+
+void edit_placed_item(short which_item)
+{
+	short i;
+
+	store_placed_item = town.preset_items[which_item];
+	store_which_placed_item = which_item;
+
+	cd_create_dialog_parent_num(842,0);
+	cdsin(842,4,store_which_placed_item);
+	put_placed_item_in_dlog();
+
+	while (dialog_not_toast)
+		ModalDialog();
+
+	cd_kill_dialog(842,0);
+
+	set_string("Select/edit placed object","Select object to edit");
+	set_cursor(7);
+	overall_mode = 40;
+}
+
+void put_placed_item_in_dlog()
+{
+	char str[256];
+	short i;
+
+	cdsin(842,4,store_which_placed_item);
+ 	csit(842,5,scen_data.scen_items[store_placed_item.which_item].full_name);
+ 	CDSN(842,15,store_placed_item.item_shift.x);
+ 	CDSN(842,16,store_placed_item.item_shift.y);
+ 	CDSN(842,17,store_placed_item.charges);
+			if (store_placed_item.properties & 1)
+				 cd_set_led(842,18,1);
+			else
+				cd_set_led(842,18,0);
+			if (store_placed_item.properties & 2)
+				 cd_set_led(842,19,1);
+			else
+				cd_set_led(842,19,0);
+			if (store_placed_item.properties & 4)
+				 cd_set_led(842,20,1);
+			else
+				cd_set_led(842,20,0);
+			if (store_placed_item.properties & 8)
+				 cd_set_led(842,21,1);
+			else
+				cd_set_led(842,21,0);
+			if (store_placed_item.properties & 16)
+				 cd_set_led(842,22,1);
+			else
+				cd_set_led(842,22,0);
+ 	cdsin(842,29,store_placed_item.item_loc.x);
+ 	cdsin(842,31,store_placed_item.item_loc.y);
+ 	CDSN(842,35,store_placed_item.which_item);
+ 	cdsin(842,38,store_placed_item.properties);
+}
+
+void edit_placed_item_event_filter (short item_hit)
+{
+	short i;
+
+	switch (item_hit) {
+			cd_flip_led(842,18,item_hit);
+			cd_flip_led(842,19,item_hit);
+			cd_flip_led(842,20,item_hit);
+			cd_flip_led(842,21,item_hit);
+			cd_flip_led(842,22,item_hit);
+		case 23:
+			if (store_which_placed_item == 0)
+			   	store_which_placed_item = 143;
+			else
+				store_which_placed_item--;
+
+				store_placed_item = town.preset_items[store_which_placed_item];
+				put_placed_item_in_dlog();
+			break;
+		case 24:
+			if (store_which_placed_item == 143)
+			   	store_which_placed_item = 0;
+			else
+				store_which_placed_item++;
+
+				store_placed_item = town.preset_items[store_which_placed_item];
+				put_placed_item_in_dlog();
+			break;
+		case 25: // Save: save this item record, but don't exit the dialog.
+			if (get_placed_item_in_dlog() == FALSE) {
+					set_string("Save attempt failed","");
+				break;
+				}
+				else
+					set_string("Save succeeded.","");
+			break;
+		case 26: // Cancel
+			dialog_not_toast = FALSE;
+			break;
+		case 27:  // OK: save and exit.
+			if (get_placed_item_in_dlog() == FALSE)
+				break;
+			dialog_not_toast = FALSE;
+			break;
+		case 34: // Delete this item
+			store_placed_item.which_item = -1;
+			store_placed_item.item_loc.x = 0;
+			store_placed_item.item_loc.y = 0;
+			store_placed_item.charges = 0;
+			store_placed_item.properties = 0;
+			store_placed_item.item_shift.x = 0;
+			store_placed_item.item_shift.y = 0;
+			
+			put_placed_item_in_dlog();
+			break;
+
+		case 37:
+			i = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,store_placed_item.which_item,842,"Which item?");
+			if (i >= 0)
+			store_placed_item.which_item = i;
+			put_placed_item_in_dlog();
+			break;
+
+		default:
+		break;
+		}
+}
+
+Boolean get_placed_item_in_dlog()
+{
+	char str[256];
+	short i;
+	short item_identified = cd_get_led(842,18);
+	short item_property = cd_get_led(842,19);
+	short item_contained = cd_get_led(842,20);
+	short item_cursed = cd_get_led(842,21);
+	short item_onceperday = cd_get_led(842,22);
+
+ 	store_placed_item.item_shift.x = CDGN(842,15);
+ 	store_placed_item.item_shift.y = CDGN(842,16);
+ 	store_placed_item.charges = CDGN(842,17);
+ 	store_placed_item.properties=
+	item_identified +
+	2 * item_property +
+	4 * item_contained +
+	8 * item_cursed +
+	16 * item_onceperday;
+
+ 	store_placed_item.which_item = CDGN(842,35);
+
+	town.preset_items[store_which_placed_item] = store_placed_item;
+	return TRUE;
+}
 
 void edit_placed_script(short which_script)
 {
@@ -507,6 +664,33 @@ void outdoor_details()
 	cd_kill_dialog(851,0);
 }
 
+// mode 0 - wandering 1 - special
+void edit_out_wand(short mode)
+{
+	store_which_out_wand = 0;
+	store_out_wand_mode = mode;
+	switch (store_out_wand_mode) {
+		case 0: store_out_wand = current_terrain.wandering[store_which_out_wand]; break;
+		case 1: store_out_wand = current_terrain.special_enc[store_which_out_wand];  break;
+		case 2: store_out_wand = current_terrain.preset[store_which_out_wand];  break;
+		}
+
+	cd_create_dialog_parent_num(852,0);
+
+	if (mode == 1)
+		csit(852,53,"Outdoor Special Encounter:");
+	if (mode == 2)
+		csit(852,53,"Outdoor Preplaced Encounter:");
+
+	put_out_wand_in_dlog();
+
+	while (dialog_not_toast)
+		ModalDialog();
+
+	cd_kill_dialog(852,0);
+
+}
+
 void put_out_wand_in_dlog()
 {
 	char str[256];
@@ -546,6 +730,75 @@ void put_out_wand_in_dlog()
 	CDSN(852,10,store_out_wand.start_state_when_defeated);
 	CDSN(852,11,store_out_wand.start_state_when_fled);
 }
+
+void edit_out_wand_event_filter (short item_hit)
+{
+	short i;
+	creature_start_type store_m;
+
+	switch (item_hit) {
+		case 21:
+			if (get_out_wand_in_dlog() == FALSE)
+				break;
+			dialog_not_toast = FALSE;
+			break;
+		case 20:
+			dialog_not_toast = FALSE;
+			break;
+		case 22:
+			if (get_out_wand_in_dlog() == FALSE) break;
+			store_which_out_wand--;
+
+			switch (store_out_wand_mode) {
+				case 0:
+					if (store_which_out_wand < 0) store_which_out_wand = 3;
+					store_out_wand = current_terrain.wandering[store_which_out_wand]; break;
+				case 1:
+					if (store_which_out_wand < 0) store_which_out_wand = 3;
+					store_out_wand = current_terrain.special_enc[store_which_out_wand];  break;
+				case 2:
+					if (store_which_out_wand < 0) store_which_out_wand = 7;
+					store_out_wand = current_terrain.preset[store_which_out_wand];  break;
+				}
+			put_out_wand_in_dlog();
+			break;
+		case 23:
+			if (get_out_wand_in_dlog() == FALSE) break;
+			store_which_out_wand++;
+			switch (store_out_wand_mode) {
+				case 0:
+					if (store_which_out_wand > 3) store_which_out_wand = 0;
+					store_out_wand = current_terrain.wandering[store_which_out_wand]; break;
+				case 1:
+					if (store_which_out_wand > 3) store_which_out_wand = 0;
+					store_out_wand = current_terrain.special_enc[store_which_out_wand];  break;
+				case 2:
+					if (store_which_out_wand > 7) store_which_out_wand = 0;
+					store_out_wand = current_terrain.preset[store_which_out_wand];  break;
+				}
+			put_out_wand_in_dlog();
+			break;
+
+		default:
+			if (get_out_wand_in_dlog() == FALSE)
+				 break;
+			cd_flip_led(852,38,item_hit);
+			cd_flip_led(852,39,item_hit);
+			cd_flip_led(852,40,item_hit);
+			if ((item_hit >= 24) && (item_hit <= 27)) {
+				i = choose_text_res(-1,0,255,store_out_wand.hostile[item_hit - 24],852,"Choose Which Creature:");
+				if (i >= 0) store_out_wand.hostile[item_hit - 24] = i;
+				put_out_wand_in_dlog();
+				}
+			if ((item_hit >= 28) && (item_hit <= 30)) {
+				i = choose_text_res(-1,0,255,store_out_wand.friendly[item_hit - 28],852,"Choose Which Creature:");
+				if (i >= 0) store_out_wand.friendly[item_hit - 28] = i;
+				put_out_wand_in_dlog();
+				}
+			break;
+		}
+}
+
 Boolean get_out_wand_in_dlog()
 {
 	short i;
@@ -595,159 +848,18 @@ Boolean get_out_wand_in_dlog()
 	return TRUE;
 }
 
-void edit_out_wand_event_filter (short item_hit)
+void edit_town_details()
+// ignore parent in Mac version
 {
-	short i;
-	creature_start_type store_m;
-	
-	switch (item_hit) {
-		case 21:
-			if (get_out_wand_in_dlog() == FALSE)
-				break;
-			dialog_not_toast = FALSE;
-			break;
-		case 20:
-			dialog_not_toast = FALSE;
-			break;
-		case 22:
-			if (get_out_wand_in_dlog() == FALSE) break;
-			store_which_out_wand--;
+	cd_create_dialog_parent_num(832,0);
 
-			switch (store_out_wand_mode) {
-				case 0: 
-					if (store_which_out_wand < 0) store_which_out_wand = 3;
-					store_out_wand = current_terrain.wandering[store_which_out_wand]; break;
-				case 1: 
-					if (store_which_out_wand < 0) store_which_out_wand = 3;
-					store_out_wand = current_terrain.special_enc[store_which_out_wand];  break;
-				case 2: 
-					if (store_which_out_wand < 0) store_which_out_wand = 7;
-					store_out_wand = current_terrain.preset[store_which_out_wand];  break;
-				}
-			put_out_wand_in_dlog();
-			break;
-		case 23:
-			if (get_out_wand_in_dlog() == FALSE) break;
-			store_which_out_wand++;
-			switch (store_out_wand_mode) {
-				case 0: 
-					if (store_which_out_wand > 3) store_which_out_wand = 0;
-					store_out_wand = current_terrain.wandering[store_which_out_wand]; break;
-				case 1: 
-					if (store_which_out_wand > 3) store_which_out_wand = 0;
-					store_out_wand = current_terrain.special_enc[store_which_out_wand];  break;
-				case 2: 
-					if (store_which_out_wand > 7) store_which_out_wand = 0;
-					store_out_wand = current_terrain.preset[store_which_out_wand];  break;
-				}
-			put_out_wand_in_dlog();
-			break;
-
-		default:
-			if (get_out_wand_in_dlog() == FALSE)
-				 break; 
-			cd_flip_led(852,38,item_hit);
-			cd_flip_led(852,39,item_hit);
-			cd_flip_led(852,40,item_hit);
-			if ((item_hit >= 24) && (item_hit <= 27)) {
-				i = choose_text_res(-1,0,255,store_out_wand.hostile[item_hit - 24],852,"Choose Which Creature:"); 
-				if (i >= 0) store_out_wand.hostile[item_hit - 24] = i;
-				put_out_wand_in_dlog();
-				}
-			if ((item_hit >= 28) && (item_hit <= 30)) {
-				i = choose_text_res(-1,0,255,store_out_wand.friendly[item_hit - 28],852,"Choose Which Creature:"); 
-				if (i >= 0) store_out_wand.friendly[item_hit - 28] = i;
-				put_out_wand_in_dlog();
-				}
-			break;
-		}
-}
-
-// mode 0 - wandering 1 - special
-void edit_out_wand(short mode)
-{
-	store_which_out_wand = 0;
-	store_out_wand_mode = mode;
-	switch (store_out_wand_mode) {
-		case 0: store_out_wand = current_terrain.wandering[store_which_out_wand]; break;
-		case 1: store_out_wand = current_terrain.special_enc[store_which_out_wand];  break;
-		case 2: store_out_wand = current_terrain.preset[store_which_out_wand];  break;
-		}
-	
-	cd_create_dialog_parent_num(852,0);
-	
-	if (mode == 1)
-		csit(852,53,"Outdoor Special Encounter:");
-	if (mode == 2)
-		csit(852,53,"Outdoor Preplaced Encounter:");
-
-	put_out_wand_in_dlog();
+	put_town_details_in_dlog();
 
 	while (dialog_not_toast)
-		ModalDialog();	
+		ModalDialog();
 
-	cd_kill_dialog(852,0);
-
+	cd_kill_dialog(832,0);
 }
-
-Boolean save_town_details()
-{
-	char str[256];
-	short i;
-	short dummy;
-	
-	// Check for errors before saving anything
-	dummy = CDGN(832,10);
-	if (cre(dummy,0,2,"The beam type must be 0 (no beams), 1 (damage beams), or 2 (impassable beams).","",832) == TRUE) return FALSE;
-	dummy = CDGN(832,11);
-	if (cre(dummy,-1,200,"The background sound must be -1 (no sound) or between 0 and 200.","",832) == TRUE) return FALSE;
-	dummy = CDGN(832,12);
-	if (cre(dummy,-1,10000,"The town death day must be -1 (never dies) or between 0 and 10000.","",832) == TRUE) return FALSE;
-	dummy = CDGN(832,13);
-	if (cre(dummy,-1,9,"The town death prevention event must be -1 (never dies) or between 0 and 9.","",832) == TRUE) return FALSE;
-	dummy = CDGN(832,17);
-	if (cre(dummy,-1,255,"The external floor type must be -1 (uses edge terrain) or between 0 and 255.","",832) == TRUE) return FALSE;
-	for (i = 0; i < 8; i++) {
-		dummy = CDGN(832,18 + i);
-		if (cre(dummy,-1,47,"The outdoor exit coordinates must all be -1 (game determines best location) or between 0 and 47.","",832) == TRUE) return FALSE;
-		}
-	CDGT(832,2,str);
-	if (string_not_clean(str,20,0,"The name of the town",832))
-		return FALSE;
-	CDGT(832,9,str);
-	if (string_not_clean(str,SCRIPT_NAME_LEN,1,"The town script",832))
-		return FALSE;
-	
-	// save values
-	CDGT(832,2,town.town_name);
-	strcpy(&zone_names.town_names[cur_town][0],&town.town_name[0]);
-	town.lighting = cd_get_led_range(832,33,36);
-	town.is_on_surface = cd_get_led(832,32);
-	town.monster_respawn_chance = CDGN(832,3);
-	town.wall_1_sheet = CDGN(832,4);
-	town.wall_1_height = CDGN(832,5);
-	town.wall_2_sheet = CDGN(832,6);
-	town.wall_2_height = CDGN(832,7);
-	town.cliff_sheet = CDGN(832,8);
-	CDGT(832,9,town.town_script);
-	town.beam_type = CDGN(832,10);
-	town.environmental_sound = CDGN(832,11);
-	town.town_kill_day = CDGN(832,12);
-	town.town_linked_event = CDGN(832,13);
-	scenario.town_starts_hidden[cur_town] = (CDGN(832,14) == 0) ? 0 : 1;
-	town.spec_on_entry = CDGN(832,15);
-	town.spec_on_entry_if_dead = CDGN(832,16);
-	town.external_floor_type = CDGN(832,17);
-	for (i = 0; i < 4; i++) {
-		town.exit_locs[i].x = (t_coord)CDGN(832,18 + i * 2);
-		town.exit_locs[i].y = (t_coord)CDGN(832,19 + i * 2);
-		town.exit_specs[i] = CDGN(832,26 + i);
-		}		
-
-	
-	return TRUE;
-}
-
 
 void put_town_details_in_dlog()
 {
@@ -768,8 +880,6 @@ void put_town_details_in_dlog()
 	CDSN(832,12,town.town_kill_day);
 	CDSN(832,13,town.town_linked_event);
 	CDSN(832,14,scenario.town_starts_hidden[cur_town]);
-	CDSN(832,15,town.spec_on_entry);
-	CDSN(832,16,town.spec_on_entry_if_dead);
 	CDSN(832,17,town.external_floor_type);
 	for (i = 0; i < 4; i++) {
 		CDSN(832,18 + i * 2,town.exit_locs[i].x);
@@ -795,31 +905,73 @@ void edit_town_details_event_filter (short item_hit)
 		}
 }
 
-void edit_town_details()
-// ignore parent in Mac version
-{		
-	cd_create_dialog_parent_num(832,0);
-	
-	put_town_details_in_dlog();
-	
-	while (dialog_not_toast)
-		ModalDialog();	
-	
-	cd_kill_dialog(832,0);
+Boolean save_town_details()
+{
+	char str[256];
+	short i;
+	short dummy;
+
+	// Check for errors before saving anything
+	dummy = CDGN(832,10);
+	if (cre(dummy,0,2,"The beam type must be 0 (no beams), 1 (damage beams), or 2 (impassable beams).","",832) == TRUE) return FALSE;
+	dummy = CDGN(832,11);
+	if (cre(dummy,-1,200,"The background sound must be -1 (no sound) or between 0 and 200.","",832) == TRUE) return FALSE;
+	dummy = CDGN(832,12);
+	if (cre(dummy,-1,10000,"The town death day must be -1 (never dies) or between 0 and 10000.","",832) == TRUE) return FALSE;
+	dummy = CDGN(832,13);
+	if (cre(dummy,-1,9,"The town death prevention event must be -1 (never dies) or between 0 and 9.","",832) == TRUE) return FALSE;
+	dummy = CDGN(832,17);
+	if (cre(dummy,-1,255,"The external floor type must be -1 (uses edge terrain) or between 0 and 255.","",832) == TRUE) return FALSE;
+	for (i = 0; i < 8; i++) {
+		dummy = CDGN(832,18 + i);
+		if (cre(dummy,-1,47,"The outdoor exit coordinates must all be -1 (game determines best location) or between 0 and 47.","",832) == TRUE) return FALSE;
+		}
+	CDGT(832,2,str);
+	if (string_not_clean(str,20,0,"The name of the town",832))
+		return FALSE;
+	CDGT(832,9,str);
+	if (string_not_clean(str,SCRIPT_NAME_LEN,1,"The town script",832))
+		return FALSE;
+
+	// save values
+	CDGT(832,2,town.town_name);
+	strcpy(&zone_names.town_names[cur_town][0],&town.town_name[0]);
+	town.lighting = cd_get_led_range(832,33,36);
+	town.is_on_surface = cd_get_led(832,32);
+	town.monster_respawn_chance = CDGN(832,3);
+	town.wall_1_sheet = CDGN(832,4);
+	town.wall_1_height = CDGN(832,5);
+	town.wall_2_sheet = CDGN(832,6);
+	town.wall_2_height = CDGN(832,7);
+	town.cliff_sheet = CDGN(832,8);
+	CDGT(832,9,town.town_script);
+	town.beam_type = CDGN(832,10);
+	town.environmental_sound = CDGN(832,11);
+	town.town_kill_day = CDGN(832,12);
+	town.town_linked_event = CDGN(832,13);
+	scenario.town_starts_hidden[cur_town] = (CDGN(832,14) == 0) ? 0 : 1;
+	town.external_floor_type = CDGN(832,17);
+	for (i = 0; i < 4; i++) {
+		town.exit_locs[i].x = (t_coord)CDGN(832,18 + i * 2);
+		town.exit_locs[i].y = (t_coord)CDGN(832,19 + i * 2);
+		town.exit_specs[i] = CDGN(832,26 + i);
+		}
+
+
+	return TRUE;
 }
 
-
-Boolean save_town_wand()
+void edit_town_wand()
+// ignore parent in Mac version
 {
-	short i,j;
-	
-	for (i = 0; i < 4; i++) 
-	for (j = 0; j < 6; j++) 
-		{
-		town.respawn_monsts[i][j] = CDGN(835,2 + i * 6 + j);
-		}	
-		
-	return TRUE;
+	cd_create_dialog_parent_num(835,0);
+
+	put_town_wand_in_dlog();
+
+	while (dialog_not_toast)
+		ModalDialog();
+
+	cd_kill_dialog(835,0);
 }
 
 void put_town_wand_in_dlog()
@@ -858,19 +1010,20 @@ void edit_town_wand_event_filter (short item_hit)
 		}
 }
 
-void edit_town_wand()
-// ignore parent in Mac version
+
+
+Boolean save_town_wand()
 {
-	cd_create_dialog_parent_num(835,0);
-	
-	put_town_wand_in_dlog();
-	
-	while (dialog_not_toast)
-		ModalDialog();	
+	short i,j;
 
-	cd_kill_dialog(835,0);
+	for (i = 0; i < 4; i++)
+	for (j = 0; j < 6; j++)
+		{
+		town.respawn_monsts[i][j] = CDGN(835,2 + i * 6 + j);
+		}
+
+	return TRUE;
 }
-
 
 void pick_out_event_filter (short item_hit)
 {
@@ -1280,21 +1433,23 @@ Boolean edit_area_rect_str(short which_str /*,short mode */)
 	return (Boolean)dialog_answer;
 }
 
-Boolean save_out_strs()
+void edit_out_strs()
+// ignore parent in Mac version
 {
-	char str[256];
 	short i;
-	
-	for (i = 0; i < 8; i++) {
-		CDGT(850,2 + i,(char *) str);
-		str[29] = 0;
-		sprintf((char *)current_terrain.info_rect_text[i],"%s",str);
-		if (str_do_delete[i] > 0)
-			current_terrain.info_rect[i].right = -1;
-		}
-	return TRUE;
-}
 
+	for (i = 0; i < 8; i++)
+		str_do_delete[i] = 0;
+
+	cd_create_dialog_parent_num(850,0);
+
+	put_out_strs_in_dlog();
+
+	while (dialog_not_toast)
+		ModalDialog();
+
+	cd_kill_dialog(850,0);
+}
 
 void put_out_strs_in_dlog()
 {
@@ -1337,38 +1492,37 @@ void edit_out_strs_event_filter (short item_hit)
 		}
 }
 
-void edit_out_strs()
+Boolean save_out_strs()
+{
+	char str[256];
+	short i;
+
+	for (i = 0; i < 8; i++) {
+		CDGT(850,2 + i,(char *) str);
+		str[29] = 0;
+		sprintf((char *)current_terrain.info_rect_text[i],"%s",str);
+		if (str_do_delete[i] > 0)
+			current_terrain.info_rect[i].right = -1;
+		}
+	return TRUE;
+}
+
+void edit_town_strs()
 // ignore parent in Mac version
 {
 	short i;
 	
-	for (i = 0; i < 8; i++)
+	for (i = 0; i < 16; i++)
 		str_do_delete[i] = 0;
 		
-	cd_create_dialog_parent_num(850,0);
+	cd_create_dialog_parent_num(839,0);
 	
-	put_out_strs_in_dlog();
-	
+	put_town_strs_in_dlog();
+
 	while (dialog_not_toast)
 		ModalDialog();	
-		
-	cd_kill_dialog(850,0);
-}
 
-
-Boolean save_town_strs()
-{
-	char str[256];
-	short i;
-	
-	for (i = 0; i < 16; i++) {
-		CDGT(839,2 + i,(char *) str);
-		str[29] = 0;
-		sprintf((char *)town.info_rect_text[i],"%s",str);
-		if (str_do_delete[i] > 0)
-			town.room_rect[i].right = -1;
-		}
-	return TRUE;
+	cd_kill_dialog(839,0);
 }
 
 void put_town_strs_in_dlog()
@@ -1396,10 +1550,10 @@ void edit_town_strs_event_filter (short item_hit)
 	switch (item_hit) {
 		case 18:
 			if (save_town_strs() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 dialog_not_toast = FALSE;
 			break;
 		case 19:
-				 dialog_not_toast = FALSE; 
+				 dialog_not_toast = FALSE;
 			break;
 		default:
 			if ((item_hit >= 41) && (item_hit <= 56)) {
@@ -1412,51 +1566,47 @@ void edit_town_strs_event_filter (short item_hit)
 		}
 }
 
-void edit_town_strs()
-// ignore parent in Mac version
+Boolean save_town_strs()
 {
+	char str[256];
 	short i;
-	
-	for (i = 0; i < 16; i++)
-		str_do_delete[i] = 0;
-		
-	cd_create_dialog_parent_num(839,0);
-	
-	put_town_strs_in_dlog();
 
-	while (dialog_not_toast)
-		ModalDialog();	
-
-	cd_kill_dialog(839,0);
+	for (i = 0; i < 16; i++) {
+		CDGT(839,2 + i,(char *) str);
+		str[29] = 0;
+		sprintf((char *)town.info_rect_text[i],"%s",str);
+		if (str_do_delete[i] > 0)
+			town.room_rect[i].right = -1;
+		}
+	return TRUE;
 }
 
-
-Boolean save_item_placement()
+void edit_item_placement()
+// ignore parent in Mac version
 {
-	short i;
-	
-	store_storage.property = cd_get_led(812,38);
-	store_storage.ter_type = CDGN(812,22);
-	for (i = 0; i < 10; i++) {
-		store_storage.item_num[i] = CDGN(812,2 + i);
-		store_storage.item_odds[i] = CDGN(812,12 + i);
-		}
-	scenario.storage_shortcuts[cur_shortcut] = store_storage;
-	
-	return TRUE;
+	store_storage = scenario.storage_shortcuts[0];
+	cur_shortcut = 0;
+
+	cd_create_dialog_parent_num(812,0);
+
+	put_item_placement_in_dlog();
+
+	while (dialog_not_toast)
+		ModalDialog();
+	cd_kill_dialog(812,0);
 }
 
 void put_item_placement_in_dlog()
 {
 	short i;
 	
-	cdsin(812,27,cur_shortcut);
-	cd_set_led(812,38,store_storage.property);
-	CDSN(812,22,store_storage.ter_type);
 	for (i = 0; i < 10; i++) {
 		CDSN(812,2 + i,store_storage.item_num[i]);
 		CDSN(812,12 + i,store_storage.item_odds[i]);
 		}
+	CDSN(812,22,store_storage.ter_type);
+	cdsin(812,27,cur_shortcut);
+	cd_set_led(812,38,store_storage.property);
 
 }
 
@@ -1505,37 +1655,32 @@ void edit_item_placement_event_filter (short item_hit)
 		}
 }
 
-void edit_item_placement()
-// ignore parent in Mac version
-{	
-	store_storage = scenario.storage_shortcuts[0];
-	cur_shortcut = 0;
-	
-	cd_create_dialog_parent_num(812,0);
-	
-	put_item_placement_in_dlog();
- 
-	while (dialog_not_toast)
-		ModalDialog();	
-	cd_kill_dialog(812,0);
-}
-
-Boolean save_add_town()
+Boolean save_item_placement()
 {
 	short i;
-	
+
+	store_storage.property = cd_get_led(812,38);
+	store_storage.ter_type = CDGN(812,22);
 	for (i = 0; i < 10; i++) {
-		scenario.town_to_add_to[i] = CDGN(810,2 + i);
-		if (cre(scenario.town_to_add_to[i],
-			-1,199,"Town number must be from 0 to 199 (or -1 for no effect).","",810) == TRUE) return FALSE;
-		scenario.flag_to_add_to_town[i][0] = CDGN(810,12 + i);
-		if (cre(scenario.flag_to_add_to_town[i][0],
-			0,299,"First part of flag must be from 0 to 299.","",810) == TRUE) return FALSE;
-		scenario.flag_to_add_to_town[i][1] = CDGN(810,22 + i);
-		if (cre(scenario.flag_to_add_to_town[i][1],
-			0,29,"Second part of flag must be from 0 to 29.","",810) == TRUE) return FALSE;
+		store_storage.item_num[i] = CDGN(812,2 + i);
+		store_storage.item_odds[i] = CDGN(812,12 + i);
 		}
+	scenario.storage_shortcuts[cur_shortcut] = store_storage;
+
 	return TRUE;
+}
+
+void edit_add_town()
+// ignore parent in Mac version
+{
+	cd_create_dialog_parent_num(810,0);
+
+	put_add_town_in_dlog();
+
+	while (dialog_not_toast)
+		ModalDialog();
+
+	cd_kill_dialog(810,0);
 }
 
 void put_add_town_in_dlog()
@@ -1561,17 +1706,41 @@ void edit_add_town_event_filter (short item_hit)
 		}
 }
 
-void edit_add_town()
+Boolean save_add_town()
+{
+	short i;
+
+	for (i = 0; i < 10; i++) {
+		scenario.town_to_add_to[i] = CDGN(810,2 + i);
+		if (cre(scenario.town_to_add_to[i],
+			-1,199,"Town number must be from 0 to 199 (or -1 for no effect).","",810) == TRUE) return FALSE;
+		scenario.flag_to_add_to_town[i][0] = CDGN(810,12 + i);
+		if (cre(scenario.flag_to_add_to_town[i][0],
+			0,299,"First part of flag must be from 0 to 299.","",810) == TRUE) return FALSE;
+		scenario.flag_to_add_to_town[i][1] = CDGN(810,22 + i);
+		if (cre(scenario.flag_to_add_to_town[i][1],
+			0,29,"Second part of flag must be from 0 to 29.","",810) == TRUE) return FALSE;
+		}
+	return TRUE;
+}
+
+short edit_make_scen_1(char *filename,char *title,short *start_on_surface)
 // ignore parent in Mac version
 {
-	cd_create_dialog_parent_num(810,0);
-	
-	put_add_town_in_dlog();
-	
-	while (dialog_not_toast)
-		ModalDialog();	
+	cd_create_dialog_parent_num(800,0);
 
-	cd_kill_dialog(810,0);
+	put_make_scen_1_in_dlog();
+
+	while (dialog_not_toast)
+		ModalDialog();
+
+	CDGT(800,2,title);
+	title[49] = 0;
+	CDGT(800,3,filename);
+	filename[21] = 0;
+	*start_on_surface = cd_get_led(800,10);
+	cd_kill_dialog(800,0);
+	return dialog_answer;
 }
 
 void put_make_scen_1_in_dlog()
@@ -1579,6 +1748,7 @@ void put_make_scen_1_in_dlog()
 	CDST(800,2,"Scenario name");
 	CDST(800,3,"filename");
 }
+
 
 void edit_make_scen_1_event_filter (short item_hit)
 {
@@ -1614,22 +1784,23 @@ void edit_make_scen_1_event_filter (short item_hit)
 		}
 }
 
-short edit_make_scen_1(char *filename,char *title,short *start_on_surface)
+short edit_make_scen_2(short *val_array)
 // ignore parent in Mac version
 {
-	cd_create_dialog_parent_num(800,0);
-	
-	put_make_scen_1_in_dlog();
-	
-	while (dialog_not_toast)
-		ModalDialog();	
+	short i;;
 
-	CDGT(800,2,title);
-	title[49] = 0;
-	CDGT(800,3,filename);
-	filename[21] = 0;
-	*start_on_surface = cd_get_led(800,10);
-	cd_kill_dialog(800,0);
+	//array = val_array;
+	cd_create_dialog_parent_num(801,0);
+
+	put_make_scen_2_in_dlog();
+
+	while (dialog_not_toast)
+		ModalDialog();
+
+	for (i = 0; i < 2; i++)
+		val_array[i] = CDGN(801,2 + i);
+	val_array[5] = cd_get_led(801,17);
+	cd_kill_dialog(801,0);
 	return dialog_answer;
 }
 
@@ -1666,26 +1837,6 @@ void edit_make_scen_2_event_filter (short item_hit)
 		}
 }
 
-short edit_make_scen_2(short *val_array)
-// ignore parent in Mac version
-{
-	short i;;
-	
-	//array = val_array;
-	cd_create_dialog_parent_num(801,0);
-	
-	put_make_scen_2_in_dlog();
-	
-	while (dialog_not_toast)
-		ModalDialog();	
-
-	for (i = 0; i < 2; i++)
-		val_array[i] = CDGN(801,2 + i);
-	val_array[5] = cd_get_led(801,17);
-	cd_kill_dialog(801,0);
-	return dialog_answer;
-}
-
 void build_scenario()
 {
 	short two_flags[6]; // width, height, large, med, small, default_town
@@ -1707,33 +1858,17 @@ void build_scenario()
 	else fancy_choice_dialog(875,0);
 }
 
-Boolean save_scen_details()
+void edit_scen_details()
+// ignore parent in Mac version
 {
-	char str[256];
-	short i;
-	
-	scenario.rating = cd_get_led_range(803,11,14);
-	scenario.ver[0] = (unsigned char)CDGN(803,2);
-	scenario.ver[1] = (unsigned char)CDGN(803,3);
-	scenario.ver[2] = (unsigned char)CDGN(803,4);
-	for (i = 0; i < 3; i++)
-		if (cre(scenario.ver[i],
-			0,9,"The digits in the version number must be in the 0 to 9 range.","",803) == TRUE) return FALSE;
+	cd_create_dialog_parent_num(803,0);
 
-	CDGT(803,5,scenario.credits_text[1]);
-	CDGT(803,6,scenario.scen_desc);
-	CDGT(803,7,(char *) str);
-	str[49] = 0;
-	strcpy(scenario.scen_name,(char *) str);
+	put_scen_details_in_dlog();
 
-	scenario.min_level = CDGN(803,8);
-	if (cre(scenario.min_level,
-		0,100,"The minimum level must be between 0 and 100.","",803) == TRUE) return FALSE;
-	scenario.max_level = CDGN(803,9);
-	if (cre(scenario.max_level,
-		0,100,"The maximum level must be between 0 and 100.","",803) == TRUE) return FALSE;
-	
-	return TRUE;
+	while (dialog_not_toast)
+		ModalDialog();
+
+	cd_kill_dialog(803,0);
 }
 
 void put_scen_details_in_dlog()
@@ -1762,17 +1897,33 @@ void edit_scen_details_event_filter (short item_hit)
 		}
 }
 
-void edit_scen_details()
-// ignore parent in Mac version
+Boolean save_scen_details()
 {
-	cd_create_dialog_parent_num(803,0);
-	
-	put_scen_details_in_dlog();
-	
-	while (dialog_not_toast)
-		ModalDialog();	
+	char str[256];
+	short i;
 
-	cd_kill_dialog(803,0);
+	scenario.rating = cd_get_led_range(803,11,14);
+	scenario.ver[0] = (unsigned char)CDGN(803,2);
+	scenario.ver[1] = (unsigned char)CDGN(803,3);
+	scenario.ver[2] = (unsigned char)CDGN(803,4);
+	for (i = 0; i < 3; i++)
+		if (cre(scenario.ver[i],
+			0,9,"The digits in the version number must be in the 0 to 9 range.","",803) == TRUE) return FALSE;
+
+	CDGT(803,5,scenario.credits_text[1]);
+	CDGT(803,6,scenario.scen_desc);
+	CDGT(803,7,(char *) str);
+	str[49] = 0;
+	strcpy(scenario.scen_name,(char *) str);
+
+	scenario.min_level = CDGN(803,8);
+	if (cre(scenario.min_level,
+		0,100,"The minimum level must be between 0 and 100.","",803) == TRUE) return FALSE;
+	scenario.max_level = CDGN(803,9);
+	if (cre(scenario.max_level,
+		0,100,"The maximum level must be between 0 and 100.","",803) == TRUE) return FALSE;
+
+	return TRUE;
 }
 
 void edit_scen_intro_event_filter (short item_hit)

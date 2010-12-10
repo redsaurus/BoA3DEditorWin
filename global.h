@@ -1740,6 +1740,9 @@ void edit_placed_script_event_filter (short item_hit);
 void edit_placed_script(short which_m);
 void edit_placed_monst_event_filter (short item_hit);
 void edit_placed_monst(short which_m);
+void edit_placed_item_event_filter (short item_hit);
+void edit_placed_item(short which_m);
+
 void edit_boats();
 void edit_boats_event_filter (short item_hit);
 void put_boats_in_dlog();

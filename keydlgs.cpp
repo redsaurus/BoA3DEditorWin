@@ -149,63 +149,6 @@ void display_strings(char *text1, char *text2,char *title,short parent_num)
 	cd_kill_dialog(store_which_string_dlog,0);
 }
 
-void choose_text_res_event_filter (short item_hit)
-{
-	short i;
-	
-	switch (item_hit) {
-		case 2:
-			dialog_answer = store_cur_t;
-			dialog_not_toast = FALSE;
-			break;
-		case 6:
-			dialog_answer = -1;
-			dialog_not_toast = FALSE;
-			break;
-		case 4:
-			if (which_page == 0)
-				which_page = (store_last_t - store_first_t) / 40;
-				else which_page--;
-			put_text_res();
-			break;
-		case 5:
-			if (which_page == (store_last_t - store_first_t) / 40)
-				which_page = 0;
-				else which_page++;
-			put_text_res();		
-			break;
-		default:
-			if ((item_hit >= 8) && (item_hit <= 86)) {
-				store_cur_t = 40 * which_page + (item_hit - 8) / 2 + store_first_t;
-				for (i = 8; i <= 86; i += 2) 
-					cd_set_led(820,i,(i == item_hit) ? 1 : 0);
-				}
-			break;
-	}
-}
-
-void put_text_res()
-{
-	short i;
-	char str[256];
-	
-	for (i = 0; i < 40; i++) {
-		if (store_first_t + which_page * 40 + i > store_last_t) {
-			csit(820,7 + i * 2,"");
-			cd_activate_item(820,8 + i * 2,0);
-		}
-		else{
-			get_str(str,store_res_list,store_first_t + 40 * which_page + i);
-			csit(820,7 + i * 2,(char *) str);
-			cd_activate_item(820,8 + i * 2,1);
-		}
-		if (which_page * 40 + i == store_cur_t - store_first_t)
-			cd_set_led(820,8 + i * 2,1);
-		else
-			cd_set_led(820,8 + i * 2,0);
-	}
-}
-
 // res_list:
 //   if >= 0, corresponds to a string list
 //   -1 - creature types
@@ -223,26 +166,145 @@ short choose_text_res(short res_list,short first_t,short last_t,short cur_choice
 	if ((cur_choice >= first_t) && (cur_choice <= last_t))
 		store_cur_t = cur_choice;
 		else store_cur_t = first_t;
-	which_page = (store_cur_t - store_first_t) / 40;
+	which_page = (store_cur_t - store_first_t) / 25;
 
 	cd_create_dialog_parent_num(820,parent_num);
 
 	csit(820,3,title);
-	if (last_t - first_t < 40) {
+	if (last_t - first_t < 25) {
 		cd_activate_item(820,4,0);
 		cd_activate_item(820,5,0);
 		}
 	put_text_res();
-		
+
 
 	while (dialog_not_toast)
-		ModalDialog();	
-	
+		ModalDialog();
+
 	cd_kill_dialog(820,0);
-	
+
 	return dialog_answer;
 }
 
+void put_text_res()
+{
+	short i;
+	char str[256];
+
+	for (i = 0; i < 25; i++) {
+		if (store_first_t + which_page * 25 + i > store_last_t) {
+			csit(820,7 + i * 2,"");
+			cd_activate_item(820,8 + i * 2,0);
+		}
+		else{
+			get_str(str,store_res_list,store_first_t + 25 * which_page + i);
+			csit(820,7 + i * 2,(char *) str);
+			cd_activate_item(820,8 + i * 2,1);
+		}
+		if (which_page * 25 + i == store_cur_t - store_first_t)
+			cd_set_led(820,8 + i * 2,1);
+		else
+			cd_set_led(820,8 + i * 2,0);
+	}
+	 cdsin(820,57,which_page * 25);
+	 cdsin(820,58,which_page * 25 + 1);
+	 cdsin(820,59,which_page * 25 + 2);
+	 cdsin(820,60,which_page * 25 + 3);
+	 cdsin(820,61,which_page * 25 + 4);
+	 cdsin(820,62,which_page * 25 + 5);
+	 cdsin(820,63,which_page * 25 + 6);
+	 cdsin(820,64,which_page * 25 + 7);
+	 cdsin(820,65,which_page * 25 + 8);
+	 cdsin(820,66,which_page * 25 + 9);
+	 cdsin(820,67,which_page * 25 + 10);
+	 cdsin(820,68,which_page * 25 + 11);
+	 cdsin(820,69,which_page * 25 + 12);
+	 cdsin(820,70,which_page * 25 + 13);
+	 cdsin(820,71,which_page * 25 + 14);
+	 cdsin(820,72,which_page * 25 + 15);
+	 cdsin(820,73,which_page * 25 + 16);
+	 cdsin(820,74,which_page * 25 + 17);
+	 cdsin(820,75,which_page * 25 + 18);
+	 cdsin(820,76,which_page * 25 + 19);
+	 cdsin(820,77,which_page * 25 + 20);
+	 cdsin(820,78,which_page * 25 + 21);
+	 cdsin(820,79,which_page * 25 + 22);
+	 cdsin(820,80,which_page * 25 + 23);
+	 cdsin(820,81,which_page * 25 + 24);
+}
+
+void choose_text_res_event_filter (short item_hit)
+{
+	short i;
+
+	switch (item_hit) {
+		case 2:
+			dialog_answer = store_cur_t;
+			dialog_not_toast = FALSE;
+			break;
+		case 6:
+			dialog_answer = -1;
+			dialog_not_toast = FALSE;
+			break;
+		case 4:
+			if (which_page == 0)
+				which_page = (store_last_t - store_first_t) / 25;
+				else which_page--;
+			put_text_res();
+			break;
+		case 5:
+			if (which_page == (store_last_t - store_first_t) / 25)
+				which_page = 0;
+				else which_page++;
+			put_text_res();
+			break;
+
+		case 83:
+				which_page = 2;
+			put_text_res();
+			break;
+		case 85:
+				which_page = 4;
+			put_text_res();
+			break;
+		case 87:
+				which_page = 6;
+			put_text_res();
+			break;
+		case 89:
+				which_page = 8;
+			put_text_res();
+			break;
+		case 91:
+				which_page = 10;
+			put_text_res();
+			break;
+		case 93:
+				which_page = 12;
+			put_text_res();
+			break;
+		case 95:
+				which_page = 14;
+			put_text_res();
+			break;
+		case 97:
+				which_page = 16;
+			put_text_res();
+			break;
+		case 99:
+				which_page = 18;
+			put_text_res();
+			break;
+
+		default:
+			if ((item_hit >= 8) && (item_hit <= 56)) {
+				store_cur_t = 25 * which_page + (item_hit - 8) / 2 + store_first_t;
+				for (i = 8; i <= 56; i += 2)
+					cd_set_led(820,i,(i == item_hit) ? 1 : 0);
+				}
+			break;
+	}
+}
 
 void edit_special_num_event_filter (short item_hit)
 {

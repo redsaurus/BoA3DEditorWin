@@ -1356,14 +1356,14 @@ void handle_help_menu(int item_hit)
 							redraw_screen();
 		break;
 		case 20: //   Rotate current object display mode: going forwards
-					object_display_mode = ((object_display_mode + 1) % 6);
+					object_display_mode = ((object_display_mode + 1) % 7);
 					numerical_display_mode = 0;
 					need_redraw = TRUE;
 			break;
 		case 21: //   Rotate current object display mode: going backwards
 				 if (object_display_mode == 0)
-				    object_display_mode = 5;
-					else object_display_mode = ((object_display_mode - 1) % 6);
+				    object_display_mode = 6;
+					else object_display_mode = ((object_display_mode - 1) % 7);
 					numerical_display_mode = 0;
 					need_redraw = TRUE;
 			break;
@@ -1468,6 +1468,7 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam)
 		case 839: edit_town_strs_event_filter(item_hit); break;
 		case 840: edit_area_rect_event_filter(item_hit); break;
 		case 841: pick_import_town_event_filter(item_hit); break;
+		case 842: edit_placed_item_event_filter(item_hit); break;
 		case 850: edit_out_strs_event_filter(item_hit); break;
 		case 851: outdoor_details_event_filter(item_hit); break;
 		case 852: edit_out_wand_event_filter(item_hit); break;

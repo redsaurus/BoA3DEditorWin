@@ -636,92 +636,105 @@ END
 820 DIALOG  10, 10, 530, 386
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,407,352,31,10,WS_GROUP
-    LTEXT           "1_63",2,407,352,75,16
+DEFPUSHBUTTON   "OK",1,407,480,31,10,WS_GROUP
+    LTEXT           "1_63",2,520,440,75,16
     LTEXT           "~Select:",3,29,23,256,17
-    LTEXT           "0_2",4,28,352,62,16
-    LTEXT           "0_3",5,90,352,75,16
-    LTEXT           "0_5",6,341,352,62,16
-    LTEXT           "*",7,27,46,200,13
-    LTEXT           "2_0",8,230,48,23,14
-    LTEXT           "*",9,27,61,200,13
-    LTEXT           "2_0",10,230,63,23,14
-    LTEXT           "*",11,27,76,200,13
-    LTEXT           "2_0",12,230,78,23,14
-    LTEXT           "*",13,27,91,200,13
-    LTEXT           "2_0",14,230,93,23,14
-    LTEXT           "*",15,27,106,200,13
-    LTEXT           "2_0",16,230,108,23,14
-    LTEXT           "*",17,27,121,200,13
-    LTEXT           "2_0",18,230,123,23,14
-    LTEXT           "*",19,27,136,200,13
-    LTEXT           "2_0",20,230,138,23,14
-    LTEXT           "*",21,27,151,200,13
-    LTEXT           "2_0",22,230,153,23,14
-    LTEXT           "*",23,27,166,200,13
-    LTEXT           "2_0",24,230,168,23,14
-    LTEXT           "*",25,27,181,200,13
-    LTEXT           "2_0",26,230,183,23,14
-    LTEXT           "*",27,27,196,200,13
-    LTEXT           "2_0",28,230,198,23,14
-    LTEXT           "*",29,27,211,200,13
-    LTEXT           "2_0",30,230,213,23,14
-    LTEXT           "*",31,27,226,200,13
-    LTEXT           "2_0",32,230,228,23,14
-    LTEXT           "*",33,27,241,200,13
-    LTEXT           "2_0",34,230,243,23,14
-    LTEXT           "*",35,27,256,200,13
-    LTEXT           "2_0",36,230,258,23,14
-    LTEXT           "*",37,27,271,200,13
-    LTEXT           "2_0",38,230,273,23,14
-    LTEXT           "*",39,27,286,200,13
-    LTEXT           "2_0",40,230,288,23,14
-    LTEXT           "*",41,27,301,200,13
-    LTEXT           "2_0",42,230,303,23,14
-    LTEXT           "*",43,27,316,200,13
-    LTEXT           "2_0",44,230,318,23,14
-    LTEXT           "*",45,27,331,200,13
-    LTEXT           "2_0",46,230,333,23,14
-    LTEXT           "*",47,255,46,201,14
-    LTEXT           "2_0",48,459,48,23,14
-    LTEXT           "*",49,255,61,201,14
-    LTEXT           "2_0",50,459,63,23,14
-    LTEXT           "*",51,255,76,201,14
-    LTEXT           "2_0",52,459,78,23,14
-    LTEXT           "*",53,255,91,201,14
-    LTEXT           "2_0",54,459,93,23,14
-    LTEXT           "*",55,255,106,201,14
-    LTEXT           "2_0",56,459,108,23,14
-    LTEXT           "*",57,255,121,201,14
-    LTEXT           "2_0",58,459,123,23,14
-    LTEXT           "*",59,255,136,201,14
-    LTEXT           "2_0",60,459,138,23,14
-    LTEXT           "*",61,255,151,201,14
-    LTEXT           "2_0",62,459,153,23,14
-    LTEXT           "*",63,255,166,201,14
-    LTEXT           "2_0",64,459,168,23,14
-    LTEXT           "*",65,255,181,201,14
-    LTEXT           "2_0",66,459,183,23,14
-    LTEXT           "*",67,255,196,201,14
-    LTEXT           "2_0",68,459,198,23,14
-    LTEXT           "*",69,255,211,201,14
-    LTEXT           "2_0",70,459,213,23,14
-    LTEXT           "*",71,255,226,201,14
-    LTEXT           "2_0",72,459,228,23,14
-    LTEXT           "*",73,255,241,201,14
-    LTEXT           "2_0",74,459,243,23,14
-    LTEXT           "*",75,255,256,201,14
-    LTEXT           "2_0",76,459,258,23,14
-    LTEXT           "*",77,255,271,201,14
-    LTEXT           "2_0",78,459,273,23,14
-    LTEXT           "*",79,255,286,201,14
-    LTEXT           "2_0",80,459,288,23,14
-    LTEXT           "*",81,255,301,201,14
-    LTEXT           "2_0",82,459,303,23,14
-    LTEXT           "*",83,255,316,201,14
-    LTEXT           "2_0",84,459,318,23,14
-    LTEXT           "*",85,255,331,201,14
-    LTEXT           "2_0",86,459,333,23,14
+    LTEXT           "0_2",4,28,440,62,16
+    LTEXT           "0_3",5,90,440,75,16
+    LTEXT           "0_5",6,450,440,62,16
+    LTEXT           "*",7,110,46,250,13
+    LTEXT           "2_0",8,80,48,23,14
+    LTEXT           "*",9,110,61,250,13
+    LTEXT           "2_0",10,80,62,23,14
+    LTEXT           "*",11,110,76,250,13
+    LTEXT           "2_0",12,80,77,23,14
+    LTEXT           "*",13,110,91,250,13
+    LTEXT           "2_0",14,80,92,23,14
+    LTEXT           "*",15,110,106,250,13
+    LTEXT           "2_0",16,80,107,23,14
+    LTEXT           "*",17,110,121,250,13
+    LTEXT           "2_0",18,80,122,23,14
+    LTEXT           "*",19,110,136,250,13
+    LTEXT           "2_0",20,80,137,23,14
+    LTEXT           "*",21,110,151,250,13
+    LTEXT           "2_0",22,80,152,23,14
+    LTEXT           "*",23,110,166,250,13
+    LTEXT           "2_0",24,80,167,23,14
+    LTEXT           "*",25,110,181,250,13
+    LTEXT           "2_0",26,80,182,23,14
+    LTEXT           "*",27,110,196,250,13
+    LTEXT           "2_0",28,80,197,23,14
+    LTEXT           "*",29,110,211,250,13
+    LTEXT           "2_0",30,80,212,23,14
+    LTEXT           "*",31,110,226,250,13
+    LTEXT           "2_0",32,80,227,23,14
+    LTEXT           "*",33,110,241,250,13
+    LTEXT           "2_0",34,80,242,23,14
+    LTEXT           "*",35,110,256,250,13
+    LTEXT           "2_0",36,80,257,23,14
+    LTEXT           "*",37,110,271,250,13
+    LTEXT           "2_0",38,80,272,23,14
+    LTEXT           "*",39,110,286,250,13
+    LTEXT           "2_0",40,80,287,23,14
+    LTEXT           "*",41,110,301,250,13
+    LTEXT           "2_0",42,80,302,23,14
+    LTEXT           "*",43,110,316,250,13
+    LTEXT           "2_0",44,80,317,23,14
+    LTEXT           "*",45,110,331,250,13
+    LTEXT           "2_0",46,80,332,23,14
+    LTEXT           "*",47,110,346,250,13
+    LTEXT           "2_0",48,80,347,23,14
+    LTEXT           "*",49,110,361,250,13
+    LTEXT           "2_0",50,80,362,23,14
+    LTEXT           "*",51,110,376,250,13
+    LTEXT           "2_0",52,80,377,23,14
+    LTEXT           "*",53,110,391,250,13
+    LTEXT           "2_0",54,80,392,23,14
+    LTEXT           "*",55,110,406,250,13
+    LTEXT           "2_0",56,80,407,23,14
+    LTEXT           "*",57,30,46,45,13
+    LTEXT           "*",58,30,61,45,13
+    LTEXT           "*",59,30,76,45,13
+    LTEXT           "*",60,30,91,45,13
+    LTEXT           "*",61,30,106,45,13
+    LTEXT           "*",62,30,121,45,13
+    LTEXT           "*",63,30,136,45,13
+    LTEXT           "*",64,30,151,45,13
+    LTEXT           "*",65,30,166,45,13
+    LTEXT           "*",66,30,181,45,13
+    LTEXT           "*",67,30,196,45,13
+    LTEXT           "*",68,30,211,45,13
+    LTEXT           "*",69,30,226,45,13
+    LTEXT           "*",70,30,241,45,13
+    LTEXT           "*",71,30,256,45,13
+    LTEXT           "*",72,30,271,45,13
+    LTEXT           "*",73,30,286,45,13
+    LTEXT           "*",74,30,301,45,13
+    LTEXT           "*",75,30,316,45,13
+    LTEXT           "*",76,30,331,45,13
+    LTEXT           "*",77,30,346,45,13
+    LTEXT           "*",78,30,361,45,13
+    LTEXT           "*",79,30,376,45,13
+    LTEXT           "*",80,30,391,45,13
+    LTEXT           "*",81,30,406,45,13
+    LTEXT           "*Start at slot 50:",82,380,51,110,14
+    LTEXT           "1_63",83,520,48,75,16
+    LTEXT           "*Start at slot 100:",84,380,81,110,14
+    LTEXT           "1_63",85,520,78,75,16
+    LTEXT           "*Start at slot 150:",86,380,111,110,14
+    LTEXT           "1_63",87,520,108,75,16
+    LTEXT           "*Start at slot 200:",88,380,141,110,14
+    LTEXT           "1_63",89,520,138,75,16
+    LTEXT           "*Start at slot 250:",90,380,171,110,14
+    LTEXT           "1_63",91,520,168,75,16
+    LTEXT           "*Start at slot 300:",92,380,201,110,14
+    LTEXT           "1_63",93,520,198,75,16
+    LTEXT           "*Start at slot 350:",94,380,231,110,14
+    LTEXT           "1_63",95,520,228,75,16
+    LTEXT           "*Start at slot 400:",96,380,261,110,14
+    LTEXT           "1_63",97,520,258,75,16
+    LTEXT           "*Start at slot 450:",98,380,291,110,14
+    LTEXT           "1_63",99,520,288,75,16
 END
 
 825 DIALOG  10, 10, 391, 150
@@ -784,49 +797,45 @@ END
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,434,337,31,10,WS_GROUP
-    LTEXT           "6_0",2,127,70,151,16
-    LTEXT           "6_0",3,196,191,78,16
-    LTEXT           "6_0",4,165,244,76,16
-    LTEXT           "6_0",5,165,268,76,16
-    LTEXT           "6_0",6,165,292,76,16
-    LTEXT           "6_0",7,165,316,76,16
-    LTEXT           "6_0",8,165,340,76,16
-    LTEXT           "6_0",9,435,67,135,16
-    LTEXT           "6_0",10,510,94,60,16
-    LTEXT           "6_0",11,510,123,60,16
-    LTEXT           "6_0",12,510,148,60,16
-    LTEXT           "6_0",13,510,172,60,16
-    LTEXT           "6_0",14,510,196,60,16
-    LTEXT           "6_0",15,510,220,60,16
-    LTEXT           "6_0",16,510,244,60,16
-    LTEXT           "6_0",17,510,279,60,16
-    LTEXT           "6_0",18,392,412,39,16
-    LTEXT           "6_0",19,442,412,33,16
-    LTEXT           "6_0",20,392,436,39,16
-    LTEXT           "6_0",21,442,436,33,16
-    LTEXT           "6_0",22,392,460,39,16
-    LTEXT           "6_0",23,442,460,33,16
-    LTEXT           "6_0",24,392,484,39,16
-    LTEXT           "6_0",25,442,484,33,16
-    LTEXT           "6_0",26,514,412,33,16
-    LTEXT           "6_0",27,514,436,33,16
-    LTEXT           "6_0",28,514,460,33,16
-    LTEXT           "6_0",29,514,484,33,16
+    LTEXT           "6_0",2,127,60,151,16
+    LTEXT           "6_0",3,196,191,50,16
+    LTEXT           "6_0",4,165,244,50,16
+    LTEXT           "6_0",5,165,268,50,16
+    LTEXT           "6_0",6,165,292,50,16
+    LTEXT           "6_0",7,165,316,50,16
+    LTEXT           "6_0",8,165,340,50,16
+    LTEXT           "6_0",9,435,60,135,16
+    LTEXT           "6_0",10,510,94,50,16
+    LTEXT           "6_0",11,510,133,50,16
+    LTEXT           "6_0",12,510,172,50,16
+    LTEXT           "6_0",13,510,196,50,16
+    LTEXT           "6_0",14,510,220,50,16
+    LTEXT           "6_0",17,510,279,50,16
+    LTEXT           "6_0",18,392,412,40,16
+    LTEXT           "6_0",19,442,412,40,16
+    LTEXT           "6_0",20,392,436,40,16
+    LTEXT           "6_0",21,442,436,40,16
+    LTEXT           "6_0",22,392,460,40,16
+    LTEXT           "6_0",23,442,460,40,16
+    LTEXT           "6_0",24,392,484,40,16
+    LTEXT           "6_0",25,442,484,40,16
+    LTEXT           "6_0",26,514,412,40,16
+    LTEXT           "6_0",27,514,436,40,16
+    LTEXT           "6_0",28,514,460,40,16
+    LTEXT           "6_0",29,514,484,40,16
     LTEXT           "1_63",30,505,558,63,16
     LTEXT           "0_5",31,443,558,62,16
-    LTEXT           "2_0",32,192,169,32,15
-    LTEXT           "2_0",33,271,99,23,14
-    LTEXT           "2_0",34,271,116,23,14
-    LTEXT           "2_0",35,271,133,23,14
-    LTEXT           "2_0",36,271,150,22,15
-    LTEXT           "*Y",37,446,392,34,15
+    LTEXT           "2_0",32,192,172,32,15
+    LTEXT           "2_0",33,271,102,23,14
+    LTEXT           "2_0",34,271,119,23,14
+    LTEXT           "2_0",35,271,135,23,14
+    LTEXT           "2_0",36,271,153,22,15
+    LTEXT           "*Y",37,449,392,34,15
     LTEXT           "*Special State",38,490,392,88,15
-    LTEXT           "Exit town location and special state: (these are the locations the party ends up at outdoors and the special state called if they leave in the given direction. Leave at -1 for the regular location to be used.)",
+    LTEXT           "Exit town location and special state: |(these are the locations the party ends up at outdoors and the special state called if they leave in the given direction. Leave at -1 for the regular location to be used.)",
                     39,299,321,276,64
-    LTEXT           "Out of town floor (-1 is default, means to just use whatever floor is at the edge)",
+    LTEXT           "Out of town floor |(-1 is default, means to just use whatever floor is at the edge)",
                     40,299,266,201,45
-    LTEXT           "*Currently unused.",41,299,243,204,17
-    LTEXT           "*Currently unused.",42,300,220,203,15
     LTEXT           "Basic Wall Types: |600 - Smooth stone with trim |601 - Stone blocks |602 -Dirt |603 - Rough stone |604 - Vahnatai |605 - Wood |614 - Underground cliff (walls only) |616 - Surface cliff (walls only) ",
                     43,21,363,135,152
     LTEXT           "Basic Cliff Types: |650 - Dirt  |651 - Stone |652 - Old Wall |653 - Dark Dirt |655 - Smooth Marble |657 - Surface cliff |658 - Underground cliff|",
@@ -836,39 +845,37 @@ BEGIN
     LTEXT           "*APPEARANCE SETTINGS",46,23,222,206,15
     LTEXT           "*Wall 1 height",47,23,269,135,14
     LTEXT           "*Wall 2 sheet",48,23,293,135,14
-    LTEXT           "*Wall 2 height",49,23,316,135,14
+    LTEXT           "*Wall 2 height",49,23,317,135,14
     LTEXT           "*Cliff sheet",50,23,341,135,14
     LTEXT           "*Wall 1 sheet",51,23,245,135,14
-    LTEXT           "*BASIC SETTINGS",52,23,44,162,18
     LTEXT           "*X",53,400,392,35,15
     LTEXT           "*Top",54,326,413,49,15
     LTEXT           "*Left",55,327,437,49,15
-    LTEXT           "*Bottom",56,327,460,53,15
+    LTEXT           "*Bottom",56,327,461,53,15
     LTEXT           "*Right",57,328,485,49,15
-    LTEXT           "*ADVANCED SETTINGS",58,299,44,160,17
-    LTEXT           "*Background sound (-1 for none, 0 for outdoors)",59,299,
-                    118,207,29
+    LTEXT           "*Background sound |(-1 for none, 0 for outdoors)",59,299,
+                    128,207,29
     LTEXT           "*Beam type (0 - no beams, 1 - damage, 2 - impassable)",
                     60,299,88,204,29
-    LTEXT           "*Town is hidden",61,299,197,200,14
-    LTEXT           "*Town kill day",62,299,149,200,14
-    LTEXT           "*Town kill prevent event",63,299,167,200,27
+    LTEXT           "*Town is hidden",61,299,221,200,14
+    LTEXT           "*Town kill day",62,299,173,200,14
+    LTEXT           "*Town kill prevent event",63,299,194,200,27
     LTEXT           "*Creature respawn chance",64,23,192,169,15
-    LTEXT           "*Town script:",65,299,68,120,14
-    LTEXT           "*Town name:",66,23,71,98,16
+    LTEXT           "*Town script:",65,299,61,120,14
+    LTEXT           "*Town name:",66,23,60,98,16
     LTEXT           "*Town is on surface",67,23,169,164,15
     LTEXT           "*Gets dark 10x faster",68,95,133,166,13
     LTEXT           "*Lighting:",69,23,99,63,14
     LTEXT           "*Fully Lit",70,95,99,164,14
     LTEXT           "*Dark",71,95,116,164,14
     LTEXT           "*Totally dark (no light)",72,95,150,164,15
-    LTEXT           "~Edit Town Details",73,23,23,256,17
+    LTEXT           "~EDIT TOWN DETAILS",73,23,23,256,17
 END
 
 835 DIALOG  10, 10, 536, 310
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,422,272,63,17,WS_GROUP
+    DEFPUSHBUTTON   "OK",1,505,308,63,17,WS_GROUP
     LTEXT           "6_0",2,160,108,39,16
     LTEXT           "6_0",3,160,136,39,16
     LTEXT           "6_0",4,160,164,39,16
@@ -1026,9 +1033,9 @@ BEGIN
     LTEXT           "*Script exists:",33,190,53,75,15
     LTEXT           "*",34,270,53,40,15
     LTEXT           "~Script Location: x = ",35,34,81,108,17
-    LTEXT           "*",36,170,82,20,15
-    LTEXT           "*y = ",37,220,81,20,15
-    LTEXT           "*",38,245,82,20,15
+    LTEXT           "*",36,150,82,30,15
+    LTEXT           "*y = ",37,190,81,20,15
+    LTEXT           "*",38,220,82,30,15
     LTEXT           "Left and right buttons do not save the contents of the current dialog screen. |This can be done by either one of the Save and the OK buttons.",39,190,211,200,80
     LTEXT           "OK then closes this dialog screen while Save leaves it open. ||Press Delete to clear this particular terrain script.",40,190,301,200,80
     LTEXT           "1_53",41,220,384,69,16
@@ -1054,8 +1061,8 @@ BEGIN
     LTEXT           "6_0",15,260,379,260,16
     LTEXT           "6_0",16,260,403,260,16
     LTEXT           "6_0",17,260,427,260,16
-    LTEXT           "1_63",18,530,497,66,16
-    LTEXT           "0_5",19,456,497,66,16
+    LTEXT           "1_63",18,530,524,66,16
+    LTEXT           "0_5",19,456,524,66,16
     LTEXT           "Descriptive message",20,260,47,140,14
     LTEXT           "*",21,27,67,100,15
     LTEXT           "*",22,27,91,100,15
@@ -1074,7 +1081,7 @@ BEGIN
     LTEXT           "*",35,27,404,100,15
     LTEXT           "*",36,27,428,100,15
     LTEXT           "Enter the descriptions for each of the special town rectangles you may have made, or press the delete button to remove them.|Each description must be less than 30 characters in length.",
-                    37,30,449,428,36
+                    37,30,459,428,36
     LTEXT           "  ",38,320,27,18,16
     LTEXT           "~Town area descriptions",39,26,27,256,17
     LTEXT           "Upper Left:",40,27,47,90,14
@@ -1110,8 +1117,7 @@ BEGIN
     LTEXT           "*",70,140,380,100,15
     LTEXT           "*",71,140,404,100,15
     LTEXT           "*",72,140,428,100,15
-    LTEXT           "0_68",73,27,524,70,8
-    LTEXT           "Lower Right:",74,140,47,90,14
+    LTEXT           "Lower Right:",73,140,47,90,14
 END
 
 840 DIALOG  10, 10, 454, 146
@@ -1141,6 +1147,54 @@ BEGIN
                     8,20,100,300,30
 END
 
+842 DIALOG  10,10,576,571
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,600,336,31,10,WS_GROUP
+    LTEXT           "~Edit Placed Item",2,25,30,138,17
+    LTEXT           "*Item number:",3,34,53,85,15
+    LTEXT           "*",4,130,53,40,15
+    LTEXT           "+",5,40,142,264,16
+    LTEXT           "*Item Properties Number:",6,50,180,200,14
+    LTEXT           "*X - Shift: (-5 thru +5)",7,34,212,100,14
+    LTEXT           "*Y - Shift: (-5 thru +5)",8,34,236,100,14
+    LTEXT           "*Charges, if any:",9,34,260,100,14
+    LTEXT           "*Identified",10,34,309,100,14
+    LTEXT           "*Property",11,34,333,100,14
+    LTEXT           "*Contained",12,34,357,100,14
+    LTEXT           "*Cursed",13,34,381,100,14
+    LTEXT           "*Used Today",14,34,405,100,14
+    LTEXT           "6_0",15,170,211,50,16
+    LTEXT           "6_0",16,170,235,50,16
+    LTEXT           "6_0",17,170,259,50,16
+    LTEXT           "2_0",18,150,312,32,16
+    LTEXT           "2_0",19,150,336,32,16
+    LTEXT           "2_0",20,150,360,32,16
+    LTEXT           "2_0",21,150,384,32,16
+    LTEXT           "2_0",22,150,408,32,16
+    LTEXT           "0_2",23,27,466,62,16
+    LTEXT           "0_3",24,89,466,62,16
+    LTEXT           "0_29",25,240,466,62,16
+    LTEXT           "1_5",26,310,466,62,16
+    LTEXT           "1_63",27,380,466,69,16
+    LTEXT           "~Item Location: x = ",28,34,81,108,17
+    LTEXT           "*",29,150,82,20,15
+    LTEXT           "*y = ",30,180,81,20,17
+    LTEXT           "*",31,210,82,20,15
+    LTEXT           "Left and right buttons do not save the contents of the current dialog screen. |This can be done by either one of the Save and the OK buttons.",32,250,211,200,80
+    LTEXT           "OK then closes this dialog screen while Save leaves it open. ||Press Delete to clear this particular item record.",33,250,301,200,80
+    LTEXT           "1_53",34,280,384,69,16
+    LTEXT           "6_0",35,140,112,50,16
+    LTEXT           "*Item type:",36,34,112,85,15
+    LTEXT           "0_109",37,320,140,75,16
+    LTEXT           "*",38,260,180,40,15
+    LTEXT           "*",39,200,312,32,16
+    LTEXT           "*",40,200,336,32,16
+    LTEXT           "*",41,200,360,32,16
+    LTEXT           "*",42,200,384,32,16
+    LTEXT           "*",43,200,408,32,16
+END
+
 850 DIALOG  10, 10, 521, 526
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
@@ -1153,8 +1207,8 @@ BEGIN
     LTEXT           "6_0",7,260,187,260,16
     LTEXT           "6_0",8,260,211,260,16
     LTEXT           "6_0",9,260,235,260,16
-    LTEXT           "1_63",10,530,305,66,16
-    LTEXT           "0_5",11,456,305,66,16
+    LTEXT           "1_63",10,530,330,66,16
+    LTEXT           "0_5",11,456,330,66,16
     LTEXT           "Descriptive message",12,260,47,140,14
     LTEXT           "*",13,27,67,100,15
     LTEXT           "*",14,27,91,100,15
@@ -1165,7 +1219,7 @@ BEGIN
     LTEXT           "*",19,27,211,100,15
     LTEXT           "*",20,27,235,100,15
     LTEXT           "Enter the descriptions for each of the special outdoor rectangles you may have made, or press the delete button to remove them.|Each description must be less than 30 characters in length.",
-                    21,30,257,428,36
+                    21,30,267,428,36
     LTEXT           "  ",22,320,27,18,16
     LTEXT           "~Outdoor area descriptions",23,26,27,256,17
     LTEXT           "Upper Left:",24,27,47,90,14
@@ -1185,7 +1239,6 @@ BEGIN
     LTEXT           "*",38,140,187,100,15
     LTEXT           "*",39,140,211,100,15
     LTEXT           "*",40,140,235,100,15
-    LTEXT           "0_68",41,27,330,70,8
     LTEXT           "Lower Right:",42,140,47,90,14
 END
 
@@ -1193,13 +1246,13 @@ END
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,329,223,31,10,WS_GROUP
-    LTEXT           "6_0",2,139,66,151,16
-    LTEXT           "6_0",3,139,90,151,16
+    LTEXT           "6_0",2,139,67,151,16
+    LTEXT           "6_0",3,139,91,151,16
     LTEXT           "6_0",4,185,151,58,16
     LTEXT           "*Section name:",5,22,68,101,14
     LTEXT           "*Coordinates:",6,22,44,87,14
     LTEXT           "*",7,114,44,127,14
-    LTEXT           "2_0",8,132,116,23,14
+    LTEXT           "2_0",8,132,119,23,14
     LTEXT           "*On Surface: ",9,22,116,101,14
     LTEXT           "1_63",10,232,184,63,16
     LTEXT           "*Section script:",11,22,92,109,14
@@ -1248,9 +1301,9 @@ BEGIN
     LTEXT           "+",35,150,192,145,14
     LTEXT           "+",36,150,216,145,14
     LTEXT           "+",37,150,240,145,14
-    LTEXT           "2_0",38,220,344,29,14
-    LTEXT           "2_0",39,220,368,29,14
-    LTEXT           "2_0",40,220,392,30,15
+    LTEXT           "2_0",38,220,347,29,14
+    LTEXT           "2_0",39,220,369,29,14
+    LTEXT           "2_0",40,220,394,30,15
     LTEXT           "*",41,407,31,35,14
     LTEXT           "*Random Move Chance",42,302,389,136,15
     LTEXT           "*Start location",43,302,363,122,14

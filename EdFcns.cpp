@@ -1242,7 +1242,9 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 							if (choice >= 0)
 								town.preset_items[selected_item_number % 1000].which_item = choice;			
 							break;
-// case 1: Edit this item
+						case 1:
+	 						edit_placed_item(selected_item_number % 1000);
+	 						break;
 						case 2:
 							town.preset_items[selected_item_number % 1000].properties =
 								town.preset_items[selected_item_number % 1000].properties ^ 1;
@@ -2408,85 +2410,87 @@ if (wParam == 0x39) {
 								redraw_screen();
 	}
 
-  if (wParam == VK_F5) {
+		if (wParam == VK_F5) {
 		if (current_drawing_mode == 0) {
+		if (current_floor_drawn > 0)
+		current_floor_drawn = current_floor_drawn - 1;
+		else
+		current_floor_drawn = 255;
 		sprintf(get_text,"Drawing Floor number %d",current_floor_drawn);
 	 	sprintf(get_text2,"%s",scen_data.scen_floors[current_floor_drawn].floor_name);
 		set_string(get_text,get_text2);
-		if (current_floor_drawn > 11)
-		current_floor_drawn = current_floor_drawn - 12;
-		else
-		current_floor_drawn = current_floor_drawn + 244;
 		}
 		if (current_drawing_mode > 0) {
+		if (current_terrain_drawn > 0)
+		current_terrain_drawn = current_terrain_drawn - 1;
+		else
+		current_terrain_drawn = 511;
 		sprintf(get_text,"Drawing Terrain number %d",current_terrain_drawn);
 	 	sprintf(get_text2,"%s",scen_data.scen_ter_types[current_terrain_drawn].ter_name);
 		set_string(get_text,get_text2);
-		if (current_terrain_drawn > 11)
-		current_terrain_drawn = current_terrain_drawn - 12;
-		else
-		current_terrain_drawn = current_terrain_drawn + 500;
 		}
 	}
 
 		if (wParam == VK_F6) {
 		if (current_drawing_mode == 0) {
-		sprintf(get_text,"Drawing Floor number %d",current_floor_drawn);
-	 	sprintf(get_text2,"%s",scen_data.scen_floors[current_floor_drawn].floor_name);
-		set_string(get_text,get_text2);
 		if (current_floor_drawn < 255)
 		current_floor_drawn = current_floor_drawn + 1;
 		else
 		current_floor_drawn = 0;
+		sprintf(get_text,"Drawing Floor number %d",current_floor_drawn);
+	 	sprintf(get_text2,"%s",scen_data.scen_floors[current_floor_drawn].floor_name);
+		set_string(get_text,get_text2);
 		}
 		if (current_drawing_mode > 0) {
-		sprintf(get_text,"Drawing Terrain number %d",current_terrain_drawn);
-	 	sprintf(get_text2,"%s",scen_data.scen_ter_types[current_terrain_drawn].ter_name);
-		set_string(get_text,get_text2);
 		if (current_terrain_drawn < 511)
 		current_terrain_drawn = current_terrain_drawn + 1;
 		else
 		current_terrain_drawn = 0;
-		}
-	}
-		if (wParam == VK_F7) {
-		if (current_drawing_mode == 0) {
-		sprintf(get_text,"Drawing Floor number %d",current_floor_drawn);
-	 	sprintf(get_text2,"%s",scen_data.scen_floors[current_floor_drawn].floor_name);
-		set_string(get_text,get_text2);
-		if (current_floor_drawn > 0)
-		current_floor_drawn = current_floor_drawn - 1;
-		else
-		current_floor_drawn = 255;
-		}
-		if (current_drawing_mode > 0) {
 		sprintf(get_text,"Drawing Terrain number %d",current_terrain_drawn);
 	 	sprintf(get_text2,"%s",scen_data.scen_ter_types[current_terrain_drawn].ter_name);
 		set_string(get_text,get_text2);
-		if (current_terrain_drawn > 0)
-		current_terrain_drawn = current_terrain_drawn - 1;
-		else
-		current_terrain_drawn = 511;
 		}
 	}
-		if (wParam == VK_F8) {
+
+  if (wParam == VK_F7) {
 		if (current_drawing_mode == 0) {
+		if (current_floor_drawn > 11)
+		current_floor_drawn = current_floor_drawn - 12;
+		else
+		current_floor_drawn = current_floor_drawn + 244;
 		sprintf(get_text,"Drawing Floor number %d",current_floor_drawn);
 	 	sprintf(get_text2,"%s",scen_data.scen_floors[current_floor_drawn].floor_name);
 		set_string(get_text,get_text2);
+		}
+		if (current_drawing_mode > 0) {
+		if (current_terrain_drawn > 11)
+		current_terrain_drawn = current_terrain_drawn - 12;
+		else
+		current_terrain_drawn = current_terrain_drawn + 500;
+		sprintf(get_text,"Drawing Terrain number %d",current_terrain_drawn);
+	 	sprintf(get_text2,"%s",scen_data.scen_ter_types[current_terrain_drawn].ter_name);
+		set_string(get_text,get_text2);
+		}
+	}
+
+		if (wParam == VK_F8) {
+		if (current_drawing_mode == 0) {
 		if (current_floor_drawn < 244)
 		current_floor_drawn = current_floor_drawn + 12;
 		else
 		current_floor_drawn = current_floor_drawn - 244;
+		sprintf(get_text,"Drawing Floor number %d",current_floor_drawn);
+	 	sprintf(get_text2,"%s",scen_data.scen_floors[current_floor_drawn].floor_name);
+		set_string(get_text,get_text2);
 		}
 		if (current_drawing_mode > 0) {
-		sprintf(get_text,"Drawing Terrain number %d",current_terrain_drawn);
-	 	sprintf(get_text2,"%s",scen_data.scen_ter_types[current_terrain_drawn].ter_name);
-		set_string(get_text,get_text2);
 		if (current_terrain_drawn < 500)
 		current_terrain_drawn = current_terrain_drawn + 12;
 		else
 		current_terrain_drawn = current_terrain_drawn - 500;
+		sprintf(get_text,"Drawing Terrain number %d",current_terrain_drawn);
+	 	sprintf(get_text2,"%s",scen_data.scen_ter_types[current_terrain_drawn].ter_name);
+		set_string(get_text,get_text2);
 		}
 	}
 
