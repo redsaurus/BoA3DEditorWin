@@ -636,7 +636,7 @@ END
 820 DIALOG  10, 10, 530, 386
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-DEFPUSHBUTTON   "OK",1,407,480,31,10,WS_GROUP
+    DEFPUSHBUTTON   "OK",1,279,223,31,10,WS_GROUP
     LTEXT           "1_63",2,520,440,75,16
     LTEXT           "~Select:",3,29,23,256,17
     LTEXT           "0_2",4,28,440,62,16
@@ -718,23 +718,23 @@ DEFPUSHBUTTON   "OK",1,407,480,31,10,WS_GROUP
     LTEXT           "*",80,30,391,45,13
     LTEXT           "*",81,30,406,45,13
     LTEXT           "*Start at slot 50:",82,380,51,110,14
-    LTEXT           "1_63",83,520,48,75,16
+    LTEXT           "0_63",83,520,48,75,16
     LTEXT           "*Start at slot 100:",84,380,81,110,14
-    LTEXT           "1_63",85,520,78,75,16
+    LTEXT           "0_63",85,520,78,75,16
     LTEXT           "*Start at slot 150:",86,380,111,110,14
-    LTEXT           "1_63",87,520,108,75,16
+    LTEXT           "0_63",87,520,108,75,16
     LTEXT           "*Start at slot 200:",88,380,141,110,14
-    LTEXT           "1_63",89,520,138,75,16
+    LTEXT           "0_63",89,520,138,75,16
     LTEXT           "*Start at slot 250:",90,380,171,110,14
-    LTEXT           "1_63",91,520,168,75,16
+    LTEXT           "0_63",91,520,168,75,16
     LTEXT           "*Start at slot 300:",92,380,201,110,14
-    LTEXT           "1_63",93,520,198,75,16
+    LTEXT           "0_63",93,520,198,75,16
     LTEXT           "*Start at slot 350:",94,380,231,110,14
-    LTEXT           "1_63",95,520,228,75,16
+    LTEXT           "0_63",95,520,228,75,16
     LTEXT           "*Start at slot 400:",96,380,261,110,14
-    LTEXT           "1_63",97,520,258,75,16
+    LTEXT           "0_63",97,520,258,75,16
     LTEXT           "*Start at slot 450:",98,380,291,110,14
-    LTEXT           "1_63",99,520,288,75,16
+    LTEXT           "0_63",99,520,288,75,16
 END
 
 825 DIALOG  10, 10, 391, 150
@@ -935,8 +935,8 @@ BEGIN
     LTEXT           "6_0",10,194,354,72,16
     LTEXT           "6_0",11,194,378,72,16
     LTEXT           "*",12,148,95,40,16
-    LTEXT           "6_0",13,276,483,67,16
-    LTEXT           "6_0",14,276,507,67,16
+    LTEXT           "6_0",13,276,459,67,16
+    LTEXT           "6_0",14,276,483,67,16
     LTEXT           "6_0",15,438,282,72,16
     LTEXT           "6_0",16,438,306,72,16
     LTEXT           "6_0",17,438,330,72,16
@@ -947,21 +947,21 @@ BEGIN
     LTEXT           "6_0",22,438,450,72,16
     LTEXT           "6_0",23,438,474,72,16
     LTEXT           "6_0",24,438,498,72,16
-    LTEXT           "*Day For Appear/Disappear:",25,40,483,221,15
-    LTEXT           "*Event Creature Linked To (-1 = none)",26,40,507,223,17
+    LTEXT           "*Day For Appear/Disappear:",25,40,459,221,15
+    LTEXT           "*Event Creature Linked To (-1 = none)",26,40,483,223,17
     LTEXT           "2_0",27,327,122,23,14
     LTEXT           "2_0",28,327,138,23,14
     LTEXT           "2_0",29,462,122,23,14
     LTEXT           "2_0",30,462,138,23,14
     LTEXT           "1_63",31,478,552,63,16
-    LTEXT           "0_5",32,410,552,62,16
+    LTEXT           "0_5",32,274,552,62,16
     LTEXT           "0_109",33,450,92,75,16
     LTEXT           "0_109",34,450,193,75,16
     LTEXT           "0_109",35,450,218,75,16
-    LTEXT           "0_109",36,283,453,75,16
+    LTEXT           "0_109",36,283,429,75,16
     LTEXT           "*",37,416,30,50,15
     LTEXT           "+",38,200,95,210,16
-    LTEXT           "+",39,44,456,229,15
+    LTEXT           "+",39,44,432,229,15
     LTEXT           "~Edit Placed Creature",40,25,30,138,17
     LTEXT           "*Creature script:",41,34,256,120,14
     LTEXT           "*Memory Cells",42,377,256,109,14
@@ -971,7 +971,7 @@ BEGIN
     LTEXT           "*Creature number:",46,288,30,126,15
     LTEXT           "~Creature type:",47,34,95,115,15
     LTEXT           "*Creature starting attitude:",48,34,122,169,15
-    LTEXT           "~Creature Appearance Type:",49,33,433,187,15
+    LTEXT           "~Creature Appearance Type:",49,33,409,187,15
     LTEXT           "*Character ID",50,34,307,144,14
     LTEXT           "+",51,229,196,210,16
     LTEXT           "+",52,229,221,210,16
@@ -980,7 +980,7 @@ BEGIN
     LTEXT           "*Hidden Class",55,34,330,143,14
     LTEXT           "*Act at distance",56,34,355,144,14
     LTEXT           "*Unique NPC",57,34,379,144,14
-    LTEXT           "*Arrow keys don't save any data.",58,34,408,144,14
+    LTEXT           "*Arrow keys don't save any data:| Save or OK buttons will do so.",58,34,507,225,40
     LTEXT           "*Cell 0",59,381,282,50,14
     LTEXT           "*Cell 1",60,381,306,50,14
     LTEXT           "*Cell 2",61,381,330,50,14
@@ -993,6 +993,8 @@ BEGIN
     LTEXT           "*Cell 9",68,381,498,50,14
     LTEXT           "0_3",69,89,552,75,16
     LTEXT           "0_2",70,27,552,62,16
+    LTEXT           "0_53",71,342,552,63,16
+    LTEXT           "0_29",72,410,552,62,16
 END
 
 838 DIALOG  10,10,576,571
@@ -1027,8 +1029,8 @@ BEGIN
     LTEXT           "6_0",27,91,427,72,16
     LTEXT           "0_2",28,27,466,62,16
     LTEXT           "0_3",29,89,466,62,16
-    LTEXT           "0_29",30,180,466,62,16
-    LTEXT           "1_5",31,250,466,62,16
+    LTEXT           "0_29",30,250,466,62,16
+    LTEXT           "0_5",31,180,466,62,16
     LTEXT           "1_63",32,320,466,69,16
     LTEXT           "*Script exists:",33,190,53,75,15
     LTEXT           "*",34,270,53,40,15
@@ -1038,7 +1040,7 @@ BEGIN
     LTEXT           "*",38,220,82,30,15
     LTEXT           "Left and right buttons do not save the contents of the current dialog screen. |This can be done by either one of the Save and the OK buttons.",39,190,211,200,80
     LTEXT           "OK then closes this dialog screen while Save leaves it open. ||Press Delete to clear this particular terrain script.",40,190,301,200,80
-    LTEXT           "1_53",41,220,384,69,16
+    LTEXT           "0_53",41,220,384,69,16
 END
 
 839 DIALOG  10, 10, 521, 526
@@ -1155,18 +1157,18 @@ BEGIN
     LTEXT           "*Item number:",3,34,53,85,15
     LTEXT           "*",4,130,53,40,15
     LTEXT           "+",5,40,142,264,16
-    LTEXT           "*Item Properties Number:",6,50,180,200,14
-    LTEXT           "*X - Shift: (-5 thru +5)",7,34,212,100,14
-    LTEXT           "*Y - Shift: (-5 thru +5)",8,34,236,100,14
-    LTEXT           "*Charges, if any:",9,34,260,100,14
+    LTEXT           "*Item Properties Number:",6,35,280,150,14
+    LTEXT           "*X - Shift: (-5 thru +5)",7,34,192,100,14
+    LTEXT           "*Y - Shift: (-5 thru +5)",8,34,216,100,14
+    LTEXT           "*Charges, if any:",9,34,240,100,14
     LTEXT           "*Identified",10,34,309,100,14
     LTEXT           "*Property",11,34,333,100,14
     LTEXT           "*Contained",12,34,357,100,14
     LTEXT           "*Cursed",13,34,381,100,14
     LTEXT           "*Used Today",14,34,405,100,14
-    LTEXT           "6_0",15,170,211,50,16
-    LTEXT           "6_0",16,170,235,50,16
-    LTEXT           "6_0",17,170,259,50,16
+    LTEXT           "6_0",15,170,191,50,16
+    LTEXT           "6_0",16,170,215,50,16
+    LTEXT           "6_0",17,170,239,50,16
     LTEXT           "2_0",18,150,312,32,16
     LTEXT           "2_0",19,150,336,32,16
     LTEXT           "2_0",20,150,360,32,16
@@ -1174,25 +1176,28 @@ BEGIN
     LTEXT           "2_0",22,150,408,32,16
     LTEXT           "0_2",23,27,466,62,16
     LTEXT           "0_3",24,89,466,62,16
-    LTEXT           "0_29",25,240,466,62,16
-    LTEXT           "1_5",26,310,466,62,16
+    LTEXT           "0_29",25,310,466,62,16
+    LTEXT           "0_5",26,240,466,62,16
     LTEXT           "1_63",27,380,466,69,16
-    LTEXT           "~Item Location: x = ",28,34,81,108,17
-    LTEXT           "*",29,150,82,20,15
-    LTEXT           "*y = ",30,180,81,20,17
-    LTEXT           "*",31,210,82,20,15
+    LTEXT           "~Item Location: x = ",28,225,53,108,17
+    LTEXT           "*",29,340,54,20,15
+    LTEXT           "*y = ",30,370,53,20,17
+    LTEXT           "*",31,400,54,20,15
     LTEXT           "Left and right buttons do not save the contents of the current dialog screen. |This can be done by either one of the Save and the OK buttons.",32,250,211,200,80
-    LTEXT           "OK then closes this dialog screen while Save leaves it open. ||Press Delete to clear this particular item record.",33,250,301,200,80
-    LTEXT           "1_53",34,280,384,69,16
+		LTEXT           "OK then closes this dialog screen while Save leaves it open. ||Press Delete to clear this particular item record.",33,250,301,200,80
+    LTEXT           "0_53",34,280,384,69,16
     LTEXT           "6_0",35,140,112,50,16
     LTEXT           "*Item type:",36,34,112,85,15
     LTEXT           "0_109",37,320,140,75,16
-    LTEXT           "*",38,260,180,40,15
+    LTEXT           "*",38,195,280,40,15
     LTEXT           "*",39,200,312,32,16
     LTEXT           "*",40,200,336,32,16
     LTEXT           "*",41,200,360,32,16
     LTEXT           "*",42,200,384,32,16
     LTEXT           "*",43,200,408,32,16
+    LTEXT           "*Jump to a new item record, enter the number:",44,34,82,260,15
+    LTEXT           "6_0",45,300,82,50,16
+    LTEXT           "0_63",46,360,80,69,16
 END
 
 850 DIALOG  10, 10, 521, 526

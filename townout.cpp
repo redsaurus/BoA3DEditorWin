@@ -143,6 +143,8 @@ void put_placed_item_in_dlog()
  	cdsin(842,31,store_placed_item.item_loc.y);
  	CDSN(842,35,store_placed_item.which_item);
  	cdsin(842,38,store_placed_item.properties);
+ 	CDSN(842,45,store_which_placed_item);
+
 }
 
 void edit_placed_item_event_filter (short item_hit)
@@ -150,11 +152,7 @@ void edit_placed_item_event_filter (short item_hit)
 	short i;
 
 	switch (item_hit) {
-			cd_flip_led(842,18,item_hit);
-			cd_flip_led(842,19,item_hit);
-			cd_flip_led(842,20,item_hit);
-			cd_flip_led(842,21,item_hit);
-			cd_flip_led(842,22,item_hit);
+
 		case 23:
 			if (store_which_placed_item == 0)
 			   	store_which_placed_item = 143;
@@ -175,11 +173,11 @@ void edit_placed_item_event_filter (short item_hit)
 			break;
 		case 25: // Save: save this item record, but don't exit the dialog.
 			if (get_placed_item_in_dlog() == FALSE) {
-					set_string("Save attempt failed","");
+					set_string("Item Save attempt failed","");
 				break;
 				}
 				else
-					set_string("Save succeeded.","");
+					set_string("Item Record Saved.","");
 			break;
 		case 26: // Cancel
 			dialog_not_toast = FALSE;
@@ -190,14 +188,7 @@ void edit_placed_item_event_filter (short item_hit)
 			dialog_not_toast = FALSE;
 			break;
 		case 34: // Delete this item
-			store_placed_item.which_item = -1;
-			store_placed_item.item_loc.x = 0;
-			store_placed_item.item_loc.y = 0;
-			store_placed_item.charges = 0;
-			store_placed_item.properties = 0;
-			store_placed_item.item_shift.x = 0;
-			store_placed_item.item_shift.y = 0;
-			
+			store_placed_item.clear_item_type();
 			put_placed_item_in_dlog();
 			break;
 
@@ -208,8 +199,27 @@ void edit_placed_item_event_filter (short item_hit)
 			put_placed_item_in_dlog();
 			break;
 
-		default:
+		case 46:
+			if (store_which_placed_item < 0)
+			   	store_which_placed_item = 0;
+			if (store_which_placed_item > 143)
+			   	store_which_placed_item = 143;
+			else
+				store_which_placed_item = CDGN(842,45);
+
+				store_placed_item = town.preset_items[store_which_placed_item];
+				put_placed_item_in_dlog();
 		break;
+
+
+		default:
+			cd_flip_led(842,18,item_hit);
+			cd_flip_led(842,19,item_hit);
+			cd_flip_led(842,20,item_hit);
+			cd_flip_led(842,21,item_hit);
+			cd_flip_led(842,22,item_hit);
+		break;
+		
 		}
 }
 
@@ -300,11 +310,11 @@ void edit_placed_script_event_filter (short item_hit)
 			break;
 		case 30: // Save: save this script record, but don't exit the dialog.
 			if (get_placed_terrain_script_in_dlog() == FALSE) {
-					set_string("Save attempt failed","");
+					set_string("Save script attempt failed","");
 				break;
 				}
 				else
-					set_string("Save succeeded.","");
+					set_string("Script save succeeded.","");
 			break;
 		case 31: // Cancel
 			dialog_not_toast = FALSE;
@@ -315,14 +325,8 @@ void edit_placed_script_event_filter (short item_hit)
 			dialog_not_toast = FALSE;
 			break;
 		case 41: // Delete this script
-			store_placed_script.exists = 0;
-			store_placed_script.loc.x = 0;
-			store_placed_script.loc.y = 0;
-			for (i = 0; i < SCRIPT_NAME_LEN; i++)
-					store_placed_script.script_name[i] = 0;
-			for (i = 0; i < 10; i++)
-					store_placed_script.memory_cells[i] = 0;
-					put_placed_terrain_script_in_dlog();
+				store_placed_script.clear_in_town_on_ter_script_type();
+				put_placed_terrain_script_in_dlog();
 			break;
 		default:
 		break;
@@ -414,8 +418,8 @@ void edit_placed_monst_event_filter (short item_hit)
 		case 33: // choose m type
 			if (get_placed_monst_in_dlog() == FALSE)
 				break;
-			i = choose_text_res(-1,1,255,store_placed_monst.number,837,"Choose Which Creature Type:");
-			if (i >= 0) {
+			i = choose_text_res(-1,1,255,store_placed_monst.number,837,"Choose Which Creature Type: 0 - 255");
+			if ((i >= 0) && (i < 256)) {
 				store_placed_monst.number = i;
 				put_placed_monst_in_dlog();
 				}
@@ -423,7 +427,7 @@ void edit_placed_monst_event_filter (short item_hit)
 
 		case 34:
 			i = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,store_placed_monst.extra_item,837,"Which item?");
-			if (i >= 0)
+	if (i >= 0)
 				store_placed_monst.extra_item = i;
 			put_placed_monst_in_dlog();
 			break;
@@ -462,6 +466,20 @@ void edit_placed_monst_event_filter (short item_hit)
 					
 					store_placed_monst = town.creatures[store_which_placed_monst];
 					put_placed_monst_in_dlog();
+			break;
+
+		case 71: // delete this record
+			store_placed_monst.clear_creature_start_type();
+					put_placed_monst_in_dlog();
+			break;
+
+		case 72: // Save: save this Creature record, but don't exit the dialog.
+			if (get_placed_monst_in_dlog() == FALSE) {
+					set_string("Save Creature attempt failed","");
+				break;
+				}
+				else
+					set_string("Creature save succeeded.","");
 			break;
 
 		default:

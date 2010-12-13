@@ -124,6 +124,10 @@ short overall_mode = 0;
 // 71 - place outdoor start point
 // 72 - place town start point
 // 73 - eyedropper
+// 74 - make oblique mirror
+// 75 - make facing mirror(
+// 76 - make_boat
+// 77 - make_horse
 
 // file selection editing files
 short selected_item_number = -1;
@@ -173,7 +177,7 @@ void check_game_done();
 short last_file_printed = 0;
 
 // extern void put_placed_terrain_script_in_dlog();
-//MW specified argument and return type.
+// MW specified argument and return type.
 int APIENTRY _tWinMain (HINSTANCE hInstance,
 						HINSTANCE /* hPrevInstance */,
 						LPSTR /* lpszCmdParam */,
@@ -276,7 +280,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		return FALSE;
 	}
 
-	//center_window(mainPtr);
+	// center_window(mainPtr);
  	GetModuleFileName(hInstance,file_path_name,256);
 
 	short seed = (short) GetCurrentTime();
@@ -469,7 +473,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				SetScrollPos(right_sbar,SB_CTL,sbar_pos,TRUE);
 				if (sbar_pos != old_setting) {
 					set_up_terrain_buttons();
-					place_right_buttons(/* 0 */);
+					place_right_buttons(); // (0)
 //					update_main_screen();
 				}
 				break;
@@ -544,7 +548,7 @@ void handle_menu_choice(short choice)
 			case 15:
 				handle_help_menu(menu_item % 100);					 
 				break;
-			case 16:				// patch for ctrl-<key> command
+			case 16:	// patch for ctrl-<key> command
 				handle_keystroke( choice % 100, 0 );
 				break;
 			}
@@ -554,7 +558,7 @@ void handle_menu_choice(short choice)
 void handle_file_menu(int item_hit)
 {
 	switch (item_hit) {
-		case 1: // open
+		case 1: // Open Scenario
 			if (change_made_town || change_made_outdoors) {
 				if (save_check(858) == FALSE)
 					break;							
@@ -565,13 +569,13 @@ void handle_file_menu(int item_hit)
 				purgeUndo();
 				purgeRedo();
 				redraw_screen();
-				shut_down_menus(/* 0 */);
+				shut_down_menus(); // (0)
 			}
 			break;
-		case 2: // save
+		case 2: // Save Scenario
 			save_campaign();
 			break;
-		case 3: // new scen
+		case 3: // New Scenario
 			if ((file_is_loaded) &&  (change_made_town || change_made_outdoors)) {
 				give_error("You need to save the changes made to your scenario before you can create a new scenario.",
 					"",0);
@@ -580,7 +584,7 @@ void handle_file_menu(int item_hit)
 			build_scenario();
 			redraw_screen();
 			break;
-		case 4: // import blades
+		case 4: // Import Blades of Exile Scenario
 			if ((file_is_loaded) && (change_made_town || change_made_outdoors)) {
 				give_error("You need to save the changes made to your scenario before you can import a Blades of Exile scenario.",
 					"",0);
@@ -600,7 +604,7 @@ void handle_file_menu(int item_hit)
 			}
 		break;
 			
-		case 6: // quit
+		case 6: // Quit
 			if (save_check(869) == FALSE)
 				break;
 			force_game_end = TRUE;
@@ -611,13 +615,13 @@ void handle_file_menu(int item_hit)
 void handle_edit_menu(int item_hit)
 {
 	switch (item_hit) {
-		case 1: // undo
+		case 1: // Undo
 			performUndo();
 			break;
-		case 2: // redo
+		case 2: // Redo
 			performRedo();
 			break;
-		case 4: // cut
+		case 4: // Cut
 			set_string("Instance copied and deleted","  ");
 			cut_selected_instance();
 			if(editing_town)
@@ -625,7 +629,7 @@ void handle_edit_menu(int item_hit)
 			else
 				change_made_outdoors = TRUE;
 			break;
-		case 5: // copy
+		case 5: // Copy
 			set_string("Instance copied","  ");
 			copy_selected_instance();
 			if(editing_town)
@@ -633,7 +637,7 @@ void handle_edit_menu(int item_hit)
 			else
 				change_made_outdoors = TRUE;
 			break;
-		case 6: // paste
+		case 6: // Paste
 			if ((copied_creature.exists() == FALSE) && (copied_item.exists() == FALSE) && (copied_ter_script.exists == FALSE)) {
 				beep();
 				break;
@@ -642,7 +646,7 @@ void handle_edit_menu(int item_hit)
 			set_cursor(7);
 			overall_mode = 48;
 			break;
-		case 7: // delete selected instance
+		case 7: // delete selected instance: "Delete"
 			delete_selected_instance();
 			set_string("Selected Instance Deleted","");
 			if(editing_town)
@@ -650,7 +654,7 @@ void handle_edit_menu(int item_hit)
 			else
 				change_made_outdoors = TRUE;
 			break;
-		case 8:// clear selected instance
+		case 8: // clear selected instance: "Clear Screen"
 				selected_item_number = -1;
 				set_string("Item De-selected","");
 		break;
@@ -665,26 +669,26 @@ void handle_campaign_menu(int item_hit)
 		 short i;
 		 
 	switch (item_hit) {
-		case 1: // edit town
+		case 1: // Edit Town
 			small_any_drawn = FALSE;
 			cen_x = max_dim[town_type] / 2; cen_y = max_dim[town_type] / 2;
 			current_drawing_mode = current_height_mode = 0;
 			editing_town = TRUE;
 			set_up_terrain_buttons();
-			shut_down_menus(/* 4 */);
+			shut_down_menus(); // (4)
 			DrawMenuBar(mainPtr);
 			reset_drawing_mode();
 			purgeUndo();
 			purgeRedo();
 			redraw_screen();
 			break;
-		case 2: // outdoor section
+		case 2: // Edit Outdoor Section
 			small_any_drawn = FALSE;
 			cen_x = 24; cen_y = 24;
 			current_drawing_mode = current_height_mode = 0;
 			editing_town = FALSE;
 			set_up_terrain_buttons();
-			shut_down_menus(/* 2 */);
+			shut_down_menus(); // (2)
 			clear_selected_copied_objects();
 			DrawMenuBar(mainPtr);
 			reset_drawing_mode();
@@ -692,13 +696,13 @@ void handle_campaign_menu(int item_hit)
 			purgeRedo();
 			redraw_screen();
 			break;
-		case 3: // new town
+		case 3: // Create New Town
 			if (change_made_town || change_made_outdoors) {
 				give_error("You need to save the changes made to your scenario before you can add a new town.",
 					"",0);
 				return;
 			}
-			if (scenario.num_towns >= 199) {
+			if (scenario.num_towns > 198) {
 				give_error("You have reached the limit of 200 zones you can have in one campaign.",
 					"",0);
 				return;
@@ -711,22 +715,22 @@ void handle_campaign_menu(int item_hit)
 			redraw_screen();
 			change_made_town = TRUE;
 			break;
-		case 5: // basic scen data
+		case 5: // Basic Scenario Details
 			edit_scen_details();
 			break;
-		case 6: // label icon
+		case 6: // Set Label Icon
 			edit_scen_intro_pic();
 			break;
-		case 7: // intro text 1
+		case 7: // Intro Text 1
 			edit_scen_intro(0);
 			break;
-		case 8: // intro text 2
+		case 8: // Intro Text 2
 			edit_scen_intro(1);
 			break;
-		case 9: // intro text 3
+		case 9: // Intro Text 3
 			edit_scen_intro(2);
 			break;
-		case 12: // reload scen script
+		case 12: // Reload Scenario Data Script
 			if (fancy_choice_dialog(871,0) == 2)
 				break;
 			char file_name[256];
@@ -737,7 +741,7 @@ void handle_campaign_menu(int item_hit)
 				}			
 			update_item_menu();
 			set_up_terrain_buttons();
-			place_right_buttons(/* 0 */);
+			place_right_buttons(); /* (0) */
 			break;
 		case 13: // Clean Up Walls
 			if (fancy_choice_dialog(873,0) == 2)
@@ -746,7 +750,7 @@ void handle_campaign_menu(int item_hit)
 			redraw_screen();
 			change_made_town = TRUE;
 			break;
-		case 14: //   Import Town
+		case 14: // Import Town
 			clear_selected_copied_objects();
 			if(import_boa_town()){
 				change_made_town = TRUE;
@@ -755,7 +759,7 @@ void handle_campaign_menu(int item_hit)
 				redraw_screen();
 			}
 			break;
-		case 15: //   Import Outdoor Section
+		case 15: // Import Outdoor Section
 			clear_selected_copied_objects();
 			if(import_boa_outdoors()){
 				change_made_outdoors = TRUE;
@@ -764,15 +768,15 @@ void handle_campaign_menu(int item_hit)
 				redraw_screen();
 			}
 			break;
-		case 16: //   Set Variable Town Entry
+		case 16: // Set Variable Town Entry
 			edit_add_town();
 			change_made_town = TRUE;
 			break;
-		case 17: //   Edit Item Placement Shortcuts
+		case 17: // Edit Item Placement Shortcuts
 			edit_item_placement();
 			change_made_town = TRUE;
 			break;
-		case 18: //   Delete Last Town
+		case 18: // Delete Last Town
 			if (change_made_town || change_made_outdoors) {
 				give_error("You need to save the changes made to your scenario before you can delete a town.",
 					"",0);
@@ -797,7 +801,7 @@ void handle_campaign_menu(int item_hit)
 				change_made_town = TRUE;
 			}
 			break;
-		case 20: //   Change Outdoor Size
+		case 20: // Change Outdoor Size
 			if (change_made_town || change_made_outdoors) {
 				give_error("You need to save the changes made to your scenario before you can change the outdoor size.",
 					"",0);
@@ -810,10 +814,10 @@ void handle_campaign_menu(int item_hit)
 				redraw_screen();
 			}
 			break;
-		case 21:
+		case 21: // bring up the Edit Horses dialog screen
 			edit_horses();
 			break;
-		case 22:
+		case 22: // bring up the Edit Boats dialog screen
 			edit_boats();
 			break;
 		case 23: // Place a Horse
@@ -844,7 +848,7 @@ void handle_town_menu(int item_hit)
 	short i,x;	
 
 	switch (item_hit) {
-		case 1: // load new town
+		case 1: // Load Different Town
 			if (change_made_town == TRUE) {
 				if (save_check(859) == FALSE)
 					break;							
@@ -864,11 +868,16 @@ void handle_town_menu(int item_hit)
 			}
 			break;
 // q_3DModStart
-		case 2: edit_town_details(); change_made_town = TRUE; break; // Town Details
+		case 2: // Town Details
+				 edit_town_details();
+				 change_made_town = TRUE;
+			break; 
 
-		case 3: edit_town_wand(); change_made_town = TRUE; break; //Town Wandering Monsters
+		case 3: // Town Wandering Monsters
+				 edit_town_wand();
+				 change_made_town = TRUE;
+			break; 
 // q_3DModEnd
-
 		case 4: // Set Town Boundaries							
 			overall_mode = 17;
 			mode_count = 2;
@@ -876,12 +885,18 @@ void handle_town_menu(int item_hit)
 			set_string("Set town boundary","Select upper left corner");
 			break;
 // q_3DModStart
-		case 5: frill_terrain(); change_made_town = TRUE; break;
-		case 6: unfrill_terrain(); change_made_town = TRUE; break;
+		case 5: // Frill Up Terrain
+				 frill_terrain();
+				 change_made_town = TRUE;
+			break;
+		case 6: // Remove Terrain Frills
+				 unfrill_terrain();
+				 change_made_town = TRUE;
+			break;
 // q_3DModEnd
 		case 7:  //Edit Area Descriptions
 			 edit_town_strs();
-			 break;
+			break;
 			
 		case 9: //Set Starting Location
 			if (fancy_choice_dialog(867,0) == 2)
@@ -890,27 +905,28 @@ void handle_town_menu(int item_hit)
 			overall_mode = 72;
 			set_cursor(7);
 			break;
-
-			
-		case 11: if (fancy_choice_dialog(863,0) == 2)
+		case 11: // Add Random Items 
+				if (fancy_choice_dialog(863,0) == 2)
 					break;
 				place_items_in_town();
 				change_made_town = TRUE; 
 				redraw_screen();
-				 break; // add random
-		case 12: for (i = 0; i < 144; i++)// set not prop
+				 break; 
+		case 12: // Set All Items Not Property
+				for (i = 0; i < 144; i++)
 					town.preset_items[i].properties = town.preset_items[i].properties & 253;
 				fancy_choice_dialog(861,0);
 				draw_terrain();
 				change_made_town = TRUE; 
 				break; 
-		case 13: for (i = 0; i < 144; i++)// set  prop
+		case 13: // Set All Items Property
+				for (i = 0; i < 144; i++)
 					town.preset_items[i].properties = town.preset_items[i].properties | 2;
 				fancy_choice_dialog(879,0);
 				draw_terrain();
 				change_made_town = TRUE; 
 				break; 
-		case 15:// clear all items
+		case 15: // Clear All Items
 			if (fancy_choice_dialog(862,0) == 2)
 				break;
 			for (i = 0; i < 144; i++)
@@ -920,7 +936,7 @@ void handle_town_menu(int item_hit)
 			redraw_screen();
 			break; 
 
-		case 16: 
+		case 16: // Clear All Monsters
 			if (fancy_choice_dialog(878,0) == 2)
 				break;
 			for (i = 0; i < 80; i++)
@@ -929,7 +945,7 @@ void handle_town_menu(int item_hit)
 			change_made_town = TRUE; 
 			redraw_screen();
 			break;
-		case 17: // clear special encs
+		case 17: // Clear All Special Encounters
 			if (fancy_choice_dialog(877,0) == 2)
 				break;
 			for (x = 0; x < NUM_TOWN_PLACED_SPECIALS; x++) {
@@ -939,7 +955,7 @@ void handle_town_menu(int item_hit)
 			change_made_town = TRUE; 
 			redraw_screen();
 			break;	
-		case 18:// clear all fields, 0:7
+		case 18: // Clear All Preset Fields, 0:8
 			if (fancy_choice_dialog(883,0) == 2)
 				break;
 			for (short i = 0; i < 60; i++) {
@@ -952,7 +968,7 @@ void handle_town_menu(int item_hit)
 			change_made_town = TRUE;
 			redraw_screen();
 			break; 
-		case 19:// clear all stains, 14:21
+		case 19:// Clear All Placed Stains, 14:21
 			if (fancy_choice_dialog(884,0) == 2)
 				break;
 			for (short i = 0; i < 60; i++) {
@@ -974,7 +990,7 @@ void handle_outdoor_menu(int item_hit)
 	short x;
 				
 	switch (item_hit) {
-		case 1: // load new
+		case 1: // Load Different Outdoor Section
 			if (change_made_outdoors == TRUE) {
 				if (save_check(859) == FALSE)
 					break;
@@ -983,7 +999,6 @@ void handle_outdoor_menu(int item_hit)
 			if (x >= 0) {
 				location spot_hit = {(t_coord)(x / 100),(t_coord)(x % 100)};
 				clear_selected_copied_objects();
-			//	load_outdoors(spot_hit,0);
 				load_outdoor_and_borders(spot_hit);
 				set_up_terrain_buttons();
 				cen_x = 24; cen_y = 24;
@@ -994,40 +1009,40 @@ void handle_outdoor_menu(int item_hit)
 				change_made_outdoors = FALSE;
 			}
 			break;
-		case 2:							//Outdoor Details
+		case 2:	//Outdoor Details
 				outdoor_details();
 				set_up_terrain_buttons();
 				draw_main_screen();
 				change_made_outdoors = TRUE;
 				break;
-
-		case 3:
+				
+		case 3: // Edit Outdoor Wandering Monsters
 				 edit_out_wand(0);
 				 change_made_outdoors = TRUE;
 				 break;
-		case 4:
+		case 4: // Edit Outdoor Special Encounters
 				 edit_out_wand(1);
 				 change_made_outdoors = TRUE;
 				 break;
-		case 5:
+		case 5: // Edit Outdoor Preset Encounters
 				 edit_out_wand(2);
 				 draw_terrain();
 				 change_made_outdoors = TRUE;
 				 break;
 
-		case 6:
+		case 6: // Frill Up Terrain
 				 frill_terrain();
 				 change_made_outdoors = TRUE;
 		break;
-		case 7:
+		case 7: // Remove Terrain Frills
 				 unfrill_terrain();
 				 change_made_outdoors = TRUE;
 				 break;
-		case 8://Edit Area Descriptions
+		case 8: //Edit Area Descriptions
 				 edit_out_strs();
 				 change_made_outdoors = TRUE;
 				 break; 
-		case 10: 					//Set Starting Location
+		case 10: //Set Starting Location
 			if (fancy_choice_dialog(864,0) == 2)
 				return;
 			set_string("Set Outdoor Start Point","Where will party start?");
@@ -1035,7 +1050,7 @@ void handle_outdoor_menu(int item_hit)
 			set_cursor(7);
 			break;
 
-		case 12: 					// Clear All Placed Specials
+		case 12: // Clear All Placed Specials
 			if (fancy_choice_dialog(885,0) == 2)
 				break;
 			for (x = 0; x < NUM_OUT_PLACED_SPECIALS; x++) {
@@ -1081,7 +1096,7 @@ void handle_help_menu(int item_hit)
 			short x;
 			location spot_hit;
 	switch (item_hit) {
-		case 1: // 2D Editor Credits
+		case 1: // 2D Editor Credits: "About Blades Scenario Editor"
 				fancy_choice_dialog(1062,0);
 				break;
 		case 2: // 3D Editor Credits
@@ -1093,24 +1108,24 @@ void handle_help_menu(int item_hit)
 				 start_data_dump();
 				 }
 			break;
-		case 5: //   Do full write up
+		case 5: //   Do full write up: "Full Write up: Outdoor/Town Names"
 			if (fancy_choice_dialog(881,0) == 1) {
          last_file_printed = 5;
 				 start_full_data_dump();
 				 }
 			break;
-		case 6: //   Filtered print out of town data
+		case 6: //   Filtered print out of town data: "Town: Write Data To File"
 			if (fancy_choice_dialog(882,0) == 1) {
          last_file_printed = 6;
 				 start_town_data_dump();
 				 }
 			break;
-		case 7: //   Rotate current numerical display mode: going forwards
+		case 7: // Rotate current numerical display forwards: "Increase Numerical Mode"
 					numerical_display_mode = ((numerical_display_mode + 1) % 5);
 					object_display_mode = 0;
 					need_redraw = TRUE;
 			break; 
-		case 8: //   Rotate current numerical display mode: going backwards
+		case 8: // Rotate current numerical display backwards: "Decrease Numerical Mode"
 				 if (numerical_display_mode == 0)
 				    numerical_display_mode = 4;
 					else numerical_display_mode = ((numerical_display_mode - 1) % 5);
@@ -1118,7 +1133,7 @@ void handle_help_menu(int item_hit)
 					need_redraw = TRUE;
 			break;
 			
-		case 9: // load previous town/outdoor zone
+		case 9: // Load Previous Outdoor Zone
 			if (editing_town) {
 			if (change_made_town == TRUE) {
 				if (save_check(859) == FALSE)
@@ -1167,7 +1182,7 @@ void handle_help_menu(int item_hit)
 				}
 			break;
 			
-		case 10: // load next town/outdoor zone
+		case 10: // Load Next Outdoor Zone
 							if (editing_town) {
 			if (change_made_town == TRUE) {
 				if (save_check(859) == FALSE)
@@ -1216,8 +1231,7 @@ void handle_help_menu(int item_hit)
 				change_made_outdoors = FALSE;
 				}
 			break;
-
-		case 11: // load outdoor zone above
+		case 11: // Load Outdoor Zone Above
 			if (editing_town)
 				break;
 
@@ -1244,7 +1258,7 @@ void handle_help_menu(int item_hit)
 				change_made_outdoors = FALSE;
 			break;
 			
-		case 12: // load outdoor zone below
+		case 12: // Load Outdoor Zone Below
 			if (editing_town)
 				break;
 
@@ -1270,15 +1284,14 @@ void handle_help_menu(int item_hit)
 				redraw_screen();
 				change_made_outdoors = FALSE;
 			break;
-			
-		case 13: //   Full print out of town data
+		case 13: // Town: Full Write Data To File
 			if (fancy_choice_dialog(886,0) == 1) {
 			   last_file_printed = 13;
 				 start_full_town_data_dump();
 				 }
 			break;
 			
-		case 14: //   Repeat print of last file printed
+		case 14: // Repeat Printing of Last File
          if (last_file_printed == 0) {
 				 set_string("Repeat Printing of Last File:","Scenario Data.txt");
 				 start_data_dump();
@@ -1310,27 +1323,27 @@ void handle_help_menu(int item_hit)
 
 				break;
 
-		case 15: //   Lists all special rectangles, town locations for each zone.
+		case 15: // Lists all special rectangles, town locations for each zone: "All Outdoor Zones: Full Write up"
 			if (fancy_choice_dialog(887,0) == 1) {
          last_file_printed = 15;
 				 start_fullout_data_dump();
 				 }
 			break;
 
-		case 16: //   Current outdoor zone write up
+		case 16: // Current Outdoor Zone: Full Write up
 			if (fancy_choice_dialog(888,0) == 1) {
          last_file_printed = 16;
 				 start_currentout_data_dump();
 				 }
 			break;
 			
-		case 17: //   Current outdoor zone write up
+		case 17: // Write Scenario Text To Text File
 			if (fancy_choice_dialog(889,0) == 1) {
          last_file_printed = 17;
 				 scenariotext_data_dump();
 				 }
 			break;
-		case 18: // switch view size
+		case 18: // Cycle Forward Through View Mode
 							if(cur_viewing_mode == 0)
 								cur_viewing_mode = 2;
 							else if(cur_viewing_mode == 2)
@@ -1342,8 +1355,7 @@ void handle_help_menu(int item_hit)
 							reset_small_drawn();
 							redraw_screen();
 		break;
-
-		case 19: // switch view size
+		case 19: // Cycle Backward Through View Mode
 							if(cur_viewing_mode == 1)
 								cur_viewing_mode = 2;
 							else if(cur_viewing_mode == 2)
@@ -1355,12 +1367,12 @@ void handle_help_menu(int item_hit)
 							reset_small_drawn();
 							redraw_screen();
 		break;
-		case 20: //   Rotate current object display mode: going forwards
+		case 20: //   Rotate current object display mode forwards: "Increase Object Display Mode"
 					object_display_mode = ((object_display_mode + 1) % 7);
 					numerical_display_mode = 0;
 					need_redraw = TRUE;
 			break;
-		case 21: //   Rotate current object display mode: going backwards
+		case 21: //   Rotate current object display mode backwards: "Decrease Object Display Mode"
 				 if (object_display_mode == 0)
 				    object_display_mode = 6;
 					else object_display_mode = ((object_display_mode - 1) % 7);

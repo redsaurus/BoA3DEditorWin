@@ -1314,9 +1314,9 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 				switch (i) {
 					case 0:
 						choice = choose_text_res(-1,0,255,town.creatures[selected_item_number % 1000].number,
-						  0,"What sort of Creature?");
-						if (choice >= 0)
-							town.creatures[selected_item_number % 1000].number = choice;			
+						  0,"What sort of Creature, (0:255)?");
+						if ((choice >= 0) && (choice < 256))
+							town.creatures[selected_item_number % 1000].number = choice;
 						break;
 					case 1:
 						edit_placed_monst(selected_item_number % 1000);
