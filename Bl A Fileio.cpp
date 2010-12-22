@@ -1085,14 +1085,21 @@ void load_all_town_names(char* to_open)
 	store = (long) (zone_names.out_width * zone_names.out_height) * (long) (sizeof(outdoor_record_type));
 	len_to_jump += store;
 	
-	for (i = 0; i < (short)temp_scen.num_towns; i++){
+	for (i = 0; i < (short)temp_scen.num_towns; i++) {
 		error = SetFPos (file_id, 1, len_to_jump);
-		if (error != 0) {FSClose(file_id);oops_error(81);return;}
+		if (error != 0) {FSClose(file_id);
+		oops_error(81);
+		return;
+		}
 		//load the  name
 		len = sizeof(town_record_type);
 		
 		error = FSRead(file_id, &len , (char *) &temp_town);
-		if (error != 0) {FSClose(file_id);oops_error(82);return;}
+		if (error != 0) {
+			 FSClose(file_id);
+			 oops_error(82);
+			 return;
+			 }
 		if (currently_editing_windows_scenario)
 			temp_town.port();
 		strcpy(&zone_names.town_names[i][0],&temp_town.town_name[0]);
@@ -1198,53 +1205,54 @@ void start_full_data_dump()
 		sprintf((char *)get_text,"  Outdoor Width = %d, Outdoor Height = %d\r",scenario.out_width,scenario.out_height);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf((char *)get_text,"  Outdoor Start Zone: X = %d, Y = %d.\r",scenario.what_outdoor_section_start_in.x,scenario.what_outdoor_section_start_in.y);
+					i = (scenario.out_width * scenario.what_outdoor_section_start_in.y) + scenario.what_outdoor_section_start_in.x;
+		sprintf((char *)get_text,"  Outdoor Start Zone: X = %d, Y = %d, name = %s.\r",scenario.what_outdoor_section_start_in.x,scenario.what_outdoor_section_start_in.y,zone_names.section_names[i]);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 		sprintf((char *)get_text,"  Outdoor Start Location: X = %d, Y = %d.\r",scenario.start_where_in_outdoor_section.x,scenario.start_where_in_outdoor_section.y);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf((char *)get_text,"  Last Outdoor Zone Edited: X = %d, Y = %d.\r",scenario.last_out_edited.x,scenario.last_out_edited.y);
+					i = (scenario.out_width * scenario.last_out_edited.y) + scenario.last_out_edited.x;
+		sprintf((char *)get_text,"  Last Outdoor Zone Edited: X = %d, Y = %d, name = %s.\r",scenario.last_out_edited.x,scenario.last_out_edited.y,zone_names.section_names[i]);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 
-		sprintf((char *)get_text,"\r  Number of towns = %d.\r  Starting Town = %d.\r",scenario.num_towns,scenario.start_in_what_town);
+		sprintf((char *)get_text,"\r  Number of towns = %d.\r  Starting Town = %d, %s.\r",scenario.num_towns,scenario.start_in_what_town,zone_names.town_names[scenario.start_in_what_town]);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 		sprintf((char *)get_text,"  Starting Town Location: X = %d, Y = %d.\r",scenario.what_start_loc_in_town.x,scenario.what_start_loc_in_town.y);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		sprintf((char *)get_text,"  Last Town Edited = %d.\r",scenario.last_town_edited);
+		sprintf((char *)get_text,"  Last Town Edited = %d, %s.\r",scenario.last_town_edited,zone_names.town_names[scenario.last_town_edited]);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 
 	sprintf((char *)get_text,"\r\rNames of the Outdoor Sections in %s:\r",scenario.scen_name);
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) 	
+		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++)
 			for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) {
-			load_outdoor(out_sec,outdoor);
 			i = (scenario.out_width * out_sec.y) + out_sec.x;
-			sprintf((char *)get_text,"\r  Section %d, X = %d, Y = %d:  %s ",i,(short) out_sec.x,(short) out_sec.y,outdoor.name);
+			sprintf((char *)get_text,"\r  Section %d, X = %d, Y = %d:  %s ",i,(short) out_sec.x,(short) out_sec.y,zone_names.section_names[i]);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
 	sprintf((char *)get_text,"\r\rNames of the towns in %s:\r",scenario.scen_name);
 	len = (long) (strlen((char *)get_text));
 	FSWrite(data_dump_file_id, &len, (char *) get_text);
-			for (j = 0; j < scenario.num_towns; j++) {
-		load_town(j);
-		sprintf((char *)get_text,"  Town %d: %s\t%s\r",j,town.town_name,town.town_script);
-		len = (long) (strlen((char *)get_text));
-		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		}
+	for (i = 0; i < scenario.num_towns; i++) {
+			sprintf((char *)get_text,"  Town %d: \t%s\r",i,zone_names.town_names[i]);
+			len = (long) (strlen((char *)get_text));
+			FSWrite(data_dump_file_id, &len, (char *) get_text);
+			}
+
 		sprintf((char *)get_text,"\r\rLocations of Town Entrances in %s:\r",scenario.scen_name);
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 		sprintf((char *)get_text,"   tl = top,left while br = bottom,right\r\r");
 		len = (long) (strlen((char *)get_text));
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
-		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++) 	
+		for (out_sec.y = 0; out_sec.y < scenario.out_height ; out_sec.y++)
 			for (out_sec.x = 0; out_sec.x < scenario.out_width ; out_sec.x++) {
 			load_outdoor(out_sec,outdoor);
 			i = (scenario.out_width * out_sec.y) + out_sec.x;
@@ -1253,7 +1261,7 @@ void start_full_data_dump()
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			for (short i = 0; i < 8; i++) {
 			if ((outdoor.exit_dests[i] >= 0) && (outdoor.exit_dests[i] < scenario.num_towns)) {
-			sprintf((char *)get_text,"   Town entrance %d: town %d, tl = (%d,%d) br = (%d,%d)\r",i,outdoor.exit_dests[i],outdoor.exit_rects[i].left,outdoor.exit_rects[i].top,outdoor.exit_rects[i].right,outdoor.exit_rects[i].bottom);
+			sprintf((char *)get_text,"   Town entrance %d: town %d, tl = (%d,%d) br = (%d,%d), name = %s\r",i,outdoor.exit_dests[i],outdoor.exit_rects[i].left,outdoor.exit_rects[i].top,outdoor.exit_rects[i].right,outdoor.exit_rects[i].bottom,zone_names.town_names[outdoor.exit_dests[i]]);
 			len = (long) (strlen((char *)get_text));
 			FSWrite(data_dump_file_id, &len, (char *) get_text);
 			}
@@ -1266,11 +1274,9 @@ void start_full_data_dump()
 		out_sec.x = scenario.last_out_edited.x;
 		out_sec.y = scenario.last_out_edited.y;
 		load_outdoor(out_sec,outdoor);
-		load_town(scenario.last_town_edited);
 
 	FSClose(data_dump_file_id);
 }
-
 
 void scenariotext_data_dump()
 {

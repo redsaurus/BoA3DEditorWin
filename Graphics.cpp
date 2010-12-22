@@ -4972,12 +4972,19 @@ void get_str(char *str,short i, short j)
 			strcpy((char *) str,scen_data.scen_floors[j].floor_name);
 			break;
 		case -7:
-			sprintf((char *) str,"(%i) %s",(j-1),(char*)&zone_names.town_names[j-1][0]);
+			sprintf((char *) str,&zone_names.town_names[j][0]);
 			break;
 		case -8:
-			y = (j-1)/zone_names.out_width;
-			sprintf((char *) str,"(%i,%i) %s",(j-1)-(y*zone_names.out_width),y,(char*)&zone_names.section_names[j-1][0]);
+			y = j/zone_names.out_width;
+			sprintf((char *) str,"(%i,%i) %s",j-(y*zone_names.out_width),y,(char*)&zone_names.section_names[j][0]);
 			break;
+		case -9:
+			strcpy((char *) str,town.ter_scripts[j].script_name);
+			break;
+		case -10:
+			strcpy((char *) str,town.creatures[j].char_script);
+			break;
+
 		default:
 			GetIndString(str, i, j);
 	}

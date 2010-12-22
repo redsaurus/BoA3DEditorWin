@@ -1670,6 +1670,9 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				break;		
 				
 		case 51: // 51 - delete instance and remain in delete mode
+				if ((editing_town) == FALSE)
+							break;
+				else {
 				set_cursor(7);
 				for (i = 0; i < 12000; i++) {
 
@@ -1694,6 +1697,7 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 							town.preset_items[item_to_try % 1000].which_item = -1;
 							}
 						}
+					}
 					}
 				break;
 
@@ -4082,11 +4086,11 @@ void shut_down_menus()
 		EnableMenuItem(menu,2,MF_GRAYED | MF_BYCOMMAND);
 		//EnableMenuItem(menu,3,MF_GRAYED | MF_BYCOMMAND);
 
-		for (short i = 101; i < 109; i++)
+		for (short i = 101; i < 121; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 201; i < 227; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 301; i < 320; i++)
+		for (short i = 301; i < 321; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 401; i < 413; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
@@ -4094,7 +4098,7 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 1503; i < 1522; i++)
+		for (short i = 1503; i < 1512; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 
 		return;
@@ -4108,9 +4112,9 @@ void shut_down_menus()
 	}
 
 	if (editing_town == TRUE) {
-		for (short i = 101; i < 109; i++)
+		for (short i = 101; i < 121; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
-		for (short i = 301; i < 320; i++)
+		for (short i = 301; i < 321; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		for (short i = 401; i < 413; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
@@ -4118,15 +4122,18 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
-		for (short i = 1503; i < 1522; i++)
+		for (short i = 1503; i < 1512; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 	}
 	else {
 		EnableMenuItem(menu,101,MF_ENABLED | MF_BYCOMMAND);
 		EnableMenuItem(menu,102,MF_ENABLED | MF_BYCOMMAND);
-		for (short i = 103; i < 109; i++)
+		for (short i = 103; i < 110; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 301; i < 320; i++)
+		EnableMenuItem(menu,120,MF_GRAYED | MF_BYCOMMAND);
+		EnableMenuItem(menu,223,MF_GRAYED | MF_BYCOMMAND);
+		EnableMenuItem(menu,224,MF_GRAYED | MF_BYCOMMAND);
+		for (short i = 301; i < 321; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 401; i < 413; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
@@ -4134,7 +4141,7 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 1503; i < 1522; i++)
+		for (short i = 1503; i < 1512; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 	}
 }

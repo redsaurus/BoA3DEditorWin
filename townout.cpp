@@ -87,6 +87,128 @@ in_town_on_ter_script_type store_placed_script;
 short which_item;
 short store_which_placed_item;
 item_type store_placed_item;
+extern zone_names_data_type zone_names;
+
+void monst_replaceall()
+{
+	char temp_str[256];
+	short i;
+	
+	cd_create_dialog_parent_num(843,0);
+
+	for (i = 2; i < 20; i++)
+	cd_set_led(843,i,0);
+
+	for (i = 42; i < 60; i++)
+ 	CDSN(843,i,0);
+
+	for (i = 62; i < 80; i++)
+ 	CDSN(843,i,0);
+
+	while (dialog_not_toast)
+		ModalDialog();
+
+	cd_kill_dialog(843,0);
+}
+
+void monst_replaceall_event_filter (short item_hit)
+{
+	short i;
+	short dummy;
+	
+	switch (item_hit) {
+		case 82:
+			dialog_not_toast = FALSE;
+			break;
+		case 83:
+				if (cd_get_led(843,2) == 1) {
+					if (cre(CDGN(843,42),-1,255,"Find value error: Creature Type. |Town creatures must have a type number between 0 and 255 inclusive. | (-1 means no monster).","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,62),-1,255,"Replace value error: Creature Type. |Town creatures must have a type number between 0 and 255 inclusive.  |(-1 means no monster).","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].number == CDGN(843,42))
+					town.creatures[i].number = CDGN(843,62);
+					}
+			}
+				if (cd_get_led(843,3) == 1) {
+					if (cre(CDGN(843,43),0,3,"Find value error: Facing. |Town creatures must have a facing number between 0 and 3.","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,63),0,3,"Replace value error: Facing. |Town creatures must have a facing number between 0 and 3.","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].facing == CDGN(843,43))
+					town.creatures[i].facing = CDGN(843,63);
+					}
+			}
+				if (cd_get_led(843,4) == 1) {
+					if (cre(CDGN(843,44),2,5,"Find value error: Start Attitude. |Town creatures must have a facing number between 2 and 5.","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),2,5,"Replace value error: Start Attitude. |Town creatures must have a facing number between 2 and 5.","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].start_attitude == CDGN(843,44))
+					town.creatures[i].start_attitude = CDGN(843,64);
+					}
+			}
+
+			break;
+
+/*
+		case 33: // choose m type
+			if (get_placed_monst_in_dlog() == FALSE)
+				break;
+			i = choose_text_res(-1,1,255,store_placed_monst.number,843,"Choose Which Creature Type: 0 - 255");
+			if ((i >= 0) && (i < 256)) {
+				store_placed_monst.number = i;
+				put_placed_monst_in_dlog();
+				}
+			break;
+		case 34:
+			i = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,store_placed_monst.extra_item,843,"Which item?");
+	if (i >= 0)
+				store_placed_monst.extra_item = i;
+			put_placed_monst_in_dlog();
+			break;
+		case 35:
+			i = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,store_placed_monst.extra_item_2,843,"Which item?");
+			if (i >= 0)
+				store_placed_monst.extra_item_2 = i;
+			put_placed_monst_in_dlog();
+			break;
+		case 36: // choose time type
+			if (get_placed_monst_in_dlog() == FALSE)
+				break;
+			i = choose_text_res(4,1,11,store_placed_monst.time_flag + 1,843,"Choose Time Type:");
+			if (i >= 0) {
+				store_placed_monst.time_flag = i - 1;
+				put_placed_monst_in_dlog();
+				}
+			break;
+*/
+		default:
+			cd_flip_led(843,2,item_hit);
+			cd_flip_led(843,3,item_hit);
+			cd_flip_led(843,4,item_hit);
+			cd_flip_led(843,5,item_hit);
+			cd_flip_led(843,6,item_hit);
+			cd_flip_led(843,7,item_hit);
+			cd_flip_led(843,8,item_hit);
+			cd_flip_led(843,9,item_hit);
+			cd_flip_led(843,10,item_hit);
+			cd_flip_led(843,11,item_hit);
+			cd_flip_led(843,12,item_hit);
+			cd_flip_led(843,13,item_hit);
+			cd_flip_led(843,14,item_hit);
+			cd_flip_led(843,15,item_hit);
+			cd_flip_led(843,16,item_hit);
+			cd_flip_led(843,17,item_hit);
+			cd_flip_led(843,18,item_hit);
+			cd_flip_led(843,19,item_hit);
+		break;
+		
+		}
+}
 
 void edit_placed_item(short which_item)
 {
@@ -328,6 +450,11 @@ void edit_placed_script_event_filter (short item_hit)
 				store_placed_script.clear_in_town_on_ter_script_type();
 				put_placed_terrain_script_in_dlog();
 			break;
+		case 42: // Show a menu of all scripts already placed in this town.
+			i = choose_text_res(-9,0,99,0,838,"Which Terrain Script Name?");
+		 	CDST(838,6,town.ter_scripts[i].script_name);
+		break;
+
 		default:
 		break;
 		}
@@ -387,7 +514,7 @@ void put_placed_monst_in_dlog()
  	CDSN(837,9,store_placed_monst.hidden_class);
  	CDSN(837,10,store_placed_monst.act_at_distance);
  	CDSN(837,11,store_placed_monst.unique_char);
-	cdsin(837,12,store_placed_monst.number);
+	CDSN(837,12,store_placed_monst.number);
  	CDSN(837,13,store_placed_monst.creature_time);
  	CDSN(837,14,store_placed_monst.attached_event);
 
@@ -482,6 +609,17 @@ void edit_placed_monst_event_filter (short item_hit)
 					set_string("Creature save succeeded.","");
 			break;
 
+		case 73: // Update display of names
+				csit(837,38,scen_data.scen_creatures[CDGN(837,12)].name);
+				csit(837,51,scen_data.scen_items[CDGN(837,4)].full_name);
+	 			csit(837,52,scen_data.scen_items[CDGN(837,5)].full_name);
+			break;
+
+		case 74: // Choose name of a char script already placed in this town.
+			i = choose_text_res(-10,0,79,0,837,"Which Character Script Name?");
+		 	CDST(837,2,town.creatures[i].char_script);
+			break;
+
 		default:
 		break;
 		}
@@ -533,19 +671,44 @@ void edit_sign(short which_sign)
 
 }
 
-
 void get_a_number_event_filter (short item_hit)
-{	
+{
+
+	 short x;
+	 char *str;
+
 	switch (item_hit) {
 		case 3:
 			dialog_answer = CDGN(store_which_dlog,2);
+				if (store_which_dlog == 855) {
+				if (cre(dialog_answer,0,scenario.num_towns - 1,"Town number must be from 0 to (Number of scenario towns - 1).","",857) == TRUE)
+				 break;
+				}
 			dialog_answer = minmax(store_dlog_min,store_dlog_max,dialog_answer);
-
-			dialog_not_toast = FALSE; 
+			dialog_not_toast = FALSE;
 			break;
 		case 4:
 			dialog_answer = -1;
-			dialog_not_toast = FALSE; 
+			dialog_not_toast = FALSE;
+			break;
+		case 7:
+				if ((store_which_dlog != 855) && (store_which_dlog != 856))
+				break;
+				else {
+				x = choose_text_res(-7,0,scenario.num_towns - 1,CDGN(store_which_dlog,2),store_which_dlog,"Which Town?");
+				if (x >= 0) {
+				CDSN(store_which_dlog,2,x);
+				csit(store_which_dlog,9,zone_names.town_names[x]);
+				}
+			}
+			break;
+		case 10:
+				if ((store_which_dlog != 855) && (store_which_dlog != 856))
+				break;
+				else {
+					x = CDGN(store_which_dlog,2);
+					csit(store_which_dlog,9,zone_names.town_names[x]);
+				}
 			break;
 
 		}
@@ -556,6 +719,7 @@ void get_a_number_event_filter (short item_hit)
 short get_a_number(short which_dlog,short default_value,short min,short max)
 {
 	char temp_str[256],str2[256];
+	short x;
 	
 	 store_which_dlog = which_dlog;
 	store_dlog_min = min;
@@ -568,6 +732,8 @@ short get_a_number(short which_dlog,short default_value,short min,short max)
 		cd_get_item_text(which_dlog,6,(char *) temp_str);
 		sprintf((char *) str2,"%s (0 - %d)",(char *) temp_str, (int)(scenario.num_towns - 1));
 		csit(which_dlog,6,(char *) str2);
+		x = CDGN(store_which_dlog,2);
+		csit(store_which_dlog,9,zone_names.town_names[x]);
 		}		
 
 	while (dialog_not_toast)
@@ -581,11 +747,12 @@ void change_ter_event_filter (short item_hit)
 {
 	short i;
 	
-	switch (item_hit) {
-		case 5:
 			a = CDGN(857,2);
 			b = CDGN(857,3);
 			c = CDGN(857,4);
+
+	switch (item_hit) {
+		case 5:
 			if (current_drawing_mode == 0) {
 				if (cre(a,0,255,"Both floor types must be from 0 to 255.","",857) == TRUE) break;
 				if (cre(b,0,255,"Both floor types must be from 0 to 255.","",857) == TRUE) break;
@@ -599,14 +766,18 @@ void change_ter_event_filter (short item_hit)
 			 dialog_not_toast = FALSE; 
 			break;
 		case 6:
-			a = -1; b = -1; c = -1;
-			dialog_not_toast = FALSE; 
+			dialog_not_toast = FALSE;
 			break;
 		case 9: case 10:
 			i = CDGN(857,item_hit - 7);
-			if (current_drawing_mode == 0)
-				i = choose_text_res(-6,0,255,i,857,"Which Floor?");
-				else i = choose_text_res(-4,0,511,i,857,"Which Terrain?");
+			if (current_drawing_mode == 0) {
+				i = choose_text_res(-6,0,255,i,857,"Which Floor? (0:255)");
+				csit(857,item_hit + 5,scen_data.scen_floors[i].floor_name);
+				}
+				else {
+				i = choose_text_res(-4,0,511,i,857,"Which Terrain? (0:511)");
+				csit(857,item_hit + 5,scen_data.scen_ter_types[i].ter_name);
+				}
 			if (i >= 0)
 				CDSN(857,item_hit - 7,i);
 			break;
@@ -615,20 +786,33 @@ void change_ter_event_filter (short item_hit)
 
 void change_ter(short *change_from,short *change_to,short *chance)
 // ignore parent in Mac version
-{	
+{
 	cd_create_dialog_parent_num(857,0);
-	
+
 	CDSN(857,2,0);
 	CDSN(857,3,0);
 	CDSN(857,4,100);
-	
+
+			if (current_drawing_mode == 0) {
+			csit(857,7,"Change Floor Randomly");
+			csit(857,8,"Select a floor type and another floor type to turn it into. |Also give a percentage chance of changing it (0 - 100). |Automatic corrections (like adjusting cave walls) will not be made to these changes.");
+			csit(857,11,"Change this floor type:");
+			csit(857,12,"To this floor type:");
+			}
+			else {
+			csit(857,7,"Change Terrain Randomly");
+			csit(857,8,"Select a terrain type and another terrain type to turn it into. |Also give a percentage chance of changing it (0 - 100). |Automatic corrections (like adjusting cave walls) will not be made to these changes.");
+			csit(857,11,"Change this terrain type:");
+			csit(857,12,"To this terrain type:");
+			}
+
 	while (dialog_not_toast)
-		ModalDialog();	
+		ModalDialog();
 
 	*change_from = a;
-	*change_to = b; 
+	*change_to = b;
 	*chance = c;
-	
+
 	cd_kill_dialog(857,0);
 }
 
@@ -1043,9 +1227,12 @@ Boolean save_town_wand()
 	return TRUE;
 }
 
+
+// Needs a name button
 void pick_out_event_filter (short item_hit)
 {
 	char temp_str[256];
+	short i,j,n;
 	
 	switch (item_hit) {
 		case 2:
@@ -1056,34 +1243,73 @@ void pick_out_event_filter (short item_hit)
 			dialog_answer = -1;
 			 dialog_not_toast = FALSE; 
 			break;
+
 		case 12:
-			if (store_cur_loc.x == 0) EdSysBeep( /* 20 */ );
-				else store_cur_loc.x--;
+			if (store_cur_loc.x == 0) EdSysBeep( );  // (20)
+				else {
+					store_cur_loc.x--;
+					i = (scenario.out_width * store_cur_loc.y) + store_cur_loc.x;
+					csit(854,16,zone_names.section_names[i]);
+				}
 			break;
 		case 13:
-			if (store_cur_loc.x >= store_max_x - 1) EdSysBeep( /* 20 */ );
-				else store_cur_loc.x++;
+			if (store_cur_loc.x >= store_max_x - 1)  EdSysBeep( );  // (20)
+				else {
+					store_cur_loc.x++;
+					i = (scenario.out_width * store_cur_loc.y) + store_cur_loc.x;
+					csit(854,16,zone_names.section_names[i]);
+				}
 			break;
 		case 14:
-			if (store_cur_loc.y == 0) EdSysBeep( /* 20 */ );
-				else store_cur_loc.y--;
+			if (store_cur_loc.y == 0)  EdSysBeep( );  // (20)
+				else {
+					store_cur_loc.y--;
+					i = (scenario.out_width * store_cur_loc.y) + store_cur_loc.x;
+					csit(854,16,zone_names.section_names[i]);
+				}
 			break;
 		case 15:
-			if (store_cur_loc.y >= store_max_y - 1) EdSysBeep( /* 20 */ );
-				else store_cur_loc.y++;
+			if (store_cur_loc.y >= store_max_y - 1) EdSysBeep( );  // (20)
+				else {
+					store_cur_loc.y++;
+					i = (scenario.out_width * store_cur_loc.y) + store_cur_loc.x;
+					csit(854,16,zone_names.section_names[i]);
+				}
 			break;
+
+		case 17:
+			i = (scenario.out_width * store_cur_loc.y) + store_cur_loc.x;
+			j = scenario.out_width * scenario.out_height;
+
+				n = choose_text_res(-8,0,j - 1,i,854,"Which Outdoor Section?");
+				if (n >= 0) {
+				store_cur_loc.x = n % scenario.out_width;
+				store_cur_loc.y = (n - store_cur_loc.x ) / scenario.out_width;
+				CDSN(854,18,store_cur_loc.x);
+				CDSN(854,19,store_cur_loc.y);
+				csit(854,16,zone_names.section_names[n]);
+			}
+			break;
+
+		case 20:
+					i = (scenario.out_width * CDGN(854,19)) + CDGN(854,18);
+					csit(854,16,zone_names.section_names[i]);
+			break;
+
+		default:
+			break;
+
 		}
-	sprintf((char *) temp_str,"X = %d", (int)store_cur_loc.x);
-	csit(854,8,(char *) temp_str);
-	sprintf((char *) temp_str,"Y = %d", (int)store_cur_loc.y);
-	csit(854,11,(char *) temp_str);
+		 	CDSN(854,18,store_cur_loc.x);
+ 			CDSN(854,19,store_cur_loc.y);
+
 }
 
 short pick_out(location default_loc,short max_x,short max_y)
 // ignore parent in Mac version
 {
 	char temp_str[256];
-	
+	short i;
 	store_cur_loc = default_loc;
 	store_max_x = max_x;
 	store_max_y = max_y;
@@ -1092,10 +1318,11 @@ short pick_out(location default_loc,short max_x,short max_y)
 	
 	cdsin(854,7,store_max_x);	
 	cdsin(854,10,store_max_y);
-	sprintf((char *) temp_str,"X = %d", (int)store_cur_loc.x);
-	csit(854,8,(char *) temp_str);
-	sprintf((char *) temp_str,"Y = %d", (int)store_cur_loc.y);
-	csit(854,11,(char *) temp_str);
+ 	CDSN(854,18,(int)store_cur_loc.x);
+ 	CDSN(854,19,(int)store_cur_loc.y);
+	i = (scenario.out_width * store_cur_loc.y) + store_cur_loc.x;
+		csit(854,16,zone_names.section_names[i]);
+
 
 	while (dialog_not_toast)
 		ModalDialog();	
@@ -1624,8 +1851,12 @@ void put_item_placement_in_dlog()
 		}
 	CDSN(812,22,store_storage.ter_type);
 	cdsin(812,27,cur_shortcut);
+	csit(812,36,scen_data.scen_ter_types[CDGN(812,22)].ter_name);
 	cd_set_led(812,38,store_storage.property);
 
+	for (i = 0; i < 10; i++) {
+			csit(812,51 + i,scen_data.scen_items[CDGN(812,2 + i)].full_name);
+			}
 }
 
 void edit_item_placement_event_filter (short item_hit)
@@ -1654,18 +1885,42 @@ void edit_item_placement_event_filter (short item_hit)
 			store_storage = scenario.storage_shortcuts[cur_shortcut];
 			put_item_placement_in_dlog();
 			break;
+		case 37: // Name button
+		csit(812,36,scen_data.scen_ter_types[CDGN(812,22)].ter_name);
+		for (i = 0; i < 10; i++) {
+			csit(812,51 + i,scen_data.scen_items[CDGN(812,2 + i)].full_name);
+			}
+			break;
+
 		case 40:
 			store_storage.ter_type = CDGN(812,22);
 			i = choose_text_res(-4,0,511,store_storage.ter_type,812,"Which Terrain?");
 			store_storage.ter_type = i;
 			CDSN(812,22,i);
+			csit(812,36,scen_data.scen_ter_types[i].ter_name);
 			break;
+
+		case 62:
+				for (i = 0; i < 10; i++) {
+				 CDSN(812,2 + i,-1);
+				 CDSN(812,12 + i,0);
+				 }
+		 		CDSN(812,22,-1);
+				cd_set_led(812,38,0);
+				csit(812,36,scen_data.scen_ter_types[CDGN(812,22)].ter_name);
+				for (i = 0; i < 10; i++) {
+				csit(812,51 + i,scen_data.scen_items[CDGN(812,2 + i)].full_name);
+				}
+			break;
+				
 		default:
 			if ((item_hit >= 41) && (item_hit <= 50)) {
-				i = CDGN(812,2 + item_hit - 41);
+				i = CDGN(812,item_hit - 39);
 				i = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,i,812,"Place which item?"); 
-				if (i >= 0)
-					CDSN(812,2 + item_hit - 41,i);
+				if (i >= 0) {
+					CDSN(812,item_hit - 39,i);
+					csit(812,item_hit  + 10,scen_data.scen_items[i].full_name);
+					}
 				break;
 				}
 			cd_flip_led(812,38,item_hit);
@@ -1704,23 +1959,107 @@ void edit_add_town()
 void put_add_town_in_dlog()
 {
 	short i;
+	short x;
 	
 	for (i = 0; i < 10; i++) {
 		CDSN(810,2 + i,scenario.town_to_add_to[i]);
 		CDSN(810,12 + i,scenario.flag_to_add_to_town[i][0]);
 		CDSN(810,22 + i,scenario.flag_to_add_to_town[i][1]);
+		x = CDGN(810,2 + i);
+		csit(810,49 + i,zone_names.town_names[x]);
 		}
 
 }
 
 void edit_add_town_event_filter (short item_hit)
 {	
+	short i;
+	short x;
+	
 	switch (item_hit) {
 		case 32:
 			if (save_add_town() == TRUE)
 				 dialog_not_toast = FALSE; 
 			break;
 
+		case 39:
+				x = choose_text_res(-7,0,scenario.num_towns - 1,CDGN(810,2),810,"Which Town?");
+				if (x >= 0) {
+				CDSN(810,2,x);
+				csit(810,49,zone_names.town_names[x]);
+			}
+			break;
+		case 40:
+				x = choose_text_res(-7,0,scenario.num_towns - 1,CDGN(810,3),810,"Which Town?");
+				if (x >= 0) {
+				CDSN(810,3,x);
+				csit(810,50,zone_names.town_names[x]);
+			}
+			break;
+		case 41:
+				x = choose_text_res(-7,0,scenario.num_towns - 1,CDGN(810,4),810,"Which Town?");
+				if (x >= 0) {
+				CDSN(810,4,x);
+				csit(810,51,zone_names.town_names[x]);
+			}
+			break;
+		case 42:
+				x = choose_text_res(-7,0,scenario.num_towns - 1,CDGN(810,5),810,"Which Town?");
+				if (x >= 0) {
+				CDSN(810,5,x);
+				csit(810,52,zone_names.town_names[x]);
+			}
+			break;
+		case 43:
+				x = choose_text_res(-7,0,scenario.num_towns - 1,CDGN(810,6),810,"Which Town?");
+				if (x >= 0) {
+				CDSN(810,6,x);
+				csit(810,53,zone_names.town_names[x]);
+			}
+			break;
+		case 44:
+				x = choose_text_res(-7,0,scenario.num_towns - 1,CDGN(810,7),810,"Which Town?");
+				if (x >= 0) {
+				CDSN(810,7,x);
+				csit(810,54,zone_names.town_names[x]);
+			}
+			break;
+		case 45:
+				x = choose_text_res(-7,0,scenario.num_towns - 1,CDGN(810,8),810,"Which Town?");
+				if (x >= 0) {
+				CDSN(810,8,x);
+				csit(810,55,zone_names.town_names[x]);
+			}
+			break;
+		case 46:
+				x = choose_text_res(-7,0,scenario.num_towns - 1,CDGN(810,9),810,"Which Town?");
+				if (x >= 0) {
+				CDSN(810,9,x);
+				csit(810,56,zone_names.town_names[x]);
+			}
+			break;
+		case 47:
+				x = choose_text_res(-7,0,scenario.num_towns - 1,CDGN(810,10),810,"Which Town?");
+				if (x >= 0) {
+				CDSN(810,10,x);
+				csit(810,57,zone_names.town_names[x]);
+			}
+			break;
+		case 48:
+				x = choose_text_res(-7,0,scenario.num_towns - 1,CDGN(810,11),810,"Which Town?");
+				if (x >= 0) {
+				CDSN(810,11,x);
+				csit(810,58,zone_names.town_names[x]);
+			}
+			break;
+
+		case 59:
+			for (i = 0; i < 10; i++) {
+					x = CDGN(810,2 + i);
+					csit(810,49 + i,zone_names.town_names[x]);
+		}
+			break;
+			
 		}
 }
 
@@ -1835,13 +2174,10 @@ void edit_make_scen_2_event_filter (short item_hit)
 	switch (item_hit) {
 		case 7:
 			i = CDGN(801,2);
-			if (cre(i,
-				1,50,"Outdoors width must be between 1 and 50.","",801) == TRUE) return ;
+			if (cre(i,1,50,"Outdoors width must be between 1 and 50.","",801) == TRUE) return ;
 			j = CDGN(801,3);
-			if (cre(j,
-				1,50,"Outdoors height must be between 1 and 50.","",801) == TRUE) return ;
-			if (cre(i * j,
-				1,100,"The total number of outdoor sections (width times height) must be between 1 and 100.","",801) == TRUE) return ;
+			if (cre(j,1,50,"Outdoors height must be between 1 and 50.","",801) == TRUE) return ;
+			if (cre(i * j,1,100,"The total number of outdoor sections (width times height) must be between 1 and 100.","",801) == TRUE) return ;
 	
 			dialog_not_toast = FALSE; 
 			break;
@@ -1907,8 +2243,12 @@ void edit_scen_details_event_filter (short item_hit)
 	switch (item_hit) {
 		case 10:
 			if (save_scen_details() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 dialog_not_toast = FALSE;
 			break;
+		case 28:
+				 dialog_not_toast = FALSE;
+			break;
+			
 		default:
 			cd_hit_led_range(803,11,14,item_hit);
 			break;

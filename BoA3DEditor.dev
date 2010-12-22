@@ -40,7 +40,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=CMemStream.cpp
+FileName=CMemStream.h
 Folder=3D BoA Editor Windows
 Compile=1
 Link=1
@@ -50,16 +50,6 @@ BuildCmd=
 CompileCpp=1
 
 [Unit4]
-FileName=CMemStream.h
-CompileCpp=1
-Folder=3D BoA Editor Windows
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit5]
 FileName=DibEngine.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -69,7 +59,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
+[Unit5]
 FileName=DibEngine.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -79,8 +69,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
-FileName=EdGlobal.cpp
+[Unit6]
+FileName=EdFcns.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
 Compile=1
@@ -89,7 +79,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit8]
 FileName=EdParser.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -99,7 +89,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit10]
+[Unit9]
 FileName=EdUtils.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -109,7 +99,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit11]
+[Unit10]
 FileName=Graphutl.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -119,8 +109,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
-FileName=Resource.h
+[Unit11]
+FileName=keydlgs.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
 Compile=1
@@ -129,7 +119,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
+[Unit14]
 FileName=sound.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -139,7 +129,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit16]
+[Unit15]
 FileName=stdafx.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -149,7 +139,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit17]
+[Unit16]
 FileName=stdafx.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -159,7 +149,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit18]
+[Unit17]
 FileName=tokntype.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -169,7 +159,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit19]
+[Unit18]
 FileName=townout.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -179,7 +169,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit20]
+[Unit19]
 FileName=version.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -189,7 +179,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit21]
+[Unit20]
 FileName=global.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -199,7 +189,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit22]
+[Unit21]
 FileName=Bl A Fileio.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -209,8 +199,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit23]
+[Unit22]
 FileName=Bl A Fileio.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit23]
+FileName=Graphics.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
 Compile=1
@@ -238,45 +238,16 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit13]
-FileName=Library.cpp
+FileName=Resource.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
 Compile=1
 Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit2]
-FileName=Blscened.rc
-Folder=3D BoA Editor Windows
-Compile=1
-Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit24]
-FileName=Graphics.cpp
-CompileCpp=1
-Folder=3D BoA Editor Windows
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit12]
-FileName=keydlgs.cpp
-CompileCpp=1
-Folder=3D BoA Editor Windows
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit25]
 FileName=dlogtool.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -286,12 +257,41 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
-FileName=EdFcns.cpp
+[Unit12]
+FileName=Library.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
 Compile=1
 Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit7]
+FileName=EdGlobal.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit2]
+FileName=CMemStream.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit25]
+FileName=Blscened.rc
+Folder=3D BoA Editor Windows
+Compile=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=

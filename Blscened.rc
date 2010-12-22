@@ -74,6 +74,7 @@ IDI_SMALL               ICON                    "Resources/BladesofAvernumEditor
 
 IDC_BOA3DEDITOR MENU 
 BEGIN
+
     POPUP "&File"
     BEGIN
         MENUITEM "&Open Scenario\tCtrl+O",      1
@@ -83,6 +84,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Quit\tCtrl+Q",               6
     END
+    
     POPUP "&Edit"
     BEGIN
     		MENUITEM "&Undo\tCtrl+Z",               101
@@ -94,7 +96,22 @@ BEGIN
         MENUITEM " &Paste\tCtrl+V",             106
         MENUITEM " &Delete\tCtrl+A",       			107
         MENUITEM " Clear &Screen\tCtrl+B", 						108
+        MENUITEM " Continual &Delete\tEnd", 						109
+        MENUITEM " &Delete Selected Only\tBackspace", 						120
+        MENUITEM SEPARATOR
+        MENUITEM "  &Cycle Forward Through View Mode\tCtrl+E", 110
+        MENUITEM "  &Cycle Backward Through View Mode\tCtrl+F", 111
+        MENUITEM "  &Increase Numerical Display Mode\tCtrl+G", 112
+        MENUITEM "  &Decrease Numerical Display Mode\tCtrl+H", 113
+        MENUITEM "  &Increase Object Display Mode\tCtrl+9", 114
+        MENUITEM "  &Decrease Object Display Mode\tCtrl+0", 115
+        MENUITEM SEPARATOR
+        MENUITEM "  Load Outdoor Zone &Above\tCtrl+Up", 116
+        MENUITEM "  Load &Previous Outdoor Zone/Town\tCtrl+Left", 117
+        MENUITEM "  Load &Next Outdoor Zone/Town\tCtrl+Right", 118
+        MENUITEM "  Load Outdoor Zone &Below\tCtrl+Down", 119
     END
+    
     POPUP "&Scenario"
     BEGIN
         MENUITEM "Edit &Town\tCtrl+T",           201
@@ -146,6 +163,8 @@ BEGIN
         MENUITEM "  &Clear All Special Encounters", 317
         MENUITEM "  Clear All &Preset Fields", 318
         MENUITEM "  Clear All Placed S&tains", 319
+        MENUITEM SEPARATOR
+        MENUITEM "  Alter Many &Monsters",        320
     END
 
     POPUP "&Outdoors"
@@ -221,6 +240,7 @@ BEGIN
     BEGIN
         MENUITEM "Dummy",                       703
     END
+    
     POPUP "&Query"
     BEGIN
         MENUITEM "  About Blades Scenario &Editor", 1501
@@ -228,26 +248,16 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "   Query Functions:",                   1503
         MENUITEM "  Write Scenario Data To Text File\tCtrl+&1", 1504
-        MENUITEM "  Write Scenario Text To Text File\tCtrl+&2", 1517
+        MENUITEM "  Write Scenario Text To Text File\tCtrl+&2", 1511
         MENUITEM "  Full Write up: Outdoor/Town Names\tCtrl+&3", 1505
-        MENUITEM "  All Outdoor Zones: Full Write up\tCtrl+&4", 1515
-        MENUITEM "  Current Outdoor Zone: Full Write up\tCtrl+&5", 1516
+        MENUITEM "  All Outdoor Zones: Full Write up\tCtrl+&4", 1509
+        MENUITEM "  Current Outdoor Zone: Full Write up\tCtrl+&5", 1510
         MENUITEM "  Town: Write Data To File\tCtrl+&6", 1506
-        MENUITEM "  Town: Full Write Data To File\tCtrl+&7", 1513
-        MENUITEM "  &Repeat Printing of Last File\tCtrl+P", 1514
+        MENUITEM "  Town: Full Write Data To File\tCtrl+&7", 1507
+        MENUITEM "  &Repeat Printing of Last File\tCtrl+P", 1508
         MENUITEM SEPARATOR
-        MENUITEM "  &Cycle Forward Through View Mode\tCtrl+E", 1518
-        MENUITEM "  &Cycle Backward Through View Mode\tCtrl+F", 1519
-        MENUITEM "  &Increase Numerical Mode\tCtrl+G", 1507
-        MENUITEM "  &Decrease Numerical Mode\tCtrl+H", 1508
-        MENUITEM "  &Increase Object Display Mode\tCtrl+9", 1520
-        MENUITEM "  &Decrease Object Display Mode\tCtrl+0", 1521
-        MENUITEM SEPARATOR
-        MENUITEM "  Load Outdoor Zone &Above\tCtrl+Up", 1511
-        MENUITEM "  Load &Previous Outdoor Zone/Town\tCtrl+Left", 1509
-        MENUITEM "  Load &Next Outdoor Zone/Town\tCtrl+Right", 1510
-        MENUITEM "  Load Outdoor Zone &Below\tCtrl+Down", 1512
     END
+    
 END
 
 
@@ -258,41 +268,42 @@ END
 
 IDC_BOA3DEDITOR ACCELERATORS 
 BEGIN
-    "^O",           1,                      ASCII,  NOINVERT
-    "^S",           2,                      ASCII,  NOINVERT
-    "^N",           3,                      ASCII,  NOINVERT
-    "^Q",           6,                      ASCII,  NOINVERT
-    "^Z",           101,                    ASCII,  NOINVERT
-    "^Y",           102,                    ASCII,  NOINVERT
-    "^X",           104,                    ASCII,  NOINVERT
-    "^C",           105,                    ASCII,  NOINVERT
-    "^V",           106,                    ASCII,  NOINVERT
     "^A",           107,                    ASCII,  NOINVERT
     "^B",           108,                    ASCII,  NOINVERT
-    "^T",           201,                    ASCII,  NOINVERT
-    "^R",           202,                    ASCII,  NOINVERT
-    "^G",           1507,                   ASCII,  NOINVERT
-    "^H",           1508,                   ASCII,  NOINVERT
+    "^C",           105,                    ASCII,  NOINVERT
+    "^E",           110,                    ASCII,  NOINVERT
+    "^F",           111,                    ASCII,  NOINVERT
+    "^G",           112,                    ASCII,  NOINVERT
+    "^H",           113,                    ASCII,  NOINVERT
     "^I",           1609,                   ASCII,  NOINVERT
-    "^J",           1509,                   ASCII,  NOINVERT
-    "^K",           1510,                   ASCII,  NOINVERT
-    "^P",           1514,                   ASCII,  NOINVERT
-    "^E",           1518,                   ASCII,  NOINVERT
-    "^F",           1519,                   ASCII,  NOINVERT
+    "^J",           117,                    ASCII,  NOINVERT
+    "^K",           118,                    ASCII,  NOINVERT
+    "^N",           3,                      ASCII,  NOINVERT
+    "^O",           1,                      ASCII,  NOINVERT
+    "^P",           1508,                   ASCII,  NOINVERT
+    "^Q",           6,                      ASCII,  NOINVERT
+    "^R",           202,                    ASCII,  NOINVERT
+    "^S",           2,                      ASCII,  NOINVERT
+    "^T",           201,                    ASCII,  NOINVERT
+    "^V",           106,                    ASCII,  NOINVERT
+    "^X",           104,                    ASCII,  NOINVERT
+    "^Y",           102,                    ASCII,  NOINVERT
+    "^Z",           101,                    ASCII,  NOINVERT
 		"^1",           1504,                   ASCII,  NOINVERT
-    "^2",           1517,                   ASCII,  NOINVERT
+    "^2",           1511,                   ASCII,  NOINVERT
     "^3",           1505,                   ASCII,  NOINVERT
-    "^4",           1515,                   ASCII,  NOINVERT
-    "^5",           1516,                   ASCII,  NOINVERT
+    "^4",           1509,                   ASCII,  NOINVERT
+    "^5",           1510,                   ASCII,  NOINVERT
     "^6",           1506,                   ASCII,  NOINVERT
-    "^7",           1513,                   ASCII,  NOINVERT
-    "^9",           1520,                   ASCII,  NOINVERT
-    "^0",           1521,                   ASCII,  NOINVERT
-    VK_LEFT,        1509,                   VIRTKEY, CONTROL, NOINVERT
-    VK_RIGHT,       1510,                   VIRTKEY, CONTROL, NOINVERT
-    VK_UP,          1511,                   VIRTKEY, CONTROL, NOINVERT
-    VK_DOWN,        1512,                   VIRTKEY, CONTROL, NOINVERT
+    "^7",           1507,                   ASCII,  NOINVERT
+    "^9",           114,                    ASCII,  NOINVERT
+    "^0",           115,                    ASCII,  NOINVERT
+    VK_LEFT,        117,                    VIRTKEY, CONTROL, NOINVERT
+    VK_RIGHT,       118,                    VIRTKEY, CONTROL, NOINVERT
+    VK_UP,          116,                    VIRTKEY, CONTROL, NOINVERT
+    VK_DOWN,        119,                    VIRTKEY, CONTROL, NOINVERT
     VK_TAB,         1609,                   VIRTKEY, CONTROL, NOINVERT
+    
 //    "^D",         302/402,                ASCII,  NOINVERT
 //    "^L",         301/401,                ASCII,  NOINVERT
 END
@@ -303,7 +314,7 @@ END
 // Dialog
 //
 
-800 DIALOG  10, 10, 516, 211
+800 DIALOG  10, 10, 516, 211 // Create a new scenario screen 1
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,448,410,31,10,WS_GROUP
@@ -318,7 +329,7 @@ BEGIN
     LTEXT           "2_0",10,211,223,38,15
 END
 
-801 DIALOG  10, 10, 467, 392
+801 DIALOG  10, 10, 467, 392 // Create a new scenario screen 2
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,281,268,31,10,WS_GROUP
@@ -330,20 +341,17 @@ BEGIN
     LTEXT           "1_63",7,371,361,60,15
     LTEXT           "~How big is your scenario?",8,24,24,278,17
     LTEXT           "~Size of Outdoors:",9,31,50,158,18
-    LTEXT           "The outdoors for your scenario can have up to 100 48x48 sections. Note, however, that more than 50 sections may be a bit too large.",
-                    10,42,70,377,39
-    LTEXT           "Your scenario will start with one 48x48 town. You can add more small, medium, and large towns once the scenario is created.",
-                    11,31,191,383,52
+    LTEXT           "The outdoors for your scenario can have up to 100 48x48 sections. Note, however, that more than 50 sections may be a bit too large.",10,42,70,377,39
+    LTEXT           "Your scenario will start with one 48x48 town. You can add more small, medium, and large towns once the scenario is created.",11,31,191,383,52
     LTEXT           "*Width of outdoors (0...50)",12,89,118,181,15
     LTEXT           "*Height of outdoors (0...50)",13,89,143,181,15
     LTEXT           "~Place a starter town?",14,31,246,235,16
-    LTEXT           "If this option is selected, Town number 0 in your scenario is 'Warrior's Grove,' a predesigned town with shops, inns, etc. This is a GREAT place to start for beginner scenario designers, and lets you put off designing characters.",
-                    15,42,263,383,53
+    LTEXT           "If this option is selected, Town number 0 in your scenario is 'Warrior's Grove,' a predesigned town with shops, inns, etc. This is a GREAT place to start for beginner scenario designers, and lets you put off designing characters.",15,42,263,383,53
     LTEXT           "*Include starter town",16,91,321,134,15
     LTEXT           "2_0",17,229,324,38,15
 END
 
-803 DIALOG  10, 10, 610, 387
+803 DIALOG  10, 10, 610, 387 // Basic Scenario Details
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,579,523,31,10,WS_GROUP
@@ -368,16 +376,15 @@ BEGIN
     LTEXT           "*Teen",20,83,336,46,15
     LTEXT           "*Mature",21,83,353,46,15
     LTEXT           "*Adult",22,83,370,64,16
-    LTEXT           "This is where you can define the various pieces of information the user will see when deciding whether or not to play your scenario. The meanings of all these fields are given in the documentation.",
-                    23,27,41,511,53
+    LTEXT           "This is where you can define the various pieces of information the user will see when deciding whether or not to play your scenario. The meanings of all these fields are given in the documentation.",23,27,41,511,53
     LTEXT           "~Scenario Details",24,27,24,256,17
     LTEXT           "*Version number:",25,26,99,120,14
     LTEXT           "*Credits:",26,26,125,125,14
     LTEXT           "*Description, Part 1:",27,26,182,120,14
-//  LTEXT           "0_5",28,432,392,62,16
+    LTEXT           "0_5",28,432,392,62,16
 END
 
-804 DIALOG  10, 10, 700, 700
+804 DIALOG  10, 10, 700, 700 // Scenario Icon/Intro
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,369,337,31,10,WS_GROUP
@@ -391,8 +398,7 @@ BEGIN
     LTEXT           "1_63",9,489,560,61,16
     LTEXT           "0_5",10,423,560,63,16
     LTEXT           "~Scenario Icon/Intro",11,26,27,256,17
-    LTEXT           "You can select a graphic the user sees when seeing this part of the intro. Give the resource number for a graphic which you provide. If you are not providing a custom graphic for this, leave this at -1.",
-                    12,26,46,313,64
+    LTEXT           "You can select a graphic the user sees when seeing this part of the intro. Give the resource number for a graphic which you provide. If you are not providing a custom graphic for this, leave this at -1.",12,26,46,313,64
     LTEXT           "~Introductory text:",13,26,114,136,15
     LTEXT           "*Graphic to display:",14,394,56,149,14
     LTEXT           "*Text number (0..2):",15,394,114,116,15
@@ -400,7 +406,7 @@ BEGIN
     LTEXT           "Cut, Copy and Paste functions can only be accessed by right-clicking the relevant text box.",17,33,534,520,14
 END
 
-805 DIALOG  10, 10, 545, 172
+805 DIALOG  10, 10, 545, 172 // Set Label Icon
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,369,337,31,10,WS_GROUP
@@ -408,12 +414,11 @@ BEGIN
     LTEXT           "1_63",3,430,127,61,16
     LTEXT           "0_5",4,364,127,62,16
     LTEXT           "~Scenario Label Picture",5,26,27,256,17
-    LTEXT           "You can select what icon the user sees when |selecting your scenario. Give the number of a |graphics resource that contains a 64x64 icon. |If you don't know what to enter, the icons |available are listed in the documentation.",
-                    6,26,46,313,64
+    LTEXT           "You can select what icon the user sees when |selecting your scenario. Give the number of a |graphics resource that contains a 64x64 icon. |If you don't know what to enter, the icons |available are listed in the documentation.",6,26,46,313,64
     LTEXT           "*Scenario icon number:",7,344,49,149,14
 END
 
-808 DIALOG 10,10,610,449
+808 DIALOG 10,10,610,449 // Edit Horses Dialog Screen
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
    DEFPUSHBUTTON "OK", 1, 272, 357, 31, 10, WS_GROUP
@@ -473,7 +478,7 @@ BEGIN
      LTEXT "This collection of horse records will have no effect in the game itself, unless you insert the printout into the Start scen state of your scenario. Printout is found at the bottom of the file created by the Write Scenario Text To Text File command.", 55, 30, 334, 479, 41
 END
 
-809 DIALOG 10,10,610,449
+809 DIALOG 10,10,610,449  // Edit Boats Dialog Screen
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
    DEFPUSHBUTTON "OK", 1, 272, 357, 31, 10, WS_GROUP
@@ -533,107 +538,139 @@ BEGIN
      LTEXT "This collection of boat records will have no effect in the game itself, unless you insert the printout into the Start scen state of your scenario. Printout is found at the bottom of the file created by the Write Scenario Text To Text File command.", 55, 30, 334, 479, 41
 END
 
-810 DIALOG  10, 10, 521, 434
+810 DIALOG  10, 10, 521, 434 // Variable Town Entry
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,397,503,67,16,WS_GROUP
-    LTEXT           "6_0",2,120,148,40,16
-    LTEXT           "6_0",3,120,176,40,16
-    LTEXT           "6_0",4,120,204,40,16
-    LTEXT           "6_0",5,120,232,40,16
-    LTEXT           "6_0",6,120,260,40,16
-    LTEXT           "6_0",7,120,288,40,16
-    LTEXT           "6_0",8,120,316,40,16
-    LTEXT           "6_0",9,120,344,40,16
-    LTEXT           "6_0",10,120,372,40,16
-    LTEXT           "6_0",11,120,400,40,16
-    LTEXT           "6_0",12,232,148,40,16
-    LTEXT           "6_0",13,232,176,40,16
-    LTEXT           "6_0",14,232,204,40,16
-    LTEXT           "6_0",15,232,232,40,16
-    LTEXT           "6_0",16,232,260,40,16
-    LTEXT           "6_0",17,232,288,40,16
-    LTEXT           "6_0",18,232,316,40,16
-    LTEXT           "6_0",19,232,344,40,16
-    LTEXT           "6_0",20,232,372,40,16
-    LTEXT           "6_0",21,232,400,40,16
-    LTEXT           "6_0",22,318,148,40,16
-    LTEXT           "6_0",23,318,176,40,16
-    LTEXT           "6_0",24,318,204,40,16
-    LTEXT           "6_0",25,318,232,40,16
-    LTEXT           "6_0",26,318,260,40,16
-    LTEXT           "6_0",27,318,288,40,16
-    LTEXT           "6_0",28,318,316,40,16
-    LTEXT           "6_0",29,318,344,40,16
-    LTEXT           "6_0",30,318,372,40,16
-    LTEXT           "6_0",31,318,400,40,16
-    LTEXT           "1_63",32,450,430,67,16
+    DEFPUSHBUTTON   "OK",1,397,550,67,16,WS_GROUP
+    LTEXT           "6_0",2,118,160,40,16
+    LTEXT           "6_0",3,118,188,40,16
+    LTEXT           "6_0",4,118,216,40,16
+    LTEXT           "6_0",5,118,244,40,16
+    LTEXT           "6_0",6,118,272,40,16
+    LTEXT           "6_0",7,118,300,40,16
+    LTEXT           "6_0",8,118,328,40,16
+    LTEXT           "6_0",9,118,356,40,16
+    LTEXT           "6_0",10,118,384,40,16
+    LTEXT           "6_0",11,118,412,40,16
+    LTEXT           "6_0",12,204,160,40,16
+    LTEXT           "6_0",13,204,188,40,16
+    LTEXT           "6_0",14,204,216,40,16
+    LTEXT           "6_0",15,204,244,40,16
+    LTEXT           "6_0",16,204,272,40,16
+    LTEXT           "6_0",17,204,300,40,16
+    LTEXT           "6_0",18,204,328,40,16
+    LTEXT           "6_0",19,204,356,40,16
+    LTEXT           "6_0",20,204,384,40,16
+    LTEXT           "6_0",21,204,412,40,16
+    LTEXT           "6_0",22,290,160,40,16
+    LTEXT           "6_0",23,290,188,40,16
+    LTEXT           "6_0",24,290,216,40,16
+    LTEXT           "6_0",25,290,244,40,16
+    LTEXT           "6_0",26,290,272,40,16
+    LTEXT           "6_0",27,290,300,40,16
+    LTEXT           "6_0",28,290,328,40,16
+    LTEXT           "6_0",29,290,356,40,16
+    LTEXT           "6_0",30,290,384,40,16
+    LTEXT           "6_0",31,290,412,40,16
+    LTEXT           "1_63",32,510,495,67,16
     LTEXT           "~Variable Town Entry",33,24,24,256,17
-    LTEXT           "When the party enters a town, you can have the exact town entered vary, depending on circumstances. To do this, specify a town number below, and the Stuff Done Flag (X,Y) whose value will be added to the town number when that town is entered.",
-                    34,24,43,500,40
-    LTEXT           "Leave the town at -1 for this to have no effect. For more information on how this works, see the documentation.",
-                    35,24,86,500,27
-    LTEXT           "*Town entered",36,110,120,100,14
-    LTEXT           "*Stuff Done Flag: X",37,222,114,96,25
-    LTEXT           "*Stuff Done Flag: Y",38,308,114,96,25
+    LTEXT           "*When the party enters a town, you can have the exact town entered vary, depending on circumstances. To do this, specify a town number below, and the Stuff Done Flag (X,Y) whose value will be added to the town number when that town is entered.",34,24,43,500,40
+    LTEXT           "*Leave the town at -1 for this to have no effect. For more information on how this works, see the documentation.",35,24,86,500,27
+    LTEXT           "*Town Entered",36,110,125,50,25
+    LTEXT           "*Stuff Done Flag: X",37,197,125,93,25
+    LTEXT           "*Stuff Done Flag: Y",38,283,125,93,25
+    LTEXT           "0_109",39,35,158,75,16
+    LTEXT           "0_109",40,35,186,75,16
+    LTEXT           "0_109",41,35,214,75,16
+    LTEXT           "0_109",42,35,242,75,16
+    LTEXT           "0_109",43,35,270,75,16
+    LTEXT           "0_109",44,35,298,75,16
+    LTEXT           "0_109",45,35,326,75,16
+    LTEXT           "0_109",46,35,354,75,16
+    LTEXT           "0_109",47,35,382,75,16
+    LTEXT           "0_109",48,35,410,75,16
+    LTEXT           "+",49,360,160,200,16
+    LTEXT           "+",50,360,188,200,16
+    LTEXT           "+",51,360,216,200,16
+    LTEXT           "+",52,360,244,200,16
+    LTEXT           "+",53,360,272,200,16
+    LTEXT           "+",54,360,300,200,16
+    LTEXT           "+",55,360,328,200,16
+    LTEXT           "+",56,360,356,200,16
+    LTEXT           "+",57,360,384,200,16
+    LTEXT           "+",58,360,412,200,16
+    LTEXT           "0_56",59,430,495,67,16
+    LTEXT           "*Town number can be entered by one of the white boxes or by the dialog screen created by the Choose button. If entering by a white box, pressing the Name button will show the correct town names for all valid town numbers.",60,24,440,500,30
 END
 
-812 DIALOG  10, 10, 588, 385
+812 DIALOG  10, 10, 588, 385 // Item Placement Shortcuts
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
-    LTEXT           "6_0",2,49,204,39,16
-    LTEXT           "6_0",3,49,232,39,16
-    LTEXT           "6_0",4,49,260,39,16
-    LTEXT           "6_0",5,49,288,39,16
-    LTEXT           "6_0",6,49,316,39,16
-    LTEXT           "6_0",7,285,204,39,16
-    LTEXT           "6_0",8,285,232,39,16
-    LTEXT           "6_0",9,285,260,39,16
-    LTEXT           "6_0",10,285,288,39,16
-    LTEXT           "6_0",11,285,316,39,16
-    LTEXT           "6_0",12,168,204,39,16
-    LTEXT           "6_0",13,168,232,39,16
-    LTEXT           "6_0",14,168,260,39,16
-    LTEXT           "6_0",15,168,288,39,16
-    LTEXT           "6_0",16,168,316,39,16
-    LTEXT           "6_0",17,404,204,39,16
-    LTEXT           "6_0",18,404,232,39,16
-    LTEXT           "6_0",19,404,260,39,16
-    LTEXT           "6_0",20,404,288,39,16
-    LTEXT           "6_0",21,404,316,39,16
+    DEFPUSHBUTTON   "OK",1,292,578,31,10,WS_GROUP
+    LTEXT           "6_0",2,31,209,39,16
+    LTEXT           "6_0",3,31,237,39,16
+    LTEXT           "6_0",4,31,265,39,16
+    LTEXT           "6_0",5,31,293,39,16
+    LTEXT           "6_0",6,31,321,39,16
+    LTEXT           "6_0",7,31,349,39,16
+    LTEXT           "6_0",8,31,377,39,16
+    LTEXT           "6_0",9,31,405,39,16
+    LTEXT           "6_0",10,31,433,39,16
+    LTEXT           "6_0",11,31,461,39,16
+    LTEXT           "6_0",12,144,209,39,16
+    LTEXT           "6_0",13,144,237,39,16
+    LTEXT           "6_0",14,144,265,39,16
+    LTEXT           "6_0",15,144,293,39,16
+    LTEXT           "6_0",16,144,321,39,16
+    LTEXT           "6_0",17,144,349,39,16
+    LTEXT           "6_0",18,144,377,39,16
+    LTEXT           "6_0",19,144,405,39,16
+    LTEXT           "6_0",20,144,433,39,16
+    LTEXT           "6_0",21,144,461,39,16
     LTEXT           "6_0",22,386,129,42,17
-    LTEXT           "1_63",23,478,350,63,16
-    LTEXT           "0_5",24,412,350,62,16
-    LTEXT           "0_3",25,89,350,75,16
-    LTEXT           "0_2",26,27,350,62,16
+    LTEXT           "1_63",23,478,550,63,16
+    LTEXT           "0_5",24,280,550,62,16
+    LTEXT           "0_3",25,89,550,75,16
+    LTEXT           "0_2",26,27,550,62,16
     LTEXT           "*",27,187,131,46,14
-    LTEXT           "*(Leave this at -1 for no shortcut.)",28,253,150,227,14
+    LTEXT           "*(Leave this at -1 for no shortcut.)",28,290,150,200,14
     LTEXT           "~Item Placement Shortcuts",29,26,18,256,17
-    LTEXT           "You can design shortcuts for automatic placement of items in towns. When editing towns, if you select the Place Automatic Items menu item, the edit will randomly place items you specify in terrain types you specify.",30,26,37,439,40
-    LTEXT           "Enter the terrain type to get the items, the numbers of the items to place, and the percentage chance (0-100) that the item is places there. For more details, see the documentation.",31,26,82,439,41
+    LTEXT           "You can design shortcuts for automatic placement of items in towns. When editing towns, if you select the Add Random Items menu item, the edit will randomly place items you specify in terrain types you specify.",30,26,37,500,40
+    LTEXT           "Enter the terrain type to contain the items, the numbers of the items to place, and the percentage chance (0-100) that the item is placed there. For more details, see the documentation.",31,26,82,500,41
     LTEXT           "*Item shortcut number:",32,26,131,155,14
     LTEXT           "*Terrain type number:",33,245,131,136,14
     LTEXT           "*Number of item to place:",34,26,170,98,26
     LTEXT           "*Chance of placing: (0-100%)",35,141,170,119,26
-    LTEXT           "*Number of item to place:",36,262,170,99,26
-    LTEXT           "*Chance of placing: (0-100%)",37,377,170,119,26
-    LTEXT           "2_0",38,191,154,26,13
+    LTEXT           "+",36,290,180,236,16
+    LTEXT           "0_56",37,412,550,62,16
+    LTEXT           "2_0",38,191,153,26,13
     LTEXT           "*Items are always property:",39,26,150,155,14
     LTEXT           "0_109",40,434,126,63,16
-    LTEXT           "0_109",41,94,201,63,13
-    LTEXT           "0_109",42,94,229,63,13
-    LTEXT           "0_109",43,94,257,63,13
-    LTEXT           "0_109",44,94,286,63,13
-    LTEXT           "0_109",45,94,314,63,13
-    LTEXT           "0_109",46,330,201,63,13
-    LTEXT           "0_109",47,330,229,63,13
-    LTEXT           "0_109",48,330,257,63,13
-    LTEXT           "0_109",49,330,286,63,13
-    LTEXT           "0_109",50,330,314,63,13
+    LTEXT           "0_109",41,76,207,63,13
+    LTEXT           "0_109",42,76,235,63,13
+    LTEXT           "0_109",43,76,263,63,13
+    LTEXT           "0_109",44,76,291,63,13
+    LTEXT           "0_109",45,76,319,63,13
+    LTEXT           "0_109",46,76,347,63,13
+    LTEXT           "0_109",47,76,375,63,13
+    LTEXT           "0_109",48,76,403,63,13
+    LTEXT           "0_109",49,76,431,63,13
+    LTEXT           "0_109",50,76,459,63,13
+    LTEXT           "+",51,200,209,310,16
+    LTEXT           "+",52,200,237,310,16
+    LTEXT           "+",53,200,265,310,16
+    LTEXT           "+",54,200,293,310,16
+    LTEXT           "+",55,200,321,310,16
+    LTEXT           "+",56,200,349,310,16
+    LTEXT           "+",57,200,377,310,16
+    LTEXT           "+",58,200,405,310,16
+    LTEXT           "+",59,200,433,310,16
+    LTEXT           "+",60,200,461,310,16
+    LTEXT           "Terrain type and item numbers can be entered via the white boxes or by the dialog screens created by the Choose buttons. If entering numbers by the white boxes, pressing the Name button shows the correct names for each number.",61,24,490,480,50
+    LTEXT           "0_53",62,346,550,62,16
 END
 
-820 DIALOG  10, 10, 530, 386
+820 DIALOG  10, 10, 530, 386  // Select Item/Monster/Town Screen
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,279,223,31,10,WS_GROUP
@@ -737,7 +774,7 @@ BEGIN
     LTEXT           "0_63",99,520,288,75,16
 END
 
-825 DIALOG  10, 10, 391, 150
+825 DIALOG  10, 10, 391, 150 // Set Special Number
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,371,138,31,10,WS_GROUP
@@ -769,12 +806,12 @@ BEGIN
     LTEXT           "~How Many?",4,23,22,256,17
 END
 
-830 DIALOG  10, 10, 360, 241
+830 DIALOG  10, 10, 360, 241 // Create New Town
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,479,423,31,10,WS_GROUP
     LTEXT           "6_0",2,123,117,180,16
-    LTEXT           "1_63",3,275,249,62,16
+    LTEXT           "1_63",3,285,249,62,16
     LTEXT           "~Create New Town",4,28,24,150,17
     LTEXT           "*Town name:",5,28,116,84,14
     LTEXT           "*Town size:",6,28,151,77,14
@@ -786,14 +823,13 @@ BEGIN
     LTEXT           "2_0",12,281,186,23,14
     LTEXT           "*Creating town number:",13,28,46,147,14
     LTEXT           "*",14,179,46,33,14
-    LTEXT           "0_5",15,210,249,62,16
-    LTEXT           "Note: Your new town will be tacked onto the end|of your current town list.|Town name must be less than 20 characters long.",
-                    16,44,64,300,48
+    LTEXT           "0_5",15,220,249,62,16
+    LTEXT           "Note: Your new town will be tacked onto the end|of your current town list.|Town name must be less than 20 characters long.",16,44,64,300,48
     LTEXT           "*On surface?",17,28,214,139,14
     LTEXT           "2_0",18,206,217,23,14
 END
 
-832 DIALOG  10, 10, 624, 566
+832 DIALOG  10, 10, 624, 566  // EDIT TOWN DETAILS
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,434,337,31,10,WS_GROUP
@@ -872,7 +908,7 @@ BEGIN
     LTEXT           "~EDIT TOWN DETAILS",73,23,23,256,17
 END
 
-835 DIALOG  10, 10, 536, 310
+835 DIALOG  10, 10, 536, 310 // Town wandering monsters
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,505,308,63,17,WS_GROUP
@@ -920,7 +956,7 @@ BEGIN
     LTEXT           "0_109",42,343,272,63,17
 END
 
-837 DIALOG  10, 10, 576, 750
+837 DIALOG  10, 10, 576, 750 // Edit Placed Creature
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,600,336,31,10,WS_GROUP
@@ -934,27 +970,27 @@ BEGIN
     LTEXT           "6_0",9,194,330,72,16
     LTEXT           "6_0",10,194,354,72,16
     LTEXT           "6_0",11,194,378,72,16
-    LTEXT           "*",12,148,95,40,16
+    LTEXT           "6_0",12,148,95,40,16
     LTEXT           "6_0",13,276,459,67,16
     LTEXT           "6_0",14,276,483,67,16
-    LTEXT           "6_0",15,438,282,72,16
-    LTEXT           "6_0",16,438,306,72,16
-    LTEXT           "6_0",17,438,330,72,16
-    LTEXT           "6_0",18,438,354,72,16
-    LTEXT           "6_0",19,438,378,72,16
-    LTEXT           "6_0",20,438,402,72,16
-    LTEXT           "6_0",21,438,426,72,16
-    LTEXT           "6_0",22,438,450,72,16
-    LTEXT           "6_0",23,438,474,72,16
-    LTEXT           "6_0",24,438,498,72,16
+    LTEXT           "6_0",15,438,310,72,16
+    LTEXT           "6_0",16,438,334,72,16
+    LTEXT           "6_0",17,438,358,72,16
+    LTEXT           "6_0",18,438,382,72,16
+    LTEXT           "6_0",19,438,406,72,16
+    LTEXT           "6_0",20,438,430,72,16
+    LTEXT           "6_0",21,438,454,72,16
+    LTEXT           "6_0",22,438,478,72,16
+    LTEXT           "6_0",23,438,502,72,16
+    LTEXT           "6_0",24,438,526,72,16
     LTEXT           "*Day For Appear/Disappear:",25,40,459,221,15
-    LTEXT           "*Event Creature Linked To (-1 = none)",26,40,483,223,17
+    LTEXT           "*Event Creature Linked To (0 = none)",26,40,483,223,17
     LTEXT           "2_0",27,327,122,23,14
     LTEXT           "2_0",28,327,138,23,14
     LTEXT           "2_0",29,462,122,23,14
     LTEXT           "2_0",30,462,138,23,14
-    LTEXT           "1_63",31,478,552,63,16
-    LTEXT           "0_5",32,274,552,62,16
+    LTEXT           "1_63",31,478,562,63,16
+    LTEXT           "0_5",32,206,562,62,16
     LTEXT           "0_109",33,450,92,75,16
     LTEXT           "0_109",34,450,193,75,16
     LTEXT           "0_109",35,450,218,75,16
@@ -964,7 +1000,7 @@ BEGIN
     LTEXT           "+",39,44,432,229,15
     LTEXT           "~Edit Placed Creature",40,25,30,138,17
     LTEXT           "*Creature script:",41,34,256,120,14
-    LTEXT           "*Memory Cells",42,377,256,109,14
+    LTEXT           "*Memory Cells",42,377,284,109,14
     LTEXT           "*Extra Items",43,34,156,183,14
     LTEXT           "*Personality",44,34,282,143,14
     LTEXT           "Enter the information for this monster/townsperson. You only need to worry about the personality if this is not a hostile monster. ",45,25,53,480,33
@@ -981,23 +1017,25 @@ BEGIN
     LTEXT           "*Act at distance",56,34,355,144,14
     LTEXT           "*Unique NPC",57,34,379,144,14
     LTEXT           "*Arrow keys don't save any data:| Save or OK buttons will do so.",58,34,507,225,40
-    LTEXT           "*Cell 0",59,381,282,50,14
-    LTEXT           "*Cell 1",60,381,306,50,14
-    LTEXT           "*Cell 2",61,381,330,50,14
-    LTEXT           "*Cell 3",62,381,354,50,14
-    LTEXT           "*Cell 4",63,381,378,50,14
-    LTEXT           "*Cell 5",64,381,402,50,14
-    LTEXT           "*Cell 6",65,381,426,50,14
-    LTEXT           "*Cell 7",66,381,450,50,14
-    LTEXT           "*Cell 8",67,381,474,50,14
-    LTEXT           "*Cell 9",68,381,498,50,14
-    LTEXT           "0_3",69,89,552,75,16
-    LTEXT           "0_2",70,27,552,62,16
-    LTEXT           "0_53",71,342,552,63,16
-    LTEXT           "0_29",72,410,552,62,16
+    LTEXT           "*Cell 0",59,381,310,50,14
+    LTEXT           "*Cell 1",60,381,334,50,14
+    LTEXT           "*Cell 2",61,381,358,50,14
+    LTEXT           "*Cell 3",62,381,382,50,14
+    LTEXT           "*Cell 4",63,381,406,50,14
+    LTEXT           "*Cell 5",64,381,430,50,14
+    LTEXT           "*Cell 6",65,381,454,50,14
+    LTEXT           "*Cell 7",66,381,478,50,14
+    LTEXT           "*Cell 8",67,381,502,50,14
+    LTEXT           "*Cell 9",68,381,526,50,14
+    LTEXT           "0_3",69,89,562,75,16
+    LTEXT           "0_2",70,27,562,62,16
+    LTEXT           "0_53",71,274,562,63,16
+    LTEXT           "0_29",72,410,562,62,16
+    LTEXT           "0_56",73,342,562,63,16
+    LTEXT           "0_109",74,340,254,63,16
 END
 
-838 DIALOG  10,10,576,571
+838 DIALOG  10,10,576,571  // Edit Terrain Script
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,600,336,31,10,WS_GROUP
@@ -1038,12 +1076,14 @@ BEGIN
     LTEXT           "*",36,150,82,30,15
     LTEXT           "*y = ",37,190,81,20,15
     LTEXT           "*",38,220,82,30,15
-    LTEXT           "Left and right buttons do not save the contents of the current dialog screen. |This can be done by either one of the Save and the OK buttons.",39,190,211,200,80
-    LTEXT           "OK then closes this dialog screen while Save leaves it open. ||Press Delete to clear this particular terrain script.",40,190,301,200,80
-    LTEXT           "0_53",41,220,384,69,16
+    LTEXT           "Left and right buttons do not save the contents of the current dialog screen. |This can be done by either one of the Save and the OK buttons.",39,190,231,200,80
+    LTEXT           "OK then closes this dialog screen while Save leaves it open. ||Press Delete to clear this particular terrain script.",40,190,321,200,80
+    LTEXT           "0_53",41,220,404,69,16
+    LTEXT           "0_109",42,230,138,62,16
+    LTEXT           "Press the Choose button to select the name of a script that has already been placed in this town.",43,190,180,200,40
 END
 
-839 DIALOG  10, 10, 521, 526
+839 DIALOG  10, 10, 521, 526 // Town area descriptions
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
@@ -1122,7 +1162,7 @@ BEGIN
     LTEXT           "Lower Right:",73,140,47,90,14
 END
 
-840 DIALOG  10, 10, 454, 146
+840 DIALOG  10, 10, 454, 146 // Palette Button: Create Area Description
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,283,157,31,10,WS_GROUP
@@ -1134,7 +1174,7 @@ BEGIN
                     6,22,78,242,42
 END
 
-841 DIALOG  10, 10, 368, 209
+841 DIALOG  10, 10, 368, 209 // Importing an outdoor zone
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,279,223,31,10,WS_GROUP
@@ -1149,7 +1189,7 @@ BEGIN
                     8,20,100,300,30
 END
 
-842 DIALOG  10,10,576,571
+842 DIALOG  10,10,576,571 // Edit Placed Item
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,600,336,31,10,WS_GROUP
@@ -1200,7 +1240,90 @@ BEGIN
     LTEXT           "0_63",46,360,80,69,16
 END
 
-850 DIALOG  10, 10, 521, 526
+843 DIALOG  10, 10, 576, 750  //  Edit Many Placed Creatures
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    DEFPUSHBUTTON   "OK",1,600,336,31,10,WS_GROUP
+    LTEXT           "2_0",2,35,114,23,14
+    LTEXT           "2_0",3,35,138,23,14
+    LTEXT           "2_0",4,35,162,23,14
+    LTEXT           "2_0",5,35,186,23,14
+    LTEXT           "2_0",6,35,210,23,14
+    LTEXT           "2_0",7,35,234,23,14
+    LTEXT           "2_0",8,35,258,23,14
+    LTEXT           "2_0",9,35,282,23,14
+    LTEXT           "2_0",10,35,306,23,14
+    LTEXT           "2_0",11,35,330,23,14
+    LTEXT           "2_0",12,35,354,23,14
+    LTEXT           "2_0",13,35,378,23,14
+    LTEXT           "2_0",14,35,402,23,14
+    LTEXT           "2_0",15,35,426,23,14
+    LTEXT           "2_0",16,35,450,23,14
+    LTEXT           "2_0",17,35,474,23,14
+    LTEXT           "2_0",18,35,498,23,14
+    LTEXT           "2_0",19,35,522,23,14
+    LTEXT           "*Creature Type",22,70,110,100,16
+    LTEXT           "* Facing ",23,70,134,100,16
+    LTEXT           "* Attitude",24,70,158,100,16
+    LTEXT           "* Personality ",25,70,182,100,16
+    LTEXT           "* Extra Item 1",26,70,206,100,16
+    LTEXT           "* Extra Item 2 ",27,70,230,100,16
+    LTEXT           "* Hidden Class ",28,70,254,100,16
+    LTEXT           "* Time Flag ",29,70,278,100,16
+    LTEXT           "* Creature Time ",30,70,302,100,16
+    LTEXT           "* Attached Event ",31,70,326,100,16
+    LTEXT           "* Character Script",32,70,350,100,16
+    LTEXT           "* Memory Cell  0",33,70,374,100,16
+    LTEXT           "* Memory Cell  1",34,70,398,100,16
+    LTEXT           "* Memory Cell  2",35,70,422,100,16
+    LTEXT           "* Memory Cell  3",36,70,446,100,16
+    LTEXT           "* Memory Cell  4",37,70,470,100,16
+    LTEXT           "* Memory Cell  5",38,70,494,100,16
+    LTEXT           "* Act At Distance ",39,70,518,100,16
+    LTEXT           "6_0",42,200,110,70,16
+    LTEXT           "6_0",43,200,134,70,16
+    LTEXT           "6_0",44,200,158,70,16
+    LTEXT           "6_0",45,200,182,70,16
+    LTEXT           "6_0",46,200,206,70,16
+    LTEXT           "6_0",47,200,230,70,16
+    LTEXT           "6_0",48,200,254,70,16
+    LTEXT           "6_0",49,200,278,70,16
+    LTEXT           "6_0",50,200,302,70,16
+    LTEXT           "6_0",51,200,326,70,16
+    LTEXT           "6_0",52,200,350,70,16
+    LTEXT           "6_0",53,200,374,70,16
+    LTEXT           "6_0",54,200,398,70,16
+    LTEXT           "6_0",55,200,422,70,16
+    LTEXT           "6_0",56,200,446,70,16
+    LTEXT           "6_0",57,200,470,70,16
+    LTEXT           "6_0",58,200,494,70,16
+    LTEXT           "6_0",59,200,518,70,16
+    LTEXT           "6_0",62,300,110,70,16
+    LTEXT           "6_0",63,300,134,70,16
+    LTEXT           "6_0",64,300,158,70,16
+    LTEXT           "6_0",65,300,182,70,16
+    LTEXT           "6_0",66,300,206,70,16
+    LTEXT           "6_0",67,300,230,70,16
+    LTEXT           "6_0",68,300,254,70,16
+    LTEXT           "6_0",69,300,278,70,16
+    LTEXT           "6_0",70,300,302,70,16
+    LTEXT           "6_0",71,300,326,70,16
+    LTEXT           "6_0",72,300,350,70,16
+    LTEXT           "6_0",73,300,374,70,16
+    LTEXT           "6_0",74,300,398,70,16
+    LTEXT           "6_0",75,300,422,70,16
+    LTEXT           "6_0",76,300,446,70,16
+    LTEXT           "6_0",77,300,470,70,16
+    LTEXT           "6_0",78,300,494,70,16
+    LTEXT           "6_0",79,300,518,70,16
+    LTEXT           "0_5",82,456,560,66,16
+    LTEXT           "1_63",83,530,560,66,16
+    LTEXT           "~Edit Many Placed Creatures",84,25,30,198,17
+    LTEXT           "Enter the information on the left side that you wish the Editor to find. Enter the replacement information on the right hand side.(THIS FUNCTION IS UNFINISHED) ",85,25,53,480,33
+
+END
+
+850 DIALOG  10, 10, 521, 526 // Outdoor area descriptions
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
@@ -1247,12 +1370,12 @@ BEGIN
     LTEXT           "Lower Right:",42,140,47,90,14
 END
 
-851 DIALOG  10, 10, 349, 213
+851 DIALOG  10, 10, 349, 213 // Outdoor Zone Details
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,329,223,31,10,WS_GROUP
-    LTEXT           "6_0",2,139,67,151,16
-    LTEXT           "6_0",3,139,91,151,16
+    LTEXT           "6_0",2,124,67,161,16
+    LTEXT           "6_0",3,124,91,161,16
     LTEXT           "6_0",4,185,151,58,16
     LTEXT           "*Section name:",5,22,68,101,14
     LTEXT           "*Coordinates:",6,22,44,87,14
@@ -1266,7 +1389,7 @@ BEGIN
                     13,22,136,150,47
 END
 
-852 DIALOG  10, 10, 632, 467
+852 DIALOG  10, 10, 632, 467 // Outdoor Wandering Encounter
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,343,284,31,10,WS_GROUP
@@ -1313,15 +1436,12 @@ BEGIN
     LTEXT           "*Random Move Chance",42,302,389,136,15
     LTEXT           "*Start location",43,302,363,122,14
     LTEXT           "*Check every turn",44,32,392,165,14
-    LTEXT           "Encounter is forced |(Party fights it right away)",45,
-                    32,363,182,27
+    LTEXT           "Encounter is forced |(Party fights it right away)",45,32,363,182,27
     LTEXT           "Move types: |0 - seek party |1 - no move |2 - random move |3 - follow roads |4 - flee party |+10 - always stays within 10 spaces of starting spot",
                     46,430,138,154,119
     LTEXT           "Move type",47,302,338,120,15
-    LTEXT           "Stuff done flag set to 1 when defeated",48,302,301,141,
-                    31
-    LTEXT           "Stuff done flag to eliminate encounter",49,302,267,141,
-                    31
+    LTEXT           "Stuff done flag set to 1 when defeated",48,302,301,141,31
+    LTEXT           "Stuff done flag to eliminate encounter",49,302,267,141,31
     LTEXT           "*Script State When Fled",50,32,314,203,15
     LTEXT           "*Script State When Beaten",51,32,289,203,15
     LTEXT           "*Script State When Met",52,32,265,203,14
@@ -1340,72 +1460,85 @@ BEGIN
     LTEXT           "*Party can't evade",65,32,343,165,18
 END
 
-854 DIALOG  10, 10, 273, 202
+854 DIALOG  10, 10, 273, 202 // Choose An Outdoor Section
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,283,273,31,10,WS_GROUP
-    LTEXT           "1_63",2,165,170,61,16
-    LTEXT           "0_5",3,99,170,62,16
+    DEFPUSHBUTTON   "OK",1,383,273,31,10,WS_GROUP
+    LTEXT           "1_63",2,265,320,62,16
+    LTEXT           "0_5",3,133,320,62,16
     LTEXT           "~Choose An Outdoor Section",4,26,22,185,16
-    LTEXT           "Select the outdoor section you want to load.",5,44,44,
-                    178,30
+    LTEXT           "Select the outdoor section you want to load.",5,44,44,260,16
     LTEXT           "*World width:",6,44,80,111,14
-    LTEXT           "*",7,162,79,37,14
-    LTEXT           "+",8,118,117,75,16
+    LTEXT           "*",7,162,80,37,14
+    LTEXT           "*X = ",8,118,123,35,17
     LTEXT           "*World height:",9,44,95,111,14
     LTEXT           "*",10,162,95,37,14
-    LTEXT           "+",11,118,142,75,16
-    LTEXT           "0_7",12,53,113,27,23
-    LTEXT           "0_6",13,82,113,27,23
-    LTEXT           "0_7",14,53,138,27,23
-    LTEXT           "0_6",15,82,138,27,23
+    LTEXT           "*Y = ",11,118,152,35,16
+    LTEXT           "0_7",12,53,121,27,16
+    LTEXT           "0_6",13,82,121,27,16
+    LTEXT           "0_7",14,53,150,27,16
+    LTEXT           "0_6",15,82,150,27,16
+    LTEXT           "+",16,30,185,275,16
+    LTEXT           "0_109",17,30,215,62,16
+    LTEXT           "6_0",18,160,123,50,16
+    LTEXT           "6_0",19,160,152,50,16
+    LTEXT           "0_56",20,199,320,62,16
+    LTEXT           "Town number can be entered by the white box, the plus/minus buttons or by the dialog screen created by the Choose button. If entering by the white box, pressing the Name button shows the correct town name for that number.",21,25,240,300,75
 END
 
-855 DIALOG  10, 10, 259, 131
+855 DIALOG  10, 10, 259, 131 // Load New Town
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
-    LTEXT           "6_0",2,77,76,62,16
-    LTEXT           "1_63",3,152,100,58,16
-    LTEXT           "0_5",4,77,100,62,16
-    LTEXT           "~Pick Town to Edit:",5,25,19,167,17
-    LTEXT           "Enter the number of the town you want to edit next:",6,25,38,185,28
-//    LTEXT           "0_109",7,152,73,63,13
+    LTEXT           "6_0",2,32,90,62,16
+    LTEXT           "1_63",3,259,212,62,16
+    LTEXT           "0_5",4,127,212,62,16
+    LTEXT           "~Pick Town to Edit:",5,23,20,167,17
+    LTEXT           "Enter the number of the town you want to edit next:",6,23,39,300,42
+    LTEXT           "0_109",7,119,87,63,15
+    LTEXT           "Town number can be entered via the white box or by the dialog screen created by the Choose button. If entering by the white box, the Name button shows the correct town name for that number.",8,24,142,300,60
+    LTEXT           "+",9,37,122,275,15
+    LTEXT           "0_56",10,193,212,62,16
 END
 
-856 DIALOG  10, 10, 284, 149
+856 DIALOG  10, 10, 284, 149 // Create Town Entrance
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
-    LTEXT           "6_0",2,92,90,62,16
-    LTEXT           "1_63",3,259,172,58,16
-    LTEXT           "0_5",4,193,172,62,16
+    DEFPUSHBUTTON   "OK",1,292,278,31,10,WS_GROUP
+    LTEXT           "6_0",2,32,90,62,16
+    LTEXT           "1_63",3,259,252,62,16
+    LTEXT           "0_53",4,127,252,62,16
     LTEXT           "~Entrance to what town?",5,23,20,167,17
     LTEXT           "What town do you want the party to end up in when they walk into this rectangle?",6,23,39,300,42
-//    LTEXT           "0_109",7,179,85,63,13
-    LTEXT           "For an existing town entrance: choosing Cancel removes it completely while choosing OK retains it.",8,24,122,300,35
+    LTEXT           "0_109",7,119,87,63,15
+    LTEXT           "Town number can be entered via the white box or by the dialog screen created by the Choose button. If entering by the white box, the Name button shows the correct town name for that number.",8,24,142,300,60
+    LTEXT           "+",9,37,122,275,15
+    LTEXT           "0_56",10,193,252,62,16
+    LTEXT           "For an existing town entrance: choosing Delete removes it completely while choosing OK retains it.",11,24,207,300,35
 END
 
-857 DIALOG  10, 10, 401, 230
+857 DIALOG  10, 10, 401, 230 // Change Terrain Randomly
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,392,238,31,10,WS_GROUP
+    DEFPUSHBUTTON   "OK",1,392,338,31,10,WS_GROUP
     LTEXT           "6_0",2,227,123,64,17
-    LTEXT           "6_0",3,227,149,64,17
-    LTEXT           "6_0",4,227,175,64,17
-    LTEXT           "1_63",5,302,201,58,16
-    LTEXT           "0_5",6,236,201,62,16
+    LTEXT           "6_0",3,227,185,64,17
+    LTEXT           "6_0",4,227,245,64,17
+    LTEXT           "1_63",5,302,291,58,16
+    LTEXT           "0_5",6,236,291,62,16
     LTEXT           "~Change Terrain Randomly",7,29,30,167,17
-    LTEXT           "Select a terrain type and another terrain type to turn it into. Also give a percentage chance of changing it (0 - 100). Automatic corrections (like adjusting cave walls) will not be made to these changes.",
-                    8,29,49,326,67
-    LTEXT           "0_109",9,297,121,63,16
-    LTEXT           "0_109",10,297,147,63,16
+    LTEXT           "Select a terrain type and another terrain type to turn it into. |Also give a percentage chance of changing it (0 - 100). |Automatic corrections (like adjusting cave walls) will not be made to these changes.",
+                    8,29,49,350,67
+    LTEXT           "0_109",9,297,121,63,15
+    LTEXT           "0_109",10,297,183,63,15
     LTEXT           "*Change this terrain type:",11,29,125,164,13
-    LTEXT           "*To this terrain type:",12,29,151,164,13
-    LTEXT           "*Chance of changing: (0 - 100)",13,29,177,193,13
+    LTEXT           "*To this terrain type:",12,29,187,164,13
+    LTEXT           "*Chance of changing: (0 - 100)",13,29,247,193,13
+    LTEXT           "+",14,29,151,354,15
+    LTEXT           "+",15,29,213,354,15
 END
 
-858 DIALOG  10, 10, 340, 80
+858 DIALOG  10, 10, 340, 80 // Load Another Scenario Save Check
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_29",1,211,55,66,20
@@ -1415,7 +1548,7 @@ BEGIN
                     4,20,18,256,32
 END
 
-859 DIALOG  10, 10, 340, 92
+859 DIALOG  10, 10, 340, 92 // Load New Town/Outdoor Zone Save Check
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_29",1,212,70,66,20
@@ -1425,7 +1558,7 @@ BEGIN
                     4,21,22,257,47
 END
 
-860 DIALOG  10, 10, 341, 91
+860 DIALOG  10, 10, 341, 91 // Create New Scenario, waiting screen
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,249,74,66,20
@@ -1434,7 +1567,7 @@ BEGIN
                     3,22,27,292,41
 END
 
-861 DIALOG  10, 10, 341, 91
+861 DIALOG  10, 10, 341, 91 // Set All Items Not Property
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,210,70,66,20
@@ -1442,7 +1575,7 @@ BEGIN
                     2,19,22,257,47
 END
 
-862 DIALOG  10, 10, 341, 91
+862 DIALOG  10, 10, 341, 91 // Erase all items
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,216,58,66,20
@@ -1451,7 +1584,7 @@ BEGIN
                     258,32
 END
 
-863 DIALOG  10, 10, 329, 140
+863 DIALOG  10, 10, 329, 140 // Place Random Items 
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,225,101,66,20
@@ -1460,20 +1593,20 @@ BEGIN
                     3,22,18,270,81
 END
 
-864 DIALOG  10, 10, 358, 221
+864 DIALOG  10, 10, 358, 221 // Set Starting Location: Outdoor
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    LTEXT           "1_63",1,229,213,66,20
-    LTEXT           "0_5",2,164,213,65,20
+    LTEXT           "1_63",1,229,223,66,20
+    LTEXT           "0_5",2,164,223,65,20
     LTEXT           "You are about to choose the party's outdoor starting location. When the party starts the scenario and leaves the town they start in, this is the section they will start in.",
                     3,24,23,270,54
     LTEXT           "To set the town the party starts in, load the correct town and use the Set Starting Location option in the Town menu.",
                     4,24,78,268,39
-    LTEXT           "Now select the location you want the party to start at. Note: If the town the party starts in gives a specific destination for when they leave town, that will override the specific location you give.",
+    LTEXT           "Now select the location you want the party to start at. |Note: If the town the party starts in gives a specific destination for when they leave town, that will override the specific location you give.",
                     5,24,130,266,81
 END
 
-865 DIALOG  10, 10, 355, 125
+865 DIALOG  10, 10, 355, 125 // Delete Last Town
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,226,112,66,20
@@ -1483,7 +1616,7 @@ BEGIN
     LTEXT           "Are you sure you want to do this?",4,23,86,268,14
 END
 
-866 DIALOG  10, 10, 357, 108
+866 DIALOG  10, 10, 357, 108 // Write Scenario Data To Text File
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,228,105,66,20
@@ -1491,7 +1624,7 @@ BEGIN
     LTEXT           "Do you want a list of all the floor, terrain, monster, and item types in your scenario to be put in a file called '(Scenario Name) - Scenario Data.txt'? You can then print out this file to act as a handy reference while designing your scenario.",3,22,21,271,66
 END
 
-867 DIALOG  10, 10, 337, 165
+867 DIALOG  10, 10, 337, 165 // Set Starting Location: Town
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,227,123,66,20
@@ -1502,7 +1635,7 @@ BEGIN
                     4,24,78,268,39
 END
 
-869 DIALOG  10, 10, 301, 78
+869 DIALOG  10, 10, 301, 78 // Close Editor Save Check
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_29",1,213,62,66,20
@@ -1512,7 +1645,7 @@ BEGIN
                     4,22,25,256,32
 END
 
-870 DIALOG  10, 10, 356, 71
+870 DIALOG  10, 10, 356, 71 // Outdoor Zone Border Warning
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,228,49,66,20
@@ -1520,7 +1653,7 @@ BEGIN
                     2,21,18,272,28
 END
 
-871 DIALOG  10, 10, 329, 140
+871 DIALOG  10, 10, 329, 140 // Reload Scenario Data Script
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,225,101,66,20
@@ -1529,7 +1662,7 @@ BEGIN
                     3,22,18,270,81
 END
 
-872 DIALOG  10, 10, 285, 157
+872 DIALOG  10, 10, 285, 157 // Palette Button: Set Height
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
@@ -1541,7 +1674,7 @@ BEGIN
                     6,29,45,213,42
 END
 
-873 DIALOG  10, 10, 329, 140
+873 DIALOG  10, 10, 329, 140 //  Scenario Menu: Clean Up Walls
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,225,111,66,20
@@ -1550,7 +1683,7 @@ BEGIN
                     3,22,18,270,81
 END
 
-874 DIALOG  10, 10, 383, 185
+874 DIALOG  10, 10, 383, 185 // Create New Scenario: Final Screen
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,274,146,66,20
@@ -1560,17 +1693,15 @@ BEGIN
                     3,22,92,318,51
 END
 
-875 DIALOG  10, 10, 382, 169
+875 DIALOG  10, 10, 382, 169 // Create New Scenario: Fatal Error
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,274,130,66,20
-    LTEXT           "The scenario editor encountered an error trying to create your scenario. Make sure there wasn't a scenario of the same name where you were trying to create it. Also make sure your hard drive has enough free space.",
-                    2,22,27,318,66
-    LTEXT           "If you continue to have problems, you may want to redownload and reinstall the editor.",
-                    3,22,94,318,35
+    LTEXT           "The scenario editor encountered an error trying to create your scenario. Make sure there wasn't a scenario of the same name where you were trying to create it. Also make sure your hard drive has enough free space.",2,22,27,318,66
+    LTEXT           "If you continue to have problems, you may want to redownload and reinstall the editor.",3,22,94,318,35
 END
 
-876 DIALOG  10, 10, 402, 403
+876 DIALOG  10, 10, 402, 403 // Import Blades of Exile Scenario
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,302,460,66,20
@@ -1586,7 +1717,7 @@ BEGIN
 
 END
 
-877 DIALOG  10, 10, 341, 91
+877 DIALOG  10, 10, 341, 91 // Clear All Special Encounters: Town
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,216,58,66,20
@@ -1595,7 +1726,7 @@ BEGIN
                     3,26,25,258,32
 END
 
-878 DIALOG  10, 10, 341, 91
+878 DIALOG  10, 10, 341, 91 // Clear All Monsters
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,216,58,66,20
@@ -1604,7 +1735,7 @@ BEGIN
                     25,258,32
 END
 
-879 DIALOG  10, 10, 341, 91
+879 DIALOG  10, 10, 341, 91 // Set All Items Property: Final Screen
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,210,70,66,20
@@ -1612,7 +1743,7 @@ BEGIN
                     2,19,22,257,47
 END
 
-880 DIALOG  10, 10, 285, 157
+880 DIALOG  10, 10, 285, 157 // Add What Height to Rectangle
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "OK",1,292,238,31,10,WS_GROUP
@@ -1624,7 +1755,7 @@ BEGIN
                     6,29,45,213,42
 END
 
-881 DIALOG  10, 10, 357, 108
+881 DIALOG  10, 10, 357, 108 // Full Write up: Outdoor/Town Names
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,228,95,66,20
@@ -1633,7 +1764,7 @@ BEGIN
                     3,22,21,271,66
 END
 
-882 DIALOG  10, 10, 357, 108
+882 DIALOG  10, 10, 357, 108 // Town: Write Data To File
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,228,89,66,20
@@ -1641,7 +1772,7 @@ BEGIN
     LTEXT           "This will list all items, placed special states and fields, along with their locations and types, in a file called '(Scenario Name) - Concise Town Report.txt'. Null entries will be omitted.",3,22,21,271,66
 END
 
-883 DIALOG  10, 10, 341, 91
+883 DIALOG  10, 10, 341, 91 // Clear All Preset Fields
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,216,68,66,20
@@ -1649,7 +1780,7 @@ BEGIN
     LTEXT           "Do you want to erase all fields (blocked spaces, mirrors, webs, crates, barrels and barriers) in this town?",3,26,20,258,32
 END
 
-884 DIALOG  10, 10, 341, 91
+884 DIALOG  10, 10, 341, 91 // Clear All Placed Stains
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,216,58,66,20
@@ -1657,7 +1788,7 @@ BEGIN
     LTEXT           "Do you want to erase all stains (blood, slime pools, bones and rocks) in this town?",3,26,20,258,32
 END
 
-885 DIALOG  10, 10, 341, 91
+885 DIALOG  10, 10, 341, 91 // Clear All Placed Specials: Outdoors
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,216,58,66,20
@@ -1665,7 +1796,7 @@ BEGIN
     LTEXT           "Do you want to erase all special encounters in this outdoor zone?",3,26,20,258,32
 END
 
-886 DIALOG  10, 10, 357, 140
+886 DIALOG  10, 10, 357, 140  // Town: Full Write Data To File
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,228,110,66,20
@@ -1673,7 +1804,7 @@ BEGIN
     LTEXT           "This will list all placed special states, items, fields, terrain scripts and creatures (along with their locations and types) in a file called '(Scenario Name) - Full Town Report.txt'. Contents of terrain script and creature memory cells are included too.",3,22,21,271,66
 END
 
-887 DIALOG  10, 10, 357, 108
+887 DIALOG  10, 10, 357, 108 // All Outdoor Zones: Full Write up
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,228,89,66,20
@@ -1681,7 +1812,7 @@ BEGIN
     LTEXT           "This will list all the placed special states, town entrances and signs, for each zone, in a file called '(Scenario Name) - Outdoor Zones Write Up.txt'.  It will also list their locations.",3,22,21,271,66
 END
 
-888 DIALOG  10, 10, 357, 122
+888 DIALOG  10, 10, 357, 122 // Current Outdoor Zone: Full Write up
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,228,99,66,20
@@ -1689,7 +1820,7 @@ BEGIN
     LTEXT           "This will list all placed special states, town entrances signs and area rectangles found in the current outdoor zone (along with their locations) in a file called '(Scenario Name) - Current Outdoor Zone Write Up.txt'.",3,22,21,271,66
 END
 
-889 DIALOG  10, 10, 357, 108
+889 DIALOG  10, 10, 357, 108 // Write Scenario Text To Text File
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,228,89,66,20
@@ -1697,7 +1828,7 @@ BEGIN
     LTEXT           "This will list all item placement shortcuts, variable town entries and introductory text in a file called '(Scenario Name) - Scenario Text and Data.txt'.",3,22,21,271,66
 END
 
-890 DIALOG  10, 10, 341, 91
+890 DIALOG  10, 10, 341, 91 // Clear All Horses
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,216,58,66,20
@@ -1705,7 +1836,7 @@ BEGIN
     LTEXT           "Do you want to erase all horses in your scenario?",3,26,20,258,32
 END
 
-891 DIALOG  10, 10, 341, 91
+891 DIALOG  10, 10, 341, 91 // Clear All Boats
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,216,58,66,20
@@ -1713,7 +1844,7 @@ BEGIN
     LTEXT           "Do you want to erase all boats in your scenario?",3,26,20,258,32
 END
 
-970 DIALOG 10, 10, 368, 145
+970 DIALOG 10, 10, 368, 145 // Used for error dialogs
      STYLE WS_POPUP | WS_DLGFRAME
      {
      LTEXT "1_0" 1, 196, 107, 70, 20
@@ -1732,11 +1863,10 @@ BEGIN
     LTEXT           "= ",5,21,124,257,98
 END
 
-972 DIALOG  10, 10, 339, 201
+972 DIALOG  10, 10, 339, 201 // Used for error dialogs
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_0",1,219,153,70,20
-    LTEXT           "*",2,25,151,70,20
     LTEXT           "*",3,285,18,18,18
     LTEXT           "= ",4,25,51,257,92
     LTEXT           "*",5,287,84,14,19
@@ -1754,43 +1884,36 @@ BEGIN
     LTEXT           "+",6,26,26,257,19
 END
 
-986 DIALOG  10, 10, 503, 279
+986 DIALOG  10, 10, 503, 279  // This dialog is not used in actual practice.
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "0_63",1,403,247,65,20
     LTEXT           "5_716",2,6,6,36,36
-    LTEXT           "The Blades of Avernum Scenario Editor can be a tricky program to use. It has lots of options and a lot of features. Fortunately, it also comes with very comprehensive online documentation.",
-                    3,50,22,413,44
-    LTEXT           "To get to this documentation, run the program Blades Editor Documentation. This file contains the full instructions for the editor, ready to be printed out.",
-                    4,50,67,412,40
-    LTEXT           "Of special importance is the section 'How to Make a Simple Scenario.  It describes, in exact, step-by-step detail, how to make a simple scenario with dungeons, monsters, and treasure. This section will give you a quick, easy start.",
-                    5,50,108,412,53
-    LTEXT           "Once you've mastered the basics, using this section, skim through the documentation. Unfortunately, this is not a program you will be able to get the best use out of without using the instructions.",
-                    6,50,162,418,40
-    LTEXT           "Finally, if you're stuck and need ideas, go to http://www.spidweb.com. There is a Scenario Editor forum there, which has all kinds of hints, tips, and answers for better scenario design.",
-                    7,50,203,418,41
+    LTEXT           "The Blades of Avernum Scenario Editor can be a tricky program to use. It has lots of options and a lot of features. Fortunately, it also comes with very comprehensive online documentation.",3,50,22,413,44
+    LTEXT           "To get to this documentation, run the program Blades Editor Documentation. This file contains the full instructions for the editor, ready to be printed out.",4,50,67,412,40
+    LTEXT           "Of special importance is the section 'How to Make a Simple Scenario.  It describes, in exact, step-by-step detail, how to make a simple scenario with dungeons, monsters, and treasure. This section will give you a quick, easy start.",5,50,108,412,53
+    LTEXT           "Once you've mastered the basics, using this section, skim through the documentation. Unfortunately, this is not a program you will be able to get the best use out of without using the instructions.",6,50,162,418,40
+    LTEXT           "Finally, if you're stuck and need ideas, go to http://www.spidweb.com. There is a Scenario Editor forum there, which has all kinds of hints, tips, and answers for better scenario design.",7,50,203,418,41
     LTEXT           "BLADES OF AVERNUM - GETTING STARTED",8,50,4,265,16
 END
 
-990 DIALOG  10, 10, 340, 92
+990 DIALOG  10, 10, 340, 92 // Move across border into new outdoor zone: save check.
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_29",1,212,70,66,20
     LTEXT           "0_91",2,146,70,62,20
     LTEXT           "0_134",3,80,70,62,20
-    LTEXT           "Do you save the change to this outdoor section and load the one you moved into?",
-                    4,21,22,257,47
+    LTEXT           "Do you save the change to this outdoor section and load the one you moved into?",4,21,22,257,47
 END
 
-991 DIALOGEX 10, 10, 301, 340
+991 DIALOGEX 10, 10, 301, 340 // Change Outdoor Size
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "",1,229,331,58,10,WS_GROUP
+    DEFPUSHBUTTON   "OK",1,229,331,58,10,WS_GROUP
     LTEXT           "1_63",2,231,300,62,16
     LTEXT           "0_5",3,165,300,62,16
     LTEXT           "~Change Outdoor Size",4,26,22,163,16
-    LTEXT           "~Warning:  If you decrease the size on any side, those sectors will be lost!",
-                    5,46,44,255,32
+    LTEXT           "~Warning:  If you decrease the size on any side, those sectors will be lost!",5,46,44,255,32
     LTEXT           "Old",6,145,79,26,16
     LTEXT           "New",7,192,79,38,16
     LTEXT           "*World width:",8,62,96,102,16
@@ -1816,30 +1939,24 @@ BEGIN
     LTEXT           "*",28,193,96,35,16
     LTEXT           "*",29,193,116,35,16
     LTEXT           "*New sectors are on surface?",30,26,266,189,16
-    LTEXT           "2_0",31,208,269,23,16
+    LTEXT           "2_0",31,208,270,23,16
     LTEXT           "Add/subtract sectors in these directions:",32,26,140,
                     275,16
 END
 
-1062 DIALOG  10, 10, 518, 408
+1062 DIALOG  10, 10, 518, 408 // About Blades Scenario Editor
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    LTEXT           "1_63",1,411,349,61,20
-    LTEXT           "Blades of Avernum Editor v1.0 |  Copyright 2004, Spiderweb Software, Inc., All rights reserved.",
-                    2,22,24,425,51
-    LTEXT           "Blades of Avernum is $25 shareware. The hint book is $10 ($7 with game registration). To find out how to order, select 'How To Order' on the title screen.",
-                    3,22,230,449,50
-    LTEXT           "Comments and questions? The creators of Blades of Avernum want to hear them. Send them to:",
-                    4,22,281,371,32
-    LTEXT           "E-Mail: spidweb@spiderwebsoftware.com |WWW: http://www.spiderwebsoftware.com",
-                    5,32,314,353,53
-    LTEXT           "Blades of Avernum is brought to you by Spiderweb Software - |   _Where our aberrations become your reality._ |_Avernum and Spiderweb Software are trademarks of Spiderweb Software.",
-                    6,22,162,451,67
-    LTEXT           "CREDITS: |   Concept, Design, Programming: Jeff Vogel |   Icon Design: Andrew Hunter (Wormius@aol.com) |   Assistant Design: Mariann Krizsan (krizsan@spidweb.com)|   Business Manager: Linda Strout",
-                    7,22,78,439,83
+    LTEXT           "1_63",1,411,368,61,20
+    LTEXT           "Blades of Avernum Editor v1.0 |  Copyright 2004, Spiderweb Software, Inc., All rights reserved.",2,22,24,425,51
+    LTEXT           "Blades of Avernum is $25 shareware. The hint book is $10 ($7 with game registration). To find out how to order, select 'How To Order' on the title screen.",3,22,230,449,50
+    LTEXT           "Comments and questions? The creators of Blades of Avernum want to hear them. Send them to:",4,22,281,371,32
+    LTEXT           "E-Mail: spidweb@spiderwebsoftware.com |WWW: http://www.spiderwebsoftware.com",5,32,314,353,53
+    LTEXT           "Blades of Avernum is brought to you by Spiderweb Software - |   _Where our aberrations become your reality._ |_Avernum and Spiderweb Software are trademarks of Spiderweb Software.",6,22,162,451,67
+    LTEXT           "CREDITS: |   Concept, Design, Programming: Jeff Vogel |   Icon Design: Andrew Hunter (Wormius@aol.com) |   Assistant Design: Mariann Krizsan (krizsan@spidweb.com)|   Business Manager: Linda Strout",7,22,78,439,83
 END
 
-1063 DIALOG  10, 10, 518, 398
+1063 DIALOG  10, 10, 518, 398 // 3D Editor Credits
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,411,200,61,20
@@ -1857,8 +1974,7 @@ STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     DEFPUSHBUTTON   "Go for it!",1,103,64,41,10,WS_GROUP
     PUSHBUTTON      "Exit",100,59,64,42,10,WS_GROUP
-    LTEXT           "The Blades of Avernum Editor looks best when the monitor is set to thousands of colors. With the current monitor settings, the editor may not work.",
-                    3,10,7,276,66
+    LTEXT           "The Blades of Avernum Editor looks best when the monitor is set to thousands of colors. With the current monitor settings, the editor may not work.",3,10,7,276,66
     LTEXT           "It might work with less colors, or it might not work at all. Do you wish to try?",
                     4,10,74,276,49
 END
@@ -1869,8 +1985,7 @@ BEGIN
     DEFPUSHBUTTON   "Yes",1,108,41,31,10,WS_GROUP
     PUSHBUTTON      "Exit",100,61,41,42,10,WS_GROUP
     PUSHBUTTON      "Run As Is",3,9,41,50,10,WS_GROUP
-    LTEXT           "The Blades of Avernum Editor runs best when the monitor is set to thousands of colors. Would you like your monitor set to Thousands of Colors?",
-                    4,8,9,265,66
+    LTEXT           "The Blades of Avernum Editor runs best when the monitor is set to thousands of colors. Would you like your monitor set to Thousands of Colors?",4,8,9,265,66
 END
 
 IDD_DIALOG1 DIALOGEX 0, 0, 186, 77

@@ -614,6 +614,11 @@ void handle_file_menu(int item_hit)
 
 void handle_edit_menu(int item_hit)
 {
+
+		 	Boolean need_redraw;
+			short x;
+			location spot_hit;
+
 	switch (item_hit) {
 		case 1: // Undo
 			performUndo();
@@ -658,7 +663,221 @@ void handle_edit_menu(int item_hit)
 				selected_item_number = -1;
 				set_string("Item De-selected","");
 		break;
+		case 9: // clear selected instance: "Clear Screen"
+				overall_mode = 51;
+				set_string("Continual Delete Mode","");
+		break;
+		case 10: // Cycle Forward Through View Mode
+							if(cur_viewing_mode == 0)
+								cur_viewing_mode = 2;
+							else if(cur_viewing_mode == 2)
+								cur_viewing_mode = 1;
+							else if(cur_viewing_mode == 1)
+								cur_viewing_mode = 0;
 
+							set_up_terrain_buttons();
+							reset_small_drawn();
+							redraw_screen();
+		break;
+		case 11: // Cycle Backward Through View Mode
+							if(cur_viewing_mode == 1)
+								cur_viewing_mode = 2;
+							else if(cur_viewing_mode == 2)
+								cur_viewing_mode = 0;
+							else if(cur_viewing_mode == 0)
+								cur_viewing_mode = 1;
+
+							set_up_terrain_buttons();
+							reset_small_drawn();
+							redraw_screen();
+		break;
+		case 12: // Rotate current numerical display forwards: "Increase Numerical Mode"
+					numerical_display_mode = ((numerical_display_mode + 1) % 5);
+					object_display_mode = 0;
+					need_redraw = TRUE;
+			break;
+		case 13: // Rotate current numerical display backwards: "Decrease Numerical Mode"
+				 if (numerical_display_mode == 0)
+				    numerical_display_mode = 4;
+					else numerical_display_mode = ((numerical_display_mode - 1) % 5);
+					object_display_mode = 0;
+					need_redraw = TRUE;
+			break;
+		case 14: //   Rotate current object display mode forwards: "Increase Object Display Mode"
+					object_display_mode = ((object_display_mode + 1) % 7);
+					numerical_display_mode = 0;
+					need_redraw = TRUE;
+			break;
+		case 15: //   Rotate current object display mode backwards: "Decrease Object Display Mode"
+				 if (object_display_mode == 0)
+				    object_display_mode = 6;
+					else object_display_mode = ((object_display_mode - 1) % 7);
+					numerical_display_mode = 0;
+					need_redraw = TRUE;
+			break;
+
+		case 16: // Load Outdoor Zone Above
+			if (editing_town)
+				break;
+
+			if (change_made_outdoors == TRUE) {
+				if (save_check(859) == FALSE)
+					break;
+			}
+				if (cur_out.y > 0) {
+				 spot_hit.x = cur_out.x;
+				 spot_hit.y = cur_out.y - 1;
+				 }
+				else {
+				 spot_hit.x = cur_out.x;
+				 spot_hit.y = scenario.out_height - 1;
+				 }
+				clear_selected_copied_objects();
+				load_outdoor_and_borders(spot_hit);
+				set_up_terrain_buttons();
+				cen_x = 24; cen_y = 24;
+				reset_drawing_mode();
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
+				change_made_outdoors = FALSE;
+			break;
+
+
+		case 17: // Load Previous Outdoor Zone
+			if (editing_town) {
+			if (change_made_town == TRUE) {
+				if (save_check(859) == FALSE)
+					break;
+			}
+			 if (cur_town == 0)
+				load_town(scenario.num_towns - 1);
+			 else load_town(cur_town - 1);
+				clear_selected_copied_objects();
+				set_up_terrain_buttons();
+				change_made_town = FALSE;
+				cen_x = max_dim[town_type] / 2; cen_y = max_dim[town_type] / 2;
+				reset_drawing_mode();
+				reset_small_drawn();
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
+				}
+
+			else {
+			if (change_made_outdoors == TRUE) {
+				if (save_check(859) == FALSE)
+					break;
+			}
+				if (cur_out.x > 0) {
+				 spot_hit.x = cur_out.x - 1;
+				 spot_hit.y = cur_out.y;
+				 }
+				if ((cur_out.x == 0) && (cur_out.y > 0)) {
+				 spot_hit.x = scenario.out_width - 1;
+				 spot_hit.y = cur_out.y - 1;
+				 }
+				if ((cur_out.x == 0) && (cur_out.y == 0)) {
+				 spot_hit.x = scenario.out_width - 1;
+				 spot_hit.y = scenario.out_height - 1;
+				 }
+				clear_selected_copied_objects();
+				load_outdoor_and_borders(spot_hit);
+				set_up_terrain_buttons();
+				cen_x = 24; cen_y = 24;
+				reset_drawing_mode();
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
+				change_made_outdoors = FALSE;
+				}
+			break;
+
+		case 18: // Load Next Outdoor Zone
+							if (editing_town) {
+			if (change_made_town == TRUE) {
+				if (save_check(859) == FALSE)
+					break;
+			}
+			if (cur_town + 1 == scenario.num_towns)
+				load_town(0);
+			else load_town(cur_town + 1);
+
+				clear_selected_copied_objects();
+				set_up_terrain_buttons();
+				change_made_town = FALSE;
+				cen_x = max_dim[town_type] / 2; cen_y = max_dim[town_type] / 2;
+				reset_drawing_mode();
+				reset_small_drawn();
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
+				}
+
+				else {
+			if (change_made_outdoors == TRUE) {
+				if (save_check(859) == FALSE)
+					break;
+			}
+			if ((cur_out.x < scenario.out_width - 1) && (cur_out.y <= scenario.out_height - 1)) {
+				 spot_hit.x = cur_out.x + 1;
+				 spot_hit.y = cur_out.y;
+				 }
+			if ((cur_out.x == scenario.out_width - 1) && (cur_out.y < scenario.out_height - 1)) {
+				 spot_hit.x = 0;
+				 spot_hit.y = cur_out.y + 1;
+				 }
+			if ((cur_out.x == scenario.out_width - 1) && (cur_out.y == scenario.out_height - 1)) {
+				 spot_hit.x = 0;
+				 spot_hit.y = 0;
+				 }
+				clear_selected_copied_objects();
+				load_outdoor_and_borders(spot_hit);
+				set_up_terrain_buttons();
+				cen_x = 24; cen_y = 24;
+				reset_drawing_mode();
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
+				change_made_outdoors = FALSE;
+				}
+			break;
+		case 19: // Load Outdoor Zone Below
+			if (editing_town)
+				break;
+
+			if (change_made_outdoors == TRUE) {
+				if (save_check(859) == FALSE)
+					break;
+			}
+			if (cur_out.y < scenario.out_height - 1) {
+				 spot_hit.x = cur_out.x;
+				 spot_hit.y = cur_out.y + 1;
+				 }
+			else {
+				 spot_hit.x = cur_out.x;
+				 spot_hit.y = 0;
+				 }
+				clear_selected_copied_objects();
+				load_outdoor_and_borders(spot_hit);
+				set_up_terrain_buttons();
+				cen_x = 24; cen_y = 24;
+				reset_drawing_mode();
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
+				change_made_outdoors = FALSE;
+			break;
+
+	case 20: // Delete Selected Object Only
+	if ((editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
+		if (selected_item_number > -1) {
+	delete_selected_instance();
+	set_string("Selected Instance Deleted","");
+	set_cursor(7);
+	}
+	}
+	break;
 		}
 	draw_main_screen();
 }
@@ -930,7 +1149,7 @@ void handle_town_menu(int item_hit)
 			if (fancy_choice_dialog(862,0) == 2)
 				break;
 			for (i = 0; i < 144; i++)
-				town.preset_items[i].which_item = -1;
+				town.preset_items[i].clear_item_type();
 			draw_terrain();
 			change_made_town = TRUE; 
 			redraw_screen();
@@ -940,7 +1159,7 @@ void handle_town_menu(int item_hit)
 			if (fancy_choice_dialog(878,0) == 2)
 				break;
 			for (i = 0; i < 80; i++)
-				town.creatures[i].number = -1;
+				town.creatures[i].clear_creature_start_type();
 			draw_terrain();
 			change_made_town = TRUE; 
 			redraw_screen();
@@ -959,11 +1178,8 @@ void handle_town_menu(int item_hit)
 			if (fancy_choice_dialog(883,0) == 2)
 				break;
 			for (short i = 0; i < 60; i++) {
-			if ((town.preset_fields[i].field_type >= 0) && (town.preset_fields[i].field_type < 9)) {
-			town.preset_fields[i].field_loc.x = 0;
-			town.preset_fields[i].field_loc.y = 0;
-			town.preset_fields[i].field_type = -1;
-			}
+			if ((town.preset_fields[i].field_type >= 0) && (town.preset_fields[i].field_type < 9))
+			town.preset_fields[i].clear_preset_field_type();
 			}
 			change_made_town = TRUE;
 			redraw_screen();
@@ -972,14 +1188,16 @@ void handle_town_menu(int item_hit)
 			if (fancy_choice_dialog(884,0) == 2)
 				break;
 			for (short i = 0; i < 60; i++) {
-			if ((town.preset_fields[i].field_type > 13) && (town.preset_fields[i].field_type < 22)) {
-			town.preset_fields[i].field_loc.x = 0;
-			town.preset_fields[i].field_loc.y = 0;
-			town.preset_fields[i].field_type = -1;
-			}
+			if ((town.preset_fields[i].field_type > 13) && (town.preset_fields[i].field_type < 22))
+			town.preset_fields[i].clear_preset_field_type();
 			}
 			change_made_town = TRUE;
 			redraw_screen();
+			break;
+		case 20: // Replace All for Creatures
+				monst_replaceall();
+				draw_terrain();
+				change_made_town = TRUE;
 			break;
 
 		}
@@ -1092,9 +1310,7 @@ void handle_monst_menu(int item_hit)
 
 void handle_help_menu(int item_hit)
 {   
-		 	Boolean need_redraw;
-			short x;
-			location spot_hit;
+
 	switch (item_hit) {
 		case 1: // 2D Editor Credits: "About Blades Scenario Editor"
 				fancy_choice_dialog(1062,0);
@@ -1120,178 +1336,14 @@ void handle_help_menu(int item_hit)
 				 start_town_data_dump();
 				 }
 			break;
-		case 7: // Rotate current numerical display forwards: "Increase Numerical Mode"
-					numerical_display_mode = ((numerical_display_mode + 1) % 5);
-					object_display_mode = 0;
-					need_redraw = TRUE;
-			break; 
-		case 8: // Rotate current numerical display backwards: "Decrease Numerical Mode"
-				 if (numerical_display_mode == 0)
-				    numerical_display_mode = 4;
-					else numerical_display_mode = ((numerical_display_mode - 1) % 5);
-					object_display_mode = 0;
-					need_redraw = TRUE;
-			break;
-			
-		case 9: // Load Previous Outdoor Zone
-			if (editing_town) {
-			if (change_made_town == TRUE) {
-				if (save_check(859) == FALSE)
-					break;
-			}
-			 if (cur_town == 0)
-				load_town(scenario.num_towns - 1);
-			 else load_town(cur_town - 1);
-				clear_selected_copied_objects();
-				set_up_terrain_buttons();
-				change_made_town = FALSE;
-				cen_x = max_dim[town_type] / 2; cen_y = max_dim[town_type] / 2;
-				reset_drawing_mode();
-				reset_small_drawn();
-				purgeUndo();
-				purgeRedo();
-				redraw_screen();
-				}
-
-			else {
-			if (change_made_outdoors == TRUE) {
-				if (save_check(859) == FALSE)
-					break;
-			}
-				if (cur_out.x > 0) {
-				 spot_hit.x = cur_out.x - 1;
-				 spot_hit.y = cur_out.y;
-				 }
-				if ((cur_out.x == 0) && (cur_out.y > 0)) {
-				 spot_hit.x = scenario.out_width - 1;
-				 spot_hit.y = cur_out.y - 1;
-				 }
-				if ((cur_out.x == 0) && (cur_out.y == 0)) {
-				 spot_hit.x = scenario.out_width - 1;
-				 spot_hit.y = scenario.out_height - 1;
-				 }
-				clear_selected_copied_objects();
-				load_outdoor_and_borders(spot_hit);
-				set_up_terrain_buttons();
-				cen_x = 24; cen_y = 24;
-				reset_drawing_mode();
-				purgeUndo();
-				purgeRedo();
-				redraw_screen();
-				change_made_outdoors = FALSE;
-				}
-			break;
-			
-		case 10: // Load Next Outdoor Zone
-							if (editing_town) {
-			if (change_made_town == TRUE) {
-				if (save_check(859) == FALSE)
-					break;
-			}
-			if (cur_town + 1 == scenario.num_towns)
-				load_town(0);
-			else load_town(cur_town + 1);
-			
-				clear_selected_copied_objects();
-				set_up_terrain_buttons();
-				change_made_town = FALSE;
-				cen_x = max_dim[town_type] / 2; cen_y = max_dim[town_type] / 2;
-				reset_drawing_mode();
-				reset_small_drawn();
-				purgeUndo();
-				purgeRedo();
-				redraw_screen();
-				}
-				
-				else {
-			if (change_made_outdoors == TRUE) {
-				if (save_check(859) == FALSE)
-					break;
-			}
-			if ((cur_out.x < scenario.out_width - 1) && (cur_out.y <= scenario.out_height - 1)) {
-				 spot_hit.x = cur_out.x + 1;
-				 spot_hit.y = cur_out.y;
-				 }
-			if ((cur_out.x == scenario.out_width - 1) && (cur_out.y < scenario.out_height - 1)) {
-				 spot_hit.x = 0;
-				 spot_hit.y = cur_out.y + 1;
-				 }
-			if ((cur_out.x == scenario.out_width - 1) && (cur_out.y == scenario.out_height - 1)) {
-				 spot_hit.x = 0;
-				 spot_hit.y = 0;
-				 }
-				clear_selected_copied_objects();
-				load_outdoor_and_borders(spot_hit);
-				set_up_terrain_buttons();
-				cen_x = 24; cen_y = 24;
-				reset_drawing_mode();
-				purgeUndo();
-				purgeRedo();
-				redraw_screen();
-				change_made_outdoors = FALSE;
-				}
-			break;
-		case 11: // Load Outdoor Zone Above
-			if (editing_town)
-				break;
-
-			if (change_made_outdoors == TRUE) {
-				if (save_check(859) == FALSE)
-					break;
-			}
-				if (cur_out.y > 0) {
-				 spot_hit.x = cur_out.x;
-				 spot_hit.y = cur_out.y - 1;
-				 }
-				else {
-				 spot_hit.x = cur_out.x;
-				 spot_hit.y = scenario.out_height - 1;
-				 }
-				clear_selected_copied_objects();
-				load_outdoor_and_borders(spot_hit);
-				set_up_terrain_buttons();
-				cen_x = 24; cen_y = 24;
-				reset_drawing_mode();
-				purgeUndo();
-				purgeRedo();
-				redraw_screen();
-				change_made_outdoors = FALSE;
-			break;
-			
-		case 12: // Load Outdoor Zone Below
-			if (editing_town)
-				break;
-
-			if (change_made_outdoors == TRUE) {
-				if (save_check(859) == FALSE)
-					break;
-			}
-			if (cur_out.y < scenario.out_height - 1) {
-				 spot_hit.x = cur_out.x;
-				 spot_hit.y = cur_out.y + 1;
-				 }
-			else {
-				 spot_hit.x = cur_out.x;
-				 spot_hit.y = 0;
-				 }
-				clear_selected_copied_objects();
-				load_outdoor_and_borders(spot_hit);
-				set_up_terrain_buttons();
-				cen_x = 24; cen_y = 24;
-				reset_drawing_mode();
-				purgeUndo();
-				purgeRedo();
-				redraw_screen();
-				change_made_outdoors = FALSE;
-			break;
-		case 13: // Town: Full Write Data To File
+		case 7: // Town: Full Write Data To File
 			if (fancy_choice_dialog(886,0) == 1) {
 			   last_file_printed = 13;
 				 start_full_town_data_dump();
 				 }
 			break;
 			
-		case 14: // Repeat Printing of Last File
+		case 8: // Repeat Printing of Last File
          if (last_file_printed == 0) {
 				 set_string("Repeat Printing of Last File:","Scenario Data.txt");
 				 start_data_dump();
@@ -1323,61 +1375,25 @@ void handle_help_menu(int item_hit)
 
 				break;
 
-		case 15: // Lists all special rectangles, town locations for each zone: "All Outdoor Zones: Full Write up"
+		case 9: // Lists all special rectangles, town locations for each zone: "All Outdoor Zones: Full Write up"
 			if (fancy_choice_dialog(887,0) == 1) {
          last_file_printed = 15;
 				 start_fullout_data_dump();
 				 }
 			break;
 
-		case 16: // Current Outdoor Zone: Full Write up
+		case 10: // Current Outdoor Zone: Full Write up
 			if (fancy_choice_dialog(888,0) == 1) {
          last_file_printed = 16;
 				 start_currentout_data_dump();
 				 }
 			break;
 			
-		case 17: // Write Scenario Text To Text File
+		case 11: // Write Scenario Text To Text File
 			if (fancy_choice_dialog(889,0) == 1) {
          last_file_printed = 17;
 				 scenariotext_data_dump();
 				 }
-			break;
-		case 18: // Cycle Forward Through View Mode
-							if(cur_viewing_mode == 0)
-								cur_viewing_mode = 2;
-							else if(cur_viewing_mode == 2)
-								cur_viewing_mode = 1;
-							else if(cur_viewing_mode == 1)
-								cur_viewing_mode = 0;
-
-							set_up_terrain_buttons();
-							reset_small_drawn();
-							redraw_screen();
-		break;
-		case 19: // Cycle Backward Through View Mode
-							if(cur_viewing_mode == 1)
-								cur_viewing_mode = 2;
-							else if(cur_viewing_mode == 2)
-								cur_viewing_mode = 0;
-							else if(cur_viewing_mode == 0)
-								cur_viewing_mode = 1;
-
-							set_up_terrain_buttons();
-							reset_small_drawn();
-							redraw_screen();
-		break;
-		case 20: //   Rotate current object display mode forwards: "Increase Object Display Mode"
-					object_display_mode = ((object_display_mode + 1) % 7);
-					numerical_display_mode = 0;
-					need_redraw = TRUE;
-			break;
-		case 21: //   Rotate current object display mode backwards: "Decrease Object Display Mode"
-				 if (object_display_mode == 0)
-				    object_display_mode = 6;
-					else object_display_mode = ((object_display_mode - 1) % 7);
-					numerical_display_mode = 0;
-					need_redraw = TRUE;
 			break;
 
 		}
@@ -1481,6 +1497,7 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam)
 		case 840: edit_area_rect_event_filter(item_hit); break;
 		case 841: pick_import_town_event_filter(item_hit); break;
 		case 842: edit_placed_item_event_filter(item_hit); break;
+		case 843: monst_replaceall_event_filter (item_hit); break;
 		case 850: edit_out_strs_event_filter(item_hit); break;
 		case 851: outdoor_details_event_filter(item_hit); break;
 		case 852: edit_out_wand_event_filter(item_hit); break;

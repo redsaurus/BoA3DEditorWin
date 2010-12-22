@@ -206,31 +206,10 @@ void put_text_res()
 		else
 			cd_set_led(820,8 + i * 2,0);
 	}
-	 cdsin(820,57,which_page * 25);
-	 cdsin(820,58,which_page * 25 + 1);
-	 cdsin(820,59,which_page * 25 + 2);
-	 cdsin(820,60,which_page * 25 + 3);
-	 cdsin(820,61,which_page * 25 + 4);
-	 cdsin(820,62,which_page * 25 + 5);
-	 cdsin(820,63,which_page * 25 + 6);
-	 cdsin(820,64,which_page * 25 + 7);
-	 cdsin(820,65,which_page * 25 + 8);
-	 cdsin(820,66,which_page * 25 + 9);
-	 cdsin(820,67,which_page * 25 + 10);
-	 cdsin(820,68,which_page * 25 + 11);
-	 cdsin(820,69,which_page * 25 + 12);
-	 cdsin(820,70,which_page * 25 + 13);
-	 cdsin(820,71,which_page * 25 + 14);
-	 cdsin(820,72,which_page * 25 + 15);
-	 cdsin(820,73,which_page * 25 + 16);
-	 cdsin(820,74,which_page * 25 + 17);
-	 cdsin(820,75,which_page * 25 + 18);
-	 cdsin(820,76,which_page * 25 + 19);
-	 cdsin(820,77,which_page * 25 + 20);
-	 cdsin(820,78,which_page * 25 + 21);
-	 cdsin(820,79,which_page * 25 + 22);
-	 cdsin(820,80,which_page * 25 + 23);
-	 cdsin(820,81,which_page * 25 + 24);
+	
+ 	for (i = 0; i < 25; i++)
+	 	cdsin(820,57 + i,which_page * 25 + i);
+
 }
 
 void choose_text_res_event_filter (short item_hit)
