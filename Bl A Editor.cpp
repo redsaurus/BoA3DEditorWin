@@ -175,6 +175,7 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam);
 void check_colors();
 void check_game_done();
 short last_file_printed = 0;
+extern char grid_mode;
 
 // extern void put_placed_terrain_script_in_dlog();
 // MW specified argument and return type.
@@ -716,35 +717,7 @@ void handle_edit_menu(int item_hit)
 					need_redraw = TRUE;
 			break;
 
-		case 16: // Load Outdoor Zone Above
-			if (editing_town)
-				break;
-
-			if (change_made_outdoors == TRUE) {
-				if (save_check(859) == FALSE)
-					break;
-			}
-				if (cur_out.y > 0) {
-				 spot_hit.x = cur_out.x;
-				 spot_hit.y = cur_out.y - 1;
-				 }
-				else {
-				 spot_hit.x = cur_out.x;
-				 spot_hit.y = scenario.out_height - 1;
-				 }
-				clear_selected_copied_objects();
-				load_outdoor_and_borders(spot_hit);
-				set_up_terrain_buttons();
-				cen_x = 24; cen_y = 24;
-				reset_drawing_mode();
-				purgeUndo();
-				purgeRedo();
-				redraw_screen();
-				change_made_outdoors = FALSE;
-			break;
-
-
-		case 17: // Load Previous Outdoor Zone
+		case 17: // Load Previous Outdoor Zone/Town
 			if (editing_town) {
 			if (change_made_town == TRUE) {
 				if (save_check(859) == FALSE)
@@ -793,7 +766,7 @@ void handle_edit_menu(int item_hit)
 				}
 			break;
 
-		case 18: // Load Next Outdoor Zone
+		case 18: // Load Next Outdoor Zone/Town
 							if (editing_town) {
 			if (change_made_town == TRUE) {
 				if (save_check(859) == FALSE)
@@ -842,7 +815,35 @@ void handle_edit_menu(int item_hit)
 				change_made_outdoors = FALSE;
 				}
 			break;
-		case 19: // Load Outdoor Zone Below
+
+		case 22: // Load Outdoor Zone Above
+			if (editing_town)
+				break;
+
+			if (change_made_outdoors == TRUE) {
+				if (save_check(859) == FALSE)
+					break;
+			}
+				if (cur_out.y > 0) {
+				 spot_hit.x = cur_out.x;
+				 spot_hit.y = cur_out.y - 1;
+				 }
+				else {
+				 spot_hit.x = cur_out.x;
+				 spot_hit.y = scenario.out_height - 1;
+				 }
+				clear_selected_copied_objects();
+				load_outdoor_and_borders(spot_hit);
+				set_up_terrain_buttons();
+				cen_x = 24; cen_y = 24;
+				reset_drawing_mode();
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
+				change_made_outdoors = FALSE;
+			break;
+
+		case 23: // Load Outdoor Zone Below
 			if (editing_town)
 				break;
 
@@ -878,6 +879,16 @@ void handle_edit_menu(int item_hit)
 	}
 	}
 	break;
+	
+	
+	case 21: // toggle gridline mode
+				if (grid_mode == 2)
+				 grid_mode = 0;
+				 else  grid_mode =  grid_mode + 1;
+				small_any_drawn = FALSE;
+				draw_terrain();
+	break;
+
 		}
 	draw_main_screen();
 }

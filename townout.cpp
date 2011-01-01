@@ -22,7 +22,7 @@ extern Boolean editing_town;
 extern short overall_mode;
 extern char *attitude_types[4];
 extern  Boolean file_is_loaded;
-
+extern short max_dim[3];
 // local variables
 creature_start_type store_placed_monst;
 short store_which_placed_monst;
@@ -87,7 +87,17 @@ in_town_on_ter_script_type store_placed_script;
 short which_item;
 short store_which_placed_item;
 item_type store_placed_item;
+short which_town_group;
 extern zone_names_data_type zone_names;
+
+  		char *aaa;
+char *BOACreatureTimeFlags[11] = {
+"always here (unless town dead)","here at day d unless town dead",
+"disappear at day d","here if event not done by day d",
+"gone if event not done by day d","here if event happened",
+"gone if event happened","here on day 0-2 of every 9 days",
+"here on day 3-5 of every 9 days","here on day 6-8 of every 9 days",
+"here if and only if town dead"};
 
 void monst_replaceall()
 {
@@ -95,15 +105,8 @@ void monst_replaceall()
 	short i;
 	
 	cd_create_dialog_parent_num(843,0);
-
-	for (i = 2; i < 20; i++)
-	cd_set_led(843,i,0);
-
-	for (i = 42; i < 60; i++)
- 	CDSN(843,i,0);
-
-	for (i = 62; i < 80; i++)
- 	CDSN(843,i,0);
+				CDSN(843,63,0);
+				CDSN(843,64,0);
 
 	while (dialog_not_toast)
 		ModalDialog();
@@ -115,100 +118,290 @@ void monst_replaceall_event_filter (short item_hit)
 {
 	short i;
 	short dummy;
-	
+	short town_size = max_dim[scenario.town_size[cur_town]];
+	char str[14];
+
 	switch (item_hit) {
-		case 82:
-			dialog_not_toast = FALSE;
+		case 2:
+		if (cre(CDGN(843,63),-1,255,"Find value error: Creature Type. |Town creatures must have a type number between 0 and 255 inclusive. | (-1 means no monster).","",843) == TRUE)
+		break;
+		if (cre(CDGN(843,64),-1,255,"Replace value error: Creature Type. |Town creatures must have a type number between 0 and 255 inclusive.  |(-1 means no monster).","",843) == TRUE)
+		break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].number == CDGN(843,63))
+					town.creatures[i].number = CDGN(843,64);
+					}
+		break;
+		case 3:
+					if (cre(CDGN(843,63),-1,499,"Find value error: Extra Item 1. |Town creatures must have extra item numbers between 0 and 499.","(-1 means no item.)",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),-1,499,"Replace value error: Extra Item 1. |Town creatures must have extra item numbers between 0 and 499.","(-1 means no item.)",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].extra_item == CDGN(843,63))
+					town.creatures[i].extra_item = CDGN(843,64);
+					}
 			break;
-		case 83:
-				if (cd_get_led(843,2) == 1) {
-					if (cre(CDGN(843,42),-1,255,"Find value error: Creature Type. |Town creatures must have a type number between 0 and 255 inclusive. | (-1 means no monster).","",843) == TRUE)
+		case 4:
+					if (cre(CDGN(843,63),-1,499,"Find value error: Extra Item 2. |Town creatures must have extra item numbers between 0 and 499.","(-1 means no item.)",843) == TRUE)
 					break;
-					if (cre(CDGN(843,62),-1,255,"Replace value error: Creature Type. |Town creatures must have a type number between 0 and 255 inclusive.  |(-1 means no monster).","",843) == TRUE)
+					if (cre(CDGN(843,64),-1,499,"Replace value error: Extra Item 2. |Town creatures must have extra item numbers between 0 and 499.","(-1 means no item.)",843) == TRUE)
 					break;
 			for (i = 0; i < 80; i++) {
-				if (town.creatures[i].number == CDGN(843,42))
-					town.creatures[i].number = CDGN(843,62);
+				if (town.creatures[i].extra_item_2 == CDGN(843,63))
+					town.creatures[i].extra_item_2 = CDGN(843,64);
 					}
-			}
-				if (cd_get_led(843,3) == 1) {
-					if (cre(CDGN(843,43),0,3,"Find value error: Facing. |Town creatures must have a facing number between 0 and 3.","",843) == TRUE)
-					break;
-					if (cre(CDGN(843,63),0,3,"Replace value error: Facing. |Town creatures must have a facing number between 0 and 3.","",843) == TRUE)
-					break;
+			break;
+
+		case 5:
 			for (i = 0; i < 80; i++) {
-				if (town.creatures[i].facing == CDGN(843,43))
-					town.creatures[i].facing = CDGN(843,63);
+					CDGT(843,64,town.creatures[i].char_script);
 					}
-			}
-				if (cd_get_led(843,4) == 1) {
-					if (cre(CDGN(843,44),2,5,"Find value error: Start Attitude. |Town creatures must have a facing number between 2 and 5.","",843) == TRUE)
+
+			break;
+
+		case 6:
+					if (cre(CDGN(843,63),0,10,"Find value error: Creature Appearance Type. |Town creatures must have Creature Appearance Type numbers between 0 and 10.","",843) == TRUE)
 					break;
-					if (cre(CDGN(843,64),2,5,"Replace value error: Start Attitude. |Town creatures must have a facing number between 2 and 5.","",843) == TRUE)
+					if (cre(CDGN(843,64),0,10,"Replace value error: Creature Appearance Type. |Town creatures must have Creature Appearance Type numbers between 0 and 10.","",843) == TRUE)
 					break;
 			for (i = 0; i < 80; i++) {
-				if (town.creatures[i].start_attitude == CDGN(843,44))
+				if (town.creatures[i].time_flag == CDGN(843,63))
+					town.creatures[i].time_flag = CDGN(843,64);
+					}
+			break;
+
+		case 7:
+					if (cre(CDGN(843,63),0,3,"Find value error: Facing. |Town creatures must have a facing number between 0 and 3.","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),0,3,"Replace value error: Facing. |Town creatures must have a facing number between 0 and 3.","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].facing == CDGN(843,63))
+					town.creatures[i].facing = CDGN(843,64);
+					}
+			break;
+		case 8:
+					if (cre(CDGN(843,63),2,5,"Find value error: Start Attitude. |Town creatures must have an attitude number between 2 and 5.","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),2,5,"Replace value error: Start Attitude. |Town creatures must have an attitude number between 2 and 5.","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].start_attitude == CDGN(843,63))
 					town.creatures[i].start_attitude = CDGN(843,64);
 					}
-			}
-
 			break;
 
-/*
-		case 33: // choose m type
-			if (get_placed_monst_in_dlog() == FALSE)
-				break;
-			i = choose_text_res(-1,1,255,store_placed_monst.number,843,"Choose Which Creature Type: 0 - 255");
-			if ((i >= 0) && (i < 256)) {
-				store_placed_monst.number = i;
-				put_placed_monst_in_dlog();
-				}
+		case 9:
+					if (cre(CDGN(843,63),0,town_size,"Find value error: Start Loc X. |Town creatures must have a Start Loc X number between 0 and (Town width - 1).","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),0,town_size,"Replace value error: Start Loc X. |Town creatures must have a Start Loc X number between 0 and (Town width - 1).","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].start_loc.x == CDGN(843,63))
+					town.creatures[i].start_loc.x = CDGN(843,64);
+					}
 			break;
-		case 34:
-			i = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,store_placed_monst.extra_item,843,"Which item?");
-	if (i >= 0)
-				store_placed_monst.extra_item = i;
-			put_placed_monst_in_dlog();
+
+		case 10:
+					if (cre(CDGN(843,63),0,town_size,"Find value error: Start Loc Y. |Town creatures must have a Start Loc Y number between 0 and (Town width - 1).","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),0,town_size,"Replace value error: Start Loc Y. |Town creatures must have a Start Loc Y number between 0 and (Town width - 1).","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].start_loc.y == CDGN(843,63))
+					town.creatures[i].start_loc.y = CDGN(843,64);
+					}
 			break;
-		case 35:
-			i = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,store_placed_monst.extra_item_2,843,"Which item?");
-			if (i >= 0)
-				store_placed_monst.extra_item_2 = i;
-			put_placed_monst_in_dlog();
+
+		case 11:
+					if (cre(CDGN(843,63),0,100,"Find value error: Extra Item Chance 1. |Town creatures must have a Extra Item Chance 1 number between 0 and 100.","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),0,100,"Replace value error: Extra Item Chance 1. |Town creatures must have a Extra Item Chance 1 number between 0 and 100.","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].extra_item_chance_1 == CDGN(843,63))
+					town.creatures[i].extra_item_chance_1 = CDGN(843,64);
+					}
 			break;
-		case 36: // choose time type
-			if (get_placed_monst_in_dlog() == FALSE)
-				break;
-			i = choose_text_res(4,1,11,store_placed_monst.time_flag + 1,843,"Choose Time Type:");
-			if (i >= 0) {
-				store_placed_monst.time_flag = i - 1;
-				put_placed_monst_in_dlog();
-				}
+
+		case 12:
+					if (cre(CDGN(843,63),0,100,"Find value error: Extra Item Chance 2. |Town creatures must have a Extra Item Chance 2 number between 0 and 100.","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),0,100,"Replace value error: Extra Item Chance 2. |Town creatures must have a Extra Item Chance 2 number between 0 and 100.","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].extra_item_chance_2 == CDGN(843,63))
+					town.creatures[i].extra_item_chance_2 = CDGN(843,64);
+					}
 			break;
-*/
-		default:
-			cd_flip_led(843,2,item_hit);
-			cd_flip_led(843,3,item_hit);
-			cd_flip_led(843,4,item_hit);
-			cd_flip_led(843,5,item_hit);
-			cd_flip_led(843,6,item_hit);
-			cd_flip_led(843,7,item_hit);
-			cd_flip_led(843,8,item_hit);
-			cd_flip_led(843,9,item_hit);
-			cd_flip_led(843,10,item_hit);
-			cd_flip_led(843,11,item_hit);
-			cd_flip_led(843,12,item_hit);
-			cd_flip_led(843,13,item_hit);
-			cd_flip_led(843,14,item_hit);
-			cd_flip_led(843,15,item_hit);
-			cd_flip_led(843,16,item_hit);
-			cd_flip_led(843,17,item_hit);
-			cd_flip_led(843,18,item_hit);
-			cd_flip_led(843,19,item_hit);
+
+		case 13:
+					if (cre(CDGN(843,63),0,3999,"Find value error: Personality. |Town creatures must have a personality between 0 and 3,999.","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),0,3999,"Replace value error: Personality. |Town creatures must have a personality between 0 and 3,999.","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].personality == CDGN(843,63))
+					town.creatures[i].personality = CDGN(843,64);
+					}
+			break;
+		case 14:
+					if (cre(CDGN(843,63),0,19999,"Find value error: Character Id. |Town creatures must have a Character Id between 0 and 19,999.","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),0,19999,"Replace value error: Character Id. |Town creatures must have a Character Id between 0 and 19,999.","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].character_id == CDGN(843,63))
+					town.creatures[i].character_id = CDGN(843,64);
+					}
+			break;
+
+		case 15:
+					if (cre(CDGN(843,63),0,19,"Find value error: Hidden Class. |Town creatures must have hidden class numbers between 0 and 19.","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),0,19,"Replace value error: Hidden Class. |Town creatures must have hidden class numbers between 0 and 19.","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].hidden_class == CDGN(843,63))
+					town.creatures[i].hidden_class = CDGN(843,64);
+					}
+			break;
+			
+		case 16:
+					if (cre(CDGN(843,63),0,3,"Find value error: Act at Distance. |Town creatures must have numbers between 0 and 3 for this variable.","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),0,3,"Replace value error: Act at Distance. |Town creatures must have numbers between 0 and 3 for this variable.","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].act_at_distance == CDGN(843,63))
+					town.creatures[i].act_at_distance = CDGN(843,64);
+					}
+			break;
+
+		case 17:
+					if (cre(CDGN(843,63),0,1,"Find value error: Unique NPC. |Town creatures must have numbers between 0 and 1 for this variable.","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),0,1,"Replace value error: Unique NPC. |Town creatures must have numbers between 0 and 1 for this variable.","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].unique_char == CDGN(843,63))
+					town.creatures[i].unique_char = CDGN(843,64);
+					}
+			break;
+		case 18:
+					if (cre(CDGN(843,63),0,32767,"Find value error: Appear Day. |Town creatures must have numbers between 0 and 32,767 for this variable.","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),0,32767,"Replace value error: Appear Day. |Town creatures must have numbers between 0 and 32,767 for this variable.","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].creature_time == CDGN(843,63))
+					town.creatures[i].creature_time = CDGN(843,64);
+					}
+			break;
+		case 19:
+					if (cre(CDGN(843,63),0,9,"Find value error: Linked Event. |Town creatures must have numbers between 0 and 9 for this variable.","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),0,9,"Replace value error: Linked Event. |Town creatures must have numbers between 0 and 9 for this variable.","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].attached_event == CDGN(843,63))
+					town.creatures[i].attached_event = CDGN(843,64);
+					}
+			break;
+
+		case 62:
+			dialog_not_toast = FALSE;
 		break;
-		
+
+		case 65: // Choose creature type: Find
+			i = choose_text_res(-1,0,255,town.creatures[i].number,843,"Choose Which Creature Type: 0 - 255");
+			if ((i >= 0) && (i < 256)) {
+				CDSN(843,63,i);
+				csit(843,75,scen_data.scen_creatures[i].name);
+			}
+			break;
+		case 66: // Choose creature type: Replace
+			i = choose_text_res(-1,0,255,town.creatures[i].number,843,"Choose Which Creature Type: 0 - 255");
+			if ((i >= 0) && (i < 256)) {
+				CDSN(843,64,i);
+				csit(843,76,scen_data.scen_creatures[i].name);
+			}
+			break;
+		case 67: case 69: // Choose item type: Find
+			i = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,town.creatures[i].extra_item,843,"Extra Item 1, which item: 0 - 499?");
+			if ((i >= 0) && (i < NUM_SCEN_ITEMS)) {
+				CDSN(843,63,i);
+				csit(843,75,scen_data.scen_items[i].full_name);
+			}
+			break;
+		case 68: case 70: // Choose item type: Replace
+			i = choose_text_res(-2,0,NUM_SCEN_ITEMS - 1,town.creatures[i].extra_item,843,"Extra Item 1, which item: 0 - 499?");
+			if ((i >= 0) && (i < NUM_SCEN_ITEMS)) {
+				CDSN(843,64,i);
+				csit(843,76,scen_data.scen_items[i].full_name);
+			}
+			break;
+
+		case 71: // Choose name of a char script already placed in this town: Find
+			i = choose_text_res(-10,0,79,0,843,"Which Character Script Name?");
+		 	CDST(843,75,town.creatures[i].char_script);
+			break;
+
+		case 72: // Choose name of a char script already placed in this town: Replace
+			i = choose_text_res(-10,0,79,0,843,"Which Character Script Name?");
+		 	CDST(843,76,town.creatures[i].char_script);
+			break;
+
+
+		case 73: //  // Choose time type: Find
+			i = choose_text_res(4,1,11,town.creatures[i].time_flag,843,"Choose Time Type:");
+			if ((i > 0) && (i < 12)) {
+				CDSN(843,63,i - 1);
+				csit(843,75,BOACreatureTimeFlags[i - 1]);
+			}
+			break;
+		case 74: //  // Choose time type: Replace
+			i = choose_text_res(4,1,11,town.creatures[i].time_flag,843,"Choose Time Type:");
+			if ((i > 0) && (i < 12)) {
+				CDSN(843,64,i - 1);
+				csit(843,76,BOACreatureTimeFlags[i - 1]);
+			}
+			break;
+
+		case 77: // Update creature type names
+				i = CDGN(843,63);
+				csit(843,75,scen_data.scen_creatures[i].name);
+				i = CDGN(843,64);
+				csit(843,76,scen_data.scen_creatures[i].name);
+			break;
+		case 78: case 79: // Update extra item 1 and extra item 2 names
+				i = CDGN(843,63);
+				csit(843,75,scen_data.scen_items[i].full_name);
+				i = CDGN(843,64);
+				csit(843,76,scen_data.scen_items[i].full_name);
+			break;
+
+		case 80: // Update creature script names
+			i = CDGN(843,63);
+		 	CDST(843,75,town.creatures[i].char_script);
+			i = CDGN(843,64);
+		 	CDST(843,76,town.creatures[i].char_script);
+			break;
+
+		case 81: // Update creature appearance type names
+				i = CDGN(843,63);
+				csit(843,75,BOACreatureTimeFlags[i]);
+				i = CDGN(843,64);
+				csit(843,76,BOACreatureTimeFlags[i]);
+			break;
+
+		default:
+		break;
+
 		}
 }
+
 
 void edit_placed_item(short which_item)
 {
@@ -545,7 +738,7 @@ void edit_placed_monst_event_filter (short item_hit)
 		case 33: // choose m type
 			if (get_placed_monst_in_dlog() == FALSE)
 				break;
-			i = choose_text_res(-1,1,255,store_placed_monst.number,837,"Choose Which Creature Type: 0 - 255");
+			i = choose_text_res(-1,0,255,store_placed_monst.number,837,"Choose Which Creature Type: 0 - 255");
 			if ((i >= 0) && (i < 256)) {
 				store_placed_monst.number = i;
 				put_placed_monst_in_dlog();
@@ -981,6 +1174,11 @@ void edit_out_wand_event_filter (short item_hit)
 			put_out_wand_in_dlog();
 			break;
 
+		case 67:
+			store_out_wand.clear_out_wandering_type();
+			put_out_wand_in_dlog();
+			break;
+
 		default:
 			if (get_out_wand_in_dlog() == FALSE)
 				 break;
@@ -1178,28 +1376,34 @@ void edit_town_wand()
 
 void put_town_wand_in_dlog()
 {
-	short i,j;
-	
-	for (i = 0; i < 4; i++) 
-	for (j = 0; j < 6; j++) 
+	short i,j,x;
+
+	for (i = 0; i < 4; i++)
+	for (j = 0; j < 6; j++)
 		{
 		CDSN(835,2 + i * 6 + j,town.respawn_monsts[i][j]);
 		}
 
+	for (j = 0; j < 6; j++)
+		CDSN(835,j + 49,town.respawn_monsts[0][j]);
+	for (x = 2; x < 8; x++) {
+		csit(835,x + 59,scen_data.scen_creatures[CDGN(835,x)].name);
+		cdsin(835,x + 74,scen_data.scen_creatures[CDGN(835,x)].level);
+		}
 }
 
 void edit_town_wand_event_filter (short item_hit)
 {
-	short i,j;
-	
+	short i,j,x,y;
+
 	switch (item_hit) {
 		case 38:
 			if (save_town_wand() == TRUE)
-				 dialog_not_toast = FALSE; 
+				 dialog_not_toast = FALSE;
 			break;
 		case 39: case 40: case 41: case 42:
 			for (i = 0; i < 6; i++) {
-				j = choose_text_res(-1,0,255,town.respawn_monsts[item_hit - 39][i],835,"Choose Which Monster:"); 
+				j = choose_text_res(-1,0,255,town.respawn_monsts[item_hit - 39][i],835,"Choose Which Monster: 0 - 255");
 				if (j <= 0)
 					j = -1;
 				if (j < 0)
@@ -1209,14 +1413,59 @@ void edit_town_wand_event_filter (short item_hit)
 						}
 				}
 			break;
+
+		case 55: case 56: case 57: case 58: case 59: case 60:
+				j = choose_text_res(-1,0,255,town.respawn_monsts[which_town_group][item_hit - 55],835,"Choose Which Monster: 0 - 255");
+			if (j >= 0) {
+				CDSN(835,(item_hit - 6),j);
+				csit(835,item_hit + 6,scen_data.scen_creatures[CDGN(835,item_hit - 6)].name);
+				cdsin(835,item_hit + 21,scen_data.scen_creatures[CDGN(835,item_hit - 6)].level);
+				}
+			break;
+
+		case 67: case 68: case 69: case 70:
+				which_town_group = item_hit - 67;
+				for (j = 0; j < 6; j++) {
+					CDSN(835,j + 49,town.respawn_monsts[which_town_group][j]);
+					csit(835,j + 61,scen_data.scen_creatures[CDGN(835,j + 49)].name);
+					cdsin(835,j + 76,scen_data.scen_creatures[CDGN(835,j + 49)].level);
+			}
+		break;
+
+		case 71: // Delete
+			for (x = 0; x < 6; x++) {
+				CDSN(835,x + 49,-1);
+				csit(835,x + 61,"Empty");
+				CDSN(835,x + 76,1);
+				}
+			break;
+		case 72: // Name
+			for (x = 61; x < 67; x++) {
+					csit(835,x,scen_data.scen_creatures[CDGN(835,x - 12)].name);
+					cdsin(835,x + 15,scen_data.scen_creatures[CDGN(835,x - 12)].level);
+				}
+			break;
+	case 73: // Save
+			for (x = 2; x < 8; x++) {
+					short y = CDGN(835,x + 47);
+					CDSN(835,which_town_group * 6 + x,y);
+					}
+			break;
+
+		default:
+			break;
+
 		}
 }
-
-
 
 Boolean save_town_wand()
 {
 	short i,j;
+
+	for (i = 2; i < 26; i++) {
+	if (cre(CDGN(835,i),-1,255,"Creature numbers must be greater than or equal to 0 and less than or equal to 255.","(-1 means no monster exists for that slot.)",835) == TRUE)
+	return FALSE;
+	}
 
 	for (i = 0; i < 4; i++)
 	for (j = 0; j < 6; j++)
@@ -1226,7 +1475,6 @@ Boolean save_town_wand()
 
 	return TRUE;
 }
-
 
 // Needs a name button
 void pick_out_event_filter (short item_hit)
@@ -1704,16 +1952,18 @@ void put_out_strs_in_dlog()
 	for (i = 0; i < 8; i++) {
 		if ((current_terrain.info_rect[i].right <= 0) || (str_do_delete[i] > 0)) {
 			sprintf((char *) str,"Not yet placed.");
+			csit(850,13 + i,(char *) str);
+			csit(850,33 + i,(char *) str);			
 			cd_activate_item(850,25 + i,0);
 			}
-			else
+			else {
 			sprintf((char *) str,"L = %d, T = %d", (int)current_terrain.info_rect[i].left,(int)current_terrain.info_rect[i].top);
 		csit(850,13 + i,(char *) str);
 			sprintf((char *) str,"R = %d, B = %d",(int)current_terrain.info_rect[i].right, (int)current_terrain.info_rect[i].bottom);
 		csit(850,33 + i,(char *) str);
+		}
 		CDST(850,2 + i,current_terrain.info_rect_text[i]);
 		}
-
 }
 
 void edit_out_strs_event_filter (short item_hit)
@@ -1726,13 +1976,19 @@ void edit_out_strs_event_filter (short item_hit)
 		case 11:
 				 dialog_not_toast = FALSE; 
 			break;
-		default:
-			if ((item_hit >= 25) && (item_hit <= 32)) {
-				//sprintf((char *)data_store->out_strs[item_hit - 25 + 1],"");
-				CDST(850,2 + item_hit - 25,"");
+
+		case 25:	case 26:	case 27:	case 28:
+		case 29:	case 30:	case 31:	case 32:
+				CDST(850,item_hit - 23,"");
+				current_terrain.info_rect[item_hit - 25].top = -1;
+				current_terrain.info_rect[item_hit - 25].left = -1;
+				current_terrain.info_rect[item_hit - 25].bottom = -1;
+				current_terrain.info_rect[item_hit - 25].right = -1;
 				str_do_delete[item_hit - 25] = 1;
 				put_out_strs_in_dlog();
-				}
+			break;
+			
+		default:
 			break;
 		}
 }
@@ -1778,13 +2034,16 @@ void put_town_strs_in_dlog()
 	for (i = 0; i < 16; i++) {
 		if ((town.room_rect[i].right <= 0) || (str_do_delete[i] > 0)) {
 			sprintf((char *) str,"Not yet placed.");
+			csit(839,21 + i,(char *) str);
+			csit(839,57 + i,(char *) str);
 			cd_activate_item(839,41 + i,0);
 			}
-			else
+			else {
 			sprintf((char *) str,"L = %d, T = %d",(int)town.room_rect[i].left,(int)town.room_rect[i].top);
 		csit(839,21 + i,(char *) str);
 			sprintf((char *) str,"R = %d, B = %d",(int)town.room_rect[i].right, (int)town.room_rect[i].bottom);
 		csit(839,57 + i,(char *) str);
+		}
 		CDST(839,2 + i,town.info_rect_text[i]);
 		}
 
@@ -1802,8 +2061,11 @@ void edit_town_strs_event_filter (short item_hit)
 			break;
 		default:
 			if ((item_hit >= 41) && (item_hit <= 56)) {
-				//sprintf((char *)data_store->town_strs[item_hit - 41 + 1],"");
-				CDST(839,2 + item_hit - 41,"");
+				CDST(839,item_hit - 39,"");
+				town.room_rect[item_hit - 41].top = -1;
+				town.room_rect[item_hit - 41].left = -1;
+				town.room_rect[item_hit - 41].bottom = -1;
+				town.room_rect[item_hit - 41].right = -1;
 				str_do_delete[item_hit - 41] = 1;
 				put_town_strs_in_dlog();
 				}
@@ -2227,6 +2489,9 @@ void edit_scen_details()
 
 void put_scen_details_in_dlog()
 {
+  short x,y,z;
+	char * str;
+  
 	cd_set_led_range(803,11,14,scenario.rating);
 	CDSN(803,2,scenario.ver[0]);
 	CDSN(803,3,scenario.ver[1]);
@@ -2236,10 +2501,14 @@ void put_scen_details_in_dlog()
 	CDST(803,7,scenario.scen_name);
 	CDSN(803,8,scenario.min_level);
 	CDSN(803,9,scenario.max_level);
+
 }
 
 void edit_scen_details_event_filter (short item_hit)
 {
+  short x,y,z;
+	char * str;
+
 	switch (item_hit) {
 		case 10:
 			if (save_scen_details() == TRUE)
@@ -2248,7 +2517,7 @@ void edit_scen_details_event_filter (short item_hit)
 		case 28:
 				 dialog_not_toast = FALSE;
 			break;
-			
+
 		default:
 			cd_hit_led_range(803,11,14,item_hit);
 			break;

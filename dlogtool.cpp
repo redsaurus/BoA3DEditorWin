@@ -102,7 +102,7 @@ char text_long_str[10][256];
 char text_short_str[140][40];
 char labels[NL][25];
 Boolean label_taken[NL];
-/**/char custom_dlg_strs[12][256];
+char custom_dlg_strs[12][256];
 short custom_dlg_strs_indent[12];
 short store_free_slot,store_dlog_num;
 short win_adjust_x = 18,win_adjust_y = 0;//20;
@@ -999,8 +999,7 @@ void cd_retrieve_text_edit_str(short dlog_num, short item_num, char *str)
 	short i;
 	
 	for (i = 0; i < 80; i++)
-		if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)
-			&& (edit_box[i] != NULL)) {
+		if ((store_edit_parent_num[i] == dlog_num) && (store_edit_item[i] == item_num)	&& (edit_box[i] != NULL)) {
 				GetWindowText(edit_box[i],str,255);
 				return;
 				}

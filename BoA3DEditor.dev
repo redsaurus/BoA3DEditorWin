@@ -159,27 +159,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit18]
-FileName=townout.cpp
-CompileCpp=1
-Folder=3D BoA Editor Windows
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit19]
-FileName=version.h
-CompileCpp=1
-Folder=3D BoA Editor Windows
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit20]
 FileName=global.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -189,7 +169,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit21]
+[Unit20]
 FileName=Bl A Fileio.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -199,7 +179,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit22]
+[Unit21]
 FileName=Bl A Fileio.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -209,8 +189,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit23]
+[Unit22]
 FileName=Graphics.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit23]
+FileName=dlogtool.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
 Compile=1
@@ -248,11 +238,11 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit24]
-FileName=dlogtool.cpp
+FileName=Blscened.rc
 CompileCpp=1
 Folder=3D BoA Editor Windows
 Compile=1
-Link=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
@@ -288,10 +278,21 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit25]
-FileName=Blscened.rc
+FileName=townout.cpp
 Folder=3D BoA Editor Windows
 Compile=1
-Link=0
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+CompileCpp=1
+
+[Unit18]
+FileName=version.h
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=

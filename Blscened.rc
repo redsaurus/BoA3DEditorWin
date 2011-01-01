@@ -99,17 +99,18 @@ BEGIN
         MENUITEM " Continual &Delete\tEnd", 						109
         MENUITEM " &Delete Selected Only\tBackspace", 						120
         MENUITEM SEPARATOR
+        MENUITEM "  Rotate &Hintbook Modes\tBackslash", 						121
         MENUITEM "  &Cycle Forward Through View Mode\tCtrl+E", 110
         MENUITEM "  &Cycle Backward Through View Mode\tCtrl+F", 111
-        MENUITEM "  &Increase Numerical Display Mode\tCtrl+G", 112
-        MENUITEM "  &Decrease Numerical Display Mode\tCtrl+H", 113
-        MENUITEM "  &Increase Object Display Mode\tCtrl+9", 114
-        MENUITEM "  &Decrease Object Display Mode\tCtrl+0", 115
+        MENUITEM "  Increase Numerical Display &Mode\tCtrl+G", 112
+        MENUITEM "  Decrease Numerical Display &Mode\tCtrl+H", 113
+        MENUITEM "  Increase &Object Display Mode\tCtrl+9", 114
+        MENUITEM "  Decrease &Object Display Mode\tCtrl+0", 115
         MENUITEM SEPARATOR
-        MENUITEM "  Load Outdoor Zone &Above\tCtrl+Up", 116
+        MENUITEM "  Load Outdoor Zone &Above\tCtrl+Up", 122
         MENUITEM "  Load &Previous Outdoor Zone/Town\tCtrl+Left", 117
         MENUITEM "  Load &Next Outdoor Zone/Town\tCtrl+Right", 118
-        MENUITEM "  Load Outdoor Zone &Below\tCtrl+Down", 119
+        MENUITEM "  Load Outdoor Zone &Below\tCtrl+Down", 123
     END
     
     POPUP "&Scenario"
@@ -300,10 +301,9 @@ BEGIN
     "^0",           115,                    ASCII,  NOINVERT
     VK_LEFT,        117,                    VIRTKEY, CONTROL, NOINVERT
     VK_RIGHT,       118,                    VIRTKEY, CONTROL, NOINVERT
-    VK_UP,          116,                    VIRTKEY, CONTROL, NOINVERT
-    VK_DOWN,        119,                    VIRTKEY, CONTROL, NOINVERT
+    VK_UP,          122,                    VIRTKEY, CONTROL, NOINVERT
+    VK_DOWN,        123,                    VIRTKEY, CONTROL, NOINVERT
     VK_TAB,         1609,                   VIRTKEY, CONTROL, NOINVERT
-    
 //    "^D",         302/402,                ASCII,  NOINVERT
 //    "^L",         301/401,                ASCII,  NOINVERT
 END
@@ -370,7 +370,7 @@ BEGIN
     LTEXT           "2_0",14,156,374,32,15
     LTEXT           "*High",15,219,287,43,15
     LTEXT           "*Level range:   Low  ",16,26,287,135,14
-    LTEXT           "*Scenario Name",17,26,251,121,17
+    LTEXT           "*Scenario Name:",17,26,251,121,17
     LTEXT           "*Rating:",18,26,319,54,14
     LTEXT           "*Everyone",19,83,319,46,15
     LTEXT           "*Teen",20,83,336,46,15
@@ -380,7 +380,7 @@ BEGIN
     LTEXT           "~Scenario Details",24,27,24,256,17
     LTEXT           "*Version number:",25,26,99,120,14
     LTEXT           "*Credits:",26,26,125,125,14
-    LTEXT           "*Description, Part 1:",27,26,182,120,14
+    LTEXT           "*Description:",27,26,182,120,14
     LTEXT           "0_5",28,432,392,62,16
 END
 
@@ -859,7 +859,7 @@ BEGIN
     LTEXT           "6_0",27,514,436,40,16
     LTEXT           "6_0",28,514,460,40,16
     LTEXT           "6_0",29,514,484,40,16
-    LTEXT           "1_63",30,505,558,63,16
+    LTEXT           "1_63",30,515,558,63,16
     LTEXT           "0_5",31,443,558,62,16
     LTEXT           "2_0",32,192,172,32,15
     LTEXT           "2_0",33,271,102,23,14
@@ -911,49 +911,91 @@ END
 835 DIALOG  10, 10, 536, 310 // Town wandering monsters
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,505,308,63,17,WS_GROUP
-    LTEXT           "6_0",2,160,108,39,16
-    LTEXT           "6_0",3,160,136,39,16
-    LTEXT           "6_0",4,160,164,39,16
-    LTEXT           "6_0",5,160,192,39,16
-    LTEXT           "6_0",6,160,220,39,16
-    LTEXT           "6_0",7,160,248,39,16
-    LTEXT           "6_0",8,225,108,39,16
-    LTEXT           "6_0",9,225,136,39,16
-    LTEXT           "6_0",10,225,164,39,16
-    LTEXT           "6_0",11,225,192,39,16
-    LTEXT           "6_0",12,225,220,39,16
-    LTEXT           "6_0",13,225,248,39,16
-    LTEXT           "6_0",14,290,108,39,16
-    LTEXT           "6_0",15,290,136,39,16
-    LTEXT           "6_0",16,290,164,39,16
-    LTEXT           "6_0",17,290,192,39,16
-    LTEXT           "6_0",18,290,220,39,16
-    LTEXT           "6_0",19,290,248,39,16
-    LTEXT           "6_0",20,355,108,39,16
-    LTEXT           "6_0",21,355,136,39,16
-    LTEXT           "6_0",22,355,164,39,16
-    LTEXT           "6_0",23,355,192,39,16
-    LTEXT           "6_0",24,355,220,39,16
-    LTEXT           "6_0",25,355,248,39,16
+    DEFPUSHBUTTON   "OK",1,505,608,63,17,WS_GROUP
+    LTEXT           "6_0",2,128,108,39,16
+    LTEXT           "6_0",3,128,136,39,16
+    LTEXT           "6_0",4,128,164,39,16
+    LTEXT           "6_0",5,128,192,39,16
+    LTEXT           "6_0",6,128,220,39,16
+    LTEXT           "6_0",7,128,248,39,16
+    LTEXT           "6_0",8,193,108,39,16
+    LTEXT           "6_0",9,193,136,39,16
+    LTEXT           "6_0",10,193,164,39,16
+    LTEXT           "6_0",11,193,192,39,16
+    LTEXT           "6_0",12,193,220,39,16
+    LTEXT           "6_0",13,193,248,39,16
+    LTEXT           "6_0",14,258,108,39,16
+    LTEXT           "6_0",15,258,136,39,16
+    LTEXT           "6_0",16,258,164,39,16
+    LTEXT           "6_0",17,258,192,39,16
+    LTEXT           "6_0",18,258,220,39,16
+    LTEXT           "6_0",19,258,248,39,16
+    LTEXT           "6_0",20,323,108,39,16
+    LTEXT           "6_0",21,323,136,39,16
+    LTEXT           "6_0",22,323,164,39,16
+    LTEXT           "6_0",23,323,192,39,16
+    LTEXT           "6_0",24,323,220,39,16
+    LTEXT           "6_0",25,323,248,39,16
     LTEXT           "There can be four different types of groups that appear. A -1 means no monster there. Leave everything at -1 for no wandering monsters in the town/dungeon.",
                     26,27,48,461,34
     LTEXT           "~Town wandering monsters",27,28,28,256,17
-    LTEXT           "*Group 1",28,152,86,58,14
-    LTEXT           "*Group 2",29,217,86,58,14
-    LTEXT           "*Group 3",30,280,86,58,14
-    LTEXT           "*Group 4",31,343,86,58,14
+    LTEXT           "*Group 1",28,122,86,58,14
+    LTEXT           "*Group 2",29,187,86,58,14
+    LTEXT           "*Group 3",30,252,86,58,14
+    LTEXT           "*Group 4",31,317,86,58,14
     LTEXT           "*Monster 1",32,27,109,109,14
     LTEXT           "*Monster 2",33,27,137,109,14
     LTEXT           "*Monster 3",34,27,165,109,14
     LTEXT           "*Monster 4",35,27,193,119,14
     LTEXT           "*Monster 5",36,27,221,109,14
     LTEXT           "*Monster 6",37,27,249,119,14
-    LTEXT           "1_63",38,422,272,63,17
-    LTEXT           "0_109",39,148,272,62,17
-    LTEXT           "0_109",40,213,272,63,17
-    LTEXT           "0_109",41,278,272,63,17
-    LTEXT           "0_109",42,343,272,63,17
+    LTEXT           "1_63",38,495,562,63,17
+    LTEXT           "0_109",39,117,272,62,17
+    LTEXT           "0_109",40,182,272,63,17
+    LTEXT           "0_109",41,247,272,63,17
+    LTEXT           "0_109",42,312,272,63,17
+    LTEXT           "*Monster 1",43,27,370,70,14
+    LTEXT           "*Monster 2",44,27,398,70,14
+    LTEXT           "*Monster 3",45,27,426,70,14
+    LTEXT           "*Monster 4",46,27,454,70,14
+    LTEXT           "*Monster 5",47,27,482,70,14
+    LTEXT           "*Monster 6",48,27,510,70,14
+    LTEXT           "6_0",49,200,370,39,16
+    LTEXT           "6_0",50,200,398,39,16
+    LTEXT           "6_0",51,200,426,39,16
+    LTEXT           "6_0",52,200,454,39,16
+    LTEXT           "6_0",53,200,482,39,16
+    LTEXT           "6_0",54,200,510,39,16
+    LTEXT           "0_109",55,117,368,63,17
+    LTEXT           "0_109",56,117,396,63,17
+    LTEXT           "0_109",57,117,424,63,17
+    LTEXT           "0_109",58,117,452,63,17
+    LTEXT           "0_109",59,117,480,63,17
+    LTEXT           "0_109",60,117,508,63,17
+    LTEXT           "+",61,310,370,230,16
+    LTEXT           "+",62,310,398,230,16
+    LTEXT           "+",63,310,426,230,16
+    LTEXT           "+",64,310,454,230,16
+    LTEXT           "+",65,310,482,230,16
+    LTEXT           "+",66,310,510,230,16
+    LTEXT           "0_52",67,117,300,62,17
+    LTEXT           "0_52",68,182,300,63,17
+    LTEXT           "0_52",69,247,300,63,17
+    LTEXT           "0_52",70,312,300,63,17
+    LTEXT           "0_53",71,300,562,63,17
+    LTEXT           "0_56",72,365,562,63,17
+    LTEXT           "0_29",73,430,562,63,17
+    LTEXT           "*Press the Create button under a group of monsters to select that group only.  |Press the Delete button to erase the entire group. |Edit the group as you wish then press the Save button to record the changes.",74,390,108,150,150
+    LTEXT           "*If entering numbers via the white boxes, pressing the Name button will refresh the display of names.",75,390,268,150,50
+    LTEXT           "+",76,260,370,35,16
+    LTEXT           "+",77,260,398,35,16
+    LTEXT           "+",78,260,426,35,16
+    LTEXT           "+",79,260,454,35,16
+    LTEXT           "+",80,260,482,35,16
+    LTEXT           "+",81,260,510,35,16
+    LTEXT           "*Type",82,200,348,50,14
+    LTEXT           "*Level",83,260,348,50,14
+    LTEXT           "*Name",84,320,348,50,14
 END
 
 837 DIALOG  10, 10, 576, 750 // Edit Placed Creature
@@ -1243,84 +1285,89 @@ END
 843 DIALOG  10, 10, 576, 750  //  Edit Many Placed Creatures
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,600,336,31,10,WS_GROUP
-    LTEXT           "2_0",2,35,114,23,14
-    LTEXT           "2_0",3,35,138,23,14
-    LTEXT           "2_0",4,35,162,23,14
-    LTEXT           "2_0",5,35,186,23,14
-    LTEXT           "2_0",6,35,210,23,14
-    LTEXT           "2_0",7,35,234,23,14
-    LTEXT           "2_0",8,35,258,23,14
-    LTEXT           "2_0",9,35,282,23,14
-    LTEXT           "2_0",10,35,306,23,14
-    LTEXT           "2_0",11,35,330,23,14
-    LTEXT           "2_0",12,35,354,23,14
-    LTEXT           "2_0",13,35,378,23,14
-    LTEXT           "2_0",14,35,402,23,14
-    LTEXT           "2_0",15,35,426,23,14
-    LTEXT           "2_0",16,35,450,23,14
-    LTEXT           "2_0",17,35,474,23,14
-    LTEXT           "2_0",18,35,498,23,14
-    LTEXT           "2_0",19,35,522,23,14
-    LTEXT           "*Creature Type",22,70,110,100,16
-    LTEXT           "* Facing ",23,70,134,100,16
-    LTEXT           "* Attitude",24,70,158,100,16
-    LTEXT           "* Personality ",25,70,182,100,16
-    LTEXT           "* Extra Item 1",26,70,206,100,16
-    LTEXT           "* Extra Item 2 ",27,70,230,100,16
-    LTEXT           "* Hidden Class ",28,70,254,100,16
-    LTEXT           "* Time Flag ",29,70,278,100,16
-    LTEXT           "* Creature Time ",30,70,302,100,16
-    LTEXT           "* Attached Event ",31,70,326,100,16
-    LTEXT           "* Character Script",32,70,350,100,16
-    LTEXT           "* Memory Cell  0",33,70,374,100,16
-    LTEXT           "* Memory Cell  1",34,70,398,100,16
-    LTEXT           "* Memory Cell  2",35,70,422,100,16
-    LTEXT           "* Memory Cell  3",36,70,446,100,16
-    LTEXT           "* Memory Cell  4",37,70,470,100,16
-    LTEXT           "* Memory Cell  5",38,70,494,100,16
-    LTEXT           "* Act At Distance ",39,70,518,100,16
-    LTEXT           "6_0",42,200,110,70,16
-    LTEXT           "6_0",43,200,134,70,16
-    LTEXT           "6_0",44,200,158,70,16
-    LTEXT           "6_0",45,200,182,70,16
-    LTEXT           "6_0",46,200,206,70,16
-    LTEXT           "6_0",47,200,230,70,16
-    LTEXT           "6_0",48,200,254,70,16
-    LTEXT           "6_0",49,200,278,70,16
-    LTEXT           "6_0",50,200,302,70,16
-    LTEXT           "6_0",51,200,326,70,16
-    LTEXT           "6_0",52,200,350,70,16
-    LTEXT           "6_0",53,200,374,70,16
-    LTEXT           "6_0",54,200,398,70,16
-    LTEXT           "6_0",55,200,422,70,16
-    LTEXT           "6_0",56,200,446,70,16
-    LTEXT           "6_0",57,200,470,70,16
-    LTEXT           "6_0",58,200,494,70,16
-    LTEXT           "6_0",59,200,518,70,16
-    LTEXT           "6_0",62,300,110,70,16
-    LTEXT           "6_0",63,300,134,70,16
-    LTEXT           "6_0",64,300,158,70,16
-    LTEXT           "6_0",65,300,182,70,16
-    LTEXT           "6_0",66,300,206,70,16
-    LTEXT           "6_0",67,300,230,70,16
-    LTEXT           "6_0",68,300,254,70,16
-    LTEXT           "6_0",69,300,278,70,16
-    LTEXT           "6_0",70,300,302,70,16
-    LTEXT           "6_0",71,300,326,70,16
-    LTEXT           "6_0",72,300,350,70,16
-    LTEXT           "6_0",73,300,374,70,16
-    LTEXT           "6_0",74,300,398,70,16
-    LTEXT           "6_0",75,300,422,70,16
-    LTEXT           "6_0",76,300,446,70,16
-    LTEXT           "6_0",77,300,470,70,16
-    LTEXT           "6_0",78,300,494,70,16
-    LTEXT           "6_0",79,300,518,70,16
-    LTEXT           "0_5",82,456,560,66,16
-    LTEXT           "1_63",83,530,560,66,16
-    LTEXT           "~Edit Many Placed Creatures",84,25,30,198,17
-    LTEXT           "Enter the information on the left side that you wish the Editor to find. Enter the replacement information on the right hand side.(THIS FUNCTION IS UNFINISHED) ",85,25,53,480,33
-
+    DEFPUSHBUTTON   "OK",1,600,596,31,10,WS_GROUP
+    LTEXT           "0_63",2,25,186,63,14
+    LTEXT           "0_63",3,25,212,63,14
+    LTEXT           "0_63",4,25,238,63,14
+    LTEXT           "0_63",5,25,264,63,14
+    LTEXT           "0_63",6,25,290,63,14
+    LTEXT           "0_63",7,25,326,63,14
+    LTEXT           "0_63",8,25,352,63,14
+    LTEXT           "0_63",9,25,378,63,14
+    LTEXT           "0_63",10,25,404,63,14
+    LTEXT           "0_63",11,25,430,63,14
+    LTEXT           "0_63",12,25,456,63,14
+    LTEXT           "0_63",13,25,482,63,14
+    LTEXT           "0_63",14,25,508,63,14
+    LTEXT           "0_63",15,220,326,63,14
+    LTEXT           "0_63",16,220,352,63,14
+    LTEXT           "0_63",17,220,378,63,14
+    LTEXT           "0_63",18,220,404,63,14
+    LTEXT           "0_63",19,220,430,63,14
+    LTEXT           "0_63",20,220,456,63,14
+    LTEXT           "0_63",21,220,482,63,14
+    LTEXT           "0_63",22,220,508,63,14
+    LTEXT           "0_63",23,400,326,63,14
+    LTEXT           "0_63",24,400,352,63,14
+    LTEXT           "0_63",25,400,378,63,14
+    LTEXT           "0_63",26,400,404,63,14
+    LTEXT           "0_63",27,400,430,63,14
+    LTEXT           "0_63",28,400,456,63,14
+    LTEXT           "0_63",29,400,482,63,14
+    LTEXT           "*Creature Type",30,100,189,100,14
+    LTEXT           "*Extra Item 1",31,100,215,100,14
+    LTEXT           "*Extra Item 2",32,100,241,100,14
+    LTEXT           "*Creature Script",33,100,267,100,14
+    LTEXT           "*Appear Type",34,100,293,100,14
+    LTEXT           "*Facing",35,100,329,100,14
+    LTEXT           "*Start Attitude",36,100,355,100,14
+    LTEXT           "*Start Loc X",37,100,381,100,14
+    LTEXT           "*Start Loc Y",38,100,407,100,14
+    LTEXT           "*Item Chance 1",39,100,433,100,14
+    LTEXT           "*Item Chance 2",40,100,459,100,14
+    LTEXT           "*Personality",41,100,485,100,14
+    LTEXT           "*Character ID",42,100,511,100,14
+    LTEXT           "*Hidden Class",43,295,329,100,14
+    LTEXT           "*Act Distance",44,295,355,100,14
+    LTEXT           "*Unique NPC",45,295,381,100,14
+    LTEXT           "*Appear Day",46,295,407,100,14
+    LTEXT           "*Linked Event",47,295,433,100,14
+    LTEXT           "*Memory Cell 0",48,295,459,100,14
+    LTEXT           "*Memory Cell 1",49,295,485,100,14
+    LTEXT           "*Memory Cell 2",50,295,511,100,14
+    LTEXT           "*Memory Cell 3",51,475,329,100,14
+    LTEXT           "*Memory Cell 4",52,475,355,100,14
+    LTEXT           "*Memory Cell 5",53,475,381,100,14
+    LTEXT           "*Memory Cell 6",54,475,407,100,14
+    LTEXT           "*Memory Cell 7",55,475,433,100,14
+    LTEXT           "*Memory Cell 8",56,475,459,100,14
+    LTEXT           "*Memory Cell 9",57,475,482,100,14
+    LTEXT           "~EDIT MANY PLACED CREATURES",58,25,30,198,17
+    LTEXT           "*Enter the data in the Find what box that you wish the Editor to find. Enter the replacement data in the Replace with box. Click the relevant OK button to make the replacement happen.",59,25,55,550,35
+    LTEXT           "+Find what:",60,25,130,82,16
+    LTEXT           "+Replace with:",61,308,130,82,16
+    LTEXT           "1_9",62,530,560,66,16
+  	LTEXT           "6_0",63,125,130,153,16
+    LTEXT           "6_0",64,408,130,153,16
+    LTEXT           "0_109",65,220,186,65,14
+    LTEXT           "0_109",66,292,186,65,14
+    LTEXT           "0_109",67,220,212,65,14
+    LTEXT           "0_109",68,292,212,65,14
+    LTEXT           "0_109",69,220,238,65,14
+    LTEXT           "0_109",70,292,238,65,14
+    LTEXT           "0_109",71,220,264,65,14
+    LTEXT           "0_109",72,292,264,65,14
+    LTEXT           "0_109",73,220,290,65,14
+    LTEXT           "0_109",74,292,290,65,14
+    LTEXT           "+",75,25,158,250,14
+    LTEXT           "+",76,308,158,250,14
+    LTEXT           "0_56",77,364,186,65,14
+    LTEXT           "0_56",78,364,212,65,14
+    LTEXT           "0_56",79,364,238,65,14
+    LTEXT           "0_56",80,364,264,65,14
+    LTEXT           "0_56",81,364,290,65,14
+    LTEXT           "*Dialog screen remains open until you press the Leave button.",82,25,100,530,16
+    LTEXT           "Creature Type, Extra Item 1, Extra Item 2, Creature Script and Appear Type numbers can be entered via the two white boxes or by the dialog screens created by the Choose buttons.",83,430,186,140,125
 END
 
 850 DIALOG  10, 10, 521, 526 // Outdoor area descriptions
@@ -1392,72 +1439,74 @@ END
 852 DIALOG  10, 10, 632, 467 // Outdoor Wandering Encounter
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,343,284,31,10,WS_GROUP
-    LTEXT           "6_0",2,371,94,50,17
-    LTEXT           "6_0",3,371,118,50,17
-    LTEXT           "6_0",4,371,142,50,17
-    LTEXT           "6_0",5,371,166,50,17
-    LTEXT           "6_0",6,371,190,50,17
-    LTEXT           "6_0",7,371,214,50,17
-    LTEXT           "6_0",8,371,238,50,17
-    LTEXT           "6_0",9,242,264,46,16
-    LTEXT           "6_0",10,242,288,46,17
-    LTEXT           "6_0",11,242,313,46,17
-    LTEXT           "6_0",12,451,274,39,16
-    LTEXT           "6_0",13,499,274,39,16
-    LTEXT           "6_0",14,451,308,39,16
-    LTEXT           "6_0",15,499,308,39,16
-    LTEXT           "6_0",16,451,337,39,16
-    LTEXT           "6_0",17,451,362,39,16
-    LTEXT           "6_0",18,499,362,39,16
-    LTEXT           "6_0",19,451,388,39,16
-    LTEXT           "0_5",20,441,417,62,16
-    LTEXT           "1_63",21,507,417,63,16
-    LTEXT           "0_2",22,33,417,62,16
-    LTEXT           "0_3",23,95,417,75,16
-    LTEXT           "0_109",24,301,91,63,23
-    LTEXT           "0_109",25,301,115,63,23
-    LTEXT           "0_109",26,301,139,63,23
-    LTEXT           "0_109",27,301,163,63,23
-    LTEXT           "0_109",28,301,187,63,23
-    LTEXT           "0_109",29,301,211,63,23
-    LTEXT           "0_109",30,301,235,63,23
-    LTEXT           "+",31,150,96,145,14
-    LTEXT           "+",32,150,120,145,14
-    LTEXT           "+",33,150,144,145,14
-    LTEXT           "+",34,150,168,145,14
-    LTEXT           "+",35,150,192,145,14
-    LTEXT           "+",36,150,216,145,14
-    LTEXT           "+",37,150,240,145,14
-    LTEXT           "2_0",38,220,347,29,14
-    LTEXT           "2_0",39,220,369,29,14
-    LTEXT           "2_0",40,220,394,30,15
+    DEFPUSHBUTTON   "OK",1,343,584,31,10,WS_GROUP
+    LTEXT           "6_0",2,125,94,50,17
+    LTEXT           "6_0",3,125,122,50,17
+    LTEXT           "6_0",4,125,150,50,17
+    LTEXT           "6_0",5,125,178,50,17
+    LTEXT           "6_0",6,125,206,50,17
+    LTEXT           "6_0",7,125,234,50,17
+    LTEXT           "6_0",8,125,262,50,17
+    LTEXT           "6_0",9,217,299,46,16
+    LTEXT           "6_0",10,217,323,46,17
+    LTEXT           "6_0",11,217,348,46,17
+    LTEXT           "6_0",12,451,304,39,16
+    LTEXT           "6_0",13,499,304,39,16
+    LTEXT           "6_0",14,451,338,39,16
+    LTEXT           "6_0",15,499,338,39,16
+    LTEXT           "6_0",16,451,367,39,16
+    LTEXT           "6_0",17,451,392,39,16
+    LTEXT           "6_0",18,499,392,39,16
+    LTEXT           "6_0",19,451,418,39,16
+    LTEXT           "0_5",20,375,547,63,16
+    LTEXT           "1_63",21,505,547,63,16
+    LTEXT           "0_2",22,33,547,62,16
+    LTEXT           "0_3",23,95,547,75,16
+    LTEXT           "0_109",24,181,92,63,23
+    LTEXT           "0_109",25,181,120,63,23
+    LTEXT           "0_109",26,181,148,63,23
+    LTEXT           "0_109",27,181,176,63,23
+    LTEXT           "0_109",28,181,204,63,23
+    LTEXT           "0_109",29,181,232,63,23
+    LTEXT           "0_109",30,181,260,63,23
+    LTEXT           "+",31,250,94,245,16
+    LTEXT           "+",32,250,122,245,16
+    LTEXT           "+",33,250,150,245,16
+    LTEXT           "+",34,250,178,245,16
+    LTEXT           "+",35,250,206,245,16
+    LTEXT           "+",36,250,234,245,16
+    LTEXT           "+",37,250,262,245,16
+    LTEXT           "2_0",38,220,383,29,14
+    LTEXT           "2_0",39,220,404,29,14
+    LTEXT           "2_0",40,220,435,30,15
     LTEXT           "*",41,407,31,35,14
-    LTEXT           "*Random Move Chance",42,302,389,136,15
-    LTEXT           "*Start location",43,302,363,122,14
-    LTEXT           "*Check every turn",44,32,392,165,14
-    LTEXT           "Encounter is forced |(Party fights it right away)",45,32,363,182,27
-    LTEXT           "Move types: |0 - seek party |1 - no move |2 - random move |3 - follow roads |4 - flee party |+10 - always stays within 10 spaces of starting spot",
-                    46,430,138,154,119
-    LTEXT           "Move type",47,302,338,120,15
-    LTEXT           "Stuff done flag set to 1 when defeated",48,302,301,141,31
-    LTEXT           "Stuff done flag to eliminate encounter",49,302,267,141,31
-    LTEXT           "*Script State When Fled",50,32,314,203,15
-    LTEXT           "*Script State When Beaten",51,32,289,203,15
-    LTEXT           "*Script State When Met",52,32,265,203,14
+    LTEXT           "*Random Move Chance",42,302,419,136,15
+    LTEXT           "*Start location",43,302,393,122,14
+    LTEXT           "*Check every turn",44,32,432,165,14
+    LTEXT           "Encounter is forced |(Party fights it right away)",45,32,398,182,27
+    LTEXT           "Move types: |0 - seek party |1 - no move |2 - random move |3 - follow roads |4 - flee party ",46,272,453,124,90
+    LTEXT           "Move type",47,302,368,120,15
+    LTEXT           "Stuff done flag set to 1 when defeated",48,302,331,141,31
+    LTEXT           "Stuff done flag to eliminate encounter",49,302,297,141,31
+    LTEXT           "*Script State When Fled",50,32,349,203,15
+    LTEXT           "*Script State When Beaten",51,32,324,203,15
+    LTEXT           "*Script State When Met",52,32,300,203,14
     LTEXT           "~Outdoor Wandering Encounter:",53,31,31,234,14
     LTEXT           "*Encounter number:",54,277,31,127,14
-    LTEXT           "*Number:",55,368,72,113,14
-    LTEXT           "*Type:",56,150,72,113,14
+    LTEXT           "*Number:",55,125,72,113,14
+    LTEXT           "*Type:",56,258,72,113,14
     LTEXT           "*Hostile 1",57,32,96,113,14
     LTEXT           "~Monsters in encounter:",58,31,50,191,17
-    LTEXT           "*Hostile 2",59,32,120,113,14
-    LTEXT           "*Hostile 3",60,32,144,113,14
-    LTEXT           "*Hostile 4",61,32,168,113,14
-    LTEXT           "*Friendly 1",62,32,192,113,14
-    LTEXT           "*Friendly 2",63,32,216,113,14
-    LTEXT           "*Friendly 3",64,32,240,113,14
-    LTEXT           "*Party can't evade",65,32,343,165,18
+    LTEXT           "*Hostile 2",59,32,124,90,14
+    LTEXT           "*Hostile 3",60,32,152,90,14
+    LTEXT           "*Hostile 4",61,32,180,90,14
+    LTEXT           "*Friendly 1",62,32,208,90,14
+    LTEXT           "*Friendly 2",63,32,236,90,14
+    LTEXT           "*Friendly 3",64,32,264,90,14
+    LTEXT           "*Party can't evade",65,32,378,165,18
+    LTEXT           "To have monsters always stays within 10 spaces of starting spot, add +10 to the numbers to the left.",66,410,453,154,60
+    LTEXT           "0_53",67,440,547,63,16
+
 END
 
 854 DIALOG  10, 10, 273, 202 // Choose An Outdoor Section
@@ -1847,10 +1896,11 @@ END
 970 DIALOG 10, 10, 368, 145 // Used for error dialogs
      STYLE WS_POPUP | WS_DLGFRAME
      {
-     LTEXT "1_0" 1, 196, 107, 70, 20
-     LTEXT "*" 2, 8, 107, 70, 20
-     LTEXT "  " 3, 274, 10, 12, 9
-     LTEXT "= " 4, 8, 8, 257, 90
+     LTEXT "1_0"1,196,107,70,20
+     LTEXT "*"2,8,107,70,20
+     LTEXT "  "3,274,10,12,9
+     LTEXT "= "4,8,8,257,90
+     DEFPUSHBUTTON   "OK",5,310,331,58,10,WS_GROUP
      }
 
 971 DIALOG  10, 10, 309, 246
@@ -1867,7 +1917,8 @@ END
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_0",1,219,153,70,20
-    LTEXT           "*",3,285,18,18,18
+    DEFPUSHBUTTON   "OK",2,310,331,58,10,WS_GROUP
+		LTEXT           "*",3,285,18,18,18
     LTEXT           "= ",4,25,51,257,92
     LTEXT           "*",5,287,84,14,19
     LTEXT           "+",6,25,22,257,19
@@ -2079,10 +2130,10 @@ END
 STRINGTABLE
 BEGIN
     1201                    "always here (unless town dead)"
-    1202                    "here at time t unless town dead"
-    1203                    "disappear at time t"
-    1204                    "here if event not done by time t"
-    1205                    "gone if event not done by time t"
+    1202                    "here at day d unless town dead"
+    1203                    "disappear at day d"
+    1204                    "here if event not done by day d"
+    1205                    "gone if event not done by day d"
     1206                    "here if event happened"
     1207                    "gone if event happened"
     1208                    "here on day 0-2 of every 9 days"

@@ -2654,13 +2654,8 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 				small_any_drawn = FALSE;
 				draw_terrain();
 	break;
-/*
-	case '-': // Delete selected instance
-	delete_selected_instance();
-	set_string("Selected Instance Deleted","");
-	break;
-*/
-	case '=': // Clear selected instance
+
+ 	case '=': // Clear selected instance
 	set_string("Drawing mode","  ");
 	selected_item_number = -1;
 	set_cursor(0);
@@ -4079,14 +4074,11 @@ void shut_down_menus()
 	HMENU menu;
 
 	menu = GetMenu(mainPtr);
-	//	EnableMenuItem(menu,2,MF_ENABLED | MF_BYCOMMAND);
-		//	EnableMenuItem(menu,town_items[i],MF_GRAYED | MF_BYCOMMAND);
 
 	if (file_is_loaded == FALSE) {
 		EnableMenuItem(menu,2,MF_GRAYED | MF_BYCOMMAND);
-		//EnableMenuItem(menu,3,MF_GRAYED | MF_BYCOMMAND);
 
-		for (short i = 101; i < 121; i++)
+		for (short i = 101; i < 124; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 201; i < 227; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
@@ -4105,15 +4097,16 @@ void shut_down_menus()
 	}
 	else {
 		EnableMenuItem(menu,2,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu,3,MF_ENABLED | MF_BYCOMMAND);
 		for (short i = 201; i < 227; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 
 	}
 
 	if (editing_town == TRUE) {
-		for (short i = 101; i < 121; i++)
+		for (short i = 101; i < 122; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
+		for (short i = 122; i < 124; i++)
+			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 301; i < 321; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		for (short i = 401; i < 413; i++)
@@ -4125,12 +4118,13 @@ void shut_down_menus()
 		for (short i = 1503; i < 1512; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 	}
+
 	else {
-		EnableMenuItem(menu,101,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu,102,MF_ENABLED | MF_BYCOMMAND);
 		for (short i = 103; i < 110; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		EnableMenuItem(menu,120,MF_GRAYED | MF_BYCOMMAND);
+		for (short i = 122; i < 124; i++)
+			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		EnableMenuItem(menu,223,MF_GRAYED | MF_BYCOMMAND);
 		EnableMenuItem(menu,224,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 301; i < 321; i++)
@@ -4728,6 +4722,7 @@ void place_items_in_town()
 			for (k = 0; k < 10; k++){
 				if (t_d.terrain[i][j] == scenario.storage_shortcuts[k].ter_type) {
 					for (x = 0; x < 10; x++){
+						if(get_ran(1,1,100)<=scenario.storage_shortcuts[k].item_odds[x]){
 						if (create_new_item(scenario.storage_shortcuts[k].item_num[x],l,(Boolean)scenario.storage_shortcuts[k].property,NULL) == FALSE)
 							place_failed = TRUE;
 					}
@@ -4735,6 +4730,7 @@ void place_items_in_town()
 			}
 		}
 	}
+}
 	if (place_failed == TRUE)
 		give_error("Not all of the random items could be placed. The preset item per town limit of 144 was reached.","",0);
 	draw_terrain();
