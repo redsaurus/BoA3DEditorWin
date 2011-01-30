@@ -36,7 +36,7 @@ HCURSOR cursors[19] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NU
 
 // function prototype
 
-void display_strings(char *text1, char *text2, char *title, /* short sound_num, short graphic_num, */ short parent_num);
+void display_strings(const char *text1, const char *text2, const char *title, /* short sound_num, short graphic_num, */ short parent_num);
 void put_text_res();
 // short choice_dialog(short pic,short num);
 
@@ -74,7 +74,7 @@ short fancy_choice_dialog(short which_dlog,short parent)
 
 
 //cre = check range error
-Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_num) 
+Boolean cre(short val,short min,short max,const char* text1, const char* text2,short parent_num) 
 {
 	if ((val < min) || (val > max)) {
 		give_error(text1,text2,parent_num);
@@ -83,7 +83,7 @@ Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_
 	return FALSE;
 }
 
-Boolean string_not_clean(char *str,short max_length,short strict_file_naming,char *beginning_of_error,short parent_num)
+Boolean string_not_clean(const char *str,short max_length,short strict_file_naming,const char* beginning_of_error,short parent_num)
 {
 	char error_str[256];
 	Boolean error = FALSE;
@@ -111,7 +111,7 @@ Boolean string_not_clean(char *str,short max_length,short strict_file_naming,cha
 	return FALSE;
 }
 
-void give_error(char *text1, char *text2,short parent_num)
+void give_error(const char* text1, const char* text2,short parent_num)
 {
 	display_strings(text1,text2,"Error!",parent_num);
 }
@@ -125,7 +125,7 @@ void display_strings_event_filter (short item_hit)
 	}
 }
 
-void display_strings(char *text1, char *text2,char *title,short parent_num)
+void display_strings(const char* text1,const char* text2,const char* title,short parent_num)
 {
 	if ((text1 == NULL) && (text2 == NULL))
 		return;
@@ -351,7 +351,7 @@ void how_many_dlog_event_filter (short item_hit)
 
 // mode - unused
 // what_start - starting value
-short how_many_dlog(short what_start,short minimum,short maximum,char *what_text)
+short how_many_dlog(short what_start,short minimum,short maximum,const char* what_text)
 {			
 	cd_create_dialog_parent_num(828,0);
 	
@@ -387,7 +387,7 @@ void get_str_dlog_event_filter (short item_hit)
 }
 
 // strict_string - If true, only alphanumeric characters
-void get_str_dlog(char *start_str,char *header_str,char *response,Boolean strict_string)
+void get_str_dlog(const char* start_str,const char* header_str,char* response,Boolean strict_string)
 {			
 	cd_create_dialog_parent_num(829,0);
 	

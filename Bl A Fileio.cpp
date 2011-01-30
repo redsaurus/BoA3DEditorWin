@@ -906,7 +906,7 @@ void load_outdoor( location which_out, outdoor_record_type & to_where )
 	if (error != 0) {FSClose(file_id);oops_error(79);return;}
 }
 
-void load_all_outdoor_names(char* to_open)
+void load_all_outdoor_names(const char* to_open)
 {
 	short x,y;
 	FILE* file_id;
@@ -1049,7 +1049,7 @@ void load_town(short which_town)
 }
 
 //unfortunately the names of the towns are scattered through the file, so this is messy
-void load_all_town_names(char* to_open)
+void load_all_town_names(const char* to_open)
 {
 	short i;
 	FILE* file_id;
@@ -1187,7 +1187,7 @@ void start_full_data_dump()
 	char get_text[280];
 	FILE *data_dump_file_id;
 	long len;
-	void load_outdoor();
+	//void load_outdoor();
 	location out_sec;
 	outdoor_record_type outdoor;
 
@@ -1480,7 +1480,7 @@ void start_fullout_data_dump()
 	char get_text[280];
 	FILE *data_dump_file_id;
 	long len;
-	void load_outdoor();
+	//void load_outdoor();
 	location out_sec;
 	outdoor_record_type outdoor;
 

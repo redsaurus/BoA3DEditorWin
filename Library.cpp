@@ -1,10 +1,4 @@
 #include "stdafx.h"
-/*
-#include <Windows.h>
-#include <stdio.h>
-#include "math.h"
-#include "stdlib.h"
-*/
 
 #include "global.h"
 
@@ -13,17 +7,7 @@
 #define CLRDM2( d, num, size ) 			memset(d[0], num, (size) * (size) * sizeof(d[0][0]))
 #define COPYDM2( dst, src, idx, size )	memcpy( dst[idx], src[idx], (size) * sizeof( dst[0][0] ) );
 
-
-// Gloabl varialbes
-
 short max_dim[3] = {64,48,32};
-
-// external gloabal variables
-
-// local variables
-
-
-
 
 
 graphic_id_type::graphic_id_type()

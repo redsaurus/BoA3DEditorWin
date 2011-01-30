@@ -32,7 +32,7 @@ extern scen_item_data_type scen_data;
 // void RedAlert (char *theStr);
 // void RedAlert_big_color (char *str1,char *str2,char *str3,char *str4,short num,char *str5,short color);
 // void RedAlert_big (char *str1,char *str2,char *str3,char *str4,short num,char *str5);
-void display_error_dialog(char *theStr,Boolean shut_down);
+void display_error_dialog(const char* theStr,Boolean shut_down);
 // short rect_dist(RECT *r1,RECT *r2);
 // RECT rect_union(RECT *r1,RECT *r2);
 // Boolean r1_in_r2(RECT r1,RECT r2);
@@ -91,23 +91,23 @@ void RedAlert_c (char *theStr)
 }
 */
 
-void ASB (char *theStr)
+void ASB (const char* theStr)
 {
 	char new_str[256];
 	
-	strcpy((char *) new_str,theStr);
-//	c2p(new_str);
+	strncpy((char *) new_str,theStr,255);
+	new_str[255]=0; //strncpy doesn't guarantee null termination
 	display_error_dialog(new_str,FALSE);
 }
 
-void ASB_big (char *str1,char *str2,char *str3,char *str4,short num,char *str5)
+void ASB_big (const char* str1,const char* str2,const char* str3,const char* str4,short num,const char* str5)
 {
 	char str[256];
-	
+	//!!!: this may overflow
 	if (num >= 0)
 		sprintf((char *) str,"%s%s%s%s%d%s",str1,str2,str3,str4,(int)num,str5);
-		else sprintf((char *) str,"%s%s%s%s%s",str1,str2,str3,str4,str5);
-//	c2p(str);
+	else
+        sprintf((char *) str,"%s%s%s%s%s",str1,str2,str3,str4,str5);
 	display_error_dialog(str,FALSE);
 }
 
@@ -154,17 +154,14 @@ void RedAlert_big (char *str1,char *str2,char *str3,char *str4,short num,char *s
 }
 */
 
-void display_error_dialog(char *theStr,Boolean shut_down)
+void display_error_dialog(const char* theStr,Boolean shut_down)
 {
-	#define		kRedAlertID		128
-
-
 	mes_box(theStr);			// Bring up alert.
 	if (shut_down == TRUE)
 		PostQuitMessage(0);
 }
 
-void ZeroRectCorner (RECT *theRect)
+void ZeroRectCorner (RECT* theRect)
 {
 	theRect->right -= theRect->left;	// Move right edge by amount of left.
 	theRect->bottom -= theRect->top;	// Move bottom edge by amount of top.
@@ -174,19 +171,19 @@ void ZeroRectCorner (RECT *theRect)
 
 
 // Handy function for returning the absolute width of a rectangle.
-short rect_width (RECT *theRect)
+short rect_width (RECT* theRect)
 {
 	return (short)(theRect->right - theRect->left);
 }
 
 // Handy function for returning the absolute height of a rectangle.
-short rect_height (RECT *theRect)
+short rect_height (RECT* theRect)
 {
 	return (short)(theRect->bottom - theRect->top);
 }
 
 // Other rectangle functions
-Boolean rects_touch(RECT *r1,RECT *r2)
+Boolean rects_touch(RECT* r1,RECT* r2)
 {
 	if (r1->right <= r2->left)
 		return (FALSE);
@@ -274,7 +271,7 @@ RECT rect_centered_around_point(RECT r, location l)
 }
 */
 
-void CenterRectInRect (RECT *rectA, RECT *rectB)
+void CenterRectInRect (RECT* rectA, RECT* rectB)
 {
 	short	widthA, tallA;
 	
@@ -288,15 +285,9 @@ void CenterRectInRect (RECT *rectA, RECT *rectB)
 	rectA->bottom = rectA->top + tallA;
 }
 
-Boolean same_string(char *str1,char *str2)
+Boolean same_string(const char* str1,const char* str2)
 {
-	short i = 0;
-	
-	while ((str1[i] == str2[i]) && (str1[i] != 0) && (str2[i] != 0))
-		i++;
-	if ((str1[i] == 0) && (str2[i] == 0))
-		return TRUE;
-	return FALSE;
+	return(!strcmp(str1,str2));
 }
 
 
@@ -347,7 +338,7 @@ terrain_type_type get_ter(short which_ter)
 	return ter;
 }
 
-void SetMacRect(macRECT *rect,short top, short left, short bottom, short right)
+void SetMacRect(macRECT* rect,short top, short left, short bottom, short right)
 {
 	rect->top = top;
 	rect->left = left;

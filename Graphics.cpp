@@ -4857,7 +4857,7 @@ void place_right_buttons( /* short mode */ )
 	SelectObject(main_dc4,store_bmp);
 }
 
-void set_string(char *string,char *string2)
+void set_string(const char* string,const char* string2)
 {
 	strcpy((char *)current_string,string);
 	strcpy((char *)current_string2,string2);

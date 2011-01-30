@@ -286,7 +286,7 @@ void mes_nums(short a, short b, short c, short d)
 }
 */
 
-void mes_box(char *str)
+void mes_box(const char* str)
 {
 	MessageBox(NULL,str,"Blades of Avernum Error",MB_OK);
 }

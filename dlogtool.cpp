@@ -207,7 +207,7 @@ short cd_process_mousetrack( short dlg_num, short item_num, RECT theRect );
 // void csp(short dlog_num, short item_num, short pict_num);
 // void cd_set_pict(short dlog_num, short item_num, short pict_num);
 // short cd_get_active(short dlog_num, short item_num);
-void cd_set_item_text(short dlog_num, short item_num, char *str);
+void cd_set_item_text(short dlog_num, short item_num, const char* str);
 void cd_set_item_num(short dlog_num, short item_num, short num);
 // void cd_set_flag(short dlog_num,short item_num,short flag);
 // void cd_text_frame(short dlog_num,short item_num,short frame);
@@ -220,7 +220,7 @@ void cd_frame_item(short dlog_num, short item_num, short width);
 void cd_erase_item(short dlog_num, short item_num);
 // void cd_erase_rect(short dlog_num,RECT to_fry);
 void cd_press_button(short dlog_num, short item_num, EDLGBtnRes mode );
-short cd_get_indices(short dlg_num, short item_num, short *dlg_index, short *item_index);
+short cd_get_indices(short dlg_num, short item_num, short* dlg_index, short* item_index);
 short cd_get_dlg_index(short dlog_num);
 short cd_get_item_id(short dlg_num, short item_num);
 RECT get_item_rect(HWND hDlg, short item_num);
@@ -972,7 +972,7 @@ void cd_get_item_text(short dlog_num, short item_num, char *str)
 		else sprintf(str,"%s",text_short_str[item_index - 10]);
 }
 
-void csit(short dlog_num, short item_num, char *str)
+void csit(short dlog_num, short item_num, const char* str)
 {
 	cd_set_item_text( dlog_num,  item_num, str);
 }
@@ -1025,7 +1025,7 @@ short cd_retrieve_text_edit_num(short dlog_num, short item_num)
 
 
 // NOTE!!! Expects a c string
-void cd_set_text_edit_str(short dlog_num, short item_num, char *str)
+void cd_set_text_edit_str(short dlog_num, short item_num, const char* str)
 {
 	short i;
 
@@ -1048,7 +1048,7 @@ void cd_set_text_edit_num(short dlog_num, short item_num, short num)
 					SetWindowText(edit_box[i],store_ptr);
 }
 
-void cd_set_item_text(short dlog_num, short item_num, char *str)
+void cd_set_item_text(short dlog_num, short item_num, const char* str)
 {
 	short k,dlg_index,item_index;
 	if (cd_get_indices(dlog_num,item_num,&dlg_index,&item_index) < 0)
@@ -1208,7 +1208,7 @@ void cd_text_frame(short dlog_num,short item_num,short frame)
 }
 */
 
-void cd_add_label(short dlog_num, short item_num, char *label, short label_flag)
+void cd_add_label(short dlog_num, short item_num, const char* label, short label_flag)
 {
 	short dlg_index,item_index,label_loc = -1;
 	short i;

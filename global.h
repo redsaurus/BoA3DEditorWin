@@ -842,11 +842,11 @@ class text_block_type
 public:
 	text_block_type();
 	~text_block_type();
-	Boolean load_text_file_into_buffer(char *file_name_to_load,short file_location);
+	Boolean load_text_file_into_buffer(char* file_name_to_load,short file_location);
 	void preprocess_text();
 	short estimate_num_of_tokens();
 	
-	char *text_block;
+	char* text_block;
 	long block_length;
 };
 
@@ -877,25 +877,25 @@ public:
 	script_type();
 	~script_type();
 	void flush_data();
-	Boolean load_script(short type_of_script_to_load,char *script_to_load,short file_location);
+	Boolean load_script(short type_of_script_to_load,char* script_to_load,short file_location);
 	Boolean IsWhiteSpace(char c);
 	Boolean IsIdentifier(char c);
 	Boolean IsNumber(char c);
 	Boolean IsOperatorCharacter (char c);
-	short IsVariable (char * string, int length, token_type *token);
-	short IsBlockDefiner (char * string, int length, short *value);
-	short IsVarDefiner (char * string, int length, short *value);
-	short IsVarArrayDefiner (char * string, int length, short *value);
-	short IsVarStringDefiner (char * string, int length, short *value);
-	short IsNewVariableDefiner (char * string, int length, short *value);
-	short IsFlowController (char * string, int length, short *value);
-	short IsConstant (char * string, int length, short *value);
-	short IsOperator (char * string, int length, short *value);
-	short IsFunction (char * string, int length, short *value);
-	short IsProcedure (char * string, int length, short *value);
-	short IsBinaryFunction (char * string, int length, short *value);
-	short IsTrinaryFunction (char * string, int length, short *value);
-	short IsLocationFunction (char * string, int length, short *value);
+	short IsVariable (char* string, int length, token_type *token);
+	short IsBlockDefiner (char* string, int length, short *value);
+	short IsVarDefiner (char* string, int length, short *value);
+	short IsVarArrayDefiner (char* string, int length, short *value);
+	short IsVarStringDefiner (char* string, int length, short *value);
+	short IsNewVariableDefiner (char* string, int length, short *value);
+	short IsFlowController (char* string, int length, short *value);
+	short IsConstant (char* string, int length, short *value);
+	short IsOperator (char* string, int length, short *value);
+	short IsFunction (char* string, int length, short *value);
+	short IsProcedure (char* string, int length, short *value);
+	short IsBinaryFunction (char* string, int length, short *value);
+	short IsTrinaryFunction (char* string, int length, short *value);
+	short IsLocationFunction (char* string, int length, short *value);
 	Boolean process_scenario_data();
 //	Boolean process_creature_data();
 	Boolean token_type_match(short which_token,short type);
@@ -918,7 +918,7 @@ public:
 //	location location_function_value(short what_function,short what_passed,short what_line);
 //	Boolean run_creature_script();
 //	short evaluate_trinary_function(short fcn_type,short op1,short op2,short op3,short which_line);
-	short IsNoParameterFunction (char * string, int length, short *value);
+	short IsNoParameterFunction (char* string, int length, short *value);
 //	short evaluate_no_param_function(short fcn_type,short which_line);
 //	Boolean run_zone_script();
 //	Boolean process_dialogue_data();
@@ -948,10 +948,10 @@ public:
 	char location_var_names[NUM_SCRIPT_LOCATIONS][SCRIPT_VAR_NAME_LEN];
 	location location_var_values[NUM_SCRIPT_LOCATIONS];
 	char string_var_names[NUM_SCRIPT_STRING_VARS][SCRIPT_VAR_NAME_LEN];
-	char *string_var_values[NUM_SCRIPT_STRING_VARS];
+	char* string_var_values[NUM_SCRIPT_STRING_VARS];
 
 	// temporary holder for the script text
-	char *string_data[NUM_SCRIPT_STRINGS];
+	char* string_data[NUM_SCRIPT_STRINGS];
 	
 	// stacks for running procedures
 	short procedure_passed_variable_types[NUM_PROCEDURE_PASS_VARS];
@@ -1511,20 +1511,20 @@ void save_campaign();
 void load_campaign();
 // void augment_terrain(location to_create);
 void load_outdoor_and_borders(location which_out);
-void load_all_outdoor_names(char* to_open);
+void load_all_outdoor_names(const char* to_open);
 void save_change_to_outdoor_size(short plus_north,short plus_west,short plus_south,short plus_east,short on_surface);
 void load_town(short which_town);
-void load_all_town_names(char* to_open);
+void load_all_town_names(const char* to_open);
 void start_data_dump();
-Boolean create_basic_scenario(char *scen_name_short,char *scen_name_with_ext,char *scen_full_name,short out_width,short out_height,short on_surface,Boolean use_warriors_grove);
+Boolean create_basic_scenario(char* scen_name_short,char* scen_name_with_ext,char* scen_full_name,short out_width,short out_height,short on_surface,Boolean use_warriors_grove);
 bool import_boa_town();
 void EdSysBeep( /* short duration */ );
-void get_name_of_current_scenario(char *name);
+void get_name_of_current_scenario(char* name);
 void init_warriors_grove();
 void import_blades_of_exile_scenario();
 bool import_boa_outdoors();
-short FSRead(FILE *file_id, long *len, char *data);
-short FSClose(FILE *file_id);
+short FSRead(FILE* file_id, long* len, char* data);
+short FSClose(FILE* file_id);
 
 // Query
 void start_full_data_dump();
@@ -1541,16 +1541,16 @@ short cd_kill_dialog(short dlog_num,short parent_message);
 short cd_process_click(HWND window,POINT the_point, WPARAM wparam,/* LPARAM lparam,*/ short *item);
 short cd_process_keystroke(HWND window,WPARAM wparam,/* LPARAM lparam,*/ short *item);
 void cd_activate_item(short dlog_num, short item_num, short status);
-void cd_get_item_text(short dlog_num, short item_num, char *str);
-void csit(short dlog_num, short item_num, char *str);
-void cd_retrieve_text_edit_str(short dlog_num,short item_num, char *str);
-void cd_set_text_edit_str(short dlog_num, short item_num, char *str);
+void cd_get_item_text(short dlog_num, short item_num, char* str);
+void csit(short dlog_num, short item_num, const char* str);
+void cd_retrieve_text_edit_str(short dlog_num,short item_num, char* str);
+void cd_set_text_edit_str(short dlog_num, short item_num, const char* str);
 void cdsin(short dlog_num, short item_num, short num) ;
 void cd_set_led(short dlog_num,short item_num,short state);
 short cd_get_led(short dlog_num,short item_num);
-void cd_add_label(short dlog_num, short item_num, char *label, short label_flag);
+void cd_add_label(short dlog_num, short item_num, const char* label, short label_flag);
 void cd_redraw(HWND window);
-short cd_find_dlog(HWND window, short *dlg_num, short *dlg_key);
+short cd_find_dlog(HWND window, short* dlg_num, short *dlg_key);
 void center_window(HWND window);
 // void beep() ;
 void cd_hit_led_range(short dlog_num,short first_led,short last_led,short which_to_set);
@@ -1626,14 +1626,14 @@ void MacInsetRect(RECT *rect,short x, short y) ;
 // void MeasureText(short str_len,char *str, short *len_array,HDC hdc);
 void PaintRect(RECT *rect,HDC hdc,short r, short g, short b);
 short GetControlValue(HWND sbar);
-void mes_box(char *str);
-void GetIndString(char *str,short i, short j);
+void mes_box(const char* str);
+void GetIndString(char* str,short i, short j);
 // Boolean point_in_rect(POINT the_point,RECT *world_screen);
 
 
 // EDParser
 void init_scripts();
-Boolean load_individual_scenario_data(char *scenario_name /*,Boolean force_reload = FALSE */);
+Boolean load_individual_scenario_data(char* scenario_name /*,Boolean force_reload = FALSE */);
 Boolean load_core_scenario_data();
 
 // EDUtils.c
@@ -1648,15 +1648,15 @@ short rect_height (RECT *theRect);
 Boolean rects_touch(RECT *r1,RECT *r2);
 // Boolean rect_empty(RECT *r);
 // RECT rect_sect(RECT *r1,RECT *r2);
-Boolean same_string(char *str1,char *str2);
+Boolean same_string(const char* str1,const char* str2);
 Boolean loc_in_active_area(location loc);
 Boolean loc_touches_rect(location loc,macRECT r);
 terrain_type_type get_ter(short which_ter);
-void ASB (char *theStr);
-void ASB_big (char *str1,char *str2,char *str3,char *str4,short num,char *str5);
+void ASB (const char* theStr);
+void ASB_big (const char* str1,const char* str2,const char* str3,const char* str4,short num,const char* str5);
 // void ASB_big_color (char *str1,char *str2,char *str3,char *str4,short num,char *str5,short dummy);
-void CenterRectInRect (RECT *rectA, RECT *rectB);
-void SetMacRect(macRECT *rect,short top, short left, short bottom, short right);
+void CenterRectInRect (RECT* rectA, RECT* rectB);
+void SetMacRect(macRECT* rect,short top, short left, short bottom, short right);
 
 // Graphics.c
 void Set_up_win ();
@@ -1667,9 +1667,9 @@ void set_up_terrain_buttons();
 void reset_small_drawn();
 void draw_terrain();
 void place_right_buttons(/* short mode */);
-void set_string(char *string,char *string2);
+void set_string(const char* string,const char* string2);
 void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height);
-void get_str(char *str,short i, short j);
+void get_str(char* str,short i, short j);
 Boolean refresh_graphics_library();
 Boolean is_oblique_mirror(short i,short j);
 void make_oblique_mirror(short i,short j);
@@ -1710,26 +1710,26 @@ void paint_pattern(HDIB dest,short which_mode,RECT dest_rect,short which_pattern
 // keydlgs
 void fancy_choice_dialog_event_filter (short item_hit);
 short fancy_choice_dialog(short which_dlog,short parent);
-Boolean cre(short val,short min,short max,char *text1, char *text2,short parent_num) ;
-void give_error(char *text1, char *text2,short parent_num);
+Boolean cre(short val,short min,short max,const char* text1, const char *text2,short parent_num) ;
+void give_error(const char* text1, const char* text2,short parent_num);
 void display_strings_event_filter (short item_hit);
 void choose_text_res_event_filter (short item_hit);
 short choose_text_res(short res_list,short first_t,short last_t,short cur_choice,short parent_num,char *title);
 void edit_special_num_event_filter (short item_hit);
 short edit_special_num(/* short mode,*/ short what_start);
 void how_many_dlog_event_filter (short item_hit);
-short how_many_dlog(short what_start,short minimum,short maximum,char *what_text);
+short how_many_dlog(short what_start,short minimum,short maximum,const char* what_text);
 void get_str_dlog_event_filter (short item_hit);
-void get_str_dlog(char *start_str,char *header_str,char *response,Boolean string_string = FALSE);
+void get_str_dlog(const char* start_str,const char* header_str,char* response,Boolean string_string = FALSE);
 void make_cursor_sword() ;
 void set_cursor(short which_c) ;
 void restore_cursor();
-Boolean string_not_clean(char *str,short max_length,short strict_file_naming,char *beginning_of_error,short parent_num);
+Boolean string_not_clean(const char* str,short max_length,short strict_file_naming,const char* beginning_of_error,short parent_num);
 
 // Library
-void flip_short(short *s);
-void alter_rect(macRECT *r);
-void flip_rect(macRECT *s);
+void flip_short(short* s);
+void alter_rect(macRECT* r);
+void flip_rect(macRECT* s);
 
 // sound
 void load_sounds ();
