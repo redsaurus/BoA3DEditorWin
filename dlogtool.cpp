@@ -413,7 +413,7 @@ INT_PTR CALLBACK dummy_dialog_proc(HWND hDlg, UINT message, WPARAM /*wParam*/, L
 	// now, make a window, matching dialog
 	GetWindowRect(hDlg,&dlg_rect);
 	dlgs[store_free_slot] = CreateWindow (szWinName,
-			"BoA Editor Dialog",
+			"BoA 3D Editor Dialog",
 			// WS_BORDER | WS_POPUP,// was visible
 			WS_TILEDWINDOW,
 			0,

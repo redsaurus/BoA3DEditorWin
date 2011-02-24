@@ -154,10 +154,15 @@ void monst_replaceall_event_filter (short item_hit)
 			break;
 
 		case 5:
+				short l;
+			CDGT(843,63,(char *) str);
+			str[14] = 0;
 			for (i = 0; i < 80; i++) {
+				for (l = 0; l < 14; l++) {
+				if (str[l] = town.creatures[i].char_script[l])
 					CDGT(843,64,town.creatures[i].char_script);
 					}
-
+				}
 			break;
 
 		case 6:
@@ -310,6 +315,17 @@ void monst_replaceall_event_filter (short item_hit)
 					}
 			break;
 
+		case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29:
+					if (cre(CDGN(843,63),-32767,32767,"Find value error: Memory Cell #. |Town creatures must have numbers between -32,767 and +32,767 for this variable.","",843) == TRUE)
+					break;
+					if (cre(CDGN(843,64),-32767,32767,"Replace value error: Memory Cell #. |Town creatures must have numbers between -32,767 and +32,767 for this variable.","",843) == TRUE)
+					break;
+			for (i = 0; i < 80; i++) {
+				if (town.creatures[i].memory_cells[item_hit - 20] == CDGN(843,63))
+					town.creatures[i].memory_cells[item_hit - 20] = CDGN(843,64);
+					}
+			break;
+
 		case 62:
 			dialog_not_toast = FALSE;
 		break;
@@ -345,12 +361,12 @@ void monst_replaceall_event_filter (short item_hit)
 
 		case 71: // Choose name of a char script already placed in this town: Find
 			i = choose_text_res(-10,0,79,0,843,"Which Character Script Name?");
-		 	CDST(843,75,town.creatures[i].char_script);
+		 	CDST(843,63,town.creatures[i].char_script);
 			break;
 
 		case 72: // Choose name of a char script already placed in this town: Replace
 			i = choose_text_res(-10,0,79,0,843,"Which Character Script Name?");
-		 	CDST(843,76,town.creatures[i].char_script);
+		 	CDST(843,64,town.creatures[i].char_script);
 			break;
 
 
@@ -1889,6 +1905,11 @@ void edit_area_rect_event_filter (short item_hit)
 	char str[256];
 	
 	switch (item_hit) {
+		case 3:
+			dialog_answer = FALSE;
+			dialog_not_toast = FALSE;
+			break;
+
 		case 5:
 			dialog_answer = TRUE;
 			dialog_not_toast = FALSE; 
@@ -1897,11 +1918,6 @@ void edit_area_rect_event_filter (short item_hit)
 			if (editing_town == FALSE)
 				sprintf(current_terrain.info_rect_text[store_which_str],"%s",(char *) str);
 				else sprintf(town.info_rect_text[store_which_str],"%s",(char *) str);
-			break;
-
-		case 3:
-			dialog_answer = FALSE;
-			dialog_not_toast = FALSE; 
 			break;
 		}
 }

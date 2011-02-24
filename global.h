@@ -1,8 +1,6 @@
 // global.h
 
-// These are the variable structures. You really shouldn't change
-// these.
-
+// These are the variable structures. You really shouldn't change these.
 // The comments are partial, intermittent, and may be wrong.
 
 #pragma once
@@ -21,27 +19,29 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define DRAG_EDGE		15
 #define	NIL				0L
 
-
 #define	NUM_BUTTONS		16
 #define	NUM_P_PER_TOWN		20
 
 #define	NUM_DLOG_B		53
 
 #define	MAX_TOWN_SIZE	64
+#define OUTDOOR_SIZE	48
 
 #define	TER_RECT_UL_X	20
 #define	TER_RECT_UL_Y	20
 #define	TERRAIN_BORDER_WIDTH	15
 #define	LEFT_TEXT_LINE_ULX	15
-#define	LEFT_TEXT_LINE_ULY	485
+#define	LEFT_TEXT_LINE_ULY	540
 #define	LEFT_TEXT_LINE_WIDTH	240
 #define	TEXT_LINE_HEIGHT	12
-#define	RIGHT_TEXT_LINE_ULX	5
-#define	RIGHT_TEXT_LINE_ULY	487
+#define	TER_BUTTON_SIZE	16
+#define	RIGHT_TEXT_LINE_ULX	15
+#define	RIGHT_TEXT_LINE_ULY	500
 #define	RIGHT_BUTTONS_X_SHIFT	540
-
-#define	PALETTE_BUT_UL_X	5
+#define	PALETTE_BUT_UL_X	17
 #define	PALETTE_BUT_UL_Y	382
+#define	PALETTE_BUT_HEIGHT		17
+#define	PALETTE_BUT_WIDTH		25
 
 #define	NUM_PC_I	34
 
@@ -66,23 +66,16 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 // q_3DModEnd
 
 // new blades consts
-#define	SCRIPT_NAME_LEN	14
 
 #define	CDGT	cd_retrieve_text_edit_str
 #define	CDGN	cd_retrieve_text_edit_num
 #define	CDST	cd_set_text_edit_str
 #define	CDSN	cd_set_text_edit_num
 
-#define NUM_WAYPOINTS	10
-
-#define	TER_BUTTON_SIZE	16
-#define	PALETTE_BUT_HEIGHT		17
-#define	PALETTE_BUT_WIDTH		25
-
-#define NUM_TER_SCRIPTS	100
-
 #define MAX_NUM_SHEETS_IN_LIBRARY	200
 
+#define NUM_WAYPOINTS	10
+#define NUM_TER_SCRIPTS	100
 #define NUM_TOWN_PLACED_ITEMS	144
 #define NUM_TOWN_PLACED_FIELDS	60
 #define NUM_TOWN_PLACED_CREATURES	80
@@ -91,9 +84,11 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 
 #define kNO_TOWN_SPECIALS		0xFF	// No Special encounter on town map
 #define kNO_OUT_SPECIALS		-1		// No special encounter on outdoor map
+#define kNO_OUT_TOWN_ENTRANCE	-1	// No town entrance on outdoor map
 
 #define kINVAL_LOC_XY			-1		// invalid location, x or y
 #define kINVAL_LOC				{kINVAL_LOC_XY, kINVAL_LOC_XY}	// invalid location
+#define	SCRIPT_NAME_LEN	14
 
 
 #define SDF_RANGE_X	300
@@ -1657,6 +1652,7 @@ void ASB_big (const char* str1,const char* str2,const char* str3,const char* str
 // void ASB_big_color (char *str1,char *str2,char *str3,char *str4,short num,char *str5,short dummy);
 void CenterRectInRect (RECT* rectA, RECT* rectB);
 void SetMacRect(macRECT* rect,short top, short left, short bottom, short right);
+Boolean loc_touches_rect_border(location loc,macRECT r);
 
 // Graphics.c
 void Set_up_win ();

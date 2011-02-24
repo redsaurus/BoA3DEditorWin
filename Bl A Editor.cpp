@@ -12,7 +12,7 @@
 #include "stdafx.h"
 #include "Resource.h"
 #include "global.h"
-#include "version.h"
+#define kVersion "   Version:  Thursday  24  February  2011"
 
 // Global variables
 
@@ -65,7 +65,7 @@ Boolean editing_town = TRUE;
 short numerical_display_mode = 0;
 short object_display_mode = 0;
 short last_large_mode = 0;
-short cur_viewing_mode = 1;
+short cur_viewing_mode = 10;
 // 0 - big icons = 9*9 view
 // 1 - small icons = 64*64 zoom-out view
 // 2 - medium icons = 32*32 view
@@ -132,20 +132,28 @@ short overall_mode = 0;
 // file selection editing files
 short selected_item_number = -1;
 // codes for selected items
-// 7000 + x - creature x
-// 9000 + x - terrain script x
+//  7000 + x - creature x
+//  9000 + x - terrain script x
 // 11000 + x - items x
+// 13000 + x - placed specials x
+// 14000 + x - area descriptions x
+// 15000 + x - town entrances x
+// 16000 + x - sign x
+// 17000 + x - wandering location x
+// 18000 + x - town: preset field x/ outdoor: preset encounter
+// 19000 + x - town: waypoint x
+
 item_type copied_item;
 creature_start_type copied_creature;
 in_town_on_ter_script_type copied_ter_script;
 
 // external global variables
-
+extern char hintbook_mode8;
 extern HDC main_dc;
 extern HBITMAP main_bitmap;
 extern short max_dim[3];
 extern RECT terrain_buttons_rect;
-extern RECT terrain_rects[264];
+extern RECT terrain_rects[330];
 extern Boolean use_custom_name;
 // local variables
 
@@ -263,8 +271,8 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
 		0,
 		0,
-		772,
-		635, // was originally 601
+		822,
+		690, // was originally 601
 		NULL,
 		NULL,
 		hInstance,
@@ -668,51 +676,53 @@ void handle_edit_menu(int item_hit)
 				overall_mode = 51;
 				set_string("Continual Delete Mode","");
 		break;
-		case 10: // Cycle Forward Through View Mode
-							if(cur_viewing_mode == 0)
+		case 10: // Decrease View Mode
+							if ((cur_viewing_mode == 0) || (cur_viewing_mode > 9)) {
+								last_large_mode = cur_viewing_mode;
 								cur_viewing_mode = 2;
+								}
 							else if(cur_viewing_mode == 2)
 								cur_viewing_mode = 1;
 							else if(cur_viewing_mode == 1)
-								cur_viewing_mode = 0;
-
+								cur_viewing_mode = last_large_mode;
 							set_up_terrain_buttons();
 							reset_small_drawn();
 							redraw_screen();
 		break;
-		case 11: // Cycle Backward Through View Mode
+		case 11: // Increase View Mode
 							if(cur_viewing_mode == 1)
 								cur_viewing_mode = 2;
 							else if(cur_viewing_mode == 2)
-								cur_viewing_mode = 0;
-							else if(cur_viewing_mode == 0)
+								cur_viewing_mode = last_large_mode;
+							else {
+								last_large_mode = cur_viewing_mode;
 								cur_viewing_mode = 1;
-
+								}
 							set_up_terrain_buttons();
 							reset_small_drawn();
 							redraw_screen();
 		break;
-		case 12: // Rotate current numerical display forwards: "Increase Numerical Mode"
-					numerical_display_mode = ((numerical_display_mode + 1) % 5);
-					object_display_mode = 0;
-					need_redraw = TRUE;
-			break;
-		case 13: // Rotate current numerical display backwards: "Decrease Numerical Mode"
+		case 12: // "Decrease Drawing Number Mode"
 				 if (numerical_display_mode == 0)
 				    numerical_display_mode = 4;
 					else numerical_display_mode = ((numerical_display_mode - 1) % 5);
 					object_display_mode = 0;
 					need_redraw = TRUE;
 			break;
-		case 14: //   Rotate current object display mode forwards: "Increase Object Display Mode"
-					object_display_mode = ((object_display_mode + 1) % 7);
+		case 13: // "Increase Drawing Number Mode"
+					numerical_display_mode = ((numerical_display_mode + 1) % 5);
+					object_display_mode = 0;
+					need_redraw = TRUE;
+			break;
+		case 14: //  "Decrease Object Number Mode"
+				 if (object_display_mode == 0)
+				    object_display_mode = 4;
+					else object_display_mode = ((object_display_mode - 1) % 5);
 					numerical_display_mode = 0;
 					need_redraw = TRUE;
 			break;
-		case 15: //   Rotate current object display mode backwards: "Decrease Object Display Mode"
-				 if (object_display_mode == 0)
-				    object_display_mode = 6;
-					else object_display_mode = ((object_display_mode - 1) % 7);
+		case 15: //  "Increase Object Number Mode"
+					object_display_mode = ((object_display_mode + 1) % 5);
 					numerical_display_mode = 0;
 					need_redraw = TRUE;
 			break;
@@ -816,6 +826,25 @@ void handle_edit_menu(int item_hit)
 				}
 			break;
 
+	case 20: // Delete Selected Object Only
+	if ((editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
+		if (selected_item_number > -1) {
+	delete_selected_instance();
+	set_string("Selected Instance Deleted","");
+	set_cursor(7);
+	}
+	}
+	break;
+
+
+	case 21: // toggle gridline mode
+				if (grid_mode == 2)
+				 grid_mode = 0;
+				 else  grid_mode =  grid_mode + 1;
+				small_any_drawn = FALSE;
+				draw_terrain();
+	break;
+
 		case 22: // Load Outdoor Zone Above
 			if (editing_town)
 				break;
@@ -870,24 +899,21 @@ void handle_edit_menu(int item_hit)
 				change_made_outdoors = FALSE;
 			break;
 
-	case 20: // Delete Selected Object Only
-	if ((editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
-		if (selected_item_number > -1) {
-	delete_selected_instance();
-	set_string("Selected Instance Deleted","");
-	set_cursor(7);
-	}
-	}
-	break;
-	
-	
-	case 21: // toggle gridline mode
-				if (grid_mode == 2)
-				 grid_mode = 0;
-				 else  grid_mode =  grid_mode + 1;
-				small_any_drawn = FALSE;
-				draw_terrain();
-	break;
+		case 24: // Decrease Group Display Mode
+		 if (hintbook_mode8 == 0) 
+	     hintbook_mode8 = 11;
+		 else hintbook_mode8 = hintbook_mode8 - 1;
+			 small_any_drawn = FALSE;
+			 draw_terrain();
+			break;
+			
+		case 25: // Increase Group Display Mode
+		 if (hintbook_mode8 == 11) 
+	     hintbook_mode8 = 0;
+		 else hintbook_mode8 = hintbook_mode8 + 1;
+			 small_any_drawn = FALSE;
+			 draw_terrain();
+			break;
 
 		}
 	draw_main_screen();
@@ -1050,21 +1076,13 @@ void handle_campaign_menu(int item_hit)
 		case 22: // bring up the Edit Boats dialog screen
 			edit_boats();
 			break;
-		case 23: // Place a Horse
-			set_string("Place a Horse in this town","Click on the location");
-			overall_mode = 77;
-			break;
-		case 24: // Place a Boat
-			set_string("Place a Boat in this town","Click on the location");
-			overall_mode = 76;
-			break;
-		case 25: // Clear All Horses
+		case 23: // Clear All Horses
 			if (fancy_choice_dialog(890,0) == 2)
 				break;
 				for (i = 0; i < 30; i++)
 				scenario.scen_horses[i].clear_horse_record_type();
 			break;
-		case 26: // Clear All Boats
+		case 24: // Clear All Boats
 			if (fancy_choice_dialog(891,0) == 2)
 				break;
 				for (i = 0; i < 30; i++)
@@ -1210,7 +1228,6 @@ void handle_town_menu(int item_hit)
 				draw_terrain();
 				change_made_town = TRUE;
 			break;
-
 		}
 }
 
@@ -1407,6 +1424,27 @@ void handle_help_menu(int item_hit)
 				 }
 			break;
 
+		case 12: // 3D Editor - Getting Started
+				fancy_choice_dialog(986,0);
+			break;	
+
+		case 13: // Shortcut keys 1 screen
+				fancy_choice_dialog(987,0);
+			break;
+
+		case 14: // Shortcut keys 2 screen
+				fancy_choice_dialog(988,0);
+			break;
+			
+		case 15: // Shortcut keys 3 screen
+				fancy_choice_dialog(989,0);
+			break;
+
+		case 19: // Display a specified dialog
+				short j = how_many_dlog(0,800,1063,"Which dialog?  (800 - 1063)");
+				fancy_choice_dialog(j,0);
+			break;
+			
 		}
 	draw_main_screen();		
 }

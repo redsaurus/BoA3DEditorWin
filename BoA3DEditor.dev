@@ -1,7 +1,7 @@
 [Project]
 FileName=BoA3DEditor.dev
 Name=3D BoA Editor Windows
-UnitCount=25
+UnitCount=24
 Type=0
 Ver=1
 ObjFiles=
@@ -25,7 +25,7 @@ CommandLine=
 UseCustomMakefile=0
 CustomMakefile=
 IncludeVersionInfo=0
-SupportXPThemes=0
+SupportXPThemes=1
 CompilerSet=0
 CompilerSettings=0000000000000000000000
 
@@ -69,27 +69,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
-FileName=EdFcns.cpp
-CompileCpp=1
-Folder=3D BoA Editor Windows
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit8]
-FileName=EdParser.cpp
-CompileCpp=1
-Folder=3D BoA Editor Windows
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit9]
 FileName=EdUtils.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -99,7 +79,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit10]
+[Unit9]
 FileName=Graphutl.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -109,7 +89,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit11]
+[Unit10]
 FileName=keydlgs.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -119,8 +99,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
-FileName=sound.cpp
+[Unit11]
+FileName=Library.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
 Compile=1
@@ -129,7 +109,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
+[Unit14]
 FileName=stdafx.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -139,7 +119,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit16]
+[Unit15]
 FileName=stdafx.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -149,7 +129,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit17]
+[Unit16]
 FileName=tokntype.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -160,26 +140,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=global.h
-CompileCpp=1
-Folder=3D BoA Editor Windows
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit20]
-FileName=Bl A Fileio.h
-CompileCpp=1
-Folder=3D BoA Editor Windows
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit21]
 FileName=Bl A Fileio.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -189,8 +149,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit22]
-FileName=Graphics.cpp
+[Unit20]
+FileName=dlogtool.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
 Compile=1
@@ -200,7 +160,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit23]
-FileName=dlogtool.cpp
+FileName=Graphics.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
 Compile=1
@@ -228,6 +188,16 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit13]
+FileName=sound.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit12]
 FileName=Resource.h
 CompileCpp=1
 Folder=3D BoA Editor Windows
@@ -237,28 +207,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit24]
-FileName=Blscened.rc
-CompileCpp=1
-Folder=3D BoA Editor Windows
-Compile=1
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit12]
-FileName=Library.cpp
-CompileCpp=1
-Folder=3D BoA Editor Windows
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit7]
-FileName=EdGlobal.cpp
+FileName=EdParser.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
 Compile=1
@@ -277,18 +227,78 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit25]
-FileName=townout.cpp
+[Unit18]
+FileName=Bl A Fileio.h
+CompileCpp=1
 Folder=3D BoA Editor Windows
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
-CompileCpp=1
 
-[Unit18]
-FileName=version.h
+[Unit22]
+FileName=EdFcns.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit6]
+FileName=EdGlobal.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit24]
+FileName=Blscened.rc
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit25]
+FileName=Graphics.cpp
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit26]
+FileName=..\..\..\NewFolder\Dev-Cpp\Examples\BoA3DEditorSVN\3D_BoA_Editor_Windows_private.h
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit17]
+FileName=global.h
+CompileCpp=1
+Folder=3D BoA Editor Windows
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit21]
+FileName=townout.cpp
 CompileCpp=1
 Folder=3D BoA Editor Windows
 Compile=1

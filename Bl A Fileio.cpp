@@ -48,6 +48,7 @@ extern Boolean file_is_loaded;
 extern Boolean showed_graphics_error;
 extern short cen_x, cen_y;
 extern Boolean change_made_town, change_made_outdoors;
+extern location selected_square;
 
 // local variables
 short data_dump_file_id;
@@ -1046,6 +1047,9 @@ void load_town(short which_town)
 	if (error != 0) {FSClose(file_id);oops_error(86);return;}
 	showed_graphics_error = FALSE;
 	kludge_correct_old_bad_data();
+	selected_square.x = -1;
+	selected_square.y = -1;
+	
 }
 
 //unfortunately the names of the towns are scattered through the file, so this is messy

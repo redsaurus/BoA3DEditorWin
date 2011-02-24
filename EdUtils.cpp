@@ -14,10 +14,10 @@
 
 #include "global.h"
 
-// Gloabl varialbes
+// Global variables
 
 
-// external gloabal variables
+// external global variables
 
 extern town_record_type town;
 extern scen_item_data_type scen_data;
@@ -35,7 +35,7 @@ extern scen_item_data_type scen_data;
 void display_error_dialog(const char* theStr,Boolean shut_down);
 // short rect_dist(RECT *r1,RECT *r2);
 // RECT rect_union(RECT *r1,RECT *r2);
-// Boolean r1_in_r2(RECT r1,RECT r2);
+Boolean r1_in_r2(macRECT r1,macRECT r2);
 // RECT rect_centered_around_point(RECT r, location l);
 // Boolean loc_in_rect(location loc,RECT r);
 // Boolean loc_touch_rect(location loc,macRECT r);
@@ -251,15 +251,15 @@ RECT rect_sect(RECT *r1,RECT *r2)
 	return r;
 }
 */
-/*
-Boolean r1_in_r2(RECT r1,RECT r2)
+
+Boolean r1_in_r2(macRECT r1,macRECT r2)
 {
 	if ((r1.left >= r2.left) && (r1.top >= r2.top) && 
 		(r1.bottom <= r2.bottom) && (r1.right <= r2.right))
 			return TRUE;
 	return FALSE;
 }
-*/
+
 // returns the given rect, but centered around point p
 /*
 RECT rect_centered_around_point(RECT r, location l)
@@ -344,4 +344,17 @@ void SetMacRect(macRECT* rect,short top, short left, short bottom, short right)
 	rect->left = left;
 	rect->bottom = bottom;
 	rect->right = right;
+}
+
+Boolean loc_touches_rect_border(location loc,macRECT r)
+{
+	if ((loc.y == r.top) && (loc.x >= r.left) && (loc.x <= r.right))
+		return TRUE;
+	if ((loc.x == r.left) && (loc.y >= r.top) && (loc.y <= r.bottom))
+		return TRUE;
+	if ((loc.y == r.bottom) && (loc.x >= r.left) && (loc.x <= r.right))
+		return TRUE;
+	if ((loc.x == r.right) && (loc.y >= r.top) && (loc.y <= r.bottom))
+		return TRUE;
+	return FALSE;
 }
