@@ -12,7 +12,7 @@
 #include "stdafx.h"
 #include "Resource.h"
 #include "global.h"
-#define kVersion "   Version:  Thursday  24  February  2011"
+#define kVersion "   Version:  MultiWindows"
 
 // Global variables
 
@@ -22,6 +22,10 @@ HWND	mainPtr;
 HWND	right_sbar;
 HACCEL	accel;
 
+HWND	palettePtr;
+HWND	tilesPtr;
+
+char szTilesName[] = "Tiles";
 char szWinName[] = "Blades of Avernum dialogs";
 
 RECT	windRect;
@@ -29,6 +33,14 @@ Boolean mouse_button_held = FALSE;
 short cen_x, cen_y;
 short ulx = 0, uly = 0;
 short mode_count = 0;
+
+extern RECT terrain_rect_gr_size;
+extern RECT terrain_viewport_3d;
+extern HDIB ter_draw_gworld;
+extern void delete_graphic(HDIB *to_delete);
+extern HDIB DibCreate (int cx, int cy, int cBits, int cColors);
+extern RECT kRect3DEditScrn;
+extern void update_screen_locs(void);
 
 
 Boolean change_made_town = FALSE;
@@ -212,7 +224,7 @@ int APIENTRY _tWinMain (HINSTANCE hInstance,
 
 void MyRegisterClass( HINSTANCE hInstance )
 {
-	WNDCLASSEX wndclass,wndclass2;
+	WNDCLASSEX wndclass,wndclass2,wndclass3;
 
 	wndclass.cbSize			= sizeof(WNDCLASSEX); 
 	wndclass.style			= CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
@@ -243,6 +255,21 @@ void MyRegisterClass( HINSTANCE hInstance )
 	wndclass2.hIconSm		= NULL;
 
 	RegisterClassEx(&wndclass2);
+
+	wndclass3.cbSize			= sizeof(WNDCLASSEX); 
+	wndclass3.style			= CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
+	wndclass3.lpfnWndProc	= (WNDPROC)WndProc;
+	wndclass3.cbClsExtra		= 0;
+	wndclass3.cbWndExtra		= 0;
+	wndclass3.hInstance		= hInstance;
+	wndclass3.hIcon			= NULL;
+	wndclass3.hCursor		= NULL;
+	wndclass3.hbrBackground	= (HBRUSH) GetStockObject(WHITE_BRUSH);
+	wndclass3.lpszMenuName	= NULL;
+	wndclass3.lpszClassName	= szTilesName;
+	wndclass3.hIconSm		= NULL;
+
+	RegisterClassEx(&wndclass3);
 }
 
 LRESULT CALLBACK folderErrMsgWndProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM /*lParam*/)
@@ -265,18 +292,22 @@ LRESULT CALLBACK folderErrMsgWndProc(HWND hDlg, UINT message, WPARAM wParam, LPA
 
 BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 {
+	RECT main_rect;
+
 	mainPtr = CreateWindow (
 		szAppName,
 		"3D Blades of Avernum Variant Scenario Editor " kVersion,
-		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX,
 		0,
 		0,
-		822,
-		690, // was originally 601
+		560,
+		601, // was originally 601
 		NULL,
 		NULL,
 		hInstance,
 		NULL);
+
+	tilesPtr = CreateWindow ( szTilesName, "Tiles", WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX, 0, 0, 280, 650, mainPtr, NULL, hInstance, NULL);
 
 	if ( !mainPtr )
 		return FALSE;
@@ -298,6 +329,13 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 	center_window(mainPtr);
 	ShowWindow(mainPtr,nCmdShow);
 
+	GetWindowRect(GetDesktopWindow(),&main_rect);
+
+	MoveWindow(tilesPtr,((main_rect.right - main_rect.left) + 560) / 2,
+		((main_rect.bottom - main_rect.top) - 650) / 2,280,650,TRUE);
+//	center_window(tilesPtr);
+	ShowWindow(tilesPtr,nCmdShow);
+
 	GetClientRect(mainPtr,&windRect);
 	SetTimer(mainPtr,1,20,NULL);
 	Set_up_win ();
@@ -312,7 +350,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		WS_CHILD | WS_TABSTOP | SBS_VERT, right_sbar_rect.left + ulx,right_sbar_rect.top + uly,
 		right_sbar_rect.right - right_sbar_rect.left,
 		right_sbar_rect.bottom - right_sbar_rect.top,
-		mainPtr,(HMENU) 1,(HINSTANCE) store_hInstance,(void *) NULL);
+		tilesPtr,(HMENU) 1,(HINSTANCE) store_hInstance,(void *) NULL);
 
 	cd_init_dialogs();
 
@@ -334,6 +372,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 	redraw_screen();
 	ShowScrollBar(right_sbar,SB_CTL,TRUE);
 //	UpdateWindow(mainPtr);
+	UpdateWindow(tilesPtr);
 
 	return TRUE;
 }
@@ -352,7 +391,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 
 	switch (message) {
 	case WM_KEYDOWN:
-		if (hwnd != mainPtr) {
+		if (hwnd != mainPtr && hwnd != tilesPtr) {
 			check_cd_event(hwnd,message,wParam,lParam);
 			}
 			else {
@@ -362,7 +401,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		break;
 
 	case WM_CHAR:
-		if (hwnd != mainPtr)
+		if (hwnd != mainPtr && hwnd != tilesPtr)
 			check_cd_event(hwnd,message,wParam,lParam);
 			else {
 				All_Done = handle_keystroke(wParam,lParam);
@@ -373,14 +412,14 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 
 	case WM_LBUTTONDOWN:
 	case WM_RBUTTONDOWN:
-		if (hwnd != mainPtr)
+		if (hwnd != mainPtr && hwnd != tilesPtr)
 			check_cd_event(hwnd,message,wParam,lParam);
 		else {
 			SetFocus(hwnd);
 			press.x = LOWORD(lParam);
 			press.y = HIWORD(lParam);
 
-			All_Done = handle_action(press, wParam,lParam);
+			All_Done = handle_action(press, wParam,lParam, (hwnd != mainPtr) ? 1 : 0);
 			check_game_done();
 		}
 		return 0;
@@ -396,7 +435,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		if ((wParam == 1) && (mouse_button_held == TRUE)) {
 			GetCursorPos(&p);
 			ScreenToClient(mainPtr,&p);
-			All_Done = handle_action(p, 0,0);
+			All_Done = handle_action(p, 0,0,0);
 			}
 		// second, refresh cursor?
 		if ((wParam == 1) && (overall_mode < 60) && (GetFocus() == mainPtr)) {
@@ -433,7 +472,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		if ((mouse_button_held == TRUE) && (hwnd == mainPtr)) {
 			press.x = LOWORD(lParam);
 			press.y = HIWORD(lParam);
-			All_Done = handle_action(press, wParam,lParam);
+			All_Done = handle_action(press, wParam,lParam,0);
 			}
 		//if (hwnd == mainPtr)
       	restore_cursor();
@@ -450,10 +489,27 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		hdc = BeginPaint( hwnd, &ps );
 		EndPaint( hwnd, &ps );
 
-		if (hwnd != mainPtr)
+		if (hwnd != mainPtr && hwnd != tilesPtr)
 			check_cd_event(hwnd,message,wParam,lParam);
 		else
 			redraw_screen();
+		return 0;
+
+	case WM_SIZING:
+		//beep();
+		if (hwnd == mainPtr){
+			GetClientRect(mainPtr,&windRect);
+			terrain_viewport_3d.bottom = windRect.bottom - 120;//40;
+			terrain_viewport_3d.right = windRect.right - 40;
+			kRect3DEditScrn.bottom = windRect.bottom - 100;//20;
+			kRect3DEditScrn.right = windRect.right - 20;
+			terrain_rect_gr_size.bottom = ((windRect.bottom - windRect.top) > (windRect.right - windRect.left)) ? (windRect.bottom - windRect.top) : (windRect.right - windRect.left);
+			terrain_rect_gr_size.right = terrain_rect_gr_size.bottom;
+			delete_graphic(&ter_draw_gworld);
+			ter_draw_gworld = DibCreate (terrain_rect_gr_size.right,terrain_rect_gr_size.bottom, 16,0);
+			update_screen_locs();
+			redraw_screen();
+		}
 		return 0;
 
 	case WM_VSCROLL:
@@ -491,7 +547,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		return 0;
 
 	case WM_COMMAND:
-		if (hwnd == mainPtr) {
+		if (hwnd == mainPtr || hwnd == tilesPtr) {
 
 //			menu = GetMenu(mainPtr);
 			handle_menu_choice((short) wParam);

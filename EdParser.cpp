@@ -18,7 +18,7 @@
 #include "stdlib.h"
 */
 #include <ctype.h>
-using namespace std;
+//using namespace std;
 
 #include "global.h"
 #include "tokntype.h"

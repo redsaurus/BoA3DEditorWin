@@ -309,20 +309,20 @@ BEGIN
     "^X",           104,                    ASCII,  NOINVERT
     "^Y",           102,                    ASCII,  NOINVERT
     "^Z",           101,                    ASCII,  NOINVERT
-		"^1",           1504,                   ASCII,  NOINVERT
-    "^2",           1511,                   ASCII,  NOINVERT
-    "^3",           1505,                   ASCII,  NOINVERT
-    "^4",           1509,                   ASCII,  NOINVERT
-    "^5",           1510,                   ASCII,  NOINVERT
-    "^6",           1506,                   ASCII,  NOINVERT
-    "^7",           1507,                   ASCII,  NOINVERT
-    "^9",           114,                    ASCII,  NOINVERT
-    "^0",           115,                    ASCII,  NOINVERT
-    VK_LEFT,        117,                    VIRTKEY, CONTROL, NOINVERT
-    VK_RIGHT,       118,                    VIRTKEY, CONTROL, NOINVERT
-    VK_UP,          122,                    VIRTKEY, CONTROL, NOINVERT
-    VK_DOWN,        123,                    VIRTKEY, CONTROL, NOINVERT
-    VK_TAB,         1609,                   VIRTKEY, CONTROL, NOINVERT
+//		"^1",           1504,                   ASCII,  NOINVERT
+//    "^2",           1511,                   ASCII,  NOINVERT
+//    "^3",           1505,                   ASCII,  NOINVERT
+//    "^4",           1509,                   ASCII,  NOINVERT
+//    "^5",           1510,                   ASCII,  NOINVERT
+//    "^6",           1506,                   ASCII,  NOINVERT
+//    "^7",           1507,                   ASCII,  NOINVERT
+//    "^9",           114,                    ASCII,  NOINVERT
+//    "^0",           115,                    ASCII,  NOINVERT
+//    VK_LEFT,        117,                    VIRTKEY, CONTROL, NOINVERT
+//    VK_RIGHT,       118,                    VIRTKEY, CONTROL, NOINVERT
+//    VK_UP,          122,                    VIRTKEY, CONTROL, NOINVERT
+//    VK_DOWN,        123,                    VIRTKEY, CONTROL, NOINVERT
+//    VK_TAB,         1609,                   VIRTKEY, CONTROL, NOINVERT
 //    "^D",         302/402,                ASCII,  NOINVERT
 //    "^L",         301/401,                ASCII,  NOINVERT
 END

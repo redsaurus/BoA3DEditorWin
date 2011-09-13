@@ -31,13 +31,13 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define	TER_RECT_UL_Y	20
 #define	TERRAIN_BORDER_WIDTH	15
 #define	LEFT_TEXT_LINE_ULX	15
-#define	LEFT_TEXT_LINE_ULY	540
+#define	LEFT_TEXT_LINE_ULY	440
 #define	LEFT_TEXT_LINE_WIDTH	240
 #define	TEXT_LINE_HEIGHT	12
 #define	TER_BUTTON_SIZE	16
 #define	RIGHT_TEXT_LINE_ULX	15
 #define	RIGHT_TEXT_LINE_ULY	500
-#define	RIGHT_BUTTONS_X_SHIFT	540
+#define	RIGHT_BUTTONS_X_SHIFT	0//540
 #define	PALETTE_BUT_UL_X	17
 #define	PALETTE_BUT_UL_Y	382
 #define	PALETTE_BUT_HEIGHT		17
@@ -1562,7 +1562,7 @@ RECT get_template_from_rect(short x,short y);
 
 // EdFcns
 void init_screen_locs();
-Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam );
+Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, Boolean tiles_window );
 void swap_terrain();
 Boolean handle_keystroke(WPARAM wParam,LPARAM lParam);
 void set_terrain(location l,short terrain_type);

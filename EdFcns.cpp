@@ -20,13 +20,15 @@ enum {
 	TERRAIN_BORDER_WIDTH + BIG_SPACE_SIZE * 9 + TER_RECT_UL_X + 15,
 	TERRAIN_BORDER_WIDTH + BIG_SPACE_SIZE * 9 + TER_RECT_UL_Y + 15
 };*/
-const RECT kRect3DEditScrn = {
+RECT kRect3DEditScrn = {
 	0 + TER_RECT_UL_Y,
 	0 + TER_RECT_UL_X,
 	496 + TER_RECT_UL_Y,
 	415 + TER_RECT_UL_X
 };
-extern const RECT terrain_viewport_3d;
+extern RECT terrain_viewport_3d;
+
+extern RECT windRect;
 
 // scroll speed limit: duration / cycle
 const DWORD kScrollLimitTime = 100;		// msec
@@ -269,6 +271,16 @@ void init_screen_locs()
 			RIGHT_TEXT_LINE_ULY + (i % 7) * TEXT_LINE_HEIGHT,
 			 RIGHT_TEXT_LINE_ULX + 235,
 			RIGHT_TEXT_LINE_ULY + (i % 7) * TEXT_LINE_HEIGHT + TEXT_LINE_HEIGHT);
+}
+
+void update_screen_locs()
+{
+	int i;
+	for (i = 0; i < 14; i++)
+		SetRECT(left_text_lines[i],LEFT_TEXT_LINE_WIDTH * (i / 7) + LEFT_TEXT_LINE_ULX,
+			windRect.bottom - 100 + (i % 7) * TEXT_LINE_HEIGHT,
+			LEFT_TEXT_LINE_WIDTH * (i / 7) + LEFT_TEXT_LINE_ULX + LEFT_TEXT_LINE_WIDTH,
+			windRect.bottom - 100 + (i % 7) * TEXT_LINE_HEIGHT + TEXT_LINE_HEIGHT);
 }
 
 
@@ -592,7 +604,7 @@ Boolean clean_up_from_scrolling( int map_size, int dx, int dy )
 // "Outdoor: drawing mode failure after moving section" fix
 // mouse click to the scroller is handled on separate routines.
 
-Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
+Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, Boolean tiles_window )
 {
 	short i,j;
 	Boolean are_done = FALSE;
@@ -625,226 +637,8 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 	int map_size = (editing_town) ? max_dim[town_type] : 48;
 	cur_point = the_point;
 
-	// scroller on edit screen
-	if ( process_scroll_click( map_size, the_point ) ){
-		mouse_button_held = FALSE;
-		return are_done;
-	}
-
-	// clicking in terrain spots, big icon mode
-	if (cur_viewing_mode == 0) {
-		cur_point2 = cur_point;
-		cur_point2.x -= TER_RECT_UL_X; cur_point2.y -= TER_RECT_UL_Y;
-		for (i = 0; i < 9; i++)
-			for (j = 0; j < 9; j++)
-				if (POINTInRECT(cur_point2,large_edit_ter_rects[i][j])) {
-					spot_hit.x = (t_coord)(cen_x + i - 4);
-					spot_hit.y = (t_coord)(cen_y + j - 4);					
-
-					if ((mouse_button_held == TRUE) && (spot_hit.x == last_spot_hit.x) &&
-						(spot_hit.y == last_spot_hit.y))
-						return are_done;
-						else last_spot_hit = spot_hit;
-					if (mouse_button_held == FALSE)
-						last_spot_hit = spot_hit;
-					
-					old_mode = overall_mode;
-					if(editing_town)
-						change_made_town = TRUE;
-					else
-						change_made_outdoors = TRUE;
-
-					handle_ter_spot_press(spot_hit,option_hit,right_click);
-					
-					need_redraw = TRUE;
-				}
-	}
-
-	// clicking in terrain spots, small icon mode
-	if (cur_viewing_mode == 1) {
-		cur_point2 = cur_point;
-		cur_point2.x -= TER_RECT_UL_X; cur_point2.y -= TER_RECT_UL_Y;
-		for (i = 0; i < MAX_TOWN_SIZE; i++)
-			for (j = 0; j < MAX_TOWN_SIZE; j++)
-				if (POINTInRECT(cur_point2,small_edit_ter_rects[i][j])) {
-					spot_hit.x = (t_coord)i;
-					spot_hit.y = (t_coord)j;					
-
-					if ((mouse_button_held == TRUE) && (spot_hit.x == last_spot_hit.x) &&
-						(spot_hit.y == last_spot_hit.y))
-						return are_done;
-						else last_spot_hit = spot_hit;
-					if (mouse_button_held == FALSE)
-						last_spot_hit = spot_hit;
-					
-					old_mode = overall_mode;
-					if(editing_town)
-						change_made_town = TRUE;
-					else
-						change_made_outdoors = TRUE;
-							
-					handle_ter_spot_press(spot_hit,option_hit,right_click);			
-					need_redraw = TRUE;
-				}
-	}
-
-	// clicking in terrain spots, medium icon mode
-	if (cur_viewing_mode == 2) {
-		cur_point2 = cur_point;
-		cur_point2.x -= TER_RECT_UL_X; cur_point2.y -= TER_RECT_UL_Y;
-		for (i = 0; i < 32; i++)
-			for (j = 0; j < 32; j++)
-				if (POINTInRECT(cur_point2,medium_edit_ter_rects[i][j])) {
-					spot_hit.x = (t_coord)(cen_x + i - 16);
-					spot_hit.y = (t_coord)(cen_y + j - 16);
-
-					if ((mouse_button_held == TRUE) && (spot_hit.x == last_spot_hit.x) &&
-						(spot_hit.y == last_spot_hit.y))
-						return are_done;
-						else last_spot_hit = spot_hit;
-					if (mouse_button_held == FALSE)
-						last_spot_hit = spot_hit;
-
-					old_mode = overall_mode;
-					if(editing_town)
-						change_made_town = TRUE;
-					else
-						change_made_outdoors = TRUE;
-
-					handle_ter_spot_press(spot_hit,option_hit,right_click);
-					need_redraw = TRUE;
-				}
-	}
-
-
-	// clicking in terrain spots, big 3D icon mode
-	else if (cur_viewing_mode == 10 || cur_viewing_mode == 11) {
-		if( POINTInRECT(cur_point, kRect3DEditScrn)) {
-
-			//detect click on terrain spot (possibilities: that <-, hit a cliff, or hit outside the map.  last two do nothing)
-			cur_point2 = cur_point;
-			cur_point2.x -= TER_RECT_UL_X; cur_point2.y -= TER_RECT_UL_Y;
-			short done = FALSE;
-			short x = 0, y = 0;
-			long mid_tenth_x, mid_tenth_y, result, x_off_from_center, y_off_from_center;
-			short height_to_draw;
-			graphic_id_type a;
-			
-			short current_size = ((editing_town) ? max_dim[town_type] : 48);
-			short center_area_x, center_area_y;
-			short center_of_current_square_x, center_of_current_square_y;
-			short center_height;
-			short rel_x, rel_y;
-			
-			RECT whole_area_rect = terrain_viewport_3d;
-				/*= {large_edit_ter_rects[0][0].left,large_edit_ter_rects[0][0].top,
-				large_edit_ter_rects[8][8].right,large_edit_ter_rects[8][8].bottom};*/
-			
-			//MacInsetRect(&whole_area_rect,-15,-15);
-			ZeroRectCorner(&whole_area_rect);
-			
-			
-			center_area_x = (short)(whole_area_rect.right / 2);
-			center_area_y = (short)(whole_area_rect.bottom / 2);
-			
-			center_height = (editing_town) ? t_d.height[cen_x][cen_y] : current_terrain.height[cen_x][cen_y];
-
-			for(x = current_size - 1; x >= 0; x--) {
-				for(y = current_size - 1; y >= 0; y--) {
-					height_to_draw = (editing_town) ? t_d.height[x][y] : current_terrain.height[x][y];
-					
-					rel_x = x - cen_x;
-					rel_y = y - cen_y;
-					
-					center_of_current_square_x = (rel_x - rel_y) * SPACE_X_DISPLACEMENT_3D + center_area_x;
-					center_of_current_square_y = (rel_x + rel_y) * SPACE_Y_DISPLACEMENT_3D + center_area_y
-						- (height_to_draw - center_height) * ELEVATION_Y_DISPLACEMENT_3D;
-					//convert the center
-					center_of_current_square_y += 11 + 2;//I thought 11 was the right amount...
-					
-					
-					//ugly click detection
-					mid_tenth_x = center_of_current_square_x * 10 + 5;
-					mid_tenth_y = center_of_current_square_y * 10 + 5;
-					
-					result = abs(mid_tenth_x - cur_point2.x * 10L) * SPACE_Y_DISPLACEMENT_3D +
-								abs(mid_tenth_y - cur_point2.y * 10L) * SPACE_X_DISPLACEMENT_3D;
-					
-					//this is distance for 2D - in case anyone wants to implement BetterEditor's "wall drawing" in 3D
-					//divide this number by a lot if you want
-					//( / about 200 if you want to get back to anything near pixel size, I think)
-					//A warning, however: I haven't tested this code. If you try something and it goes wrong, consider this.
-					x_off_from_center = (mid_tenth_x - cur_point2.x * 10L) * SPACE_Y_DISPLACEMENT_3D +
-								(mid_tenth_y - cur_point2.y * 10L) * SPACE_X_DISPLACEMENT_3D;
-					y_off_from_center = -(mid_tenth_x - cur_point2.x * 10L) * SPACE_Y_DISPLACEMENT_3D +
-								(mid_tenth_y - cur_point2.y * 10L) * SPACE_X_DISPLACEMENT_3D;
-					
-					if(result >= 0 && result <= SPACE_X_DISPLACEMENT_3D * SPACE_Y_DISPLACEMENT_3D * 10) {
-						done = TRUE;
-					/*Str255 draw_str;
-					Rect the_rect = {200,200,400,400};
-					sprintf((char *) draw_str,"%d,%d,%d,%d,%d,%d,%d",(long)cur_point2.h,(long)cur_point2.v,
-					(long)center_of_current_square_x,(long)center_of_current_square_y,(long)mid_tenth_x,
-					(long)mid_tenth_y,(long)result); 
-					char_win_draw_string(GetWindowPort(mainPtr),the_rect,(char *) draw_str,2,12);*/
-						break;
-					}
-					
-					//cliff checking (anything within the square's width and below its center)
-					if(cur_point2.y > center_of_current_square_y &&
-					cur_point2.x > center_of_current_square_x - SPACE_X_DISPLACEMENT_3D + 1 &&
-					cur_point2.x < center_of_current_square_x + SPACE_X_DISPLACEMENT_3D) {
-						done = 2;
-					/*Str255 draw_str;
-					Rect the_rect = {200,200,400,400};
-					sprintf((char *) draw_str,"%d,%d,%d,%d,%d,%d,%d",(long)cur_point2.h,(long)cur_point2.v,
-					(long)center_of_current_square_x,(long)center_of_current_square_y,(long)mid_tenth_x,
-					(long)mid_tenth_y,(long)result); 
-					char_win_draw_string(GetWindowPort(mainPtr),the_rect,(char *) draw_str,2,12);*/
-						beep();//this might actually be a good idea permanently
-						break;
-					}
-					/*if(q + 1 == current_num_diagonals && r + 1 == current_diagonal_length){
-					Str255 draw_str;
-					Rect the_rect = {200,200,400,400};
-					sprintf((char *) draw_str,"%d,%d,%d,%d,%d,%d,%d",(long)cur_point2.h,(long)cur_point2.v,
-					(long)center_of_current_square_x,(long)center_of_current_square_y,(long)mid_tenth_x,
-					(long)mid_tenth_y,(long)result); 
-					char_win_draw_string(GetWindowPort(mainPtr),the_rect,(char *) draw_str,2,12);
-					}*/
-				}
-				if(done != FALSE)
-					break;
-			}
-			if(done == TRUE) {
-				spot_hit.x = (char)x;
-				spot_hit.y = (char)y;
-				
-				if ((mouse_button_held == TRUE) && (spot_hit.x == last_spot_hit.x) && (spot_hit.y == last_spot_hit.y))
-					return are_done;
-				else
-					last_spot_hit = spot_hit;
-					
-				old_mode = overall_mode;
-				if(editing_town)
-					change_made_town = TRUE;
-				else
-					change_made_outdoors = TRUE;
-					//erasing_mode = TRUE;
-					//mouse_button_held = TRUE;		
-					
-				handle_ter_spot_press(spot_hit,option_hit,right_click);			
-				
-				need_redraw = TRUE;
-			}
-			else if(done == FALSE) {
-				beep();
-			}
-		}
-	}
-// q_3DModEnd
-
-	// TERRAIN BUTTONS TO RIGHT
+		// TERRAIN BUTTONS TO RIGHT
+	if (tiles_window) {
 	if (mouse_button_held == FALSE) {
 		cur_point = the_point;
 		cur_point.x -= RIGHT_BUTTONS_X_SHIFT;
@@ -1306,6 +1100,231 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam )
 				
 				}
 		} // end right buttons
+		if (need_redraw)
+		{
+			draw_main_screen();
+		}
+		return are_done;
+	}
+
+	// scroller on edit screen
+	if ( process_scroll_click( map_size, the_point ) ){
+		mouse_button_held = FALSE;
+		return are_done;
+	}
+
+	// clicking in terrain spots, big icon mode
+	if (cur_viewing_mode == 0) {
+		cur_point2 = cur_point;
+		cur_point2.x -= TER_RECT_UL_X; cur_point2.y -= TER_RECT_UL_Y;
+		for (i = 0; i < 9; i++)
+			for (j = 0; j < 9; j++)
+				if (POINTInRECT(cur_point2,large_edit_ter_rects[i][j])) {
+					spot_hit.x = (t_coord)(cen_x + i - 4);
+					spot_hit.y = (t_coord)(cen_y + j - 4);					
+
+					if ((mouse_button_held == TRUE) && (spot_hit.x == last_spot_hit.x) &&
+						(spot_hit.y == last_spot_hit.y))
+						return are_done;
+						else last_spot_hit = spot_hit;
+					if (mouse_button_held == FALSE)
+						last_spot_hit = spot_hit;
+					
+					old_mode = overall_mode;
+					if(editing_town)
+						change_made_town = TRUE;
+					else
+						change_made_outdoors = TRUE;
+
+					handle_ter_spot_press(spot_hit,option_hit,right_click);
+					
+					need_redraw = TRUE;
+				}
+	}
+
+	// clicking in terrain spots, small icon mode
+	if (cur_viewing_mode == 1) {
+		cur_point2 = cur_point;
+		cur_point2.x -= TER_RECT_UL_X; cur_point2.y -= TER_RECT_UL_Y;
+		for (i = 0; i < MAX_TOWN_SIZE; i++)
+			for (j = 0; j < MAX_TOWN_SIZE; j++)
+				if (POINTInRECT(cur_point2,small_edit_ter_rects[i][j])) {
+					spot_hit.x = (t_coord)i;
+					spot_hit.y = (t_coord)j;					
+
+					if ((mouse_button_held == TRUE) && (spot_hit.x == last_spot_hit.x) &&
+						(spot_hit.y == last_spot_hit.y))
+						return are_done;
+						else last_spot_hit = spot_hit;
+					if (mouse_button_held == FALSE)
+						last_spot_hit = spot_hit;
+					
+					old_mode = overall_mode;
+					if(editing_town)
+						change_made_town = TRUE;
+					else
+						change_made_outdoors = TRUE;
+							
+					handle_ter_spot_press(spot_hit,option_hit,right_click);			
+					need_redraw = TRUE;
+				}
+	}
+
+	// clicking in terrain spots, medium icon mode
+	if (cur_viewing_mode == 2) {
+		cur_point2 = cur_point;
+		cur_point2.x -= TER_RECT_UL_X; cur_point2.y -= TER_RECT_UL_Y;
+		for (i = 0; i < 32; i++)
+			for (j = 0; j < 32; j++)
+				if (POINTInRECT(cur_point2,medium_edit_ter_rects[i][j])) {
+					spot_hit.x = (t_coord)(cen_x + i - 16);
+					spot_hit.y = (t_coord)(cen_y + j - 16);
+
+					if ((mouse_button_held == TRUE) && (spot_hit.x == last_spot_hit.x) &&
+						(spot_hit.y == last_spot_hit.y))
+						return are_done;
+						else last_spot_hit = spot_hit;
+					if (mouse_button_held == FALSE)
+						last_spot_hit = spot_hit;
+
+					old_mode = overall_mode;
+					if(editing_town)
+						change_made_town = TRUE;
+					else
+						change_made_outdoors = TRUE;
+
+					handle_ter_spot_press(spot_hit,option_hit,right_click);
+					need_redraw = TRUE;
+				}
+	}
+
+
+	// clicking in terrain spots, big 3D icon mode
+	else if (cur_viewing_mode == 10 || cur_viewing_mode == 11) {
+		if( POINTInRECT(cur_point, kRect3DEditScrn)) {
+
+			//detect click on terrain spot (possibilities: that <-, hit a cliff, or hit outside the map.  last two do nothing)
+			cur_point2 = cur_point;
+			cur_point2.x -= TER_RECT_UL_X; cur_point2.y -= TER_RECT_UL_Y;
+			short done = FALSE;
+			short x = 0, y = 0;
+			long mid_tenth_x, mid_tenth_y, result, x_off_from_center, y_off_from_center;
+			short height_to_draw;
+			graphic_id_type a;
+			
+			short current_size = ((editing_town) ? max_dim[town_type] : 48);
+			short center_area_x, center_area_y;
+			short center_of_current_square_x, center_of_current_square_y;
+			short center_height;
+			short rel_x, rel_y;
+			
+			RECT whole_area_rect = terrain_viewport_3d;
+				/*= {large_edit_ter_rects[0][0].left,large_edit_ter_rects[0][0].top,
+				large_edit_ter_rects[8][8].right,large_edit_ter_rects[8][8].bottom};*/
+			
+			//MacInsetRect(&whole_area_rect,-15,-15);
+			ZeroRectCorner(&whole_area_rect);
+			
+			
+			center_area_x = (short)(whole_area_rect.right / 2);
+			center_area_y = (short)(whole_area_rect.bottom / 2);
+			
+			center_height = (editing_town) ? t_d.height[cen_x][cen_y] : current_terrain.height[cen_x][cen_y];
+
+			for(x = current_size - 1; x >= 0; x--) {
+				for(y = current_size - 1; y >= 0; y--) {
+					height_to_draw = (editing_town) ? t_d.height[x][y] : current_terrain.height[x][y];
+					
+					rel_x = x - cen_x;
+					rel_y = y - cen_y;
+					
+					center_of_current_square_x = (rel_x - rel_y) * SPACE_X_DISPLACEMENT_3D + center_area_x;
+					center_of_current_square_y = (rel_x + rel_y) * SPACE_Y_DISPLACEMENT_3D + center_area_y
+						- (height_to_draw - center_height) * ELEVATION_Y_DISPLACEMENT_3D;
+					//convert the center
+					center_of_current_square_y += 11 + 2;//I thought 11 was the right amount...
+					
+					
+					//ugly click detection
+					mid_tenth_x = center_of_current_square_x * 10 + 5;
+					mid_tenth_y = center_of_current_square_y * 10 + 5;
+					
+					result = abs(mid_tenth_x - cur_point2.x * 10L) * SPACE_Y_DISPLACEMENT_3D +
+								abs(mid_tenth_y - cur_point2.y * 10L) * SPACE_X_DISPLACEMENT_3D;
+					
+					//this is distance for 2D - in case anyone wants to implement BetterEditor's "wall drawing" in 3D
+					//divide this number by a lot if you want
+					//( / about 200 if you want to get back to anything near pixel size, I think)
+					//A warning, however: I haven't tested this code. If you try something and it goes wrong, consider this.
+					x_off_from_center = (mid_tenth_x - cur_point2.x * 10L) * SPACE_Y_DISPLACEMENT_3D +
+								(mid_tenth_y - cur_point2.y * 10L) * SPACE_X_DISPLACEMENT_3D;
+					y_off_from_center = -(mid_tenth_x - cur_point2.x * 10L) * SPACE_Y_DISPLACEMENT_3D +
+								(mid_tenth_y - cur_point2.y * 10L) * SPACE_X_DISPLACEMENT_3D;
+					
+					if(result >= 0 && result <= SPACE_X_DISPLACEMENT_3D * SPACE_Y_DISPLACEMENT_3D * 10) {
+						done = TRUE;
+					/*Str255 draw_str;
+					Rect the_rect = {200,200,400,400};
+					sprintf((char *) draw_str,"%d,%d,%d,%d,%d,%d,%d",(long)cur_point2.h,(long)cur_point2.v,
+					(long)center_of_current_square_x,(long)center_of_current_square_y,(long)mid_tenth_x,
+					(long)mid_tenth_y,(long)result); 
+					char_win_draw_string(GetWindowPort(mainPtr),the_rect,(char *) draw_str,2,12);*/
+						break;
+					}
+					
+					//cliff checking (anything within the square's width and below its center)
+					if(cur_point2.y > center_of_current_square_y &&
+					cur_point2.x > center_of_current_square_x - SPACE_X_DISPLACEMENT_3D + 1 &&
+					cur_point2.x < center_of_current_square_x + SPACE_X_DISPLACEMENT_3D) {
+						done = 2;
+					/*Str255 draw_str;
+					Rect the_rect = {200,200,400,400};
+					sprintf((char *) draw_str,"%d,%d,%d,%d,%d,%d,%d",(long)cur_point2.h,(long)cur_point2.v,
+					(long)center_of_current_square_x,(long)center_of_current_square_y,(long)mid_tenth_x,
+					(long)mid_tenth_y,(long)result); 
+					char_win_draw_string(GetWindowPort(mainPtr),the_rect,(char *) draw_str,2,12);*/
+						beep();//this might actually be a good idea permanently
+						break;
+					}
+					/*if(q + 1 == current_num_diagonals && r + 1 == current_diagonal_length){
+					Str255 draw_str;
+					Rect the_rect = {200,200,400,400};
+					sprintf((char *) draw_str,"%d,%d,%d,%d,%d,%d,%d",(long)cur_point2.h,(long)cur_point2.v,
+					(long)center_of_current_square_x,(long)center_of_current_square_y,(long)mid_tenth_x,
+					(long)mid_tenth_y,(long)result); 
+					char_win_draw_string(GetWindowPort(mainPtr),the_rect,(char *) draw_str,2,12);
+					}*/
+				}
+				if(done != FALSE)
+					break;
+			}
+			if(done == TRUE) {
+				spot_hit.x = (char)x;
+				spot_hit.y = (char)y;
+				
+				if ((mouse_button_held == TRUE) && (spot_hit.x == last_spot_hit.x) && (spot_hit.y == last_spot_hit.y))
+					return are_done;
+				else
+					last_spot_hit = spot_hit;
+					
+				old_mode = overall_mode;
+				if(editing_town)
+					change_made_town = TRUE;
+				else
+					change_made_outdoors = TRUE;
+					//erasing_mode = TRUE;
+					//mouse_button_held = TRUE;		
+					
+				handle_ter_spot_press(spot_hit,option_hit,right_click);			
+				
+				need_redraw = TRUE;
+			}
+			else if(done == FALSE) {
+				beep();
+			}
+		}
+	}
+// q_3DModEnd
 
 	// TEXT LINES TO LOWER LEFT
 	// Clicking on the text lines to the lower left enables you to change a wide range of instance properties
@@ -2711,12 +2730,12 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 			kill_next_win_char = TRUE;
 			if ( i == 5 ) {		// "5" key
 				if (cur_viewing_mode == 0) {
-					handle_action( kCenterPoint, ((ctrl_key) ? MK_CONTROL : 0),-1 );
+					handle_action( kCenterPoint, ((ctrl_key) ? MK_CONTROL : 0),-1,0 );
 					mouse_button_held = FALSE;
 					return FALSE;
 				}
 				if (cur_viewing_mode == 2) {
-					handle_action( cur_point, ((ctrl_key) ? MK_CONTROL : 0),-1 );
+					handle_action( cur_point, ((ctrl_key) ? MK_CONTROL : 0),-1,0 );
 					mouse_button_held = FALSE;
 					return FALSE;
 				}
@@ -3063,132 +3082,132 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	case 'A': // Pencil
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][0].left;
 	pass_point.y = 6 + palette_buttons[0][0].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'B': // Paintbrush (Large)
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][0].left;
 	pass_point.y = 6 + palette_buttons[1][0].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'C': // Paintbrush (Small)
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][0].left;
 	pass_point.y = 6 + palette_buttons[2][0].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'D': // Spraycan (Large)
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][0].left;
 	pass_point.y = 6 + palette_buttons[3][0].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'E': // Spraycan (Small)
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][0].left;
 	pass_point.y = 6 + palette_buttons[4][0].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'F': // Change Height
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][0].left;
 	pass_point.y = 6 + palette_buttons[5][0].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'G': // Paint Rectangle (Hollow)
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][0].left;
 	pass_point.y = 6 + palette_buttons[6][0].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'H': // Paint Rectangle (Full)
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][0].left;
 	pass_point.y = 6 + palette_buttons[7][0].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'I': // Eyedropper
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[8][0].left;
 	pass_point.y = 6 + palette_buttons[8][0].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'J':  case '[': // Zoom Out/Zoom In
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][1].left;
 	pass_point.y = 6 + palette_buttons[0][1].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'K':  case ']': // 2D/3D
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][1].left;
 	pass_point.y = 6 + palette_buttons[1][1].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'L': // Change Drawing Mode
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][1].left;
 	pass_point.y = 6 + palette_buttons[2][1].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'M': // Place Walls
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][1].left;
 	pass_point.y = 6 + palette_buttons[3][1].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'N': // Switch Wall Types
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][1].left;
 	pass_point.y = 6 + palette_buttons[4][1].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'O': // Automatic Hills
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][1].left;
 	pass_point.y = 6 + palette_buttons[5][1].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'P': // Copy Terrain Rectangle
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][1].left;
 	pass_point.y = 6 + palette_buttons[6][1].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'Q': // Paste Terrain Rectangle
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][1].left;
 	pass_point.y = 6 + palette_buttons[7][1].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'R': // Change Terrain Randomly
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[8][1].left;
 	pass_point.y = 6 + palette_buttons[8][1].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'S': // Edit Sign
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][2].left;
 	pass_point.y = 6 + palette_buttons[0][2].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'T': // Create Room Rectangle
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][2].left;
 	pass_point.y = 6 + palette_buttons[1][2].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'U': // Place Spawn Point
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][2].left;
 	pass_point.y = 6 + palette_buttons[2][2].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'V': // Create Special Encounter
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][2].left;
 	pass_point.y = 6 + palette_buttons[3][2].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'W': // Delete Special Encounter
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][2].left;
 	pass_point.y = 6 + palette_buttons[4][2].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'X': // Edit Special Encounter
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][2].left;
 	pass_point.y = 6 + palette_buttons[5][2].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'Y': // Select/Edit Object
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][2].left;
 	pass_point.y = 6 + palette_buttons[6][2].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	case 'Z': // Delete Object
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][2].left;
 	pass_point.y = 6 + palette_buttons[7][2].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 	
 	case '\\': // toggle gridline mode
@@ -3203,13 +3222,13 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	selected_item_number = -1;
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][0].left;
 	pass_point.y = 6 + palette_buttons[0][0].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 
 	case ';': // Clear Space
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[8][4].left;
 	pass_point.y = 6 + palette_buttons[8][4].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 
 	case ',': // Cut selected instance
@@ -3241,7 +3260,7 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	case ' ':
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][1].left;
 	pass_point.y = 6 + palette_buttons[2][1].top;
-	handle_action(pass_point,wParam,-1);
+	handle_action(pass_point,wParam,-1,1);
 	break;
 
 // q_3DModStart
@@ -3256,7 +3275,7 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 					pass_point.y = 6 + palette_buttons[1][1].top;
 				}
 
-				handle_action(pass_point,wParam,-1);
+				handle_action(pass_point,wParam,-1,1);
 	break;
 // q_3DModEnd
 
