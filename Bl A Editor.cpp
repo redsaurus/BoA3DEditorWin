@@ -12,7 +12,7 @@
 #include "stdafx.h"
 #include "Resource.h"
 #include "global.h"
-#define kVersion "   Version:  MultiWindows"
+#define kVersion "   Version:  Adventurous Adventurer"
 
 // Global variables
 
@@ -301,7 +301,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		0,
 		0,
 		560,
-		601, // was originally 601
+		601, // was originally 601, then 690
 		NULL,
 		NULL,
 		hInstance,

@@ -16,6 +16,7 @@ HDC main_dc2;
 HDC main_dc3;
 HDC main_dc4;
 HDC main_dc5;
+HDC tiles_dc;
 HDIB mixed_gworld = NULL;
 HDIB ed_pattern_gworld = NULL;
 HBITMAP bw_bitmap = NULL;
@@ -306,6 +307,7 @@ void Set_up_win ()
 void load_main_screen()
 {
 	main_dc = GetDC(mainPtr);
+	tiles_dc = GetDC(tilesPtr);
 
 	SelectObject(main_dc,font);
 	SetBkMode(main_dc,TRANSPARENT);
@@ -380,6 +382,8 @@ void lose_graphics()
 
 	ReleaseDC( mainPtr, main_dc );
 
+	ReleaseDC( tilesPtr, tiles_dc );
+
 	DeleteDC(main_dc2);
 	DeleteDC(main_dc3);
 	DeleteDC(main_dc4);
@@ -399,7 +403,7 @@ void redraw_screen()
 	RECT to_rect = windRect;
 	//to_rect.right = RIGHT_BUTTONS_X_SHIFT;
 	paint_pattern(NULL,1,to_rect,0);
-	paint_pattern((HDIB) GetDC(tilesPtr), 1, to_rect, 0);//???
+	paint_pattern((HDIB) tiles_dc, 1, to_rect, 0);//???
 	
 	// fill lower right corner
 	to_rect = windRect;
@@ -5979,11 +5983,7 @@ void place_right_buttons( /* short mode */ )
 	HBITMAP store_bmp;
 	HFONT store_font;
 
-	HDC win_dc;
-
-	win_dc = GetDC(tilesPtr);
-
-	SetBkMode(win_dc,TRANSPARENT);
+	SetBkMode(tiles_dc,TRANSPARENT);
 
 	for (short i = 0; i < 7; i++){
  //		paint_pattern(terrain_buttons_gworld,0,right_text_lines[i],2);
@@ -5993,54 +5993,54 @@ void place_right_buttons( /* short mode */ )
 		to_rect = terrain_buttons_rect;
 		OffsetRect(&to_rect,RIGHT_BUTTONS_X_SHIFT,0);
 		rect_draw_some_item(terrain_buttons_gworld,terrain_buttons_rect,
-			(HDIB) win_dc,to_rect,0,2); 
+			(HDIB) tiles_dc,to_rect,0,2); 
 		return;
 	}
 
-	SetBkMode(win_dc,TRANSPARENT);
-	store_font = (HFONT) SelectObject(win_dc,bold_font);
-	store_bmp = (HBITMAP) SelectObject(win_dc,DibBitmapHandle(terrain_buttons_gworld));
+	SetBkMode(tiles_dc,TRANSPARENT);
+	store_font = (HFONT) SelectObject(tiles_dc,bold_font);
+	store_bmp = (HBITMAP) SelectObject(tiles_dc,DibBitmapHandle(terrain_buttons_gworld));
 	
 
 
 	// place buttons on screen
 	to_rect = terrain_buttons_rect;
 	OffsetRect(&to_rect,RIGHT_BUTTONS_X_SHIFT,0);
-	SelectObject(win_dc,store_bmp);
+	SelectObject(tiles_dc,store_bmp);
 	rect_draw_some_item(terrain_buttons_gworld,terrain_buttons_rect,
-		(HDIB) win_dc,to_rect,0,2);
-	SelectObject(win_dc,DibBitmapHandle(terrain_buttons_gworld));
+		(HDIB) tiles_dc,to_rect,0,2);
+	SelectObject(tiles_dc,DibBitmapHandle(terrain_buttons_gworld));
 
 		switch (current_drawing_mode) {
 		case 0: sprintf((char *) draw_str,"Drawing mode: FLOORS"); break;
 		case 1: sprintf((char *) draw_str,"Drawing mode: TERRAIN"); break;
 		case 2: sprintf((char *) draw_str,"Drawing mode: HEIGHT"); break;
 		}
-	char_win_draw_string(win_dc,right_text_lines[0],(char *) draw_str,2,12);
-	char_win_draw_string(win_dc,right_text_lines[1],(char *) current_string,2,12);
-	char_win_draw_string(win_dc,right_text_lines[2],(char *) current_string2,2,12);
+	char_win_draw_string(tiles_dc,right_text_lines[0],(char *) draw_str,2,12);
+	char_win_draw_string(tiles_dc,right_text_lines[1],(char *) current_string,2,12);
+	char_win_draw_string(tiles_dc,right_text_lines[2],(char *) current_string2,2,12);
 
 	sprintf((char *) draw_str,"Center: x = %d, y = %d ", (int)cen_x, (int)cen_y);
-	char_win_draw_string(win_dc,right_text_lines[3],(char *) draw_str,2,12);
+	char_win_draw_string(tiles_dc,right_text_lines[3],(char *) draw_str,2,12);
 
  		if (editing_town) {
 			sprintf((char *) draw_str,"Editing Town/Dungeon %d", (int)cur_town);
-			char_win_draw_string(win_dc,right_text_lines[4],(char *) draw_str,2,12);
+			char_win_draw_string(tiles_dc,right_text_lines[4],(char *) draw_str,2,12);
 			sprintf((char *) draw_str,"  %s",town.town_name);
-			char_win_draw_string(win_dc,right_text_lines[5],(char *) draw_str,2,12);
+			char_win_draw_string(tiles_dc,right_text_lines[5],(char *) draw_str,2,12);
 		}
 		else {
        short out_num = cur_out.y * scenario.out_width + cur_out.x;
 			sprintf((char *) draw_str,"  Section %d,  X = %d, Y = %d",out_num, (int)cur_out.x, (int)cur_out.y);
-			char_win_draw_string(win_dc,right_text_lines[4],(char *) draw_str,2,12);
+			char_win_draw_string(tiles_dc,right_text_lines[4],(char *) draw_str,2,12);
 			sprintf((char *) draw_str,"  %s",current_terrain.name);
-			char_win_draw_string(win_dc,right_text_lines[5],(char *) draw_str,2,12);
+			char_win_draw_string(tiles_dc,right_text_lines[5],(char *) draw_str,2,12);
     }
 
 			if (current_drawing_mode == 2) {
 		if (current_height_mode == 0)
-			char_win_draw_string(win_dc,right_text_lines[6],"Automatic Hills: OFF",2,12);
-			else char_win_draw_string(win_dc,right_text_lines[6],"Automatic Hills: ON",2,12);
+			char_win_draw_string(tiles_dc,right_text_lines[6],"Automatic Hills: OFF",2,12);
+			else char_win_draw_string(tiles_dc,right_text_lines[6],"Automatic Hills: ON",2,12);
 	}
 
 	// draw frames around selected ter
@@ -6062,7 +6062,7 @@ void place_right_buttons( /* short mode */ )
 	if (selected_ter >= 0) {
 		OffsetRect(&to_rect,RIGHT_BUTTONS_X_SHIFT,0);
 		MacInsetRect(&to_rect,-1,-1);
-		put_rect_on_screen(win_dc,to_rect,0,0,0);
+		put_rect_on_screen(tiles_dc,to_rect,0,0,0);
 	}
 
 	SelectObject(main_dc4,store_font);
@@ -6134,7 +6134,7 @@ void win_draw_string(HDC dest_hdc,RECT dest_rect,char *str,short mode /*,short l
       	str[i] = 34;
 	}
 	// if dest is main window, add ulx, uly
-	if (dest_hdc == main_dc || dest_hdc == GetDC(tilesPtr))
+	if (dest_hdc == main_dc || dest_hdc == tiles_dc)
 		OffsetRect(&dest_rect,ulx,uly);
 	switch (mode) {
 		case 0:
