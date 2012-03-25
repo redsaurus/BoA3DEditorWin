@@ -352,6 +352,8 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		right_sbar_rect.bottom - right_sbar_rect.top,
 		tilesPtr,(HMENU) 1,(HINSTANCE) store_hInstance,(void *) NULL);
 
+	CreateToolTipForRect(tilesPtr);
+
 	cd_init_dialogs();
 
 	DWORD d = GetDialogBaseUnits();

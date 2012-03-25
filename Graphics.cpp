@@ -84,6 +84,8 @@ extern RECT right_text_lines[7];
 
 extern short selected_item_number;
 
+extern HINSTANCE store_hInstance;
+
 char hintbook_mode0 = 0;
 char hintbook_mode1 = 1;
 char hintbook_mode2 = 0;
@@ -6958,6 +6960,60 @@ void add_border_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short bord
 //		destBits += dest_shift_width;//(width * 2);
 	}
 }
+
+void CreateToolTipForRect(HWND hwndParent)
+{
+    // Create a tooltip.
+
+	TOOLINFO ti[9][6];
+	char *toolstring[6][9] = {{"Pencil", "Large Paintbrush", "Small Paintbrush", "Large Spraycan",
+							"Small Spraycan", "Set Height Rectangle", "Frame Rectangle", "Fill Rectangle", "Eyedropper"},
+								{"Toggle 3D", "Toggle Special View", "Drawing Mode", "Place Bounding Walls", "Swap Wall Types",
+								"Toggle Automatic Hills", "Copy Terrain", "Paste Terrain", "Change Terrain Randomly"},
+								{"Edit Sign", "Place Area Description", "Place Spawn Point", "Place Special Encounter",
+								"Delete Special Encounter", "Edit Special Encounter", "Select Object", "Delete Object", "Paintbucket"},
+								{"Place Terrain Script", "Place Waypoint", "Delete Waypoint", "Place North Town Entrance", "Place West Town Entrance",
+								"Place South Town Entrance", "Place East Town Entrance", "Place Horse", "Place Boat"},
+								{"Make Space Blocked", "Place Web", "Place Crate", "Place Barrell", "Place Fire Barrier",
+								"Place Force Barrier", "Place NE/SW Mirror", "Place NW/SE Mirror", "Clear Space"},
+								{"Place Small Bloodstain", "Place Medium Bloodstain", "Place Large Bloodstain", "Place Small Slime Pool",
+								"Place Large Slime Pool", "Place Dried Blood", "Place Bones", "Place Rocks", "Select Space"}};
+
+	int i, j;
+    HWND hwndTT = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, 
+                                 WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, 
+                                 CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
+                                 hwndParent, NULL, store_hInstance,NULL);
+
+    SetWindowPos(hwndTT, HWND_TOPMOST, 0, 0, 0, 0, 
+                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+
+    // Set up "tool" information. In this case, the "tool" is the entire parent window.
+	
+	for (i = 0; i < 9; i++)
+	{
+		for (j = 0; j < 6; j++)
+		{
+//			ti[i][j] = { 0 };
+			ti[i][j].cbSize   = sizeof(TOOLINFO);
+			ti[i][j].uFlags   = TTF_SUBCLASS;
+			ti[i][j].hwnd     = hwndParent;
+			ti[i][j].hinst    = store_hInstance;
+			//sprintf(toolstring[i][j], "This is tooltip string (%d, %d).", i, j);
+			ti[i][j].lpszText = TEXT(toolstring[j][i]);
+			//ti[i][j].lpszText = TEXT("This is your tooltip string.");
+
+			ti[i][j].rect = palette_buttons[i][j];
+
+			// Associate the tooltip with the "tool" window.
+		  SendMessage(hwndTT, TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) &ti[i][j]);	
+		}
+	}
+    
+    //GetClientRect (hwndParent, &ti.rect);
+
+    
+} 
 
 // Setting color functions
 // rgb are all in the 0 .. 31 range

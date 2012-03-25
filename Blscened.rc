@@ -773,23 +773,23 @@ BEGIN
     LTEXT           "*",79,30,376,45,13
     LTEXT           "*",80,30,391,45,13
     LTEXT           "*",81,30,406,45,13
-    LTEXT           "*Start at slot 50:",82,380,51,110,14
+    LTEXT           "*Start at slot 0:",82,380,51,110,14
     LTEXT           "0_63",83,500,48,75,16
-    LTEXT           "*Start at slot 100:",84,380,81,110,14
+    LTEXT           "*Start at slot 25:",84,380,81,110,14
     LTEXT           "0_63",85,500,78,75,16
-    LTEXT           "*Start at slot 150:",86,380,111,110,14
+    LTEXT           "*Start at slot 50:",86,380,111,110,14
     LTEXT           "0_63",87,500,108,75,16
-    LTEXT           "*Start at slot 200:",88,380,141,110,14
+    LTEXT           "*Start at slot 75:",88,380,141,110,14
     LTEXT           "0_63",89,500,138,75,16
-    LTEXT           "*Start at slot 250:",90,380,171,110,14
+    LTEXT           "*Start at slot 100:",90,380,171,110,14
     LTEXT           "0_63",91,500,168,75,16
-    LTEXT           "*Start at slot 300:",92,380,201,110,14
+    LTEXT           "*Start at slot 125:",92,380,201,110,14
     LTEXT           "0_63",93,500,198,75,16
-    LTEXT           "*Start at slot 350:",94,380,231,110,14
+    LTEXT           "*Start at slot 150:",94,380,231,110,14
     LTEXT           "0_63",95,500,228,75,16
-    LTEXT           "*Start at slot 400:",96,380,261,110,14
+    LTEXT           "*Start at slot 175:",96,380,261,110,14
     LTEXT           "0_63",97,500,258,75,16
-    LTEXT           "*Start at slot 450:",98,380,291,110,14
+    LTEXT           "*Start at slot 200:",98,380,291,110,14
     LTEXT           "0_63",99,500,288,75,16
 END
 

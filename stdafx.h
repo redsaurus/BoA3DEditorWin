@@ -15,3 +15,4 @@
 #include <tchar.h>
 
 // TODO: Refer additional headers necessary in the program here.
+#include <Commctrl.h>

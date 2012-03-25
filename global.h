@@ -1695,6 +1695,7 @@ void make_Horse(short i,short j);
 void make_Boat(short i,short j);
 void take_Horse(short i,short j);
 void take_Boat(short i,short j);
+void CreateToolTipForRect(HWND hwndParent);
 
 // graphutl
 HDIB load_pict(short which_pict);

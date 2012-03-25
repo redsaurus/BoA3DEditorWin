@@ -239,39 +239,39 @@ void choose_text_res_event_filter (short item_hit)
 			break;
 
 		case 83:
-				which_page = 2;
+				which_page = 0;
 			put_text_res();
 			break;
 		case 85:
-				which_page = 4;
+				which_page = 1;
 			put_text_res();
 			break;
 		case 87:
-				which_page = 6;
+				which_page = 2;
 			put_text_res();
 			break;
 		case 89:
-				which_page = 8;
+				which_page = 3;
 			put_text_res();
 			break;
 		case 91:
-				which_page = 10;
+				which_page = 4;
 			put_text_res();
 			break;
 		case 93:
-				which_page = 12;
+				which_page = 5;
 			put_text_res();
 			break;
 		case 95:
-				which_page = 14;
+				which_page = 6;
 			put_text_res();
 			break;
 		case 97:
-				which_page = 16;
+				which_page = 7;
 			put_text_res();
 			break;
 		case 99:
-				which_page = 18;
+				which_page = 8;
 			put_text_res();
 			break;
 
