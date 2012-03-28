@@ -287,28 +287,28 @@ END
 
 IDC_BOA3DEDITOR ACCELERATORS 
 BEGIN
-    "^A",           107,                    ASCII,  NOINVERT
-    "^B",           108,                    ASCII,  NOINVERT
-    "^C",           105,                    ASCII,  NOINVERT
-    "^E",           110,                    ASCII,  NOINVERT
-    "^F",           111,                    ASCII,  NOINVERT
-    "^G",           112,                    ASCII,  NOINVERT
-    "^H",           113,                    ASCII,  NOINVERT
-    "^I",           1609,                   ASCII,  NOINVERT
-    "^J",           117,                    ASCII,  NOINVERT
-    "^K",           118,                    ASCII,  NOINVERT
-    "^M",           1519,                   ASCII,  NOINVERT    
-    "^N",           3,                      ASCII,  NOINVERT
-    "^O",           1,                      ASCII,  NOINVERT
-    "^P",           1508,                   ASCII,  NOINVERT
-    "^Q",           6,                      ASCII,  NOINVERT
-    "^R",           202,                    ASCII,  NOINVERT
-    "^S",           2,                      ASCII,  NOINVERT
-    "^T",           201,                    ASCII,  NOINVERT
-    "^V",           106,                    ASCII,  NOINVERT
-    "^X",           104,                    ASCII,  NOINVERT
-    "^Y",           102,                    ASCII,  NOINVERT
-    "^Z",           101,                    ASCII,  NOINVERT
+    "A",           107,                    VIRTKEY, CONTROL,  NOINVERT
+    "B",           108,                    VIRTKEY, CONTROL,  NOINVERT
+    "C",           105,                    VIRTKEY, CONTROL,  NOINVERT
+    "E",           110,                    VIRTKEY, CONTROL,  NOINVERT
+    "F",           111,                    VIRTKEY, CONTROL,  NOINVERT
+    "G",           112,                    VIRTKEY, CONTROL,  NOINVERT
+    "H",           113,                    VIRTKEY, CONTROL,  NOINVERT
+    "I",           1609,                   VIRTKEY, CONTROL,  NOINVERT
+    "J",           117,                    VIRTKEY, CONTROL,  NOINVERT
+    "K",           118,                    VIRTKEY, CONTROL,  NOINVERT
+    "M",           1519,                   VIRTKEY, CONTROL,  NOINVERT    
+    "N",           3,                      VIRTKEY, CONTROL,  NOINVERT
+    "O",           1,                      VIRTKEY, CONTROL,  NOINVERT
+    "P",           1508,                   VIRTKEY, CONTROL,  NOINVERT
+    "Q",           6,                      VIRTKEY, CONTROL,  NOINVERT
+    "R",           202,                    VIRTKEY, CONTROL,  NOINVERT
+    "S",           2,                      VIRTKEY, CONTROL,  NOINVERT
+    "T",           201,                    VIRTKEY, CONTROL,  NOINVERT
+    "V",           106,                    VIRTKEY, CONTROL,  NOINVERT
+    "X",           104,                    VIRTKEY, CONTROL,  NOINVERT
+    "Y",           102,                    VIRTKEY, CONTROL,  NOINVERT
+    "Z",           101,                    VIRTKEY, CONTROL,  NOINVERT
 //		"^1",           1504,                   ASCII,  NOINVERT
 //    "^2",           1511,                   ASCII,  NOINVERT
 //    "^3",           1505,                   ASCII,  NOINVERT
@@ -323,8 +323,8 @@ BEGIN
     VK_UP,          122,                    VIRTKEY, CONTROL, NOINVERT
     VK_DOWN,        123,                    VIRTKEY, CONTROL, NOINVERT
     VK_TAB,         1609,                   VIRTKEY, CONTROL, NOINVERT
-    "^D",         302/402,                ASCII,  NOINVERT
-    "^L",         301/401,                ASCII,  NOINVERT
+    "D",         302/402,                VIRTKEY, CONTROL,  NOINVERT
+    "L",         301/401,                VIRTKEY, CONTROL,  NOINVERT
 END
 
 // Currently available: U,W

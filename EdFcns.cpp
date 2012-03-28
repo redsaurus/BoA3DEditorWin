@@ -4,15 +4,6 @@
 
 #define	MAX_RECURSION_DEPTH	200
 
-// bit definition of scroll direction
-enum {
-	eSCRL_NoScrl	= 0,
-	eSCRL_Top		= 0x08,
-	eSCRL_Left		= 0x04,
-	eSCRL_Bottom	= 0x02,
-	eSCRL_Right		= 0x01,
-};
-
 // Edit screen coordinates
 /*const RECT kRect3DEditScrn = {
 	TERRAIN_BORDER_WIDTH + TER_RECT_UL_X - 15,

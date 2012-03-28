@@ -1468,6 +1468,14 @@ public:
 };
 //end undo system types
 			
+// bit definition of scroll direction
+enum {
+	eSCRL_NoScrl	= 0,
+	eSCRL_Top		= 0x08,
+	eSCRL_Left		= 0x04,
+	eSCRL_Bottom	= 0x02,
+	eSCRL_Right		= 0x01,
+};
 
 typedef struct {
 	/*char strings_ls[NLS][40];

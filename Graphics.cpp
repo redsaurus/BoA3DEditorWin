@@ -6966,9 +6966,10 @@ void CreateToolTipForRect(HWND hwndParent)
     // Create a tooltip.
 
 	TOOLINFO ti[9][6];
+	//unfortunately i managed to write these out as a 6x9 not a 9x6..nevermind
 	char *toolstring[6][9] = {{"Pencil", "Large Paintbrush", "Small Paintbrush", "Large Spraycan",
 							"Small Spraycan", "Set Height Rectangle", "Frame Rectangle", "Fill Rectangle", "Eyedropper"},
-								{"Toggle 3D", "Toggle Special View", "Drawing Mode", "Place Bounding Walls", "Swap Wall Types",
+								{"Toggle Special View", "Toggle 3D", "Drawing Mode", "Place Bounding Walls", "Swap Wall Types",
 								"Toggle Automatic Hills", "Copy Terrain", "Paste Terrain", "Change Terrain Randomly"},
 								{"Edit Sign", "Place Area Description", "Place Spawn Point", "Place Special Encounter",
 								"Delete Special Encounter", "Edit Special Encounter", "Select Object", "Delete Object", "Paintbucket"},
@@ -6999,20 +7000,15 @@ void CreateToolTipForRect(HWND hwndParent)
 			ti[i][j].uFlags   = TTF_SUBCLASS;
 			ti[i][j].hwnd     = hwndParent;
 			ti[i][j].hinst    = store_hInstance;
-			//sprintf(toolstring[i][j], "This is tooltip string (%d, %d).", i, j);
 			ti[i][j].lpszText = TEXT(toolstring[j][i]);
-			//ti[i][j].lpszText = TEXT("This is your tooltip string.");
+
 
 			ti[i][j].rect = palette_buttons[i][j];
 
 			// Associate the tooltip with the "tool" window.
 		  SendMessage(hwndTT, TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) &ti[i][j]);	
 		}
-	}
-    
-    //GetClientRect (hwndParent, &ti.rect);
-
-    
+	} 
 } 
 
 // Setting color functions

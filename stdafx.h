@@ -16,3 +16,4 @@
 
 // TODO: Refer additional headers necessary in the program here.
 #include <Commctrl.h>
+#include <Windowsx.h>

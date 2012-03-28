@@ -379,6 +379,8 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 	return TRUE;
 }
 
+extern bool handle_scroll( int map_size, int scrl, bool ctrl_key, bool shft_key );
+
 LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 {
 	HDC hdc;
@@ -389,9 +391,72 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 	int min = 0, max = 0;
 //	HMENU menu;
 	POINT p;
-	RECT r;
+	RECT r, wheelHitRect;
+	int wheel_delta, wheel_keystate;
 
 	switch (message) {
+	case WM_MOUSEHWHEEL:
+		if (hwnd == mainPtr){
+			wheelHitRect = terrain_viewport_3d;
+			wheel_delta = GET_WHEEL_DELTA_WPARAM(wParam);
+			press.x = GET_X_LPARAM(lParam);
+			press.y = GET_Y_LPARAM(lParam);
+			ScreenToClient(mainPtr, &press);
+			wheel_keystate = GET_KEYSTATE_WPARAM(wParam);
+			if (!POINTInRECT(press, wheelHitRect))
+				break;
+			if (wheel_delta > 0)
+				handle_scroll((editing_town) ? max_dim[town_type] : 48, eSCRL_Left, (wheel_keystate & MK_CONTROL), FALSE);
+			else if (wheel_delta < 0)
+				handle_scroll((editing_town) ? max_dim[town_type] : 48, eSCRL_Right, (wheel_keystate & MK_CONTROL), FALSE);
+		}
+		break;
+	case WM_MOUSEWHEEL:
+		if (hwnd == mainPtr){
+			wheelHitRect = terrain_viewport_3d;
+			wheel_delta = GET_WHEEL_DELTA_WPARAM(wParam);
+			press.x = GET_X_LPARAM(lParam);
+			press.y = GET_Y_LPARAM(lParam);
+			ScreenToClient(mainPtr, &press);
+			wheel_keystate = GET_KEYSTATE_WPARAM(wParam);
+			if (!POINTInRECT(press, wheelHitRect))
+				break;
+			if (wheel_delta > 0)
+				handle_scroll((editing_town) ? max_dim[town_type] : 48, (wheel_keystate & MK_SHIFT) ? eSCRL_Left : eSCRL_Top, (wheel_keystate & MK_CONTROL), FALSE);
+			else if (wheel_delta < 0)
+				handle_scroll((editing_town) ? max_dim[town_type] : 48, (wheel_keystate & MK_SHIFT) ? eSCRL_Right : eSCRL_Bottom, (wheel_keystate & MK_CONTROL), FALSE);
+		}
+		else if (hwnd == tilesPtr){
+			wheelHitRect = terrain_buttons_rect;
+			wheelHitRect.bottom = right_sbar_rect.bottom;
+			wheel_delta = GET_WHEEL_DELTA_WPARAM(wParam);
+			press.x = GET_X_LPARAM(lParam);
+			press.y = GET_Y_LPARAM(lParam);
+			ScreenToClient(tilesPtr, &press);
+			if (!POINTInRECT(press, wheelHitRect))
+				break;
+			sbar_pos = (short)GetScrollPos(right_sbar,SB_CTL);
+			old_setting = sbar_pos;
+			GetScrollRange(right_sbar,SB_CTL,&min,&max);
+			if (wheel_delta/120)
+				sbar_pos -= wheel_delta/120;
+			else if (wheel_delta > 0)
+				sbar_pos -= 1;
+			else if (wheel_delta < 0)
+				sbar_pos += 1;
+
+			if (sbar_pos < 0)
+				sbar_pos = 0;
+			if (sbar_pos > (short)max)
+				sbar_pos = (short)max;
+			SetScrollPos(right_sbar,SB_CTL,sbar_pos,TRUE);
+			if (sbar_pos != old_setting) {
+				set_up_terrain_buttons();
+				place_right_buttons(); // (0)
+//					update_main_screen();
+			}
+		}
+		break;
 	case WM_KEYDOWN:
 		if (hwnd != mainPtr && hwnd != tilesPtr) {
 			check_cd_event(hwnd,message,wParam,lParam);

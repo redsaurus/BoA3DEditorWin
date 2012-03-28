@@ -105,7 +105,7 @@ Boolean label_taken[NL];
 char custom_dlg_strs[12][256];
 short custom_dlg_strs_indent[12];
 short store_free_slot,store_dlog_num;
-short win_adjust_x = 18,win_adjust_y = 0;//20;
+short win_adjust_x = 18,win_adjust_y = 20;//20;
 
 HWND edit_box[80];
 HWND store_edit_parent[80];
