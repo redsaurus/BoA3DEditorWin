@@ -682,7 +682,7 @@ int do_save_change_to_outdoor_size(short plus_north,short plus_west,short plus_s
 	tiny_tr_type* aTny_town_rec;
 	for (i = 0; i < scenario.num_towns; i++) {
 								// if the index matches to the current town,
-		int anTownSize = scenario.town_size[cur_town];
+		int anTownSize = scenario.town_size[i];
 		if (i == cur_town) {
 								// write current town and read off the original
 			if ( needPort )		town.port();
@@ -718,8 +718,21 @@ int do_save_change_to_outdoor_size(short plus_north,short plus_west,short plus_s
 			}
 
 		} else { // transfer unedited town
-			if ( in_f.TransferBytes( (kSizeOfTown_record_type + max_dim[ anTownSize ]), &out_f ) != 0)
-				return 68; //66, 67
+			switch (anTownSize) {
+				case 0:
+					if ( in_f.TransferBytes( (kSizeOfTown_record_type + kSizeOfBig_tr_type), &out_f ) != 0)
+						return 68; //66, 67
+					break;
+				case 1:
+					if ( in_f.TransferBytes( (kSizeOfTown_record_type + kSizeOfAve_tr_type), &out_f ) != 0)
+						return 68; //66, 67
+					break;
+				case 2:
+					if ( in_f.TransferBytes( (kSizeOfTown_record_type + kSizeOfTiny_tr_type), &out_f ) != 0)
+						return 68; //66, 67
+					break;
+			}
+
 		}
 	}
 
