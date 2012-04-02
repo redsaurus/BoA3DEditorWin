@@ -22,10 +22,11 @@ HWND	mainPtr;
 HWND	right_sbar;
 HACCEL	accel;
 
-HWND	palettePtr;
-HWND	tilesPtr;
+HWND	palettePtr;//this is the window which has the tools in it
+HWND	tilesPtr;//this is the window with the terrain etc. tiles in it
 
 char szTilesName[] = "Tiles";
+char szPaletteName[] = "Tools";
 char szWinName[] = "Blades of Avernum dialogs";
 
 RECT	windRect;
@@ -224,7 +225,9 @@ int APIENTRY _tWinMain (HINSTANCE hInstance,
 
 void MyRegisterClass( HINSTANCE hInstance )
 {
-	WNDCLASSEX wndclass,wndclass2,wndclass3;
+	WNDCLASSEX wndclass,wndclass2,wndclass3,wndclass4;
+
+	//Main Window
 
 	wndclass.cbSize			= sizeof(WNDCLASSEX); 
 	wndclass.style			= CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
@@ -241,6 +244,8 @@ void MyRegisterClass( HINSTANCE hInstance )
 
 	RegisterClassEx(&wndclass);
 
+	//Dialogue Windows
+
 	wndclass2.cbSize		= sizeof(WNDCLASSEX); 
 	wndclass2.style			= CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
 	wndclass2.lpfnWndProc	= (WNDPROC)WndProc;
@@ -256,6 +261,7 @@ void MyRegisterClass( HINSTANCE hInstance )
 
 	RegisterClassEx(&wndclass2);
 
+	//Floor Tiles Window
 	wndclass3.cbSize			= sizeof(WNDCLASSEX); 
 	wndclass3.style			= CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
 	wndclass3.lpfnWndProc	= (WNDPROC)WndProc;
@@ -270,6 +276,21 @@ void MyRegisterClass( HINSTANCE hInstance )
 	wndclass3.hIconSm		= NULL;
 
 	RegisterClassEx(&wndclass3);
+
+	wndclass4.cbSize			= sizeof(WNDCLASSEX); 
+	wndclass4.style			= CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
+	wndclass4.lpfnWndProc	= (WNDPROC)WndProc;
+	wndclass4.cbClsExtra		= 0;
+	wndclass4.cbWndExtra		= 0;
+	wndclass4.hInstance		= hInstance;
+	wndclass4.hIcon			= NULL;
+	wndclass4.hCursor		= NULL;
+	wndclass4.hbrBackground	= (HBRUSH) GetStockObject(WHITE_BRUSH);
+	wndclass4.lpszMenuName	= NULL;
+	wndclass4.lpszClassName	= szPaletteName;
+	wndclass4.hIconSm		= NULL;
+
+	RegisterClassEx(&wndclass4);
 }
 
 LRESULT CALLBACK folderErrMsgWndProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM /*lParam*/)
@@ -307,7 +328,9 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		hInstance,
 		NULL);
 
-	tilesPtr = CreateWindow ( szTilesName, "Tiles", WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX, 0, 0, 280, 650, mainPtr, NULL, hInstance, NULL);
+	tilesPtr = CreateWindow ( szTilesName, "Tiles", WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX, 0, 0, 280, 415, mainPtr, NULL, hInstance, NULL);
+
+	palettePtr = CreateWindow ( szPaletteName, "Tools", WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX, 0, 0, 240, 225, mainPtr, NULL, hInstance, NULL);
 
 	if ( !mainPtr )
 		return FALSE;
@@ -332,9 +355,13 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 	GetWindowRect(GetDesktopWindow(),&main_rect);
 
 	MoveWindow(tilesPtr,((main_rect.right - main_rect.left) + 560) / 2,
-		((main_rect.bottom - main_rect.top) - 650) / 2,280,650,TRUE);
+		((main_rect.bottom - main_rect.top) - 650) / 2,280,415,TRUE);
 //	center_window(tilesPtr);
 	ShowWindow(tilesPtr,nCmdShow);
+
+	MoveWindow(palettePtr,((main_rect.right - main_rect.left) + 560) / 2,
+		((main_rect.bottom - main_rect.top) - 650) / 2 + 415,240,225,TRUE);
+	ShowWindow(palettePtr,nCmdShow);
 
 	GetClientRect(mainPtr,&windRect);
 	SetTimer(mainPtr,1,20,NULL);
@@ -352,7 +379,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		right_sbar_rect.bottom - right_sbar_rect.top,
 		tilesPtr,(HMENU) 1,(HINSTANCE) store_hInstance,(void *) NULL);
 
-	CreateToolTipForRect(tilesPtr);
+	CreateToolTipForRect(palettePtr);
 
 	cd_init_dialogs();
 
@@ -375,6 +402,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 	ShowScrollBar(right_sbar,SB_CTL,TRUE);
 //	UpdateWindow(mainPtr);
 	UpdateWindow(tilesPtr);
+	UpdateWindow(palettePtr);
 
 	return TRUE;
 }
@@ -458,7 +486,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		}
 		break;
 	case WM_KEYDOWN:
-		if (hwnd != mainPtr && hwnd != tilesPtr) {
+		if (hwnd != mainPtr && hwnd != tilesPtr && hwnd != palettePtr) {
 			check_cd_event(hwnd,message,wParam,lParam);
 			}
 			else {
@@ -468,7 +496,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		break;
 
 	case WM_CHAR:
-		if (hwnd != mainPtr && hwnd != tilesPtr)
+		if (hwnd != mainPtr && hwnd != tilesPtr && hwnd != palettePtr)
 			check_cd_event(hwnd,message,wParam,lParam);
 			else {
 				All_Done = handle_keystroke(wParam,lParam);
@@ -479,14 +507,14 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 
 	case WM_LBUTTONDOWN:
 	case WM_RBUTTONDOWN:
-		if (hwnd != mainPtr && hwnd != tilesPtr)
+		if (hwnd != mainPtr && hwnd != tilesPtr && hwnd != palettePtr)
 			check_cd_event(hwnd,message,wParam,lParam);
 		else {
 			SetFocus(hwnd);
 			press.x = LOWORD(lParam);
 			press.y = HIWORD(lParam);
 
-			All_Done = handle_action(press, wParam,lParam, (hwnd != mainPtr) ? 1 : 0);
+			All_Done = handle_action(press, wParam,lParam, (hwnd != mainPtr) ? ((hwnd != tilesPtr) ? PALETTE_WINDOW : TILES_WINDOW) : MAIN_WINDOW);//don't worry i'm going to rewrite this
 			check_game_done();
 		}
 		return 0;
@@ -556,7 +584,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		hdc = BeginPaint( hwnd, &ps );
 		EndPaint( hwnd, &ps );
 
-		if (hwnd != mainPtr && hwnd != tilesPtr)
+		if (hwnd != mainPtr && hwnd != tilesPtr && hwnd != palettePtr)
 			check_cd_event(hwnd,message,wParam,lParam);
 		else
 			redraw_screen();
@@ -613,7 +641,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		return 0;
 
 	case WM_COMMAND:
-		if (hwnd == mainPtr || hwnd == tilesPtr) {
+		if (hwnd == mainPtr || hwnd == tilesPtr || hwnd == palettePtr) {
 
 //			menu = GetMenu(mainPtr);
 			handle_menu_choice((short) wParam);

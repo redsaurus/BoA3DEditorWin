@@ -14,6 +14,10 @@ const size_t kSizeOfBig_tr_type			= 20480;	// only town_record_type is 6 byte la
 const size_t kSizeOfAve_tr_type			= 11520;	// Anyway, these constant is needed because the structure (class) size
 const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment setting.
 
+#define MAIN_WINDOW	0
+#define	TILES_WINDOW 1
+#define PALETTE_WINDOW 2
+
 #define	SLEEP_TICKS		0L
 #define	MOUSE_REGION	0L
 #define DRAG_EDGE		15
@@ -35,11 +39,12 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define	LEFT_TEXT_LINE_WIDTH	240
 #define	TEXT_LINE_HEIGHT	12
 #define	TER_BUTTON_SIZE	16
-#define	RIGHT_TEXT_LINE_ULX	15
-#define	RIGHT_TEXT_LINE_ULY	500
+#define TER_BUTTON_SIZE_OLD 16
+#define	RIGHT_TEXT_LINE_ULX	5
+#define	RIGHT_TEXT_LINE_ULY	110//500
 #define	RIGHT_BUTTONS_X_SHIFT	0//540
-#define	PALETTE_BUT_UL_X	17
-#define	PALETTE_BUT_UL_Y	382
+#define	PALETTE_BUT_UL_X	5
+#define	PALETTE_BUT_UL_Y	5//382
 #define	PALETTE_BUT_HEIGHT		17
 #define	PALETTE_BUT_WIDTH		25
 
@@ -1570,7 +1575,7 @@ RECT get_template_from_rect(short x,short y);
 
 // EdFcns
 void init_screen_locs();
-Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, Boolean tiles_window );
+Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which_window );
 void swap_terrain();
 Boolean handle_keystroke(WPARAM wParam,LPARAM lParam);
 void set_terrain(location l,short terrain_type);

@@ -595,7 +595,7 @@ Boolean clean_up_from_scrolling( int map_size, int dx, int dy )
 // "Outdoor: drawing mode failure after moving section" fix
 // mouse click to the scroller is handled on separate routines.
 
-Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, Boolean tiles_window )
+Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which_window )
 {
 	short i,j;
 	Boolean are_done = FALSE;
@@ -629,8 +629,8 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, Boolean til
 	cur_point = the_point;
 
 		// TERRAIN BUTTONS TO RIGHT
-	if (tiles_window) {
-	if (mouse_button_held == FALSE) {
+	if (which_window != MAIN_WINDOW) {
+	if (mouse_button_held == FALSE && which_window == TILES_WINDOW) {
 		cur_point = the_point;
 		cur_point.x -= RIGHT_BUTTONS_X_SHIFT;
 		
@@ -645,7 +645,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, Boolean til
 					}
 // q_3DModEnd
 
-			}
+		}
 			else { // terrain/height mode
 				short sbar_pos = GetControlValue(right_sbar);
 
@@ -661,11 +661,12 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, Boolean til
 							}
 						}
 // q_3DModEnd
-					}		
+			}		
 
 				
 				//place_right_buttons(0);
 		}
+	else if (which_window == PALETTE_WINDOW){
 
 		// PRESSING MAIN BUTTONS
 		for (i = 0; i < 9; i++)
@@ -1089,6 +1090,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, Boolean til
 				
 				place_right_buttons(/* 0 */);
 				
+				}
 				}
 		} // end right buttons
 		if (need_redraw)
@@ -3073,132 +3075,132 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	case 'A': // Pencil
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][0].left;
 	pass_point.y = 6 + palette_buttons[0][0].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'B': // Paintbrush (Large)
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][0].left;
 	pass_point.y = 6 + palette_buttons[1][0].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'C': // Paintbrush (Small)
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][0].left;
 	pass_point.y = 6 + palette_buttons[2][0].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'D': // Spraycan (Large)
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][0].left;
 	pass_point.y = 6 + palette_buttons[3][0].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'E': // Spraycan (Small)
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][0].left;
 	pass_point.y = 6 + palette_buttons[4][0].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'F': // Change Height
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][0].left;
 	pass_point.y = 6 + palette_buttons[5][0].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'G': // Paint Rectangle (Hollow)
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][0].left;
 	pass_point.y = 6 + palette_buttons[6][0].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'H': // Paint Rectangle (Full)
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][0].left;
 	pass_point.y = 6 + palette_buttons[7][0].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'I': // Eyedropper
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[8][0].left;
 	pass_point.y = 6 + palette_buttons[8][0].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'J':  case '[': // Zoom Out/Zoom In
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][1].left;
 	pass_point.y = 6 + palette_buttons[0][1].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'K':  case ']': // 2D/3D
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][1].left;
 	pass_point.y = 6 + palette_buttons[1][1].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'L': // Change Drawing Mode
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][1].left;
 	pass_point.y = 6 + palette_buttons[2][1].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'M': // Place Walls
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][1].left;
 	pass_point.y = 6 + palette_buttons[3][1].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'N': // Switch Wall Types
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][1].left;
 	pass_point.y = 6 + palette_buttons[4][1].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'O': // Automatic Hills
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][1].left;
 	pass_point.y = 6 + palette_buttons[5][1].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'P': // Copy Terrain Rectangle
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][1].left;
 	pass_point.y = 6 + palette_buttons[6][1].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'Q': // Paste Terrain Rectangle
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][1].left;
 	pass_point.y = 6 + palette_buttons[7][1].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'R': // Change Terrain Randomly
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[8][1].left;
 	pass_point.y = 6 + palette_buttons[8][1].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'S': // Edit Sign
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][2].left;
 	pass_point.y = 6 + palette_buttons[0][2].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'T': // Create Room Rectangle
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][2].left;
 	pass_point.y = 6 + palette_buttons[1][2].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'U': // Place Spawn Point
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][2].left;
 	pass_point.y = 6 + palette_buttons[2][2].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'V': // Create Special Encounter
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][2].left;
 	pass_point.y = 6 + palette_buttons[3][2].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'W': // Delete Special Encounter
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][2].left;
 	pass_point.y = 6 + palette_buttons[4][2].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'X': // Edit Special Encounter
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][2].left;
 	pass_point.y = 6 + palette_buttons[5][2].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'Y': // Select/Edit Object
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][2].left;
 	pass_point.y = 6 + palette_buttons[6][2].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'Z': // Delete Object
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][2].left;
 	pass_point.y = 6 + palette_buttons[7][2].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	
 	case '\\': // toggle gridline mode
@@ -3213,13 +3215,13 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	selected_item_number = -1;
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][0].left;
 	pass_point.y = 6 + palette_buttons[0][0].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 
 	case ';': // Clear Space
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[8][4].left;
 	pass_point.y = 6 + palette_buttons[8][4].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 
 	case ',': // Cut selected instance
@@ -3251,7 +3253,7 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	case ' ':
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][1].left;
 	pass_point.y = 6 + palette_buttons[2][1].top;
-	handle_action(pass_point,wParam,-1,1);
+	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 
 // q_3DModStart
@@ -3266,7 +3268,7 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 					pass_point.y = 6 + palette_buttons[1][1].top;
 				}
 
-				handle_action(pass_point,wParam,-1,1);
+				handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 // q_3DModEnd
 
