@@ -1722,8 +1722,10 @@ END
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
     LTEXT           "1_63",1,294,156,66,20
-    LTEXT           "Your scenario has been created in its own directory in the same directory as the Blades of Avernum Editor application. All scripts necessary to enable your scenario to run have also been copied over.",2,22,27,318,64
-    LTEXT           "To load your scenario and begin to edit it, select Open from the File menu. To play your scenario, drag the folder it's in into the Blades of Avernum Scenarios folder.",3,22,92,318,51
+//    LTEXT           "Your scenario has been created in its own directory in the same directory as the Blades of Avernum Editor application. All scripts necessary to enable your scenario to run have also been copied over.",2,22,27,318,64
+//    LTEXT           "To load your scenario and begin to edit it, select Open from the File menu. To play your scenario, drag the folder it's in into the Blades of Avernum Scenarios folder.",3,22,92,318,51
+    LTEXT           "Your scenario has been created in its own directory in the Blades of Avernum Scenarios folder. All scripts necessary to enable your scenario to run have also been copied over.",2,22,27,318,64
+    LTEXT           "To load your scenario and begin to edit it, select Open from the File menu.",3,22,92,318,51
 END
 
 875 DIALOG  10, 10, 382, 169 // Create New Scenario: Fatal Error

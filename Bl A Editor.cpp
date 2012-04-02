@@ -12,7 +12,7 @@
 #include "stdafx.h"
 #include "Resource.h"
 #include "global.h"
-#define kVersion "   Version:  Adventurous Adventurer"
+#define kVersion "   Version:  Bourgeois Bat (r97)"
 
 // Global variables
 
@@ -297,7 +297,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 	mainPtr = CreateWindow (
 		szAppName,
 		"3D Blades of Avernum Variant Scenario Editor " kVersion,
-		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX,
+		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SIZEBOX,
 		0,
 		0,
 		560,
@@ -562,8 +562,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			redraw_screen();
 		return 0;
 
-	case WM_SIZING:
-		//beep();
+	case WM_SIZE://using wm_size rather than wm_sizing makes sure that it works w/ the maximise button
 		if (hwnd == mainPtr){
 			GetClientRect(mainPtr,&windRect);
 			terrain_viewport_3d.bottom = windRect.bottom - 120;//40;
@@ -610,7 +609,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				}
 				break;
 			}
-	    SetFocus(mainPtr);
+	    SetFocus(tilesPtr);
 		return 0;
 
 	case WM_COMMAND:
@@ -625,7 +624,6 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				}
 		return 0;
 
-
 	case WM_DESTROY:
 		if (hwnd == mainPtr) {
 			force_game_end = TRUE;
@@ -633,6 +631,8 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		return 0;
 	case WM_CLOSE:
 		if (hwnd == mainPtr) {
+			if (save_check(869) == FALSE)
+				return 0;
 			force_game_end = TRUE;
 			}
 		return 0;

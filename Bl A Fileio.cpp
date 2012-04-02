@@ -23,6 +23,7 @@
 // Global variables
 char scenario_path[_MAX_PATH] = ""; // just the path to the scenario file
 char store_editor_path[_MAX_PATH + 1];
+char store_scenarios_path[_MAX_PATH + 1];
 char appl_path[_MAX_PATH + 1];
 
 // external global variables
@@ -267,6 +268,9 @@ bool init_directories( void )
 		write_BoAFilesFolder_to_Pref( boaFolder );
 
 	strcpy( store_editor_path, boaFolder );
+	strcpy( store_scenarios_path, boaFolder );
+	store_scenarios_path[strlen(store_scenarios_path) - 4] = '\0';
+	strcat_s( store_scenarios_path, _MAX_PATH + 1, "Blades of Avernum Scenarios" );
 	return true;
 }
 
@@ -1807,7 +1811,7 @@ Boolean create_basic_scenario(char *scen_name_short,char *scen_name_with_ext,cha
 	slash[0] = 92;
 
 	char new_directory[_MAX_PATH];
-	sprintf(new_directory,"%s%s%s",store_editor_path,slash,scen_name_short);
+	sprintf(new_directory,"%s%s%s",/*store_editor_path*/store_scenarios_path,slash,scen_name_short);
 	error = (short)CreateDirectory(new_directory,NULL);
 
 	sprintf((char *) scen_script_name,"%s.txt",scen_name_short);
@@ -2291,11 +2295,11 @@ void import_blades_of_exile_scenario()
 
 	// create new directory and scen file
 	char new_directory[_MAX_PATH];
-	sprintf(new_directory,"%s%s%s",store_editor_path,slash,new_scen_name);
+	sprintf(new_directory,"%s%s%s",/*store_editor_path*/store_scenarios_path,slash,new_scen_name);
 	error = (short)CreateDirectory(new_directory,NULL);
 		if (error == FALSE) {
        	for (j = 0; j < 1000; j++) {
-				sprintf(new_directory,"%s%s%s%d",store_editor_path,slash,new_scen_name,j);
+				sprintf(new_directory,"%s%s%s%d",/*store_editor_path*/store_scenarios_path,slash,new_scen_name,j);
 				error = (short)CreateDirectory(new_directory,NULL);
 				if (error == TRUE) {
 				break;
