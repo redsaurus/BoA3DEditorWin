@@ -44,7 +44,7 @@ extern short town_type ;
 extern location cur_out;
 extern Boolean editing_town;
 extern short overall_mode;
-extern short max_dim[3];
+extern short max_zone_dim[3];
 extern Boolean file_is_loaded;
 extern Boolean showed_graphics_error;
 extern short cen_x, cen_y;
@@ -2777,7 +2777,7 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 	short i,j,k;
 	Boolean current_section_on_surface = TRUE;
 	Boolean erase_list[64][64];
-	short town_size = max_dim[scenario.town_size[which_town]];
+	short town_size = max_zone_dim[scenario.town_size[which_town]];
 	
 	town.clear_town_record_type();
 	t_d.clear_big_tr_type();
@@ -5143,8 +5143,8 @@ void kludge_correct_old_bad_data()
 {
 	short q,r;
 	
-	for (q = 0; q < ((editing_town) ? max_dim[town_type] : 48); q++) 
-		for (r = 0; r < ((editing_town) ? max_dim[town_type] : 48); r++) {
+	for (q = 0; q < ((editing_town) ? max_zone_dim[town_type] : 48); q++) 
+		for (r = 0; r < ((editing_town) ? max_zone_dim[town_type] : 48); r++) {
 			if (editing_town) {
 				t_d.terrain[q][r] = minmax(0,511,t_d.terrain[q][r]);
 				t_d.floor[q][r] = (unsigned char)minmax(0,255,t_d.floor[q][r]);

@@ -12,7 +12,7 @@
 #include "stdafx.h"
 #include "Resource.h"
 #include "global.h"
-#define kVersion "   Version:  Bourgeois Bat (r97)"
+#define kVersion "   Version:  Bourgeois Bat (r98)"
 
 // Global variables
 
@@ -164,7 +164,7 @@ in_town_on_ter_script_type copied_ter_script;
 extern char hintbook_mode8;
 extern HDC main_dc;
 extern HBITMAP main_bitmap;
-extern short max_dim[3];
+extern short max_zone_dim[3];
 extern RECT terrain_buttons_rect;
 extern RECT terrain_rects[330];
 extern Boolean use_custom_name;
@@ -434,9 +434,9 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			if (!POINTInRECT(press, wheelHitRect))
 				break;
 			if (wheel_delta > 0)
-				handle_scroll((editing_town) ? max_dim[town_type] : 48, eSCRL_Left, (wheel_keystate & MK_CONTROL), FALSE);
+				handle_scroll((editing_town) ? max_zone_dim[town_type] : 48, eSCRL_Left, (wheel_keystate & MK_CONTROL), FALSE);
 			else if (wheel_delta < 0)
-				handle_scroll((editing_town) ? max_dim[town_type] : 48, eSCRL_Right, (wheel_keystate & MK_CONTROL), FALSE);
+				handle_scroll((editing_town) ? max_zone_dim[town_type] : 48, eSCRL_Right, (wheel_keystate & MK_CONTROL), FALSE);
 		}
 		break;
 	case WM_MOUSEWHEEL:
@@ -450,9 +450,9 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			if (!POINTInRECT(press, wheelHitRect))
 				break;
 			if (wheel_delta > 0)
-				handle_scroll((editing_town) ? max_dim[town_type] : 48, (wheel_keystate & MK_SHIFT) ? eSCRL_Left : eSCRL_Top, (wheel_keystate & MK_CONTROL), FALSE);
+				handle_scroll((editing_town) ? max_zone_dim[town_type] : 48, (wheel_keystate & MK_SHIFT) ? eSCRL_Left : eSCRL_Top, (wheel_keystate & MK_CONTROL), FALSE);
 			else if (wheel_delta < 0)
-				handle_scroll((editing_town) ? max_dim[town_type] : 48, (wheel_keystate & MK_SHIFT) ? eSCRL_Right : eSCRL_Bottom, (wheel_keystate & MK_CONTROL), FALSE);
+				handle_scroll((editing_town) ? max_zone_dim[town_type] : 48, (wheel_keystate & MK_SHIFT) ? eSCRL_Right : eSCRL_Bottom, (wheel_keystate & MK_CONTROL), FALSE);
 		}
 		else if (hwnd == tilesPtr){
 			wheelHitRect = terrain_buttons_rect;
@@ -514,7 +514,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			press.x = LOWORD(lParam);
 			press.y = HIWORD(lParam);
 
-			All_Done = handle_action(press, wParam,lParam, (hwnd != mainPtr) ? ((hwnd != tilesPtr) ? PALETTE_WINDOW : TILES_WINDOW) : MAIN_WINDOW);//don't worry i'm going to rewrite this
+			All_Done = handle_action(press, wParam,lParam, (hwnd != mainPtr) ? ((hwnd != tilesPtr) ? PALETTE_WINDOW : TILES_WINDOW_NUM) : MAIN_WINDOW_NUM);//don't worry i'm going to rewrite this
 			check_game_done();
 		}
 		return 0;
@@ -591,7 +591,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		return 0;
 
 	case WM_SIZE://using wm_size rather than wm_sizing makes sure that it works w/ the maximise button
-		if (hwnd == mainPtr){
+		if (hwnd == mainPtr && ter_draw_gworld != NULL/*don't want this when opening window for first time before initing:|*/){
 			GetClientRect(mainPtr,&windRect);
 			terrain_viewport_3d.bottom = windRect.bottom - 120;//40;
 			terrain_viewport_3d.right = windRect.right - 40;
@@ -601,8 +601,15 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			terrain_rect_gr_size.right = terrain_rect_gr_size.bottom;
 			delete_graphic(&ter_draw_gworld);
 			ter_draw_gworld = DibCreate (terrain_rect_gr_size.right,terrain_rect_gr_size.bottom, 16,0);
+			recalculate_2D_view_details();
+			recalculate_draw_distances();
 			update_screen_locs();
 			redraw_screen();
+			if (cur_viewing_mode == 1)
+			{
+				small_any_drawn = FALSE;
+				draw_terrain();
+			}
 		}
 		return 0;
 
@@ -830,24 +837,24 @@ void handle_edit_menu(int item_hit)
 		case 10: // Decrease View Mode
 							if ((cur_viewing_mode == 0) || (cur_viewing_mode > 9)) {
 								last_large_mode = cur_viewing_mode;
-								cur_viewing_mode = 2;
+								set_view_mode(2);
 								}
 							else if(cur_viewing_mode == 2)
-								cur_viewing_mode = 1;
+								set_view_mode(1);
 							else if(cur_viewing_mode == 1)
-								cur_viewing_mode = last_large_mode;
+								set_view_mode(last_large_mode);
 							set_up_terrain_buttons();
 							reset_small_drawn();
 							redraw_screen();
 		break;
 		case 11: // Increase View Mode
 							if(cur_viewing_mode == 1)
-								cur_viewing_mode = 2;
+								set_view_mode(2);
 							else if(cur_viewing_mode == 2)
-								cur_viewing_mode = last_large_mode;
+								set_view_mode(last_large_mode);
 							else {
 								last_large_mode = cur_viewing_mode;
-								cur_viewing_mode = 1;
+								set_view_mode(1);
 								}
 							set_up_terrain_buttons();
 							reset_small_drawn();
@@ -890,7 +897,7 @@ void handle_edit_menu(int item_hit)
 				clear_selected_copied_objects();
 				set_up_terrain_buttons();
 				change_made_town = FALSE;
-				cen_x = max_dim[town_type] / 2; cen_y = max_dim[town_type] / 2;
+				cen_x = max_zone_dim[town_type] / 2; cen_y = max_zone_dim[town_type] / 2;
 				reset_drawing_mode();
 				reset_small_drawn();
 				purgeUndo();
@@ -940,7 +947,7 @@ void handle_edit_menu(int item_hit)
 				clear_selected_copied_objects();
 				set_up_terrain_buttons();
 				change_made_town = FALSE;
-				cen_x = max_dim[town_type] / 2; cen_y = max_dim[town_type] / 2;
+				cen_x = max_zone_dim[town_type] / 2; cen_y = max_zone_dim[town_type] / 2;
 				reset_drawing_mode();
 				reset_small_drawn();
 				purgeUndo();
@@ -1078,7 +1085,7 @@ void handle_campaign_menu(int item_hit)
 	switch (item_hit) {
 		case 1: // Edit Town
 			small_any_drawn = FALSE;
-			cen_x = max_dim[town_type] / 2; cen_y = max_dim[town_type] / 2;
+			cen_x = max_zone_dim[town_type] / 2; cen_y = max_zone_dim[town_type] / 2;
 			current_drawing_mode = current_height_mode = 0;
 			editing_town = TRUE;
 			set_up_terrain_buttons();
@@ -1116,7 +1123,7 @@ void handle_campaign_menu(int item_hit)
 			}
 			new_town();
 			reset_drawing_mode();
-			cen_x = max_dim[town_type] / 2; cen_y = max_dim[town_type] / 2;
+			cen_x = max_zone_dim[town_type] / 2; cen_y = max_zone_dim[town_type] / 2;
 			purgeUndo();
 			purgeRedo();
 			redraw_screen();
@@ -1258,7 +1265,7 @@ void handle_town_menu(int item_hit)
 				clear_selected_copied_objects();
 				set_up_terrain_buttons();
 				change_made_town = FALSE;
-				cen_x = max_dim[town_type] / 2; cen_y = max_dim[town_type] / 2;
+				cen_x = max_zone_dim[town_type] / 2; cen_y = max_zone_dim[town_type] / 2;
 				reset_drawing_mode();
 				reset_small_drawn();
 				purgeUndo();

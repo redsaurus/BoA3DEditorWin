@@ -22,7 +22,7 @@ extern Boolean editing_town;
 extern short overall_mode;
 extern char *attitude_types[4];
 extern  Boolean file_is_loaded;
-extern short max_dim[3];
+extern short max_zone_dim[3];
 // local variables
 creature_start_type store_placed_monst;
 short store_which_placed_monst;
@@ -118,7 +118,7 @@ void monst_replaceall_event_filter (short item_hit)
 {
 	short i;
 	short dummy;
-	short town_size = max_dim[scenario.town_size[cur_town]];
+	short town_size = max_zone_dim[scenario.town_size[cur_town]];
 	char str[14];
 
 	switch (item_hit) {

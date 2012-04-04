@@ -14,20 +14,28 @@
 RECT kRect3DEditScrn = {
 	0 + TER_RECT_UL_Y,
 	0 + TER_RECT_UL_X,
-	496 + TER_RECT_UL_Y,
-	415 + TER_RECT_UL_X
+	DEFAULT_RECT3DEDIT_HEIGHT + TER_RECT_UL_Y,
+	DEFAULT_RECT3DEDIT_WIDTH + TER_RECT_UL_X
 };
 extern RECT terrain_viewport_3d;
 
 extern RECT windRect;
+
+extern unsigned int terrain_width_2d;
+extern unsigned int terrain_height_2d;
+extern int TER_RECT_UL_X_2d_big;
+extern int TER_RECT_UL_Y_2d_big;
+extern int TER_RECT_UL_X_2d_small;
+extern int TER_RECT_UL_Y_2d_small;
+
+extern int indoor_draw_distance;
+extern int outdoor_draw_distance;
 
 // scroll speed limit: duration / cycle
 const DWORD kScrollLimitTime = 100;		// msec
 
 // Global variables
 
-	// border rects order: top, left, bottom, right //
-RECT border_rect[4];
 RECT terrain_rects[330];
 // RECT terrain_rect_base = {0,0,16,16};							
 
@@ -37,9 +45,7 @@ RECT terrain_rects_3D[330];
 RECT palette_buttons[9][6];
 
 // These are the rects of the terrain spots INSIDE the terrain GWORLD, NOT the screen.
-RECT small_edit_ter_rects[MAX_TOWN_SIZE][MAX_TOWN_SIZE];
 RECT medium_edit_ter_rects[32][32];
-RECT large_edit_ter_rects[9][9];
 
 // Bottom text rectangles
 RECT left_text_lines[14];
@@ -120,7 +126,7 @@ extern HWND	mainPtr;
 extern short selected_item_number;
 extern item_type copied_item;
 extern creature_start_type copied_creature;
-extern short max_dim[4];
+extern short max_zone_dim[3];
 
 extern HWND right_sbar;
 extern in_town_on_ter_script_type copied_ter_script;
@@ -296,11 +302,29 @@ int check_scroller( POINT the_point )
 // check four rectangle side bars
 int check_scroller_2D( POINT the_point )
 {
+	//offset the_point to get from window coordinates to terrain view with border) coordinates
+	the_point.x-=TER_RECT_UL_X_2d_big;
+	the_point.y-=TER_RECT_UL_Y_2d_big;
+	RECT border_rect = terrainViewRect();
+	//terrainViewRect() is the rectangle containing the actual terrain; 
+	//need to expand it to include the bordering scroll areas
+	MacInsetRect(&border_rect, -TERRAIN_BORDER_WIDTH, -TERRAIN_BORDER_WIDTH);
 	int scrl = eSCRL_NoScrl;
-	if ( POINTInRECT( the_point, border_rect[0] ))	scrl |= eSCRL_Top;
-	if ( POINTInRECT( the_point, border_rect[1] ))	scrl |= eSCRL_Left;
-	if ( POINTInRECT( the_point, border_rect[2] ))	scrl |= eSCRL_Bottom;
-	if ( POINTInRECT( the_point, border_rect[3] ))	scrl |= eSCRL_Right;
+	int save = border_rect.bottom;
+	border_rect.bottom = border_rect.top + TERRAIN_BORDER_WIDTH;
+	if(POINTInRECT(the_point, border_rect)) scrl |= eSCRL_Top;
+	border_rect.bottom = save;
+	save = border_rect.right;
+	border_rect.right = border_rect.left + TERRAIN_BORDER_WIDTH;
+	if(POINTInRECT(the_point, border_rect)) scrl |= eSCRL_Left;
+	border_rect.right = save;
+	save = border_rect.top;
+	border_rect.top = border_rect.bottom - TERRAIN_BORDER_WIDTH;
+	if(POINTInRECT(the_point, border_rect)) scrl |= eSCRL_Bottom;
+	border_rect.top = save;
+	//save = border_rect.left; //not needed
+	border_rect.left = border_rect.right - TERRAIN_BORDER_WIDTH;
+	if(POINTInRECT(the_point, border_rect)) scrl |= eSCRL_Right;
 	return scrl;
 }
 
@@ -591,6 +615,60 @@ Boolean clean_up_from_scrolling( int map_size, int dx, int dy )
 	}
 	return FALSE;
 }
+void toggle_3D( void )
+{
+	if(cur_viewing_mode >= 10) {
+		set_view_mode(0);
+		if(current_cursor == 8)
+			set_cursor(5);
+		if(current_cursor == 9)
+			set_cursor(6);
+		// do proper modifications of scroll bar
+		if (current_drawing_mode != 0) {
+			//SetControlMinimum(right_sbar,0);
+//			SetControlMaximum(right_sbar,22);
+			SetScrollRange(right_sbar,SB_CTL,0,22,TRUE);
+			//SetControlValue(right_sbar,store_control_value);
+		}
+	}
+	else {
+		set_view_mode(10);
+		if(current_cursor == 5)
+			set_cursor(8);
+		if(current_cursor == 6)
+			set_cursor(9);
+		// do proper modifications of scroll bar
+		if (current_drawing_mode != 0) {
+			//SetControlMinimum(right_sbar,0);
+//			SetControlMaximum(right_sbar,25);
+			SetScrollRange(right_sbar,SB_CTL,0,25,TRUE);
+			//SetControlValue(right_sbar,store_control_value);
+		}
+	}
+	set_up_terrain_buttons();
+	reset_small_drawn();
+	redraw_screen();
+}
+
+void toggle_zoomedOut( void )
+{
+// q_3DModStart
+	if ((cur_viewing_mode == 1) || (cur_viewing_mode == 2))
+		set_view_mode(0);
+	else if(cur_viewing_mode == 0)
+		set_view_mode(1);
+	else if(cur_viewing_mode == 10) {
+		set_view_mode(11);
+		set_up_lights();
+	}
+	else if(cur_viewing_mode == 11)
+		set_view_mode(10);
+							
+	set_up_terrain_buttons();
+// q_3DModEnd
+	reset_small_drawn();
+	redraw_screen();
+}
 
 // "Outdoor: drawing mode failure after moving section" fix
 // mouse click to the scroller is handled on separate routines.
@@ -625,12 +703,12 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 
 	right_click = (GetKeyState( VK_RBUTTON ) & 0x8000) != 0;
 
-	int map_size = (editing_town) ? max_dim[town_type] : 48;
+	int map_size = (editing_town) ? max_zone_dim[town_type] : 48;
 	cur_point = the_point;
 
 		// TERRAIN BUTTONS TO RIGHT
-	if (which_window != MAIN_WINDOW) {
-	if (mouse_button_held == FALSE && which_window == TILES_WINDOW) {
+	if (which_window != MAIN_WINDOW_NUM) {
+	if (mouse_button_held == FALSE && which_window == TILES_WINDOW_NUM) {
 		cur_point = the_point;
 		cur_point.x -= RIGHT_BUTTONS_X_SHIFT;
 		
@@ -734,60 +812,12 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 						break;
 
 						case 100: //  Zoom In/Zoom Out
-// q_3DModStart
-							if ((cur_viewing_mode == 1) || (cur_viewing_mode == 2))
-								cur_viewing_mode = 0;
-							else if(cur_viewing_mode == 0)
-								cur_viewing_mode = 1;
-							else if(cur_viewing_mode == 10) {
-								cur_viewing_mode = 11;
-								set_up_lights();
-							}
-							else if(cur_viewing_mode == 11)
-								cur_viewing_mode = 10;
-							
-							set_up_terrain_buttons();
-// q_3DModEnd
-
-							reset_small_drawn();
-							redraw_screen();
+							toggle_zoomedOut();
 							break;
 
-// q_3DModStart
 						case 101: //  2D/3D
-							if(cur_viewing_mode >= 10) {
-								cur_viewing_mode = 0;
-								if(current_cursor == 8)
-									set_cursor(5);
-								if(current_cursor == 9)
-									set_cursor(6);
-								// do proper modifications of scroll bar
-								if (current_drawing_mode != 0) {
-									//SetControlMinimum(right_sbar,0);
-//									SetControlMaximum(right_sbar,22);
-									SetScrollRange(right_sbar,SB_CTL,0,22,TRUE);
-									//SetControlValue(right_sbar,store_control_value);
-								}
-							}
-							else {
-								cur_viewing_mode = 10;
-								if(current_cursor == 5)
-									set_cursor(8);
-								if(current_cursor == 6)
-									set_cursor(9);
-								// do proper modifications of scroll bar
-								if (current_drawing_mode != 0) {
-									//SetControlMinimum(right_sbar,0);
-//									SetControlMaximum(right_sbar,25);
-									SetScrollRange(right_sbar,SB_CTL,0,25,TRUE);
-									//SetControlValue(right_sbar,store_control_value);
-								}
-							}
-							set_up_terrain_buttons();
-							reset_small_drawn();
-							redraw_screen();
+							toggle_3D();
 							break;
-// q_3DModEnd
 
 						case 102: //  Change Drawing Mode
 							set_drawing_mode((current_drawing_mode + 1) % 3);
@@ -1108,59 +1138,55 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 
 	// clicking in terrain spots, big icon mode
 	if (cur_viewing_mode == 0) {
-		cur_point2 = cur_point;
-		cur_point2.x -= TER_RECT_UL_X; cur_point2.y -= TER_RECT_UL_Y;
-		for (i = 0; i < 9; i++)
-			for (j = 0; j < 9; j++)
-				if (POINTInRECT(cur_point2,large_edit_ter_rects[i][j])) {
-					spot_hit.x = (t_coord)(cen_x + i - 4);
-					spot_hit.y = (t_coord)(cen_y + j - 4);					
-
-					if ((mouse_button_held == TRUE) && (spot_hit.x == last_spot_hit.x) &&
-						(spot_hit.y == last_spot_hit.y))
-						return are_done;
-						else last_spot_hit = spot_hit;
-					if (mouse_button_held == FALSE)
-						last_spot_hit = spot_hit;
+		i = coord2Index(cur_point.x, TER_RECT_UL_X_2d_big+TERRAIN_BORDER_WIDTH,BIG_SPACE_SIZE);
+		j = coord2Index(cur_point.y, TER_RECT_UL_Y_2d_big+TERRAIN_BORDER_WIDTH,BIG_SPACE_SIZE);
+		if (i>=0 && i<terrain_width_2d && j>=0 && j<terrain_height_2d){
+			spot_hit.x = cen_x + i - terrain_width_2d/2;
+			spot_hit.y = cen_y + j - terrain_height_2d/2;
+		
+			if ((mouse_button_held == TRUE) && (spot_hit.x == last_spot_hit.x) &&
+				(spot_hit.y == last_spot_hit.y))
+				return are_done;
+			else last_spot_hit = spot_hit;
+			if (mouse_button_held == FALSE)
+				last_spot_hit = spot_hit;
 					
-					old_mode = overall_mode;
-					if(editing_town)
-						change_made_town = TRUE;
-					else
-						change_made_outdoors = TRUE;
+			old_mode = overall_mode;
+			if(editing_town)
+				change_made_town = TRUE;
+			else
+				change_made_outdoors = TRUE;
 
-					handle_ter_spot_press(spot_hit,option_hit,right_click);
+			handle_ter_spot_press(spot_hit,option_hit,right_click);
 					
-					need_redraw = TRUE;
-				}
+			need_redraw = TRUE;
+		}
 	}
 
 	// clicking in terrain spots, small icon mode
 	if (cur_viewing_mode == 1) {
-		cur_point2 = cur_point;
-		cur_point2.x -= TER_RECT_UL_X; cur_point2.y -= TER_RECT_UL_Y;
-		for (i = 0; i < MAX_TOWN_SIZE; i++)
-			for (j = 0; j < MAX_TOWN_SIZE; j++)
-				if (POINTInRECT(cur_point2,small_edit_ter_rects[i][j])) {
-					spot_hit.x = (t_coord)i;
-					spot_hit.y = (t_coord)j;					
+		i = coord2Index(cur_point.x, TER_RECT_UL_X_2d_small,SMALL_SPACE_SIZE);
+		j = coord2Index(cur_point.y, TER_RECT_UL_Y_2d_small,SMALL_SPACE_SIZE);
+		if (i>=0 && i<MAX_TOWN_SIZE && j>=0 && j<MAX_TOWN_SIZE){
+			spot_hit.x = (t_coord)i;
+			spot_hit.y = (t_coord)j;					
 
-					if ((mouse_button_held == TRUE) && (spot_hit.x == last_spot_hit.x) &&
-						(spot_hit.y == last_spot_hit.y))
-						return are_done;
-						else last_spot_hit = spot_hit;
-					if (mouse_button_held == FALSE)
-						last_spot_hit = spot_hit;
+			if ((mouse_button_held == TRUE) && (spot_hit.x == last_spot_hit.x) &&
+				(spot_hit.y == last_spot_hit.y))
+				return are_done;
+			else last_spot_hit = spot_hit;
+			if (mouse_button_held == FALSE)
+				last_spot_hit = spot_hit;
 					
-					old_mode = overall_mode;
-					if(editing_town)
-						change_made_town = TRUE;
-					else
-						change_made_outdoors = TRUE;
+			old_mode = overall_mode;
+			if(editing_town)
+				change_made_town = TRUE;
+			else
+				change_made_outdoors = TRUE;
 							
-					handle_ter_spot_press(spot_hit,option_hit,right_click);			
-					need_redraw = TRUE;
-				}
+			handle_ter_spot_press(spot_hit,option_hit,right_click);			
+			need_redraw = TRUE;
+		}
 	}
 
 	// clicking in terrain spots, medium icon mode
@@ -1205,7 +1231,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 			short height_to_draw;
 			graphic_id_type a;
 			
-			short current_size = ((editing_town) ? max_dim[town_type] : 48);
+			short current_size = ((editing_town) ? max_zone_dim[town_type] : 48);
 			short center_area_x, center_area_y;
 			short center_of_current_square_x, center_of_current_square_y;
 			short center_height;
@@ -1508,7 +1534,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 								case 4:
 									if(editing_town){
 										town.special_rects[j].bottom = 
-										how_many_dlog(town.special_rects[j].bottom,town.special_rects[j].top,max_dim[town_type],"Set bottom boundary:");
+										how_many_dlog(town.special_rects[j].bottom,town.special_rects[j].top,max_zone_dim[town_type],"Set bottom boundary:");
 									}
 									else {
 										current_terrain.special_rects[j].bottom = 
@@ -1519,7 +1545,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 								case 5:
 									if(editing_town){
 										town.special_rects[j].right = 
-										how_many_dlog(town.special_rects[j].right,town.special_rects[j].left,max_dim[town_type],"Set right boundary:");
+										how_many_dlog(town.special_rects[j].right,town.special_rects[j].left,max_zone_dim[town_type],"Set right boundary:");
 									}
 									else{
 										current_terrain.special_rects[j].right = 
@@ -1579,7 +1605,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 							case 4:
 								if(editing_town){
 									town.room_rect[j].bottom = 
-									how_many_dlog(town.room_rect[j].bottom,town.room_rect[j].top,max_dim[town_type],"Set bottom boundary:");
+									how_many_dlog(town.room_rect[j].bottom,town.room_rect[j].top,max_zone_dim[town_type],"Set bottom boundary:");
 								}
 								else {
 									current_terrain.info_rect[j].bottom = 
@@ -1590,7 +1616,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 							case 5:
 								if(editing_town){
 									town.room_rect[j].right = 
-									how_many_dlog(town.room_rect[j].right,town.room_rect[j].left,max_dim[town_type],"Set right boundary:");
+									how_many_dlog(town.room_rect[j].right,town.room_rect[j].left,max_zone_dim[town_type],"Set right boundary:");
 								}
 								else{
 									current_terrain.info_rect[j].right = 
@@ -1703,7 +1729,7 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 	Boolean shift_key = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0;
 	location current_loc;
 
-	if ((editing_town == TRUE) && ((spot_hit.x < 0) || (spot_hit.x > max_dim[town_type] - 1) || (spot_hit.y < 0) || (spot_hit.y > max_dim[town_type] - 1)))
+	if ((editing_town == TRUE) && ((spot_hit.x < 0) || (spot_hit.x > max_zone_dim[town_type] - 1) || (spot_hit.y < 0) || (spot_hit.y > max_zone_dim[town_type] - 1)))
 		return ;
 	if ((editing_town == FALSE) && ((spot_hit.x < 0) || (spot_hit.x > 47) || (spot_hit.y < 0) || (spot_hit.y > 47)))
 		return ;
@@ -1743,7 +1769,7 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 			cen_y = spot_hit.y;
 					 
 	if ((cur_viewing_mode == 1) || (cur_viewing_mode == 2)) {
-			cur_viewing_mode = 0;
+			set_view_mode(0);
 			set_up_terrain_buttons();
 			reset_small_drawn();
 			redraw_screen();
@@ -2590,8 +2616,8 @@ void swap_terrain()
 	change_ter(&a,&b,&c);
 	if (a < 0) return;
 	
-	for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++){
-		for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) {
+	for (i = 0; i < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); i++){
+		for (j = 0; j < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); j++) {
 			if (current_drawing_mode > 0) {
 				ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
 				if ((ter == a) && (get_ran(1,1,100) <= c)) {
@@ -2706,8 +2732,8 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 	};
 
 	const POINT kCenterPoint = {
-	TER_RECT_UL_Y + 15 + 4 * 48,
-	TER_RECT_UL_X + 15 + 4 * 48
+	TER_RECT_UL_Y_2d_big + TERRAIN_BORDER_WIDTH + (terrain_width_2d/2) * BIG_SPACE_SIZE,
+	TER_RECT_UL_X_2d_big + TERRAIN_BORDER_WIDTH + (terrain_width_2d/2) * BIG_SPACE_SIZE
 	};
 
 	// num pad key handling
@@ -2737,7 +2763,7 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 			}
 			
 			else {						// other ten keys
-				int map_size = (editing_town) ? max_dim[town_type] : 48;
+				int map_size = (editing_town) ? max_zone_dim[town_type] : 48;
 				int scrl = eSCRL_NoScrl;
 				if ((cur_viewing_mode == 0) || (cur_viewing_mode == 2))
 					scrl = scrl_key_2D[ i ];
@@ -2804,12 +2830,12 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 	if (wParam == VK_SUBTRACT) { // Zoom out
 							if ((cur_viewing_mode == 0) || (cur_viewing_mode > 9)) {
 								last_large_mode = cur_viewing_mode;
-								cur_viewing_mode = 2;
+								set_view_mode(2);
 								}
 							else if(cur_viewing_mode == 2)
-								cur_viewing_mode = 1;
+								set_view_mode(1);
 							else if(cur_viewing_mode == 1)
-								cur_viewing_mode = last_large_mode;
+								set_view_mode(last_large_mode);
 
 							set_up_terrain_buttons();
 							reset_small_drawn();
@@ -2818,12 +2844,12 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 
 	if (wParam == VK_ADD) { // Zoom in
 							if(cur_viewing_mode == 1)
-								cur_viewing_mode = 2;
+								set_view_mode(2);
 							else if(cur_viewing_mode == 2)
-								cur_viewing_mode = last_large_mode;
+								set_view_mode(last_large_mode);
 							else {
 								last_large_mode = cur_viewing_mode;
-								cur_viewing_mode = 1;
+								set_view_mode(1);
 								}
 							set_up_terrain_buttons();
 							reset_small_drawn();
@@ -3335,7 +3361,7 @@ Boolean is_hill(short i,short j)
 	short ter;
 	
 	ter = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
-	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
+	if ((editing_town == TRUE) && ((i < 0) || (i > max_zone_dim[town_type] - 1) || (j < 0) || (j > max_zone_dim[town_type] - 1)))
 		return TRUE;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return TRUE;
@@ -3356,7 +3382,7 @@ Boolean is_rocks(short i,short j)
 	short ter;
 	
 	ter = (editing_town == TRUE) ? t_d.floor[i][j] : current_terrain.floor[i][j];
-	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
+	if ((editing_town == TRUE) && ((i < 0) || (i > max_zone_dim[town_type] - 1) || (j < 0) || (j > max_zone_dim[town_type] - 1)))
 		return TRUE;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return TRUE;
@@ -3387,7 +3413,7 @@ Boolean is_water(short i,short j)
 	short ter;
 	
 	ter = (editing_town == TRUE) ? t_d.floor[i][j] : current_terrain.floor[i][j];
-	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
+	if ((editing_town == TRUE) && ((i < 0) || (i > max_zone_dim[town_type] - 1) || (j < 0) || (j > max_zone_dim[town_type] - 1)))
 		return TRUE;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return TRUE;
@@ -3407,8 +3433,8 @@ void shy_change_circle_terrain(location center,short radius,short terrain_type,s
 	short i,j;
 	short ter;
 		
-	for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++)
-		for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) {
+	for (i = 0; i < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); i++)
+		for (j = 0; j < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); j++) {
 			l.x = (t_coord)i;
 			l.y = (t_coord)j;
 			if (current_drawing_mode == 0) {
@@ -3434,8 +3460,8 @@ void change_circle_terrain(location center,short radius,short terrain_type,short
 	location l;
 	short i,j;
 
-	for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++)
-		for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) {
+	for (i = 0; i < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); i++)
+		for (j = 0; j < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); j++) {
 			l.x = (t_coord)i;
 			l.y = (t_coord)j;
 			if ((dist(center,l) <= radius) && (get_ran(1,1,20) <= probability))
@@ -3449,8 +3475,8 @@ void change_circle_height(location center,short radius,short lower_or_raise,shor
 {
 	location l;
 	short i,j;
-	for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++){
-		for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) {
+	for (i = 0; i < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); i++){
+		for (j = 0; j < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); j++) {
 			l.x = i;
 			l.y = j;
 			if ((dist(center,l) <= radius) && (get_ran(1,1,20) <= probability))
@@ -3466,7 +3492,7 @@ int flood_fill_floor(short new_floor, short old_floor, int x, int y)
 	int minx=x, maxx=x;
 	if(floors_match(new_floor,old_floor))
 		return(-1);
-	short i,max_size=((editing_town == TRUE) ? max_dim[town_type] : 48);
+	short i,max_size=((editing_town == TRUE) ? max_zone_dim[town_type] : 48);
 	//start at the seed point and move right to find one end of the line
 	for (i = x; i < max_size; i++){
 		if(editing_town){
@@ -3544,7 +3570,7 @@ int flood_fill_terrain(short new_terrain, short old_terrain, int x, int y)
 	int minx=x, maxx=x;
 	if(new_terrain==old_terrain)
 		return(-1);
-	short i,max_size=((editing_town == TRUE) ? max_dim[town_type] : 48);
+	short i,max_size=((editing_town == TRUE) ? max_zone_dim[town_type] : 48);
 	for (i = x; i < max_size; i++){
 		if(editing_town){
 			if(t_d.terrain[i][y]!=old_terrain){
@@ -3615,8 +3641,8 @@ void change_rect_terrain(macRECT r,short terrain_type,short probability,Boolean 
 	location l;
 	short i,j;
 	
-	for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++){
-		for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) {
+	for (i = 0; i < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); i++){
+		for (j = 0; j < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); j++) {
 			l.x = i;
 			l.y = j;
 			if ((i >= r.left) && (i <= r.right) && (j >= r.top) && (j <= r.bottom)
@@ -3631,8 +3657,8 @@ void change_rect_terrain(macRECT r,short terrain_type,short probability,Boolean 
 void copy_rect_terrain(macRECT r)
 {
 	short i,j;
-	for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++){
-		for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) {
+	for (i = 0; i < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); i++){
+		for (j = 0; j < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); j++) {
 			if ((i >= r.left) && (i <= r.right) && (j >= r.top) && (j <= r.bottom)){
 				if(editing_town){
 					clipboard.terrain[i-r.left][j-r.top]=t_d.terrain[i][j];
@@ -3665,8 +3691,8 @@ void paste_terrain(location l,Boolean shft_key,Boolean alt_key,Boolean ctrl_key)
 
 	short i,j,x,y;
 
-	for (i = l.x; (i < ((editing_town == TRUE) ? max_dim[town_type] : 48)) && (i<=(l.x+clipboardSize.right)); i++){
-		for (j = l.y; (j < ((editing_town == TRUE) ? max_dim[town_type] : 48)) && (j<=(l.y+clipboardSize.bottom)); j++) {
+	for (i = l.x; (i < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48)) && (i<=(l.x+clipboardSize.right)); i++){
+		for (j = l.y; (j < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48)) && (j<=(l.y+clipboardSize.bottom)); j++) {
 			x = i-l.x;
 			y = j-l.y;
 			if(editing_town){
@@ -3708,7 +3734,7 @@ void set_terrain(location l,short terrain_type)
 	location l2;
 	
 	i = l.x; j = l.y;
-	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
+	if ((editing_town == TRUE) && ((i < 0) || (i > max_zone_dim[town_type] - 1) || (j < 0) || (j > max_zone_dim[town_type] - 1)))
 		return ;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return ;
@@ -3863,7 +3889,7 @@ Boolean town_fix_grass_rocks(location l)
 	short i,j;
 	
 	i = l.x; j = l.y;	
-	if ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1))
+	if ((i < 0) || (i > max_zone_dim[town_type] - 1) || (j < 0) || (j > max_zone_dim[town_type] - 1))
 		return FALSE;
 	
 	store_ter = t_d.floor[i][j];
@@ -4018,7 +4044,7 @@ Boolean town_fix_rocks_water(location l)
 	short i,j;
 	
 	i = l.x; j = l.y;
-	if ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1))
+	if ((i < 0) || (i > max_zone_dim[town_type] - 1) || (j < 0) || (j > max_zone_dim[town_type] - 1))
 		return FALSE;
 	
 	store_ter = t_d.floor[i][j];
@@ -4165,7 +4191,7 @@ Boolean town_fix_hills(location l)
 	int lx = l.x;
 	int ly = l.y;
 	
-	if ((l.x < 0) || (l.x > max_dim[town_type] - 1) || (l.y < 0) || (l.y > max_dim[town_type] - 1))
+	if ((l.x < 0) || (l.x > max_zone_dim[town_type] - 1) || (l.y < 0) || (l.y > max_zone_dim[town_type] - 1))
 		return FALSE;
 	if (current_height_mode != 1)
 		return FALSE;
@@ -4338,8 +4364,8 @@ short get_height(short x, short y,short out_or_town)
 		
 		return current_terrain.height[x][y];
 	}
-	if (x > max_dim[town_type] - 1) x = max_dim[town_type] - 1;
-	if (y > max_dim[town_type] - 1) y = max_dim[town_type] - 1;
+	if (x > max_zone_dim[town_type] - 1) x = max_zone_dim[town_type] - 1;
+	if (y > max_zone_dim[town_type] - 1) y = max_zone_dim[town_type] - 1;
 	
 	return t_d.height[x][y];
 }
@@ -4374,7 +4400,7 @@ void recursive_clean_terrain(location l)
 		return;
 	
 	i = l.x; j = l.y;
-	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
+	if ((editing_town == TRUE) && ((i < 0) || (i > max_zone_dim[town_type] - 1) || (j < 0) || (j > max_zone_dim[town_type] - 1)))
 		return ;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return ;
@@ -4417,8 +4443,8 @@ short coord_to_ter(short x,short y)
 	short what_terrain;
 	if (x < 0) return 0;
 	if (y < 0) return 0;
-	if (x > (editing_town) ? max_dim[town_type] - 1 : 47)  return 0;
-	if (y > (editing_town) ? max_dim[town_type] - 1 : 47)  return 0;
+	if (x > (editing_town) ? max_zone_dim[town_type] - 1 : 47)  return 0;
+	if (y > (editing_town) ? max_zone_dim[town_type] - 1 : 47)  return 0;
 
 	if (editing_town == TRUE)
 		what_terrain = t_d.terrain[x][y];
@@ -4435,7 +4461,7 @@ void change_height(location l,short lower_or_raise)
 	short i,j;
 	
 	i = l.x; j = l.y;
-	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
+	if ((editing_town == TRUE) && ((i < 0) || (i > max_zone_dim[town_type] - 1) || (j < 0) || (j > max_zone_dim[town_type] - 1)))
 		return ;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return ;
@@ -4509,7 +4535,7 @@ void recursive_adjust_space_height_lower(location l)
 		return;
 	
 	i = l.x; j = l.y;
-	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
+	if ((editing_town == TRUE) && ((i < 0) || (i > max_zone_dim[town_type] - 1) || (j < 0) || (j > max_zone_dim[town_type] - 1)))
 		return ;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return ;
@@ -4574,7 +4600,7 @@ void recursive_adjust_space_height_raise(location l)
 		return;
 	
 	i = l.x; j = l.y;
-	if ((editing_town == TRUE) && ((i < 0) || (i > max_dim[town_type] - 1) || (j < 0) || (j > max_dim[town_type] - 1)))
+	if ((editing_town == TRUE) && ((i < 0) || (i > max_zone_dim[town_type] - 1) || (j < 0) || (j > max_zone_dim[town_type] - 1)))
 		return ;
 	if ((editing_town == FALSE) && ((i < 0) || (i > 47) || (j < 0) || (j > 47)))
 		return ;
@@ -5247,8 +5273,8 @@ void frill_terrain()
 	short terrain_type;
 	unsigned char floor_type;
 	
-	for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++){
-		for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) {
+	for (i = 0; i < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); i++){
+		for (j = 0; j < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); j++) {
 			terrain_type = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
 			floor_type = (editing_town == TRUE) ? t_d.floor[i][j] : current_terrain.floor[i][j];
 			
@@ -5303,8 +5329,8 @@ void unfrill_terrain()
 	short terrain_type;
 	unsigned char floor_type;
 	
-	for (i = 0; i < ((editing_town == TRUE) ? max_dim[town_type] : 48); i++){
-		for (j = 0; j < ((editing_town == TRUE) ? max_dim[town_type] : 48); j++) {
+	for (i = 0; i < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); i++){
+		for (j = 0; j < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); j++) {
 			terrain_type = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
 			floor_type = (editing_town == TRUE) ? t_d.floor[i][j] : current_terrain.floor[i][j];
 			
@@ -5682,10 +5708,10 @@ void place_bounding_walls(macRECT working_rect)
 		working_rect.left = 1;
 	if (working_rect.top == 0)
 		working_rect.top = 1;
-	if (working_rect.right == ((editing_town == TRUE) ? max_dim[town_type] : 48) - 1)
-		working_rect.right = ((editing_town == TRUE) ? max_dim[town_type] : 48) - 2;
-	if (working_rect.bottom == ((editing_town == TRUE) ? max_dim[town_type] : 48) - 1)
-		working_rect.bottom = ((editing_town == TRUE) ? max_dim[town_type] : 48) - 2;
+	if (working_rect.right == ((editing_town == TRUE) ? max_zone_dim[town_type] : 48) - 1)
+		working_rect.right = ((editing_town == TRUE) ? max_zone_dim[town_type] : 48) - 2;
+	if (working_rect.bottom == ((editing_town == TRUE) ? max_zone_dim[town_type] : 48) - 1)
+		working_rect.bottom = ((editing_town == TRUE) ? max_zone_dim[town_type] : 48) - 2;
 	
 	for (i = (short)working_rect.left; i <= (short)working_rect.right; i++)
 		for (j = (short)working_rect.top;j <= (short)working_rect.bottom; j++) {
@@ -5764,8 +5790,8 @@ void clean_walls()
 	short i,j;
 	
 	if (editing_town == TRUE) {
-		for (i = 1; i < max_dim[town_type] - 1; i++){
-			for (j = 1; j < max_dim[town_type] - 1; j++) {
+		for (i = 1; i < max_zone_dim[town_type] - 1; i++){
+			for (j = 1; j < max_zone_dim[town_type] - 1; j++) {
 				if ((t_d.terrain[i][j] == 6) && (is_dumb_terrain(t_d.terrain[i][j - 1])) && (is_wall(i + 1,j) == FALSE)) {
 					t_d.terrain[i][j] = 3; t_d.terrain[i][j - 1] = 4;
 				}
@@ -5910,15 +5936,15 @@ void set_up_lights()
 		for (j = 0; j < 64; j++)
 			where_lit[i][j] = 0;
 			
-	for (i = 0; i < max_dim[town_type]; i++)
-		for (j = 0; j < max_dim[town_type]; j++) {
+	for (i = 0; i < max_zone_dim[town_type]; i++)
+		for (j = 0; j < max_zone_dim[town_type]; j++) {
 			l.x = (t_coord)i; l.y = (t_coord)j;
 			ter = get_ter(t_d.terrain[i][j]);
 			rad = smax(ter.light_radius,
 					scen_data.scen_floors[t_d.floor[i][j]].light_radius);
 			if (rad > 0) {
-				for (where.x = (t_coord)smax(0,i - rad); where.x < (t_coord)smin(max_dim[town_type],i + rad + 1); where.x++)
-					for (where.y = (t_coord)smax(0,j - rad); where.y < (t_coord)smin(max_dim[town_type],j + rad + 1); where.y++)
+				for (where.x = (t_coord)smax(0,i - rad); where.x < (t_coord)smin(max_zone_dim[town_type],i + rad + 1); where.x++)
+					for (where.y = (t_coord)smax(0,j - rad); where.y < (t_coord)smin(max_zone_dim[town_type],j + rad + 1); where.y++)
 // q_3DModStart
 						if (/*(where_lit[where.x][where.y] == 0) && */(dist(where,l) <= rad) && (old_can_see_in(l,where, /* 0,*/ 0) == TRUE)) {
 // q_3DModEnd
@@ -6435,8 +6461,8 @@ temp_space_info_ptr corner_and_sight_map_at_loc(short sector_offset_x, short sec
 	short sight_reach;
 
 //	if(editing_town) {
-//		x += ((sector_offset_x == 1) ? max_dim[town_type] : ((sector_offset_x) ? -max_dim[town_type] : 0)) + 12;
-//		y += ((sector_offset_y == 1) ? max_dim[town_type] : ((sector_offset_y) ? -max_dim[town_type] : 0)) + 12;
+//		x += ((sector_offset_x == 1) ? max_zone_dim[town_type] : ((sector_offset_x) ? -max_zone_dim[town_type] : 0)) + 12;
+//		y += ((sector_offset_y == 1) ? max_zone_dim[town_type] : ((sector_offset_y) ? -max_zone_dim[town_type] : 0)) + 12;
 //	}
 //	else {
 //		x += ((sector_offset_x == 1) ? 48 : ((sector_offset_x) ? -48 : 0)) + 20;
@@ -6444,7 +6470,7 @@ temp_space_info_ptr corner_and_sight_map_at_loc(short sector_offset_x, short sec
 //	}
 
 	if(editing_town) {
-		map_size = max_dim[town_type];	sight_reach = 12;
+		map_size = max_zone_dim[town_type];	sight_reach = 12;
 	} else {
 		map_size = 48;					sight_reach = 20;
 	}
@@ -6595,7 +6621,7 @@ void set_up_corner_and_sight_map()
 	Boolean see_to_neighbors[3][3] = {{TRUE,TRUE,TRUE},{TRUE,TRUE,TRUE},{TRUE,TRUE,TRUE}};
 	
 	
-	short current_size = ((editing_town) ? max_dim[town_type] : 48);
+	short current_size = ((editing_town) ? max_zone_dim[town_type] : 48);
 	
 	temp_space_info_ptr temp_ptr;
 	
@@ -6653,9 +6679,9 @@ void set_up_corner_and_sight_map()
 				
 				//in the game, things a certain distance away aren't drawn.  Also, 
 				//that helps here by reducing the number of line-of-sight calculations needed
-				if(editing_town && (n_abs(view_to.x - cen_x) > 10 || n_abs(view_to.y - cen_y) > 10))
+				if(editing_town && (n_abs(view_to.x - cen_x) > indoor_draw_distance || n_abs(view_to.y - cen_y) > indoor_draw_distance))
 					continue;
-				if(!editing_town && (n_abs(view_to.x - cen_x) + n_abs(view_to.y - cen_y) > 14))
+				if(!editing_town && (n_abs(view_to.x - cen_x) + n_abs(view_to.y - cen_y) > outdoor_draw_distance))
 					continue;
 			}
 			
@@ -6731,9 +6757,9 @@ void set_up_corner_and_sight_map()
 				
 				//in the game, things a certain distance away aren't drawn.  Also, 
 				//that helps here by reducing the number of line-of-sight calculations needed
-				if(editing_town && (n_abs(view_to.x - cen_x) > 10 || n_abs(view_to.y - cen_y) > 10))
+				if(editing_town && (n_abs(view_to.x - cen_x) > indoor_draw_distance || n_abs(view_to.y - cen_y) > indoor_draw_distance))
 					continue;
-				if(!editing_town && (n_abs(view_to.x - cen_x) + n_abs(view_to.y - cen_y) > 14))
+				if(!editing_town && (n_abs(view_to.x - cen_x) + n_abs(view_to.y - cen_y) > outdoor_draw_distance))
 					continue;
 				
 				can_see(view_from, view_to, TRUE, FALSE,&see_to,&see_in);

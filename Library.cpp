@@ -7,7 +7,7 @@
 #define CLRDM2( d, num, size ) 			memset(d[0], num, (size) * (size) * sizeof(d[0][0]))
 #define COPYDM2( dst, src, idx, size )	memcpy( dst[idx], src[idx], (size) * sizeof( dst[0][0] ) );
 
-short max_dim[3] = {64,48,32};
+short max_zone_dim[3] = {64,48,32};
 
 
 graphic_id_type::graphic_id_type()
@@ -537,7 +537,7 @@ void town_record_type::clear_town_record_type()
 void town_record_type::set_start_locs(short town_size)
 {
 
-	short s = max_dim[town_size];
+	short s = max_zone_dim[town_size];
 	in_town_rect.top = 3;
 	in_town_rect.bottom = s - 4;
 	in_town_rect.left = 3;

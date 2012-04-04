@@ -14,9 +14,15 @@ const size_t kSizeOfBig_tr_type			= 20480;	// only town_record_type is 6 byte la
 const size_t kSizeOfAve_tr_type			= 11520;	// Anyway, these constant is needed because the structure (class) size
 const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment setting.
 
-#define MAIN_WINDOW	0
-#define	TILES_WINDOW 1
-#define PALETTE_WINDOW 2
+#define	DEFAULT_RECT3DEDIT_HEIGHT 496
+#define	DEFAULT_RECT3DEDIT_WIDTH 415
+
+#define DEFAULT_INDOOR_DRAW_DISTANCE 10//realistic draw distance in towns
+#define DEFAULT_OUTDOOR_DRAW_DISTANCE 14//realistic draw distance outdoors
+
+#define MAIN_WINDOW_NUM	0
+#define PALETTE_WINDOW 1
+#define	TILES_WINDOW_NUM 2
 
 #define	SLEEP_TICKS		0L
 #define	MOUSE_REGION	0L
@@ -1666,16 +1672,21 @@ void ASB_big (const char* str1,const char* str2,const char* str3,const char* str
 void CenterRectInRect (RECT* rectA, RECT* rectB);
 void SetMacRect(macRECT* rect,short top, short left, short bottom, short right);
 Boolean loc_touches_rect_border(location loc,macRECT r);
+int coord2Index(int coord, int base, int step);
 
 // Graphics.c
 void Set_up_win ();
 void lose_graphics();
+void recalculate_2D_view_details();
+void recalculate_draw_distances();
+Boolean set_view_mode(int mode);
 void redraw_screen();
 void draw_main_screen();
 void set_up_terrain_buttons();
 void reset_small_drawn();
 void draw_terrain();
 void place_right_buttons(/* short mode */);
+RECT terrainViewRect();
 void set_string(const char* string,const char* string2);
 void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height);
 void get_str(char* str,short i, short j);

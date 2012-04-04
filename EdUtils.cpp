@@ -338,6 +338,14 @@ terrain_type_type get_ter(short which_ter)
 	return ter;
 }
 
+int coord2Index(int coord, int base, int step){
+	int numer=coord-base;
+	int result=numer/step;
+	if(numer<0)
+		result-=1;
+	return(result);
+}
+
 void SetMacRect(macRECT* rect,short top, short left, short bottom, short right)
 {
 	rect->top = top;

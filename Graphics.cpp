@@ -62,9 +62,8 @@ extern short ulx,uly;
 extern short cen_x, cen_y;
 
 extern short available_dlog_buttons[NUM_DLOG_B];
-extern short max_dim[3];
+extern short max_zone_dim[3];
 extern RECT windRect;
-extern RECT world_screen;
 
 extern Boolean file_is_loaded;
 extern char *button_strs[140];
@@ -72,17 +71,13 @@ extern char *button_strs[140];
 extern short current_floor_drawn;
 extern short current_terrain_drawn;
 
-	// border rects order: top, left, bottom, right //
-extern RECT border_rect[4];
 extern RECT terrain_rects[330];
 
 extern RECT terrain_rects_3D[330];
 extern short hill_c_heights[12][4];
 
 extern RECT palette_buttons[9][6];
-extern RECT small_edit_ter_rects[MAX_TOWN_SIZE][MAX_TOWN_SIZE];
 extern RECT medium_edit_ter_rects[32][32];
-extern RECT large_edit_ter_rects[9][9];
 extern RECT left_text_lines[14];
 extern RECT right_text_lines[7];
 
@@ -161,6 +156,16 @@ RECT buttons_from[NUM_BUTTONS] = {{0,0,23,23},{46,0,108,23},{0,132,102,155},{126
 								{0,46,62,69},{208,30,226,46},{204,132,222,148},{172,0,202,30}}; // cancel, up arrow  down arrow
 
 // Palette UL x = 525 y = 382
+
+unsigned int terrain_width_2d = 10;
+unsigned int terrain_height_2d = 8;
+int TER_RECT_UL_X_2d_big;
+int TER_RECT_UL_Y_2d_big;
+int TER_RECT_UL_X_2d_small;
+int TER_RECT_UL_Y_2d_small;
+
+int indoor_draw_distance = DEFAULT_INDOOR_DRAW_DISTANCE;
+int outdoor_draw_distance = DEFAULT_OUTDOOR_DRAW_DISTANCE;
 
 // graphics library
 HDIB graphics_library[MAX_NUM_SHEETS_IN_LIBRARY];
@@ -263,24 +268,11 @@ void Set_up_win ()
 		    OffsetRect(&palette_buttons[i][j],i * 25 + PALETTE_BUT_UL_X, j * 17 + PALETTE_BUT_UL_Y);
 		}	
     }
-	for (i = 0; i < MAX_TOWN_SIZE; i++){
-		for (j = 0; j < MAX_TOWN_SIZE; j++){
-			SetRECT(small_edit_ter_rects[i][j],  i * SMALL_SPACE_SIZE,  j * SMALL_SPACE_SIZE,
-			    (i + 1) * SMALL_SPACE_SIZE,  (j + 1) * SMALL_SPACE_SIZE);
-		}
-    }
 
 	for (i = 0; i < MAX_TOWN_SIZE; i++){
 		for (j = 0; j < MAX_TOWN_SIZE; j++){
 			SetRECT(medium_edit_ter_rects[i][j],  i * MEDIUM_SPACE_SIZE,  j * MEDIUM_SPACE_SIZE,
 			    (i + 1) * MEDIUM_SPACE_SIZE,  (j + 1) * MEDIUM_SPACE_SIZE);
-		}
-    }
-
-	for (i = 0; i < 9; i++){
-		for (j = 0; j < 9; j++){
-			SetRECT(large_edit_ter_rects[i][j],TERRAIN_BORDER_WIDTH + i * BIG_SPACE_SIZE,TERRAIN_BORDER_WIDTH + j * BIG_SPACE_SIZE,
-			  TERRAIN_BORDER_WIDTH + (i + 1) * BIG_SPACE_SIZE,TERRAIN_BORDER_WIDTH + (j + 1) * BIG_SPACE_SIZE);
 		}
     }
 
@@ -295,18 +287,6 @@ void Set_up_win ()
 	for (i = 0; i < MAX_NUM_SHEETS_IN_LIBRARY; i++) {
 		graphics_library[i] = NULL;
 	}
-	RECT world_screen = {large_edit_ter_rects[0][0].left,large_edit_ter_rects[0][0].top,
-		large_edit_ter_rects[8][8].right,large_edit_ter_rects[8][8].bottom}; /**/
-
-	MacInsetRect(&world_screen,-15,-15);
-	OffsetRect(&world_screen,TER_RECT_UL_X,TER_RECT_UL_Y);
-
-	for (i = 0; i < 4; i++)
-		border_rect[i] = world_screen;
-	border_rect[0].bottom = border_rect[0].top + 15;
-	border_rect[1].right = border_rect[1].left + 15;
-	border_rect[2].top = border_rect[2].bottom - 15;
-	border_rect[3].left = border_rect[3].right - 15;
 			
 	load_main_screen();
 }
@@ -409,6 +389,50 @@ void lose_graphics()
 	DeleteObject(bold_font);
 
 }
+
+void recalculate_2D_view_details(){
+	terrain_width_2d = ((windRect.right-windRect.left)-2*(TERRAIN_BORDER_WIDTH+TER_RECT_UL_X))/BIG_SPACE_SIZE;
+	terrain_height_2d = ((windRect.bottom-windRect.top-80)-2*(TERRAIN_BORDER_WIDTH+TER_RECT_UL_Y))/BIG_SPACE_SIZE;
+	TER_RECT_UL_X_2d_big = (((windRect.right-windRect.left)-2*TERRAIN_BORDER_WIDTH)-(terrain_width_2d*BIG_SPACE_SIZE))/2;
+	TER_RECT_UL_Y_2d_big = (((windRect.bottom-windRect.top-80)-2*TERRAIN_BORDER_WIDTH)-(terrain_height_2d*BIG_SPACE_SIZE))/2;
+	TER_RECT_UL_X_2d_small = ((windRect.right-windRect.left)-(((editing_town) ? max_zone_dim[town_type] : 48)*SMALL_SPACE_SIZE))/2;
+	TER_RECT_UL_Y_2d_small = ((windRect.bottom-windRect.top-80)-(((editing_town) ? max_zone_dim[town_type] : 48)*SMALL_SPACE_SIZE))/2;
+}
+
+void recalculate_draw_distances(){
+	int i_x, i_y, o_x, o_y;
+	i_x = 1+(10*(terrain_viewport_3d.right - terrain_viewport_3d.left))/DEFAULT_RECT3DEDIT_WIDTH;
+	i_y = 1+(10*(terrain_viewport_3d.bottom - terrain_viewport_3d.top))/DEFAULT_RECT3DEDIT_HEIGHT;
+	o_x = 1+(14*(terrain_viewport_3d.right - terrain_viewport_3d.left))/DEFAULT_RECT3DEDIT_WIDTH;
+	o_y = 1+(14*(terrain_viewport_3d.bottom - terrain_viewport_3d.top))/DEFAULT_RECT3DEDIT_HEIGHT;
+	indoor_draw_distance = (i_x > i_y) ? i_x : i_y;
+	outdoor_draw_distance = (o_x > o_y) ? o_x : o_y;
+}
+
+Boolean set_view_mode(int mode){
+	switch(mode){
+		case 0: //2D mode, zoomed in
+			if (cur_viewing_mode>=10){
+				recalculate_2D_view_details();
+			}
+			break;
+		case 1: //2D mode, zoomed out
+			break;
+		case 2: //2D mode medium?
+			break;
+		case 10: //3D, schematic
+			break;
+		case 11:
+			recalculate_draw_distances();
+			break;
+		default:
+			return(false);
+	}
+	bool changed=(mode!=cur_viewing_mode);
+	cur_viewing_mode=mode;
+	return(changed);
+}
+
 
 void redraw_screen()
 {
@@ -2009,6 +2033,39 @@ for (short j = 14; j < 22; j++) {
 
 }
 
+
+RECT terrainViewRect(){
+	RECT r;
+	if(cur_viewing_mode==0){ //2D, zoomed in
+		r.top=TERRAIN_BORDER_WIDTH;
+		r.left=TERRAIN_BORDER_WIDTH;
+		r.bottom=TERRAIN_BORDER_WIDTH + terrain_height_2d * BIG_SPACE_SIZE;
+		r.right=TERRAIN_BORDER_WIDTH + terrain_width_2d * BIG_SPACE_SIZE;
+	}
+	else if(cur_viewing_mode==1){ //2D, zoomed out
+		r.top=0;
+		r.left=0;
+		r.bottom=((editing_town) ? max_zone_dim[town_type] : 48) * SMALL_SPACE_SIZE;
+		r.right=((editing_town) ? max_zone_dim[town_type] : 48) * SMALL_SPACE_SIZE;
+	}
+	else{ //3D
+		r = terrain_viewport_3d;
+	}
+	return(r);
+}
+
+RECT largeTileScreenRect(int xIdx, int yIdx){
+	RECT r={TERRAIN_BORDER_WIDTH + xIdx * BIG_SPACE_SIZE,TERRAIN_BORDER_WIDTH + yIdx * BIG_SPACE_SIZE,
+		TERRAIN_BORDER_WIDTH + (xIdx + 1) * BIG_SPACE_SIZE,TERRAIN_BORDER_WIDTH + (yIdx + 1) * BIG_SPACE_SIZE};
+	return(r);
+}
+
+RECT smallTileScreenRect(int xIdx, int yIdx){
+	RECT r={xIdx * SMALL_SPACE_SIZE,yIdx * SMALL_SPACE_SIZE,
+		(xIdx + 1) * SMALL_SPACE_SIZE,(yIdx + 1) * SMALL_SPACE_SIZE};
+	return(r);
+}
+
 void draw_ter_3D_large()
 {
 	short x,y,i;
@@ -2020,7 +2077,7 @@ void draw_ter_3D_large()
 	short sheet;
 	HFONT store_font;
 	short last_large_mode = cur_viewing_mode;
-	short current_size = ((editing_town) ? max_dim[town_type] : 48);
+	short current_size = ((editing_town) ? max_zone_dim[town_type] : 48);
 	short center_area_x, center_area_y;
 	short center_of_current_square_x, center_of_current_square_y;
 	short center_height, neighbor_height;
@@ -2174,9 +2231,9 @@ void draw_ter_3D_large()
 					view_to.y = (char)temp_y;
 					//in the game, things a certain distance away aren't drawn.  Also, 
 					//that helps here by reducing the number of line-of-sight calculations needed
-					if(editing_town && (n_abs(view_to.x - cen_x) > 10 || n_abs(view_to.y - cen_y) > 10))
+					if(editing_town && (n_abs(view_to.x - cen_x) > indoor_draw_distance || n_abs(view_to.y - cen_y) > indoor_draw_distance))
 						continue;
-					if(!editing_town && (n_abs(view_to.x - cen_x) + n_abs(view_to.y - cen_y) > 14))
+					if(!editing_town && (n_abs(view_to.x - cen_x) + n_abs(view_to.y - cen_y) > outdoor_draw_distance))
 						continue;
 					
 					see_in = get_see_in(sector_offset_x,sector_offset_y,x,y);
@@ -2879,10 +2936,9 @@ void draw_ter_large()
 
  	paint_pattern(ter_draw_gworld,0,terrain_rect_gr_size,1);
 
-	RECT whole_area_rect = {large_edit_ter_rects[0][0].left,large_edit_ter_rects[0][0].top,
-		large_edit_ter_rects[8][8].right,large_edit_ter_rects[8][8].bottom}; /**/
+	RECT whole_area_rect = terrainViewRect();
 	
-	MacInsetRect(&whole_area_rect,-15,-15);
+	MacInsetRect(&whole_area_rect,-TERRAIN_BORDER_WIDTH,-TERRAIN_BORDER_WIDTH);
 	ZeroRectCorner(&whole_area_rect);
 
 	SetBkMode(main_dc5,TRANSPARENT);
@@ -2890,9 +2946,9 @@ void draw_ter_large()
 	store_bmp = (HBITMAP) SelectObject(main_dc5,DibBitmapHandle(ter_draw_gworld));
 	
 	put_rect_in_gworld(main_dc5,whole_area_rect,0,0,0);
-	MacInsetRect(&whole_area_rect,15,15);
+	MacInsetRect(&whole_area_rect,TERRAIN_BORDER_WIDTH,TERRAIN_BORDER_WIDTH);
 	put_rect_in_gworld(main_dc5,whole_area_rect,0,0,0);
-	MacInsetRect(&whole_area_rect,-15,-15);
+	MacInsetRect(&whole_area_rect,-TERRAIN_BORDER_WIDTH,-TERRAIN_BORDER_WIDTH);
 	
 	if (file_is_loaded == FALSE) {
 		to_rect = whole_area_rect;
@@ -2903,53 +2959,63 @@ void draw_ter_large()
 		SelectObject(main_dc5,store_bmp);
 
 		to_rect = whole_area_rect;
-		OffsetRect(&to_rect,TER_RECT_UL_X,TER_RECT_UL_Y);
+		OffsetRect(&to_rect,TER_RECT_UL_X_2d_big,TER_RECT_UL_Y_2d_big);
 		rect_draw_some_item(ter_draw_gworld,
 			whole_area_rect,ter_draw_gworld,to_rect,0,1);			
 
 		return;
 	}
+
+	const int half_width = terrain_width_2d/2;
+	const int half_height = terrain_height_2d/2;
 		
-	for (q = 0; q < 9; q++) 
-		for (r = 0; r < 9; r++) {
+	for (q = 0; q < terrain_width_2d; q++) 
+		for (r = 0; r < terrain_height_2d; r++) {
+			int x_coord = cen_x + q - half_width;
+			int y_coord = cen_y + r - half_height;
+
+			Boolean selected = FALSE;
+
+			RECT destRect=/*large_edit_ter_rects[q][r]*/largeTileScreenRect(q,r);
 			where_draw.x = (t_coord)q; where_draw.y = (t_coord)r;
-			if((editing_town == FALSE) && ((cen_x + q - 4 < 0) || (cen_x + q - 4 >= 48) || (cen_y + r - 4 < 0) || (cen_y + r - 4 >= 48)) ) {
-				short sector_offset_x = ((cen_x + q - 4 < 0) ? -1 : ((cen_x + q - 4 >= 48) ? 1 : 0));
-				short sector_offset_y = ((cen_y + r - 4 < 0) ? -1 : ((cen_y + r - 4 >= 48) ? 1 : 0));
+
+			if((editing_town == FALSE) && ((x_coord < 0) || (x_coord >= 48) || (y_coord < 0) || (y_coord >= 48)) ) {
+				short sector_offset_x = ((x_coord < 0) ? -1 : ((x_coord >= 48) ? 1 : 0));
+				short sector_offset_y = ((y_coord < 0) ? -1 : ((y_coord >= 48) ? 1 : 0));
 
 				//leave the wood background there
 				if(cur_out.x + sector_offset_x < 0 || cur_out.y + sector_offset_y < 0 || 
 				cur_out.x + sector_offset_x >= scenario.out_width || cur_out.y + sector_offset_y >= scenario.out_height)
 					continue;
-				t_to_draw = border_terrains[sector_offset_x + 1][sector_offset_y + 1].terrain[cen_x + q - 4 - sector_offset_x * 48][cen_y + r - 4 - sector_offset_y * 48];
-				floor_to_draw = border_terrains[sector_offset_x + 1][sector_offset_y + 1].floor[cen_x + q - 4 - sector_offset_x * 48][cen_y + r - 4 - sector_offset_y * 48];
-				height_to_draw = border_terrains[sector_offset_x + 1][sector_offset_y + 1].height[cen_x + q - 4 - sector_offset_x * 48][cen_y + r - 4 - sector_offset_y * 48];
+				t_to_draw = border_terrains[sector_offset_x + 1][sector_offset_y + 1].terrain[x_coord - sector_offset_x * 48][y_coord - sector_offset_y * 48];
+				floor_to_draw = border_terrains[sector_offset_x + 1][sector_offset_y + 1].floor[x_coord - sector_offset_x * 48][y_coord - sector_offset_y * 48];
+				height_to_draw = border_terrains[sector_offset_x + 1][sector_offset_y + 1].height[x_coord - sector_offset_x * 48][y_coord - sector_offset_y * 48];
 			}
-			else if((editing_town == TRUE) && ((cen_x + q - 4 < 0) || (cen_x + q - 4 >= max_dim[town_type]) || (cen_y + r - 4 < 0) || (cen_y + r - 4 >= max_dim[town_type])) ) {
+			else if((editing_town == TRUE) && ((x_coord < 0) || (x_coord >= max_zone_dim[town_type]) || (y_coord < 0) || (y_coord >= max_zone_dim[town_type])) ) {
 
-				short temp_x = cen_x + q - 4;
-				short temp_y = cen_y + r - 4;
-				if(cen_x + q - 4 < 0) {
+				short temp_x = x_coord;
+				short temp_y = y_coord;
+				if(x_coord < 0) {
 					temp_x = 0;
 				}
-				if(cen_x + q - 4 >= max_dim[town_type]) {
-					temp_x = max_dim[town_type] - 1;
+				if(x_coord >= max_zone_dim[town_type]) {
+					temp_x = max_zone_dim[town_type] - 1;
 				}
-				if(cen_y + r - 4 < 0) {
+				if(y_coord < 0) {
 					temp_y = 0;
 				}
-				if(cen_y + r - 4 >= max_dim[town_type]) {
-					temp_y = max_dim[town_type] - 1;
+				if(y_coord >= max_zone_dim[town_type]) {
+					temp_y = max_zone_dim[town_type] - 1;
 				}
 
 				if((temp_x == 0) && (temp_x == town.in_town_rect.left  ) && (temp_y >= town.in_town_rect.top ) && (temp_y <= town.in_town_rect.bottom))
 					continue;
-				if((temp_x == (max_dim[town_type] - 1))
+				if((temp_x == (max_zone_dim[town_type] - 1))
 								 && (temp_x == town.in_town_rect.right ) && (temp_y >= town.in_town_rect.top ) && (temp_y <= town.in_town_rect.bottom))
 					continue;
 				if((temp_y == 0) && (temp_y == town.in_town_rect.top   ) && (temp_x >= town.in_town_rect.left) && (temp_x <= town.in_town_rect.right ))
 					continue;
-				if((temp_y == (max_dim[town_type] - 1)) 
+				if((temp_y == (max_zone_dim[town_type] - 1)) 
 								 && (temp_y == town.in_town_rect.bottom) && (temp_x >= town.in_town_rect.left) && (temp_x <= town.in_town_rect.right ))
 					continue;
 				
@@ -2962,12 +3028,12 @@ void draw_ter_large()
 			}
 
 			else {
-				t_to_draw = (editing_town) ? t_d.terrain[cen_x + q - 4][cen_y + r - 4] : current_terrain.terrain[cen_x + q - 4][cen_y + r - 4];		
-				floor_to_draw = (editing_town) ? t_d.floor[cen_x + q - 4][cen_y + r - 4] : current_terrain.floor[cen_x + q - 4][cen_y + r - 4];		
-				height_to_draw = (editing_town) ? t_d.height[cen_x + q - 4][cen_y + r - 4] : current_terrain.height[cen_x + q - 4][cen_y + r - 4];
+				t_to_draw = (editing_town) ? t_d.terrain[x_coord][y_coord] : current_terrain.terrain[x_coord][y_coord];		
+				floor_to_draw = (editing_town) ? t_d.floor[x_coord][y_coord] : current_terrain.floor[x_coord][y_coord];		
+				height_to_draw = (editing_town) ? t_d.height[x_coord][y_coord] : current_terrain.height[x_coord][y_coord];
 				}
 
-			location loc_drawn = {(t_coord)(cen_x + q - 4), (t_coord)(cen_y + r - 4)};
+			location loc_drawn = {(t_coord)(x_coord), (t_coord)(y_coord)};
 			if (same_point(loc_drawn,town.ter_scripts[i].loc)) {
 				terrsc_to_draw = i;
 				}
@@ -2982,7 +3048,7 @@ void draw_ter_large()
 
 			// if graphic is underfined for floor, just draw white
 			if (a.not_legit()) {
-				fill_rect_in_gworld(main_dc5,large_edit_ter_rects[q][r],230,0,0);
+				fill_rect_in_gworld(main_dc5,destRect,230,0,0);
 				}
 				else {
 					SelectObject(main_dc5,store_bmp);
@@ -2996,7 +3062,7 @@ void draw_ter_large()
 			if (t_to_draw > 0) {
 				a = scen_data.scen_ter_types[t_to_draw].ed_pic;
 				if (a.not_legit())
-					 fill_rect_in_gworld(main_dc5,large_edit_ter_rects[q][r],0,255,0);
+					 fill_rect_in_gworld(main_dc5,destRect,0,255,0);
 				else {
 					SelectObject(main_dc5,store_bmp);
 					if (place_terrain_icon_into_ter_large(a,q,r) == FALSE)
@@ -3006,7 +3072,7 @@ void draw_ter_large()
 			}
 		}
 			else
-			t_to_draw == 0;
+			t_to_draw = 0;
 
 			// Town mode: draw all instances
 			if (editing_town) {
@@ -3109,7 +3175,7 @@ void draw_ter_large()
 			// draw height
 			if (current_drawing_mode == 2) {
 				sprintf(str,"%d",height_to_draw);
-				to_rect = large_edit_ter_rects[q][r];
+				to_rect = destRect;
 				OffsetRect(&to_rect,3,14);
 				if (strlen(str) == 1)
 				to_rect.left = to_rect.right - 14;
@@ -3123,8 +3189,8 @@ void draw_ter_large()
 			location loc_drawn;
 			short in_square_x;
 			short in_square_y;
-			short temp_x = cen_x + q - 4;
-			short temp_y = cen_y + r - 4;
+			short temp_x = x_coord;
+			short temp_y = y_coord;
 			
 
 			// sign numbers, placed special numbers, (town) terrain script numbers,
@@ -3139,7 +3205,7 @@ void draw_ter_large()
 			if (numerical_display_mode == 4)
 				sprintf(str," %d %d",temp_x,temp_y);
 
- 				to_rect = large_edit_ter_rects[q][r];
+ 				to_rect = destRect;
 				OffsetRect(&to_rect,3,13);
 				if (strlen(str) == 1)
 				to_rect.left = to_rect.right - 34;
@@ -3150,12 +3216,12 @@ void draw_ter_large()
 				win_draw_string_outline(main_dc5,to_rect,str,2,10);
 				}
 
-			if(((editing_town == FALSE) && ((cen_x + q - 4 <= -1) || (cen_x + q - 4 >= 48) || (cen_y + r - 4 <= -1) || (cen_y + r - 4 >= 48))) ||
-			(editing_town == TRUE) && ((cen_x + q - 4 <= -1) || (cen_x + q - 4 >= max_dim[town_type]) || (cen_y + r - 4 <= -1) || (cen_y + r - 4 >= max_dim[town_type])) ) {
+			if(((editing_town == FALSE) && ((x_coord <= -1) || (x_coord >= 48) || (y_coord <= -1) || (y_coord >= 48))) ||
+			(editing_town == TRUE) && ((x_coord <= -1) || (x_coord >= max_zone_dim[town_type]) || (y_coord <= -1) || (y_coord >= max_zone_dim[town_type])) ) {
 				continue;
 			}
 
-			put_rect_in_gworld(main_dc5,large_edit_ter_rects[q][r],0,0,0);
+			put_rect_in_gworld(main_dc5,destRect,0,0,0);
 
 			short small_icon_position = 0;
 
@@ -4396,7 +4462,7 @@ void draw_ter_large()
 
 	// plop ter on screen
 	to_rect = whole_area_rect;
-	OffsetRect(&to_rect,TER_RECT_UL_X,TER_RECT_UL_Y);
+	OffsetRect(&to_rect,TER_RECT_UL_X_2d_big,TER_RECT_UL_Y_2d_big);
 	rect_draw_some_item(ter_draw_gworld,
 		whole_area_rect,ter_draw_gworld,to_rect,0,1);
 
@@ -4442,7 +4508,7 @@ void draw_ter_medium()
 				height_to_draw = border_terrains[sector_offset_x + 1][sector_offset_y + 1].height[cen_x + q - 16 - sector_offset_x * 48][cen_y + r - 16 - sector_offset_y * 48];
 			}
 
-			else if((editing_town == TRUE) && ((cen_x + q - 16 < 0) || (cen_x + q - 16 >= max_dim[town_type]) || (cen_y + r - 16 < 0) || (cen_y + r - 16 >= max_dim[town_type])) ) {
+			else if((editing_town == TRUE) && ((cen_x + q - 16 < 0) || (cen_x + q - 16 >= max_zone_dim[town_type]) || (cen_y + r - 16 < 0) || (cen_y + r - 16 >= max_zone_dim[town_type])) ) {
 
 				short temp_x = cen_x + q - 16;
 				short temp_y = cen_y + r - 16;
@@ -4450,24 +4516,24 @@ void draw_ter_medium()
 				if(cen_x + q - 16 < 0) {
 					temp_x = 0;
 				}
-				if(cen_x + q - 16 >= max_dim[town_type]) {
-					temp_x = max_dim[town_type] - 1;
+				if(cen_x + q - 16 >= max_zone_dim[town_type]) {
+					temp_x = max_zone_dim[town_type] - 1;
 				}
 				if(cen_y + r - 16 < 0) {
 					temp_y = 0;
 				}
-				if(cen_y + r - 16 >= max_dim[town_type]) {
-					temp_y = max_dim[town_type] - 1;
+				if(cen_y + r - 16 >= max_zone_dim[town_type]) {
+					temp_y = max_zone_dim[town_type] - 1;
 				}
 
 				if((temp_x == 0) && (temp_x == town.in_town_rect.left  ) && (temp_y >= town.in_town_rect.top ) && (temp_y <= town.in_town_rect.bottom))
 					continue;
-				if((temp_x == (max_dim[town_type] - 1))
+				if((temp_x == (max_zone_dim[town_type] - 1))
 								 && (temp_x == town.in_town_rect.right ) && (temp_y >= town.in_town_rect.top ) && (temp_y <= town.in_town_rect.bottom))
 					continue;
 				if((temp_y == 0) && (temp_y == town.in_town_rect.top   ) && (temp_x >= town.in_town_rect.left) && (temp_x <= town.in_town_rect.right ))
 					continue;
-				if((temp_y == (max_dim[town_type] - 1))
+				if((temp_y == (max_zone_dim[town_type] - 1))
 								 && (temp_y == town.in_town_rect.bottom) && (temp_x >= town.in_town_rect.left) && (temp_x <= town.in_town_rect.right ))
 					continue;
 
@@ -5034,18 +5100,16 @@ void draw_ter_small()
 
 	// first, clear area not drawn on
 	if ((editing_town == FALSE) || (town_type > 0)) {
-		RECT fill_area_rect = {small_edit_ter_rects[0][0].left,small_edit_ter_rects[0][0].top,
-			small_edit_ter_rects[63][63].right,small_edit_ter_rects[63][63].bottom}; /**/
-		fill_area_rect.left = small_edit_ter_rects[((editing_town) ? max_dim[town_type] : 48)][0].left;
+		RECT fill_area_rect = terrainViewRect();
+		fill_area_rect.left = ((editing_town) ? max_zone_dim[town_type] : 48)*SMALL_SPACE_SIZE;
  		paint_pattern(ter_draw_gworld,0,fill_area_rect,2);
 		fill_area_rect.left = 0;
-		fill_area_rect.top = small_edit_ter_rects[0][((editing_town) ? max_dim[town_type] : 48)].top;
+		fill_area_rect.top = ((editing_town) ? max_zone_dim[town_type] : 48)*SMALL_SPACE_SIZE;
  		paint_pattern(ter_draw_gworld,0,fill_area_rect,2);
 	}
 
 	RECT whole_area_rect;
-	SetRECT(whole_area_rect,small_edit_ter_rects[0][0].left,small_edit_ter_rects[0][0].top,
-		small_edit_ter_rects[MAX_TOWN_SIZE - 1][MAX_TOWN_SIZE - 1].right,small_edit_ter_rects[MAX_TOWN_SIZE - 1][MAX_TOWN_SIZE - 1].bottom);
+	whole_area_rect = terrainViewRect();
 
 	ZeroRectCorner(&whole_area_rect);
 
@@ -5053,8 +5117,8 @@ void draw_ter_small()
 	store_font = (HFONT)SelectObject(main_dc5,bold_font);
 	store_bmp = (HBITMAP) SelectObject(main_dc5,DibBitmapHandle(ter_draw_gworld));
 
-	for (q = 0; q < ((editing_town) ? max_dim[town_type] : 48); q++)
-		for (r = 0; r < ((editing_town) ? max_dim[town_type] : 48); r++) {
+	for (q = 0; q < ((editing_town) ? max_zone_dim[town_type] : 48); q++)
+		for (r = 0; r < ((editing_town) ? max_zone_dim[town_type] : 48); r++) {
 			where_draw.x = (t_coord)q; where_draw.y = (t_coord)r;
 
 			t_to_draw = (editing_town) ? t_d.terrain[q][r] : current_terrain.terrain[q][r];
@@ -5070,7 +5134,7 @@ void draw_ter_small()
 			a = scen_data.scen_floors[254].ed_pic;
 
 				if (a.not_legit()) {
-					fill_rect_in_gworld(main_dc5,small_edit_ter_rects[q][r],230,0,0);
+					fill_rect_in_gworld(main_dc5,smallTileScreenRect(q,r),230,0,0);
 				}
 				else {
 					SelectObject(main_dc5,store_bmp);
@@ -5083,7 +5147,7 @@ void draw_ter_small()
 			if (t_to_draw > 0) {
 				a = scen_data.scen_ter_types[t_to_draw].ed_pic;
 				if (a.not_legit())
-					 fill_rect_in_gworld(main_dc5,small_edit_ter_rects[q][r],0,255,0);
+					 fill_rect_in_gworld(main_dc5,smallTileScreenRect(q,r),0,255,0);
 				else {
 					SelectObject(main_dc5,store_bmp);
 					if (place_terrain_icon_into_ter_small(a,q,r) == FALSE)
@@ -5156,7 +5220,7 @@ void draw_ter_small()
 			if ((hintbook_mode2 == 0) && (hintbook_mode3 == 0)) {
 				for (i = 0; i < NUM_TOWN_PLACED_CREATURES; i++){
 					if ((town.creatures[i].exists()) && (town.creatures[i].start_loc.x == q) && (town.creatures[i].start_loc.y == r)) {
-					  	to_rect = small_edit_ter_rects[q][r];
+					  	to_rect = smallTileScreenRect(q,r);
 					  	MacInsetRect(&to_rect,1,1);
 						if (town.creatures[i].start_attitude < 3)
       				put_rect_in_gworld(main_dc5,to_rect,0,0,255);
@@ -5240,7 +5304,7 @@ put_rect_in_gworld( main_dc5,terrain_rect_gr_size,0,0,0);
 
 	// plop ter on screen
 	to_rect = whole_area_rect;
-	OffsetRect(&to_rect,TER_RECT_UL_X,TER_RECT_UL_Y);
+	OffsetRect(&to_rect,TER_RECT_UL_X_2d_small,TER_RECT_UL_Y_2d_small);
 	rect_draw_some_item(ter_draw_gworld,
 		whole_area_rect,ter_draw_gworld,to_rect,0,1);
 }
@@ -5266,7 +5330,7 @@ void draw_terrain()
 
 Boolean place_terrain_icon_into_ter_large(graphic_id_type icon,short in_square_x,short in_square_y)
 {
-	RECT to_rect = large_edit_ter_rects[in_square_x][in_square_y];
+	RECT to_rect = largeTileScreenRect(in_square_x,in_square_y);//large_edit_ter_rects[in_square_x][in_square_y];
 	RECT from_rect;
 	graphic_id_type a = icon;
 
@@ -5306,7 +5370,7 @@ Boolean place_terrain_icon_into_ter_medium(graphic_id_type icon,short in_square_
 
 Boolean place_terrain_icon_into_ter_small(graphic_id_type icon,short in_square_x,short in_square_y)
 {
-	RECT to_rect = small_edit_ter_rects[in_square_x][in_square_y];
+	RECT to_rect = smallTileScreenRect(in_square_x,in_square_y);
 	RECT from_rect;
 
 	graphic_id_type a = icon;
@@ -5327,7 +5391,7 @@ Boolean place_terrain_icon_into_ter_small(graphic_id_type icon,short in_square_x
 
 void place_ter_icon_on_tile(short tile_x,short tile_y,short position,short which_icon)
 {
-	RECT tiny_to = large_edit_ter_rects[tile_x][tile_y];
+	RECT tiny_to = largeTileScreenRect(tile_x,tile_y);
 	tiny_to.right = tiny_to.left + 10;
 	tiny_to.bottom = tiny_to.top + 10;
 	OffsetRect(&tiny_to,10 * (position / 4) + 1,10 * (position % 4) + 1);
@@ -5350,7 +5414,7 @@ void draw_creature(HDC ter_hdc,HBITMAP store_bmp,short creature_num,location loc
 		return;
 		
 	if (same_point(town.creatures[creature_num].start_loc,loc_drawn)){
-		RECT base_rect = large_edit_ter_rects[in_square_x][in_square_y];
+		RECT base_rect = largeTileScreenRect(in_square_x,in_square_y);
 		a = scen_data.scen_creatures[town.creatures[creature_num].number].char_graphic;
 
 		from_rect = get_template_from_rect(0,0);
@@ -5413,7 +5477,7 @@ void draw_item(HDC ter_hdc,HBITMAP store_bmp,short item_num,location loc_drawn,s
 		return;
 		
 	if (same_point(town.preset_items[item_num].item_loc,loc_drawn)) {
-		RECT to_rect = large_edit_ter_rects[in_square_x][in_square_y];
+		RECT to_rect = largeTileScreenRect(in_square_x,in_square_y);
 		MacInsetRect(&to_rect,10,10);
 		OffsetRect(&to_rect, town.preset_items[item_num].item_shift.x,town.preset_items[item_num].item_shift.y);
 		
@@ -5447,13 +5511,13 @@ void draw_item(HDC ter_hdc,HBITMAP store_bmp,short item_num,location loc_drawn,s
 void draw_ter_script(short script_num,location loc_drawn,short in_square_x,short in_square_y)
 {
 	char str[256];
-	RECT to_rect = large_edit_ter_rects[in_square_x][in_square_y];
+	RECT to_rect = largeTileScreenRect(in_square_x,in_square_y);
 	RECT ter_script_icon_from = {100,103,120,123}; 
 	if (town.ter_scripts[script_num].exists == FALSE)
 		return;
 		
 	if (same_point(town.ter_scripts[script_num].loc,loc_drawn)) {
-		to_rect = large_edit_ter_rects[in_square_x][in_square_y];
+		to_rect = largeTileScreenRect(in_square_x,in_square_y);
 		to_rect.left = to_rect.right - 20;
 		to_rect.bottom = to_rect.top + 20;
 		rect_draw_some_item(editor_mixed,ter_script_icon_from,ter_draw_gworld,to_rect,0,0);
