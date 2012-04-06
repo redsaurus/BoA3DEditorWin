@@ -815,8 +815,7 @@ void handle_edit_menu(int item_hit)
 				break;
 				}
 			set_string("Paste copied instance","Select location to place");
-			set_cursor(7);
-			overall_mode = 48;
+			set_tool(48);
 			break;
 		case 7: // delete selected instance: "Delete"
 			delete_selected_instance();
@@ -831,7 +830,7 @@ void handle_edit_menu(int item_hit)
 				set_string("Item De-selected","");
 		break;
 		case 9: // clear selected instance: "Clear Screen"
-				overall_mode = 51;
+				set_tool(51);
 				set_string("Continual Delete Mode","");
 		break;
 		case 10: // Decrease View Mode
@@ -1285,9 +1284,7 @@ void handle_town_menu(int item_hit)
 			break; 
 // q_3DModEnd
 		case 4: // Set Town Boundaries							
-			overall_mode = 17;
-			mode_count = 2;
-			set_cursor(5);
+			set_tool(17);
 			set_string("Set town boundary","Select upper left corner");
 			break;
 // q_3DModStart
@@ -1308,8 +1305,7 @@ void handle_town_menu(int item_hit)
 			if (fancy_choice_dialog(867,0) == 2)
 					break;
 			set_string("Set Town Start Point","Where will party start?");
-			overall_mode = 72;
-			set_cursor(7);
+			set_tool(72);
 			break;
 		case 11: // Add Random Items 
 				if (fancy_choice_dialog(863,0) == 2)
@@ -1450,8 +1446,7 @@ void handle_outdoor_menu(int item_hit)
 			if (fancy_choice_dialog(864,0) == 2)
 				return;
 			set_string("Set Outdoor Start Point","Where will party start?");
-			overall_mode = 71;
-			set_cursor(7);
+			set_tool(71);
 			break;
 
 		case 12: // Clear All Placed Specials
@@ -1476,7 +1471,7 @@ void handle_item_menu(int item_hit)
 	//	give_error("You can't place an item named 'Unused'.","",0);
 	//	return;
 	//	}
-	overall_mode = 47;
+	set_tool(47);
 	mode_count = (short)item_hit;
 	set_string("Place New Item","Select location to place");
 
@@ -1488,7 +1483,7 @@ void handle_monst_menu(int item_hit)
 		give_error("You can't place an creature named 'Unused'.","",0);
 		return;
 		}
-	overall_mode = 46;
+	set_tool(46);
 	mode_count = (short)item_hit;
 	set_string("Place New Creature","Select location to place");
 }

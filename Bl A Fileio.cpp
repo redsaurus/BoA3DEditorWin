@@ -805,7 +805,7 @@ void load_campaign()
 		scenario.port();
 		
 	refresh_graphics_library();
-	overall_mode = 0;	
+	set_tool(0);	
 
 	change_made_town = change_made_outdoors = FALSE;
 

@@ -436,8 +436,7 @@ void edit_placed_item(short which_item)
 	cd_kill_dialog(842,0);
 
 	set_string("Select/edit placed object","Select object to edit");
-	set_cursor(7);
-	overall_mode = 40;
+	set_tool(40);
 }
 
 void put_placed_item_in_dlog()
@@ -597,8 +596,7 @@ void edit_placed_script(short which_script)
 	cd_kill_dialog(838,0);
 
 	set_string("Select/edit placed object","Select object to edit");
-	set_cursor(7);
-	overall_mode = 40;
+	set_tool(40);
 }
 
 void put_placed_terrain_script_in_dlog()
@@ -703,8 +701,7 @@ void edit_placed_monst(short which_m)
 	cd_kill_dialog(837,0);
 
 	set_string("Select/edit placed object","Select object to edit");
-	set_cursor(7);
-	overall_mode = 40;
+	set_tool(40);
 
 }
 
