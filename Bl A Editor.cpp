@@ -591,7 +591,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		return 0;
 
 	case WM_SIZE://using wm_size rather than wm_sizing makes sure that it works w/ the maximise button
-		if (hwnd == mainPtr && ter_draw_gworld != NULL/*don't want this when opening window for first time before initing:|*/){
+		if (hwnd == mainPtr && main_dc != NULL/*don't want this when opening window for first time before initing:|*/){
 			GetClientRect(mainPtr,&windRect);
 			terrain_viewport_3d.bottom = windRect.bottom - 120;//40;
 			terrain_viewport_3d.right = windRect.right - 40;
