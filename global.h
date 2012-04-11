@@ -1685,7 +1685,7 @@ void lose_graphics();
 void recalculate_2D_view_details();
 void recalculate_draw_distances();
 Boolean set_view_mode(int mode);
-void redraw_screen();
+void redraw_screen(Boolean redrawSmall=false);
 void draw_main_screen();
 void set_up_terrain_buttons();
 void reset_small_drawn();

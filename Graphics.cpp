@@ -40,6 +40,7 @@ extern HWND	mainPtr;
 extern HWND tilesPtr;
 extern HWND palettePtr;
 extern HWND right_sbar;
+extern HWND palette_tooltips;
 extern RECT right_sbar_rect;
 
 extern scenario_data_type scenario;
@@ -434,22 +435,57 @@ Boolean set_view_mode(int mode){
 }
 
 
-void redraw_screen()
+void redraw_screen(Boolean redrawSmall)
 {
 	// fill main window with pattern
 	RECT to_rect = windRect;
-	//to_rect.right = RIGHT_BUTTONS_X_SHIFT;
-	paint_pattern(NULL,1,to_rect,0);
-	paint_pattern((HDIB) tiles_dc, 1, to_rect, 0);//???
-	paint_pattern((HDIB) palette_dc, 1, to_rect, 0);
+	RECT whole_area_rect = terrainViewRect();
+
+	switch(cur_viewing_mode){
+		case 0:
+			MacInsetRect(&whole_area_rect,-TERRAIN_BORDER_WIDTH,-TERRAIN_BORDER_WIDTH);
+			ZeroRectCorner(&whole_area_rect);
+			OffsetRect(&whole_area_rect, TER_RECT_UL_X_2d_big, TER_RECT_UL_Y_2d_big);
+			break;
+		case 1:
+		case 2:
+			OffsetRect(&whole_area_rect, TER_RECT_UL_X_2d_small, TER_RECT_UL_Y_2d_small);
+			break;
+		case 10:
+		case 11:
+			OffsetRect(&whole_area_rect, 15, 15);
+			break;
+	}
 	
-	// fill lower right corner
-	to_rect = windRect;
-	to_rect.left = terrain_buttons_rect.right + RIGHT_BUTTONS_X_SHIFT;
-	to_rect.top = 22 * (TER_BUTTON_SIZE + 1) + 1;
+	to_rect.bottom = whole_area_rect.top;
 	paint_pattern(NULL,1,to_rect,0);
 
-	small_any_drawn = TRUE;
+	//bottom bit is drawn with left text
+
+	to_rect.top = whole_area_rect.top;
+	to_rect.bottom = whole_area_rect.bottom;
+	to_rect.left = 0;
+	to_rect.right = whole_area_rect.left;
+	paint_pattern(NULL,1,to_rect,0);
+
+	to_rect.left = whole_area_rect.right;
+	to_rect.right = windRect.right;
+	paint_pattern(NULL,1,to_rect,0);
+
+	//to_rect.right = RIGHT_BUTTONS_X_SHIFT;
+	//paint_pattern((HDIB) tiles_dc, 1, to_rect, 0);//???
+	//paint_pattern((HDIB) palette_dc, 1, to_rect, 0);
+	
+	// fill lower right corner
+	//to_rect = windRect;
+	//to_rect.left = terrain_buttons_rect.right + RIGHT_BUTTONS_X_SHIFT;
+	//to_rect.top = 22 * (TER_BUTTON_SIZE + 1) + 1;
+	//paint_pattern(NULL,1,to_rect,0);
+
+	if (redrawSmall)
+		small_any_drawn = FALSE;
+	else
+		small_any_drawn = TRUE;
 	draw_main_screen();
 }
 
@@ -5542,8 +5578,27 @@ void place_left_text()
 	char draw_str[256];
 	short i,j;
 	
-	for (i = 0; i < 14; i++)
- 		paint_pattern(NULL,1,left_text_lines[i],0);
+	RECT to_rect = windRect;
+	RECT whole_area_rect = terrainViewRect();
+
+	switch(cur_viewing_mode){
+		case 0:
+			MacInsetRect(&whole_area_rect,-TERRAIN_BORDER_WIDTH,-TERRAIN_BORDER_WIDTH);
+			ZeroRectCorner(&whole_area_rect);
+			OffsetRect(&whole_area_rect, TER_RECT_UL_X_2d_big, TER_RECT_UL_Y_2d_big);
+			break;
+		case 1:
+		case 2:
+			OffsetRect(&whole_area_rect, TER_RECT_UL_X_2d_small, TER_RECT_UL_Y_2d_small);
+			break;
+		case 10:
+		case 11:
+			OffsetRect(&whole_area_rect, 15, 15);
+			break;
+	}
+	to_rect.bottom = windRect.bottom;
+	to_rect.top = whole_area_rect.bottom;
+	paint_pattern(NULL,1,to_rect,0);
 
 	HFONT store_font = (HFONT)SelectObject(main_dc,bold_font);
 	
@@ -7053,7 +7108,7 @@ void CreateToolTipForRect(HWND hwndParent)
 
 	TOOLINFO ti[9][6];
 	//unfortunately i managed to write these out as a 6x9 not a 9x6..nevermind
-	char *toolstring[6][9] = {{"Pencil", "Large Paintbrush", "Small Paintbrush", "Large Spraycan",
+	char *town_tool_string[6][9] = {{"Pencil", "Large Paintbrush", "Small Paintbrush", "Large Spraycan",
 							"Small Spraycan", "Set Height Rectangle", "Frame Rectangle", "Fill Rectangle", "Eyedropper"},
 								{"Toggle Special View", "Toggle 3D", "Drawing Mode", "Place Bounding Walls", "Swap Wall Types",
 								"Toggle Automatic Hills", "Copy Terrain", "Paste Terrain", "Change Terrain Randomly"},
@@ -7065,34 +7120,44 @@ void CreateToolTipForRect(HWND hwndParent)
 								"Place Force Barrier", "Place NE/SW Mirror", "Place NW/SE Mirror", "Clear Space"},
 								{"Place Small Bloodstain", "Place Medium Bloodstain", "Place Large Bloodstain", "Place Small Slime Pool",
 								"Place Large Slime Pool", "Place Dried Blood", "Place Bones", "Place Rocks", "Select Space"}};
+	char *outdoor_tool_string[4][9] = {{"Pencil", "Large Paintbrush", "Small Paintbrush", "Large Spraycan",
+							"Small Spraycan", "Set Height Rectangle", "Frame Rectangle", "Fill Rectangle", "Eyedropper"},
+								{"Toggle Special View", "Toggle 3D", "Drawing Mode", "Place Bounding Walls", "Swap Wall Types",
+								"Toggle Automatic Hills", "Copy Terrain", "Paste Terrain", "Change Terrain Randomly"},
+								{"Edit Sign", "Place Area Description", "Place Spawn Point", "Place Special Encounter",
+								"Delete Special Encounter", "Edit Special Encounter", "Select Object", "Delete Object", "Paintbucket"},
+								{"Create Town Entrance", "Edit Town Entrance", "", "", "",
+								"", "", "", ""}};
 
 	int i, j;
-    HWND hwndTT = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, 
+	DestroyWindow(palette_tooltips);
+
+    palette_tooltips = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, 
                                  WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, 
                                  CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
                                  hwndParent, NULL, store_hInstance,NULL);
 
-    SetWindowPos(hwndTT, HWND_TOPMOST, 0, 0, 0, 0, 
+    SetWindowPos(palette_tooltips, HWND_TOPMOST, 0, 0, 0, 0, 
                  SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 
     // Set up "tool" information. In this case, the "tool" is the entire parent window.
 	
 	for (i = 0; i < 9; i++)
 	{
-		for (j = 0; j < 6; j++)
+		for (j = 0; j < ((editing_town) ? 6 : 4); j++)
 		{
 //			ti[i][j] = { 0 };
 			ti[i][j].cbSize   = sizeof(TOOLINFO);
 			ti[i][j].uFlags   = TTF_SUBCLASS;
 			ti[i][j].hwnd     = hwndParent;
 			ti[i][j].hinst    = store_hInstance;
-			ti[i][j].lpszText = TEXT(toolstring[j][i]);
+			ti[i][j].lpszText = TEXT(((editing_town) ? town_tool_string[j][i] : outdoor_tool_string[j][i]));
 
 
 			ti[i][j].rect = palette_buttons[i][j];
 
 			// Associate the tooltip with the "tool" window.
-		  SendMessage(hwndTT, TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) &ti[i][j]);	
+		  SendMessage(palette_tooltips, TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) &ti[i][j]);	
 		}
 	} 
 } 

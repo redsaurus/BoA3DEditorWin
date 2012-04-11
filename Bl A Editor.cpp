@@ -23,6 +23,7 @@ HWND	right_sbar;
 HACCEL	accel;
 
 HWND	palettePtr;//this is the window which has the tools in it
+HWND	palette_tooltips;
 HWND	tilesPtr;//this is the window with the terrain etc. tiles in it
 
 char szTilesName[] = "Tiles";
@@ -321,7 +322,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SIZEBOX,
 		0,
 		0,
-		560,
+		546,
 		601, // was originally 601, then 690
 		NULL,
 		NULL,
@@ -604,12 +605,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			recalculate_2D_view_details();
 			recalculate_draw_distances();
 			update_screen_locs();
-			redraw_screen();
-			if (cur_viewing_mode == 1)
-			{
-				small_any_drawn = FALSE;
-				draw_terrain();
-			}
+			redraw_screen((cur_viewing_mode == 1) ? true : false);
 		}
 		return 0;
 
@@ -1083,10 +1079,13 @@ void handle_campaign_menu(int item_hit)
 		 
 	switch (item_hit) {
 		case 1: // Edit Town
+			if(editing_town)
+				return;
 			small_any_drawn = FALSE;
 			cen_x = max_zone_dim[town_type] / 2; cen_y = max_zone_dim[town_type] / 2;
 			current_drawing_mode = current_height_mode = 0;
 			editing_town = TRUE;
+			CreateToolTipForRect(palettePtr);
 			set_up_terrain_buttons();
 			shut_down_menus(); // (4)
 			DrawMenuBar(mainPtr);
@@ -1096,10 +1095,13 @@ void handle_campaign_menu(int item_hit)
 			redraw_screen();
 			break;
 		case 2: // Edit Outdoor Section
+			if(!editing_town)
+				return;
 			small_any_drawn = FALSE;
 			cen_x = 24; cen_y = 24;
 			current_drawing_mode = current_height_mode = 0;
 			editing_town = FALSE;
+			CreateToolTipForRect(palettePtr);
 			set_up_terrain_buttons();
 			shut_down_menus(); // (2)
 			clear_selected_copied_objects();
