@@ -24,6 +24,7 @@ HACCEL	accel;
 
 HWND	palettePtr;//this is the window which has the tools in it
 HWND	palette_tooltips;
+HWND	main_tooltips;
 HWND	tilesPtr;//this is the window with the terrain etc. tiles in it
 
 char szTilesName[] = "Tiles";
@@ -329,7 +330,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		hInstance,
 		NULL);
 
-	tilesPtr = CreateWindow ( szTilesName, "Tiles", WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX, 0, 0, 280, 415, mainPtr, NULL, hInstance, NULL);
+	tilesPtr = CreateWindow ( szTilesName, "Tiles", WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX, 0, 0, 280, 435, mainPtr, NULL, hInstance, NULL);
 
 	palettePtr = CreateWindow ( szPaletteName, "Tools", WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX, 0, 0, 240, 225, mainPtr, NULL, hInstance, NULL);
 
@@ -355,13 +356,13 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 
 	GetWindowRect(GetDesktopWindow(),&main_rect);
 
-	MoveWindow(tilesPtr,((main_rect.right - main_rect.left) + 560) / 2,
-		((main_rect.bottom - main_rect.top) - 650) / 2,280,415,TRUE);
+	MoveWindow(tilesPtr,((main_rect.right - main_rect.left) + 546) / 2,
+		((main_rect.bottom - main_rect.top) - 650) / 2,280,435,TRUE);
 //	center_window(tilesPtr);
 	ShowWindow(tilesPtr,nCmdShow);
 
-	MoveWindow(palettePtr,((main_rect.right - main_rect.left) + 560) / 2,
-		((main_rect.bottom - main_rect.top) - 650) / 2 + 415,240,225,TRUE);
+	MoveWindow(palettePtr,((main_rect.right - main_rect.left) + 546) / 2,
+		((main_rect.bottom - main_rect.top) - 650) / 2 + 435,240,225,TRUE);
 	ShowWindow(palettePtr,nCmdShow);
 
 	GetClientRect(mainPtr,&windRect);
@@ -370,17 +371,15 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 
 	cen_x = 24; cen_y = 24;
 
-	right_sbar_rect.top = 0;
+	right_sbar_rect.top = RIGHT_BUTTONS_Y_SHIFT;;
 	right_sbar_rect.left = terrain_buttons_rect.right + RIGHT_BUTTONS_X_SHIFT;
-	right_sbar_rect.bottom = 22 * (TER_BUTTON_SIZE + 1) + 1;
+	right_sbar_rect.bottom = 22 * (TER_BUTTON_SIZE + 1) + 1 + RIGHT_BUTTONS_Y_SHIFT;
 	right_sbar_rect.right = terrain_buttons_rect.right + RIGHT_BUTTONS_X_SHIFT + 16;
 	right_sbar = CreateWindow("scrollbar",NULL,
 		WS_CHILD | WS_TABSTOP | SBS_VERT, right_sbar_rect.left + ulx,right_sbar_rect.top + uly,
 		right_sbar_rect.right - right_sbar_rect.left,
 		right_sbar_rect.bottom - right_sbar_rect.top,
 		tilesPtr,(HMENU) 1,(HINSTANCE) store_hInstance,(void *) NULL);
-
-	CreateToolTipForRect(palettePtr);
 
 	cd_init_dialogs();
 
@@ -604,6 +603,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			ter_draw_gworld = DibCreate (terrain_rect_gr_size.right,terrain_rect_gr_size.bottom, 16,0);
 			recalculate_2D_view_details();
 			recalculate_draw_distances();
+			set_up_view_buttons();
 			update_screen_locs();
 			redraw_screen((cur_viewing_mode == 1) ? true : false);
 		}
@@ -1087,6 +1087,7 @@ void handle_campaign_menu(int item_hit)
 			editing_town = TRUE;
 			CreateToolTipForRect(palettePtr);
 			set_up_terrain_buttons();
+			reset_mode_number();
 			shut_down_menus(); // (4)
 			DrawMenuBar(mainPtr);
 			reset_drawing_mode();
@@ -1103,6 +1104,7 @@ void handle_campaign_menu(int item_hit)
 			editing_town = FALSE;
 			CreateToolTipForRect(palettePtr);
 			set_up_terrain_buttons();
+			reset_mode_number();
 			shut_down_menus(); // (2)
 			clear_selected_copied_objects();
 			DrawMenuBar(mainPtr);

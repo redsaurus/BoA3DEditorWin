@@ -28,6 +28,7 @@ char appl_path[_MAX_PATH + 1];
 
 // external global variables
 extern HWND mainPtr;
+extern HWND palettePtr;
 extern scenario_data_type scenario;
 extern town_record_type town;
 extern big_tr_type t_d;
@@ -845,6 +846,8 @@ void load_campaign()
 				if ((scenario.scen_horses[i].horse_loc.x == 0) && (scenario.scen_horses[i].horse_loc.y == 0) && (scenario.scen_horses[i].which_town == 0))
 					scenario.scen_horses[i].which_town = -1;
 					}
+
+	CreateToolTipForRect(palettePtr);
 
 }
 

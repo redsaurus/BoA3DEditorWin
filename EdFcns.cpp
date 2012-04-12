@@ -44,6 +44,11 @@ RECT terrain_rects_3D[330];
 
 RECT palette_buttons[9][6];
 
+RECT mode_buttons[5];
+RECT view_buttons[2];
+
+extern RECT mode_buttons_rect;
+
 // These are the rects of the terrain spots INSIDE the terrain GWORLD, NOT the screen.
 RECT medium_edit_ter_rects[32][32];
 
@@ -644,6 +649,7 @@ void toggle_3D( void )
 		}
 	}
 	set_up_terrain_buttons();
+	CreateMainToolTipRect();
 	reset_small_drawn();
 	redraw_screen();
 }
@@ -708,38 +714,54 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 	if (which_window != MAIN_WINDOW_NUM) {
 	if (mouse_button_held == FALSE && which_window == TILES_WINDOW_NUM) {
 		cur_point = the_point;
-		cur_point.x -= RIGHT_BUTTONS_X_SHIFT;
-		
-		if (current_drawing_mode == 0) { // floor mode
-			for (i = 0; i < 256; i++)
 
-// q_3DModStart
-//				if (point_in_rect(cur_point,&terrain_rects[i])) {
-				if (POINTInRECT(cur_point,((cur_viewing_mode >= 10 && current_drawing_mode > 0) ? terrain_rects_3D[i] : terrain_rects[i]))) {
-					reset_drawing_mode();
-					set_new_floor(i);
-					}
-// q_3DModEnd
+		if (!POINTInRECT(cur_point, mode_buttons_rect))
+		{
+			cur_point.x -= RIGHT_BUTTONS_X_SHIFT;
+			cur_point.y -= RIGHT_BUTTONS_Y_SHIFT;
+			
+			if (current_drawing_mode == 0) { // floor mode
+				for (i = 0; i < 256; i++)
 
-		}
-			else { // terrain/height mode
-				short sbar_pos = GetControlValue(right_sbar);
-
-				for (i = 0; i < 330; i++)
-					if (sbar_pos * 15 + i < 512) {
-// q_3DModStart
-//						if (point_in_rect(cur_point,&terrain_rects[i])) {
-						if (POINTInRECT(cur_point,((cur_viewing_mode >= 10 && current_drawing_mode > 0) ? terrain_rects_3D[i] : terrain_rects[i]))) {
-							if (current_drawing_mode != 1)
-								set_drawing_mode(1);
-							reset_drawing_mode();
-							set_new_terrain(sbar_pos * 15 + i);
-							}
+	// q_3DModStart
+	//				if (point_in_rect(cur_point,&terrain_rects[i])) {
+					if (POINTInRECT(cur_point,((cur_viewing_mode >= 10 && current_drawing_mode > 0) ? terrain_rects_3D[i] : terrain_rects[i]))) {
+						reset_drawing_mode();
+						set_new_floor(i);
 						}
-// q_3DModEnd
-			}		
+	// q_3DModEnd
 
+			}
+				else { // terrain/height mode
+					short sbar_pos = GetControlValue(right_sbar);
+
+					for (i = 0; i < 330; i++)
+						if (sbar_pos * 15 + i < 512) {
+	// q_3DModStart
+	//						if (point_in_rect(cur_point,&terrain_rects[i])) {
+							if (POINTInRECT(cur_point,((cur_viewing_mode >= 10 && current_drawing_mode > 0) ? terrain_rects_3D[i] : terrain_rects[i]))) {
+								if (current_drawing_mode != 1)
+									set_drawing_mode(1);
+								reset_drawing_mode();
+								set_new_terrain(sbar_pos * 15 + i);
+								}
+							}
+	// q_3DModEnd
+				}	
+		}
+		else{
 				
+			for (i = 0; i < ((editing_town) ? 3 : 3); i++) {
+				if (POINTInRECT(cur_point, mode_buttons[i])) {
+					if (i != current_drawing_mode)
+					{
+						play_sound(34);
+						set_drawing_mode(i);
+						need_redraw = TRUE;
+					}
+				}
+			}
+		}
 				//place_right_buttons(0);
 		}
 	else if (which_window == PALETTE_WINDOW){
@@ -801,16 +823,15 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 						break;
 
 						case 100: //  Zoom In/Zoom Out
-							toggle_zoomedOut();
+							//Not used
 							break;
 
 						case 101: //  2D/3D
-							toggle_3D();
+							//Not used
 							break;
 
 						case 102: //  Change Drawing Mode
-							set_drawing_mode((current_drawing_mode + 1) % 3);
-							need_redraw = TRUE;
+							//Not used
 							break;		
 						case 103: //  Place Walls
 							set_string("Place bounding walls","");
@@ -1068,6 +1089,19 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 		{
 			draw_main_screen();
 		}
+		return are_done;
+	}
+
+	if ((mouse_button_held == FALSE) && POINTInRECT(cur_point, view_buttons[0]))
+	{
+		play_sound(34);
+		toggle_3D();
+		return are_done;
+	}
+	else if ((mouse_button_held == FALSE) && POINTInRECT(cur_point, view_buttons[1]))
+	{
+		play_sound(34);
+		toggle_zoomedOut();
 		return are_done;
 	}
 
@@ -3238,19 +3272,23 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 	case 'J':  case '[': // Zoom Out/Zoom In
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][1].left;
-	pass_point.y = 6 + palette_buttons[0][1].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
+	if (file_is_loaded == TRUE){				// toggle Realistic mode
+		play_sound(34);
+		toggle_zoomedOut();
+	}
 	break;
 	case 'K':  case ']': // 2D/3D
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][1].left;
-	pass_point.y = 6 + palette_buttons[1][1].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
+	if (file_is_loaded == TRUE){				// toggle Realistic mode
+		play_sound(34);
+		toggle_3D();
+	}
 	break;
 	case 'L': // Change Drawing Mode
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][1].left;
-	pass_point.y = 6 + palette_buttons[2][1].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
+	if (file_is_loaded == TRUE){
+		play_sound(34);
+		set_drawing_mode((current_drawing_mode + 1) % 3);
+		draw_main_screen();
+	}
 	break;
 	case 'M': // Place Walls
 	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][1].left;
@@ -3370,24 +3408,26 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	break;
 
 	case ' ':
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][1].left;
-	pass_point.y = 6 + palette_buttons[2][1].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
+	if (file_is_loaded == TRUE){
+		play_sound(34);
+		set_drawing_mode((current_drawing_mode + 1) % 3);
+		draw_main_screen();
+	}
 	break;
 
 // q_3DModStart
 	case VK_TAB:	// '\t':
 //				if (option_hit != 0) {
+		if (file_is_loaded == TRUE){
 				if ( ctrl_key ) {					// toggle Realistic mode
-					pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][1].left;
-					pass_point.y = 6 + palette_buttons[0][1].top;
+					play_sound(34);
+					toggle_zoomedOut();
 				}
 				else {								// swap 2D/3D mode
-					pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][1].left;
-					pass_point.y = 6 + palette_buttons[1][1].top;
+					play_sound(34);
+					toggle_3D();
 				}
-
-				handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
+		}
 	break;
 // q_3DModEnd
 

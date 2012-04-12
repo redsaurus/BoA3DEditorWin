@@ -49,10 +49,13 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define	RIGHT_TEXT_LINE_ULX	5
 #define	RIGHT_TEXT_LINE_ULY	110//500
 #define	RIGHT_BUTTONS_X_SHIFT	0//540
+#define RIGHT_BUTTONS_Y_SHIFT	20
 #define	PALETTE_BUT_UL_X	5
 #define	PALETTE_BUT_UL_Y	5//382
 #define	PALETTE_BUT_HEIGHT		17
 #define	PALETTE_BUT_WIDTH		25
+
+#define TILES_WINDOW_WIDTH 280
 
 #define	NUM_PC_I	34
 
@@ -1688,11 +1691,14 @@ Boolean set_view_mode(int mode);
 void redraw_screen(Boolean redrawSmall=false);
 void draw_main_screen();
 void set_up_terrain_buttons();
+void reset_mode_number();
+void set_up_view_buttons();
 void reset_small_drawn();
 void draw_terrain();
 void place_right_buttons(/* short mode */);
 RECT terrainViewRect();
 void set_string(const char* string,const char* string2);
+void draw_view_buttons();
 void char_win_draw_string(HDC dest_window,RECT dest_rect,char *str,short mode,short line_height);
 void get_str(char* str,short i, short j);
 Boolean refresh_graphics_library();
@@ -1725,6 +1731,7 @@ void make_Boat(short i,short j);
 void take_Horse(short i,short j);
 void take_Boat(short i,short j);
 void CreateToolTipForRect(HWND hwndParent);
+void CreateMainToolTipRect();
 
 // graphutl
 HDIB load_pict(short which_pict);

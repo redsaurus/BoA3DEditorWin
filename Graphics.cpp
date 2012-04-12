@@ -32,6 +32,8 @@ RECT terrain_buttons_rect = {0,0,260,639}; /* was 550 */
 
 RECT palette_buttons_rect = {0, 0, 280, 250};
 
+RECT mode_buttons_rect = {0, 0, TILES_WINDOW_WIDTH, 20};
+
 Boolean showed_graphics_error = FALSE;
 
 // external global variables
@@ -41,6 +43,7 @@ extern HWND tilesPtr;
 extern HWND palettePtr;
 extern HWND right_sbar;
 extern HWND palette_tooltips;
+extern HWND main_tooltips;
 extern RECT right_sbar_rect;
 
 extern scenario_data_type scenario;
@@ -69,6 +72,7 @@ extern RECT windRect;
 extern Boolean file_is_loaded;
 extern char *button_strs[140];
 
+extern void draw_mode_buttons();
 extern short current_floor_drawn;
 extern short current_terrain_drawn;
 
@@ -78,6 +82,8 @@ extern RECT terrain_rects_3D[330];
 extern short hill_c_heights[12][4];
 
 extern RECT palette_buttons[9][6];
+extern RECT mode_buttons[5];
+extern RECT view_buttons[2];
 extern RECT medium_edit_ter_rects[32][32];
 extern RECT left_text_lines[14];
 extern RECT right_text_lines[7];
@@ -128,6 +134,8 @@ HDIB editor_mixed = NULL;
 HDIB terrain_buttons_gworld = NULL;
 HDIB palette_buttons_gworld = NULL;
 HDIB ter_draw_gworld = NULL;
+HDIB modeButtons = NULL;
+HDIB modeButtonsInvert = NULL;
 
 HDIB dlog_horiz_border_bottom_gworld = NULL;
 HDIB dlog_horiz_border_top_gworld = NULL;
@@ -149,6 +157,8 @@ RECT terrain_rect_gr_size = {0,0,512,512};
 RECT base_small_button_from = {0,103,10,113};
 RECT base_small_3D_button_from = {0,143,16,154};
 RECT palette_button_base = {0,0,25,18};
+RECT mode_button_base = {0,0,25,18};
+RECT view_button_base = {0,0,25,18};
 extern RECT terrain_viewport_3d = {5,5,501,420};
 
 RECT buttons_from[NUM_BUTTONS] = {{0,0,23,23},{46,0,108,23},{0,132,102,155},{126,23,142,36},
@@ -277,6 +287,10 @@ void Set_up_win ()
 		}
     }
 
+	reset_mode_number();
+
+	set_up_view_buttons();
+
 	for (i = 0; i < 330; i++)
 		SetRECT(terrain_rects[i],3 + (i % 15) * (TER_BUTTON_SIZE + 1),2 + (i / 15) * (TER_BUTTON_SIZE + 1),
 			3 + (i % 15) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE,2 + (i / 15) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE);
@@ -331,6 +345,9 @@ void load_main_screen()
 	dialog_pattern_gworld = DibCreate (192,256, 16,0);
 	pat_source_gworld = load_pict(4900);
 	editor_mixed = load_pict(4919);
+	modeButtons = load_pict(4921);
+	modeButtonsInvert = load_pict(4922);
+
 
 	mixed_gworld = load_pict(903);
 	if (dlog_horiz_border_bottom_gworld == NULL)
@@ -362,6 +379,8 @@ void lose_graphics()
 	delete_graphic(&dlog_horiz_border_bottom_gworld);
 	delete_graphic(&mixed_gworld);
 	delete_graphic(&editor_mixed);
+	delete_graphic(&modeButtons);
+	delete_graphic(&modeButtonsInvert);
 	delete_graphic(&pat_source_gworld);
 	delete_graphic(&dialog_pattern_gworld);
 	delete_graphic(&pattern_gworld);
@@ -457,17 +476,34 @@ void redraw_screen(Boolean redrawSmall)
 			break;
 	}
 	
+	//top zone
+	to_rect.bottom = whole_area_rect.top;
+	to_rect.right = view_buttons[0].left;
+	paint_pattern(NULL,1,to_rect,0);
+
+	to_rect.left = view_buttons[1].right + 1;
+	to_rect.right = windRect.right;
+	paint_pattern(NULL,1,to_rect,0);
+
+	to_rect.left = view_buttons[0].left;
+	to_rect.right = view_buttons[1].right + 1;
+	to_rect.bottom = view_buttons[0].top;
+	paint_pattern(NULL,1,to_rect,0);
+
+	to_rect.top = view_buttons[0].bottom;
 	to_rect.bottom = whole_area_rect.top;
 	paint_pattern(NULL,1,to_rect,0);
 
 	//bottom bit is drawn with left text
 
+	//left
 	to_rect.top = whole_area_rect.top;
 	to_rect.bottom = whole_area_rect.bottom;
 	to_rect.left = 0;
 	to_rect.right = whole_area_rect.left;
 	paint_pattern(NULL,1,to_rect,0);
 
+	//right
 	to_rect.left = whole_area_rect.right;
 	to_rect.right = windRect.right;
 	paint_pattern(NULL,1,to_rect,0);
@@ -493,8 +529,40 @@ void draw_main_screen()
 {
 	place_right_buttons();
 	draw_terrain();
+	draw_view_buttons();
 }
 
+//this sets the mode buttons rectangles in the tiles window according to whether
+//you're editing town or outdoors
+void reset_mode_number()
+{
+	int i, offset;
+
+	offset = TILES_WINDOW_WIDTH/2;//find middle of tiles window...
+
+	offset -= (PALETTE_BUT_WIDTH * ((editing_town) ? 3 : 3)) / 2;//and shift over by 3/2 buttons worth to centre buttons
+
+	for (i = 0; i < 5; i++) {
+		mode_buttons[i] = mode_button_base;
+		OffsetRect(&mode_buttons[i], offset + i * 25, 0);
+	}
+}
+
+//this places the toggle 3d and toggle special view mode buttons in the main window
+void set_up_view_buttons()
+{
+	int i, offset;
+
+	offset = (windRect.right - windRect.left)/2;
+
+	offset -= PALETTE_BUT_WIDTH;
+
+	for (i = 0; i < 2; i++) {
+		view_buttons[i] = view_button_base;
+		OffsetRect(&view_buttons[i], offset + i * 25, 1);
+	}
+	CreateMainToolTipRect();
+}
 
 void set_up_terrain_buttons()
 {
@@ -634,8 +702,8 @@ void set_up_terrain_buttons()
 			RECT from_rect = {PALETTE_BUT_WIDTH * i,PALETTE_BUT_HEIGHT * j,
 				PALETTE_BUT_WIDTH * (i + 1),PALETTE_BUT_HEIGHT * (j + 1) + 1}; /**/
 			RECT to_rect = palette_buttons[i][j];
-			if(cur_viewing_mode >= 10 && i == 0 && j == 1)		// realistic mode palette icon
-				from_rect = kRealisticButtonRect;
+			if((i >= 0 && i <= 2) && j == 1)		// realistic mode palette icon
+				from_rect = kBlankButtonRect;
 			if(editing_town == FALSE && i == 0 && j == 3)
 				from_rect = kCreateTownButtonRect;
 			if(editing_town == FALSE && i == 1 && j == 3)
@@ -6126,11 +6194,12 @@ void place_right_buttons( /* short mode */ )
 	
 	if (file_is_loaded == FALSE){
 		to_rect = terrain_buttons_rect;
-		OffsetRect(&to_rect,RIGHT_BUTTONS_X_SHIFT,0);
+		OffsetRect(&to_rect,RIGHT_BUTTONS_X_SHIFT,RIGHT_BUTTONS_Y_SHIFT);
 		rect_draw_some_item(terrain_buttons_gworld,terrain_buttons_rect,
 			(HDIB) tiles_dc,to_rect,0,2); 
 		to_rect = palette_buttons_rect;
 		rect_draw_some_item(palette_buttons_gworld, palette_buttons_rect, (HDIB) palette_dc, to_rect, 0, 2);
+		paint_pattern((HDIB)tiles_dc, 2, mode_buttons_rect, 2);
 		return;
 	}
 
@@ -6145,7 +6214,7 @@ void place_right_buttons( /* short mode */ )
 
 	// place buttons on screen
 	to_rect = terrain_buttons_rect;
-	OffsetRect(&to_rect,RIGHT_BUTTONS_X_SHIFT,0);
+	OffsetRect(&to_rect,RIGHT_BUTTONS_X_SHIFT,RIGHT_BUTTONS_Y_SHIFT);
 	SelectObject(tiles_dc,store_bmp);
 	rect_draw_some_item(terrain_buttons_gworld,terrain_buttons_rect,
 		(HDIB) tiles_dc,to_rect,0,2);
@@ -6186,6 +6255,8 @@ void place_right_buttons( /* short mode */ )
 			else char_win_draw_string(palette_dc,right_text_lines[6],"Automatic Hills: ON",2,12);
 	}
 
+	draw_mode_buttons();
+
 	// draw frames around selected ter
 	short selected_ter = -1;
 	switch (current_drawing_mode) {
@@ -6203,13 +6274,61 @@ void place_right_buttons( /* short mode */ )
 		break;
 	}	
 	if (selected_ter >= 0) {
-		OffsetRect(&to_rect,RIGHT_BUTTONS_X_SHIFT,0);
+		OffsetRect(&to_rect,RIGHT_BUTTONS_X_SHIFT,RIGHT_BUTTONS_Y_SHIFT);
 		MacInsetRect(&to_rect,-1,-1);
 		put_rect_on_screen(tiles_dc,to_rect,0,0,0);
 	}
 
 	SelectObject(main_dc4,store_font);
 	SelectObject(main_dc4,store_bmp);
+}
+
+void draw_mode_buttons(){
+	RECT to_rect;
+	int i;
+	for (i = 0; i < ((editing_town) ? 3 : 3); i++){
+		to_rect = mode_buttons[i];
+		RECT from_rect = to_rect;
+		ZeroRectCorner(&from_rect);
+		OffsetRect(&from_rect, i * PALETTE_BUT_WIDTH, 0);
+		to_rect.right++;
+		from_rect.right++;
+		if (current_drawing_mode == i)
+			rect_draw_some_item(modeButtonsInvert,from_rect,(HDIB) tiles_dc,to_rect,0,2);
+		else
+			rect_draw_some_item(modeButtons,from_rect,(HDIB) tiles_dc,to_rect,0,2);
+	}
+	to_rect = mode_buttons_rect;
+	to_rect.right = mode_buttons[0].left;
+	paint_pattern((HDIB)tiles_dc, 2, to_rect, 2);
+	to_rect.left = mode_buttons[(editing_town) ? 2 : 2].right + 1;
+	to_rect.right = mode_buttons_rect.right;
+	paint_pattern((HDIB)tiles_dc, 2, to_rect, 2);
+	to_rect.right = to_rect.left;
+	to_rect.left = mode_buttons[0].left;
+	to_rect.top = mode_buttons[0].bottom;
+}
+
+void draw_view_buttons(){
+	RECT to_rect;
+	int viewIcons[4][3] = {{0,1,1},{0,0,1},{0,1,1},{0,8,6}};
+	int i;
+
+	for (i = 0; i < 2; i++){
+		to_rect = view_buttons[i];
+		RECT from_rect = view_button_base;
+		if (cur_viewing_mode >= 10)
+		{
+			OffsetRect(&from_rect, viewIcons[i+2][1]*PALETTE_BUT_WIDTH, viewIcons[i+2][2]*PALETTE_BUT_HEIGHT);
+		}
+		else
+		{
+			OffsetRect(&from_rect, viewIcons[i][1]*PALETTE_BUT_WIDTH, viewIcons[i][2]*PALETTE_BUT_HEIGHT);
+		}
+		to_rect.right++;
+		from_rect.right++;
+		rect_draw_some_item(editor_mixed,from_rect,editor_mixed,to_rect,0,1);
+	}
 }
 
 void set_string(const char* string,const char* string2)
@@ -7102,6 +7221,42 @@ void add_border_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short bord
 	}
 }
 
+void CreateMainToolTipRect()
+{
+	TOOLINFO ti[2];
+	char *tool_string_2d[2] = {"Toggle 3D", "Toggle Zoom"};
+	char *tool_string_3d[2] = {"Toggle 3D", "Toggle Realistic Mode"};
+
+	int i;
+	DestroyWindow(main_tooltips);
+
+    main_tooltips = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, 
+                                 WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, 
+                                 CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
+                                 mainPtr, NULL, store_hInstance,NULL);
+
+    SetWindowPos(main_tooltips, HWND_TOPMOST, 0, 0, 0, 0, 
+                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+
+    // Set up "tool" information. In this case, the "tool" is the entire parent window.
+	
+	for (i = 0; i < 2; i++)
+	{
+//		ti[i][j] = { 0 };
+		ti[i].cbSize   = sizeof(TOOLINFO);
+		ti[i].uFlags   = TTF_SUBCLASS;
+		ti[i].hwnd     = mainPtr;
+		ti[i].hinst    = store_hInstance;
+		ti[i].lpszText = TEXT(((cur_viewing_mode >= 10) ? tool_string_3d[i] : tool_string_2d[i]));
+
+
+		ti[i].rect = view_buttons[i];
+
+		// Associate the tooltip with the "tool" window.
+		SendMessage(main_tooltips, TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) &ti[i]);	
+	} 
+} 
+
 void CreateToolTipForRect(HWND hwndParent)
 {
     // Create a tooltip.
@@ -7110,7 +7265,7 @@ void CreateToolTipForRect(HWND hwndParent)
 	//unfortunately i managed to write these out as a 6x9 not a 9x6..nevermind
 	char *town_tool_string[6][9] = {{"Pencil", "Large Paintbrush", "Small Paintbrush", "Large Spraycan",
 							"Small Spraycan", "Set Height Rectangle", "Frame Rectangle", "Fill Rectangle", "Eyedropper"},
-								{"Toggle Special View", "Toggle 3D", "Drawing Mode", "Place Bounding Walls", "Swap Wall Types",
+								{"", "", "", "Place Bounding Walls", "Swap Wall Types",
 								"Toggle Automatic Hills", "Copy Terrain", "Paste Terrain", "Change Terrain Randomly"},
 								{"Edit Sign", "Place Area Description", "Place Spawn Point", "Place Special Encounter",
 								"Delete Special Encounter", "Edit Special Encounter", "Select Object", "Delete Object", "Paintbucket"},
@@ -7122,7 +7277,7 @@ void CreateToolTipForRect(HWND hwndParent)
 								"Place Large Slime Pool", "Place Dried Blood", "Place Bones", "Place Rocks", "Select Space"}};
 	char *outdoor_tool_string[4][9] = {{"Pencil", "Large Paintbrush", "Small Paintbrush", "Large Spraycan",
 							"Small Spraycan", "Set Height Rectangle", "Frame Rectangle", "Fill Rectangle", "Eyedropper"},
-								{"Toggle Special View", "Toggle 3D", "Drawing Mode", "Place Bounding Walls", "Swap Wall Types",
+								{"", "", "", "Place Bounding Walls", "Swap Wall Types",
 								"Toggle Automatic Hills", "Copy Terrain", "Paste Terrain", "Change Terrain Randomly"},
 								{"Edit Sign", "Place Area Description", "Place Spawn Point", "Place Special Encounter",
 								"Delete Special Encounter", "Edit Special Encounter", "Select Object", "Delete Object", "Paintbucket"},
