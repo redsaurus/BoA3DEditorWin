@@ -125,6 +125,8 @@ BEGIN
         MENUITEM "Load &Previous Outdoor Zone/Town\tCtrl+Left", 117
         MENUITEM "Load &Next Outdoor Zone/Town\tCtrl+Right", 118
         MENUITEM "Load Outdoor Zone &Below\tCtrl+Down", 123
+		MENUITEM SEPARATOR
+		MENUITEM "Play Sounds", 126
     END
     
     POPUP "&Scenario"

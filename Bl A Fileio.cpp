@@ -175,6 +175,7 @@ short FSWrite(FILE *file_id, long *len, char *data);
 // registry constant
 const char* kRegistryKey = "Software\\Spiderweb Software\\BoA 3D Editor";
 const char* kRegistryName = "BoA DATA Dirctory";
+const char* kRegistryPlaySounds = "PlaySounds";
 
 bool read_BoAFilesFolder_from_Pref( char * boaFolder )
 {
@@ -210,6 +211,34 @@ bool check_BoAFilesFolder( char * boaFolder )
 	fclose( fp );
 	return true;
 }
+
+//user preference settings functions
+
+bool get_should_play_sounds()
+{
+	int should_we_play_sounds;
+	HKEY hKey; 
+	DWORD len = 4;
+	DWORD type = REG_DWORD;
+	
+	if (RegOpenKey(HKEY_CURRENT_USER, kRegistryKey, &hKey) != ERROR_SUCCESS) 
+		return true;//default is play sounds
+	if( RegQueryValueEx( hKey, kRegistryPlaySounds, NULL, (LPDWORD) &type, (BYTE *) &should_we_play_sounds, &len ) != ERROR_SUCCESS) 
+		return true;
+	return should_we_play_sounds;
+}
+
+void write_should_play_sounds(bool play)
+{
+	HKEY hKey; 
+	int should_we_play_sounds = play;
+
+	if (RegCreateKey(HKEY_CURRENT_USER, kRegistryKey, &hKey) != ERROR_SUCCESS) 
+		return;
+    RegSetValueEx( hKey, kRegistryPlaySounds, NULL, REG_DWORD, (BYTE *) &should_we_play_sounds, 4 );
+	RegCloseKey( hKey ); 
+}
+
 
 bool init_directories_with_pref( char * boaFolder )
 {

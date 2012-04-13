@@ -6307,6 +6307,7 @@ void draw_mode_buttons(){
 	to_rect.right = to_rect.left;
 	to_rect.left = mode_buttons[0].left;
 	to_rect.top = mode_buttons[0].bottom;
+	paint_pattern((HDIB)tiles_dc, 2, to_rect, 2);
 }
 
 void draw_view_buttons(){

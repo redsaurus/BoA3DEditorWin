@@ -45,6 +45,10 @@ extern HDIB DibCreate (int cx, int cy, int cBits, int cColors);
 extern RECT kRect3DEditScrn;
 extern void update_screen_locs(void);
 
+extern Boolean play_sounds;
+extern void write_should_play_sounds(bool play);
+extern bool get_should_play_sounds();
+
 
 Boolean change_made_town = FALSE;
 Boolean change_made_outdoors = FALSE;
@@ -393,6 +397,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 
 	check_colors();
 	update_item_menu();
+	play_sounds = get_should_play_sounds();
 	shut_down_menus(/* 0 */);
 
 	load_sounds();
@@ -1066,6 +1071,15 @@ void handle_edit_menu(int item_hit)
 		 else hintbook_mode8 = hintbook_mode8 + 1;
 			 small_any_drawn = FALSE;
 			 draw_terrain();
+			break;
+
+		case 26: //Play Sounds
+			play_sounds = !play_sounds;
+			HMENU menu = GetMenu(mainPtr);
+			ModifyMenu(menu,126,(play_sounds) ? (MF_ENABLED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) :
+			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),126,"Play Sounds");
+			write_should_play_sounds(play_sounds);
+			play_sound(0);
 			break;
 
 		}

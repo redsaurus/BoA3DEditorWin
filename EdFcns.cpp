@@ -34,6 +34,8 @@ extern int outdoor_draw_distance;
 // scroll speed limit: duration / cycle
 const DWORD kScrollLimitTime = 100;		// msec
 
+extern Boolean play_sounds;
+
 // Global variables
 
 RECT terrain_rects[330];
@@ -4790,11 +4792,14 @@ void shut_down_menus()
 
 	menu = GetMenu(mainPtr);
 
+	int sounds_menu = 226;
+
 	if (file_is_loaded == FALSE) {
 		EnableMenuItem(menu,2,MF_GRAYED | MF_BYCOMMAND);
 
 		for (short i = 101; i < 126; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
+		ModifyMenu(menu,126,(play_sounds) ? (MF_GRAYED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) : (MF_GRAYED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),126,"Play Sounds");
 		for (short i = 201; i < 225; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 301; i < 321; i++)
@@ -4814,10 +4819,11 @@ void shut_down_menus()
 		EnableMenuItem(menu,2,MF_ENABLED | MF_BYCOMMAND);
 		for (short i = 201; i < 225; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
-
 	}
 
 	if (editing_town == TRUE) {
+		ModifyMenu(menu,126,(play_sounds) ? (MF_ENABLED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) :
+			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),126,"Play Sounds");
 		for (short i = 101; i < 122; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		for (short i = 122; i < 124; i++)
@@ -4837,6 +4843,8 @@ void shut_down_menus()
 	}
 
 	else {
+		ModifyMenu(menu,126,(play_sounds) ? (MF_ENABLED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) :
+			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),126,"Play Sounds");
 		for (short i = 103; i < 110; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		EnableMenuItem(menu,120,MF_GRAYED | MF_BYCOMMAND);
