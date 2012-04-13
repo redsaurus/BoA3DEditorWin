@@ -1219,7 +1219,7 @@ END
 840 DIALOG  10, 10, 454, 146 // Palette Button: Create Area Description
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,283,157,31,10,WS_GROUP
+    DEFPUSHBUTTON   "OK",1,283,257,31,10,WS_GROUP
     LTEXT           "6_0",2,27,52,332,16
     LTEXT           "0_5",3,252,134,61,16
     LTEXT           "~Enter this area's description:",4,22,24,232,17
@@ -1294,7 +1294,7 @@ END
 843 DIALOG  10, 10, 576, 750  //  Edit Many Placed Creatures
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,600,596,31,10,WS_GROUP
+    DEFPUSHBUTTON   "OK",1,620,596,31,10,WS_GROUP
     LTEXT           "0_63",2,25,186,63,14
     LTEXT           "0_63",3,25,212,63,14
     LTEXT           "0_63",4,25,238,63,14
@@ -1446,7 +1446,7 @@ END
 852 DIALOG  10, 10, 632, 467 // Outdoor Wandering Encounter
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
-    DEFPUSHBUTTON   "OK",1,343,584,31,10,WS_GROUP
+    DEFPUSHBUTTON   "OK",1,343,604,31,10,WS_GROUP
     LTEXT           "6_0",2,125,94,50,17
     LTEXT           "6_0",3,125,122,50,17
     LTEXT           "6_0",4,125,150,50,17

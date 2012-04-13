@@ -1823,13 +1823,13 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				if (current_drawing_mode == 2)
 					return;
 				mouse_button_held = TRUE;
-				shy_change_circle_terrain(spot_hit,4,current_terrain_type,1);
+				change_circle_terrain(spot_hit,4,current_terrain_type,1);
 				break;
 		case 4:// 4 - small spray can
 				if (current_drawing_mode == 2)
 					return;
 				mouse_button_held = TRUE;
-				shy_change_circle_terrain(spot_hit,2,current_terrain_type,1);
+				change_circle_terrain(spot_hit,2,current_terrain_type,1);
 				break;		
 
 		case 5: // paste terrain rectangle
