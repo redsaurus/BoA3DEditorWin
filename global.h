@@ -1593,6 +1593,7 @@ RECT get_template_from_rect(short x,short y);
 // EdFcns
 void init_screen_locs();
 Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which_window );
+Boolean handleToolPaletteClick(POINT the_point, WPARAM wparam, LPARAM lparam );
 void swap_terrain();
 void set_tool(short tool);
 void set_new_terrain(short selected_terrain);

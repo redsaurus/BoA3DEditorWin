@@ -556,12 +556,20 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 	case WM_RBUTTONDOWN:
 		if (hwnd != mainPtr && hwnd != tilesPtr && hwnd != palettePtr)
 			check_cd_event(hwnd,message,wParam,lParam);
+		else if (hwnd == palettePtr) {
+			SetFocus(hwnd);
+			press.x = LOWORD(lParam);
+			press.y = HIWORD(lParam);
+
+			All_Done = handleToolPaletteClick(press, wParam,lParam);
+			check_game_done();
+		}
 		else {
 			SetFocus(hwnd);
 			press.x = LOWORD(lParam);
 			press.y = HIWORD(lParam);
 
-			All_Done = handle_action(press, wParam,lParam, (hwnd != mainPtr) ? ((hwnd != tilesPtr) ? PALETTE_WINDOW : TILES_WINDOW_NUM) : MAIN_WINDOW_NUM);//don't worry i'm going to rewrite this
+			All_Done = handle_action(press, wParam,lParam, (hwnd != mainPtr) ? TILES_WINDOW_NUM : MAIN_WINDOW_NUM);
 			check_game_done();
 		}
 		return 0;

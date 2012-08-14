@@ -89,6 +89,18 @@ extern RECT medium_edit_ter_rects[32][32];
 extern RECT left_text_lines[14];
 extern RECT right_text_lines[7];
 
+namespace tools{
+extern RECT toolCategoryTownRect;
+extern RECT toolCategoryOutdoorRect;
+extern RECT toolDetailsRect;
+extern RECT autohillsButtonRect;
+extern int lastUsedTools[6];
+extern int categoryForTool[83];
+extern int toolIcons[83][3];
+extern const char* tool_names[83];
+extern RECT tool_details_text_lines[10];
+}
+
 extern short selected_item_number;
 
 extern HINSTANCE store_hInstance;

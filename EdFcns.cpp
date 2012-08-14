@@ -142,6 +142,236 @@ extern Boolean kill_next_win_char;
 
 extern short current_cursor;
 
+namespace tools{
+RECT toolCategoryTownRect;
+RECT toolCategoryOutdoorRect;
+RECT toolDetailsRect;
+	
+RECT autohillsButtonRect;
+	
+	const int nCategories = 6;
+	
+	int lastUsedTools[nCategories] = {0, //basic drawing, pencil
+	                                  20, //advanced drawing, set height
+	                                  23, //copy and paste, copy terrain
+	                                  16, //'Object' creation, place special encounter
+	                                  40, //selection, select object (only tool)
+	                                  61}; //(town mode) object/field/stain placement, make space blocked
+
+//TODO: make Change Terrain Randomly into a standard tool
+//do the same for set town boundaries
+int categoryForTool[83] = {
+	0, 0, 0, 0, 0, //the pencil, brushes, and spray cans are basic drawing
+	2, //paste terrain is copy and paste
+	0, //the eyedropper is, for now, basic drawing //-1, //the eyedropper has no assigned category
+	0, //the paint bucket is basic drawing
+	-1, -1, //tools 8 and 9 do not exist
+	1, 1, //frame and fill rectangle are advanced drawing
+	-1, -1, -1, -1, //tools 12-15 do not exist
+	3, //place special encounter is 'Object' creation
+	-1, //set town boundaries has no category (should be put into 'Object' creation)
+	1, 1, 1, //swap walls, add walls, and set height are advanced drawing
+	3, 3, //description rectangle and town entrance are 'Object' creation
+	2, //copy terrain is copy and paste
+	1, //change height is advanced drawing
+	-1, -1, -1, //rectangle redrawing tools have no category
+	-1, -1, //tools 28 and 29 do not exist
+	3, 3, 3, 3, //(town mode) entrance placement is 'Object' creation
+	-1, -1, -1, -1, -1, -1, //tools 34-39 do not exist
+	4, //object selection is selection
+	-1, //object deletion has no category
+	-1, -1, -1, //tools 42-44 do not exist
+	1, //change terrain randomly is advanced drawing
+	0, 0, //placing creatures and items are basic drawing
+	-1, -1, -1, //pasting instances and deleting and editing special encounters have no category
+	-1, -1, -1, -1, -1, -1, //tools 51-56 do not exist
+	3, //plaing a waypoint is 'Object' creation
+	-1, -1, //deleting waypoints and editing signs have no category
+	3, //placing spawn points is 'Object' creation
+	5, 5, 5, 5, 5, 5, 5, 5, //block space, clean space, objects and stains
+	-1, //edit town entrance has no category
+	3, //place terrain script is 'Object' creation
+	-1, -1, //starting point placement has no category
+	5, 5, //placing mirrors
+	5, 5, 5, 5, 5, 5, 5, 5 //placing stains
+};
+
+int toolIcons[83][3] = {
+	{0,0,0}, //pencil
+	{0,1,0}, //large paintbrush
+	{0,2,0}, //small paintbrush
+	{0,3,0}, //large spraycan
+	{0,4,0}, //small spraycan
+	{0,8,1}, //paste terrain
+	{0,5,1}, //eyedropper
+	{0,6,1}, //paint bucket
+	{-1,-1,-1}, //tool 8 (does not exist)
+	{-1,-1,-1}, //tool 9 (does not exist)
+	{0,7,0}, //frame rectangle
+	{0,6,0}, //fill rectangle
+	{-1,-1,-1}, //tool 12 (does not exist)
+	{-1,-1,-1}, //tool 13 (does not exist)
+	{-1,-1,-1}, //tool 14 (does not exist)
+	{-1,-1,-1}, //tool 15 (does not exist)
+	{0,1,2}, //place special encounter
+	{-1,-1,-1}, //set town boundaries
+	{0,3,1}, //swap wall types
+	{0,8,0}, //bounding walls
+	{0,5,0}, //set height rectangle
+	{0,3,2}, //place area description
+	{1,6,2}, //create town entrance
+	{0,7,1}, //copy terrain
+	{0,5,0}, //change height rectangle
+	{-1,-1,-1}, //redraw special encounter
+	{-1,-1,-1}, //redraw town entrance
+	{-1,-1,-1}, //redraw area description
+	{-1,-1,-1}, //tool 28 (does not exist)
+	{-1,-1,-1}, //tool 29 (does not exist)
+	{0,5,3}, //place north entrance
+	{0,6,3}, //place west entrance
+	{0,7,3}, //place south entrance
+	{0,8,3}, //place east entrance
+	{-1,-1,-1}, //tool 34 (does not exist)
+	{-1,-1,-1}, //tool 35 (does not exist)
+	{-1,-1,-1}, //tool 36 (does not exist)
+	{-1,-1,-1}, //tool 37 (does not exist)
+	{-1,-1,-1}, //tool 38 (does not exist)
+	{-1,-1,-1}, //tool 39 (does not exist)
+	{0,0,2}, //select instance
+	{-1,-1,-1}, //delete instance
+	{-1,-1,-1}, //tool 42 (does not exist)
+	{-1,-1,-1}, //tool 43 (does not exist)
+	{-1,-1,-1}, //tool 44 (does not exist)
+	{0,4,1}, //change terrain randomly
+	{0,0,0}, //place creature
+	{0,0,0}, //place item
+	{-1,-1,-1}, //paste instance
+	{-1,-1,-1}, //delete special encounter
+	{-1,-1,-1}, //set special encounter
+	{-1,-1,-1}, //tool 51 (does not exist)
+	{-1,-1,-1}, //tool 52 (does not exist)
+	{-1,-1,-1}, //tool 53 (does not exist)
+	{-1,-1,-1}, //tool 54 (does not exist)
+	{-1,-1,-1}, //tool 55 (does not exist)
+	{-1,-1,-1}, //tool 56 (does not exist)
+	{0,6,2}, //place waypoint
+	{0,7,2}, //delete waypoint
+	{0,2,2}, //edit sign
+	{0,8,2}, //place spawn point
+	{0,0,4}, //make space blocked
+	{0,1,4}, //place web
+	{0,2,4}, //place crate
+	{0,3,4}, //place barrel
+	{0,4,4}, //place fire barrier
+	{0,5,4}, //place force barrier
+	{0,0,5}, //clear space
+	{-1,-1,-1}, //place stains (old)
+	{1,7,2}, //edit town entrance
+	{0,4,2}, //place terrain script
+	{-1,-1,-1}, //place outdoor start point
+	{-1,-1,-1}, //place town start point
+	{0,6,4}, //place NE/SW mirror
+	{0,7,4}, //place NW/SE mirror
+	{0,1,5}, //place small blood stain
+	{0,2,5}, //place medium blood stain
+	{0,3,5}, //place large blood stain
+	{0,4,5}, //place small slime pool
+	{0,5,5}, //place large slime pool
+	{0,6,5}, //place dried blood
+	{0,7,5}, //place bones
+	{0,8,5} //place rocks
+};
+
+const char* tool_names[83] = {
+	"Pencil",
+	"Paintbrush (Large)",
+	"Paintbrush (Small)",
+	"Spraycan (Large)",
+	"Spraycan (Small)",
+	"Paste Terrain",
+	"Eyedropper",
+	"Paint bucket",
+	"Tool 8 (Does not exist)",
+	"Tool 9 (Does not exist)",
+	"Fill Rectangle",
+	"Frame Rectangle",
+	"Tool 12 (Does not exist)",
+	"Tool 13 (Does not exist)",
+	"Tool 14 (Does not exist)",
+	"Tool 15 (Does not exist)",
+	"Place Special Encounter",
+	"Set Town Boundaries",
+	"Swap Wall Types",
+	"Place Bounding Walls",
+	"Set Height (Rectangle)",
+	"Place Area Description",
+	"Create Town Entrance",
+	"Copy Terrain",
+	"Change Height (Rectangle)",
+	"Redraw Special Encounter",
+	"Redraw Town Entrance",
+	"Redraw Area Description",
+	"Tool 28 (Does not exist)",
+	"Tool 29 (Does not exist)",
+	"Place North Town Entrance",
+	"Place West Town Entrance",
+	"Place South Town Entrance",
+	"Place East Town Entrance",
+	"Tool 34 (Does not exist)",
+	"Tool 35 (Does not exist)",
+	"Tool 36 (Does not exist)",
+	"Tool 37 (Does not exist)",
+	"Tool 38 (Does not exist)",
+	"Tool 39 (Does not exist)",
+	"Select Object",
+	"Delete Object",
+	"Tool 42 (Does not exist)",
+	"Tool 43 (Does not exist)",
+	"Tool 44 (Does not exist)",
+	"Replace Terrain",
+	"Place Creature",
+	"Place Item",
+	"Paste Object",
+	"Delete Special Encounter",
+	"Set Special Encounter",
+	"Tool 51 (Does not exist)",
+	"Tool 52 (Does not exist)",
+	"Tool 53 (Does not exist)",
+	"Tool 54 (Does not exist)",
+	"Tool 55 (Does not exist)",
+	"Tool 56 (Does not exist)",
+	"Place Waypoint",
+	"Delete Waypoint",
+	"Edit Sign",
+	"Place Spawn Point",
+	"Make Space Blocked",
+	"Place Web",
+	"Place Crate",
+	"Place Barrel",
+	"Place Fire Barrier",
+	"Place Force Barrier",
+	"Clear Space",
+	"Place Stain", //old
+	"Edit Town Entrance",
+	"Place Terrain Script",
+	"Place Outdoor Start Point",
+	"Place Town Start Point",
+	"Place NE/SW Mirror",
+	"Place NW/SE MIrror",
+	"Place Small Blood Stain",
+	"Place Medium Blood Stain",
+	"Place Large Blood Stain",
+	"Place Small Slime Pool",
+	"Place Large Slime Pool",
+	"Place Dried Blood",
+	"Place Bones",
+	"Place Rocks"
+};
+
+RECT tool_details_text_lines[10];
+	
+} //namespace tools
+
 // local variables
 
 short current_terrain_type = 0;
@@ -756,327 +986,6 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 		}
 				//place_right_buttons(0);
 		}
-	else if (which_window == PALETTE_WINDOW){
-
-		// PRESSING MAIN BUTTONS
-		for (i = 0; i < 9; i++)
-			for (j = 0; j < ((editing_town) ? 6 : 4); j++) {
-			cur_point2 = the_point;
-				cur_point2.x -= RIGHT_BUTTONS_X_SHIFT;
-				if ((mouse_button_held == FALSE) && (POINTInRECT(cur_point2,palette_buttons[i][j]))) {
-					play_sound(34);
-					switch (i + 100 * j) {
-						case 0: //  Pencil
-							//pre-emptive support for creature and item placement modes
-							if(current_drawing_mode==3){
-								set_tool(46);
-								object_sticky_draw = shift_key;
-							}
-							else if(current_drawing_mode==4){
-								set_tool(47);
-								object_sticky_draw = shift_key;
-							}
-							else
-								reset_drawing_mode();
-							break;					
-						case 1: //  Paintbrush (Large)
-							set_string("Paintbrush (large)","");
-							set_tool(1);
-							break;					
-						case 2: //  Paintbrush (Small)
-							set_string("Paintbrush (small)","");
-							set_tool(2);
-							break;					
-						case 3: //  Spraycan (Large)
-							set_string("Spraycan (large)","");
-							set_tool(3);
-							break;					
-						case 4: //  Spraycan (Small)
-							set_string("Spraycan (small)","");
-							set_tool(4);
-							break;					
-						case 5: //  Change Height
-							set_string("Set Height","Select rectangle to set");
-							set_tool(shift_key?24:20); //if shift is on, add height
-							need_redraw = TRUE;
-							break;
-							
-						case 6: //  Paint Rectangle (Hollow)
-						case 7: //  Paint Rectangle (Full)
-							set_tool((i == 6) ? 11 : 10);
-							if (i == 6)
-								set_string("Fill rectangle (hollow)","Select upper left corner");
-									else set_string("Fill rectangle (solid)","Select upper left corner");
-							break;					
-				
-						case 8: // Eyedropper
-							set_string("Click on terrain/floor to select it.","   ");
-							set_tool(6);
-						break;
-
-						case 100: //  Zoom In/Zoom Out
-							//Not used
-							break;
-
-						case 101: //  2D/3D
-							//Not used
-							break;
-
-						case 102: //  Change Drawing Mode
-							//Not used
-							break;		
-						case 103: //  Place Walls
-							set_string("Place bounding walls","");
-							set_tool(19);
-							break;
-						case 104://  Switch Wall Types
-							set_string("Swap walls 1 <--> 2","Select rectangle to set");
-							set_tool(18);
-							break;		
-						case 105: //  Automatic Hills
-							current_height_mode = 1 - current_height_mode;
-							need_redraw = TRUE;
-							break;
-						case 106: // Copy Terrain Rectangle
-							set_string("Copy rectangle of terrain:","Select rectangle to copy.");
-							set_tool(23);
-						break;
-						case 107: // Paste Terrain Rectangle
-							set_string("Paste Terrain Rectangle:","Select location of upper left corner.");
-							set_tool(5);
-						break;
-						case 108: //  Change Terrain Randomly
-							swap_terrain();
-							need_redraw = TRUE;
-							mouse_button_held = FALSE;
-							break;
-
-						case 200: // Edit Sign
-							set_string("Edit sign","Select sign to edit");
-							set_tool(59);
-							break;		
-						case 201: //  Create Room Rectangle
-							set_tool(21);
-							set_string("Create room rectangle","Select upper left corner");
-							break;		
-						case 202: //  Place Spawn Point
-							set_tool(60);
-							set_string("Place 1st spawn point","");
-							break;		
-						case 203: //  Create Special Encounter
-							set_string("Create Special Encouter","Select rectangle for encounter");
-							set_tool(16);
-							break;		
-						case 204: //  Delete Special Encounter
-							set_string("Erase Special Encouter","");
-							set_tool(49);
-							break;		
-						case 205: //  Edit Special Encounter
-							set_string("Edit Special Encouter","");
-							set_tool(50);
-							break;		
-						case 206: //  Select/Edit Object
-							set_string("Select/edit placed object","Select object to edit");
-							set_tool(40);
-							break;
-						case 207: //  Delete Object
-							set_string("Delete an object","Select object");
-							set_tool(41);
-							break;
-
-						case 208: //  Fill Bucket
-						set_string("Paintbucket","Select location");
-		    			set_tool(7);
-						break;
-							
-						case 300: // Place Terrain Script (town),  Create Town Entrance (outdoor)
-							if (editing_town == TRUE) {						
-								set_string("Place Terrain Script","");
-								set_tool(70);
-							}
-							else {
-							set_string("Create town entrance","Select upper left corner");
-							set_tool(22);
-							}
-							break;
-
-						case 301: // Place Waypoint (town), Edit Town Entrance (outdoor)
-							if (editing_town == TRUE) {
-							set_string("Place a Waypoint","");
-							set_tool(57);
-							}
-							else {
-							set_string("Edit town entrance","");
-							set_tool(69);
-							}
-							break;		
-						case 302: // Delete Waypoint
-							if (editing_town == TRUE) {
-							set_string("Delete Waypoint","");
-							set_tool(58);
-							}
-							else {
-								set_string("This is a town-only function.","");
-							}
-							break;
-
-														
-						case 303: //  Set Town Entrance, North
-			            	if (editing_town == TRUE) {
-							set_string("Place north entrance","Select entrance location");
-							set_tool(30);
-							}
-							else {
-								set_string("This is a town-only function.","");
-							}
-							break;
-						case 304: //  Set Town Entrance, West
-							if (editing_town == TRUE) {
-							set_string("Place west entrance","Select entrance location");
-							set_tool(31);
-							}
-							else {
-								set_string("This is a town-only function.","");
-							}
-							break;
-						case 305: //  Set Town Entrance, South
-							if (editing_town == TRUE) {
-							set_string("Place south entrance","Select entrance location");
-							set_tool(32);
-							}
-							else {
-								set_string("This is a town-only function.","");
-							}
-							break;
-						case 306: //  Set Town Entrance, East
-							if (editing_town == TRUE) {
-							set_string("Place east entrance","Select entrance location");
-							set_tool(33);
-							}
-							else {
-								set_string("This is a town-only function.","");
-							}
-							break;
-
-						case 307: // Place a Horse
-							if (editing_town == TRUE) {
-								set_string("Place a Horse in this town","Click on the location");
-								set_tool(87);
-								}
-							 	else {
-								set_string("This is a town-only function.","");
-								}
-								break;
-								
-						case 308: // Place a Boat
-							if (editing_town == TRUE) {
-								set_string("Place a Boat in this town","Click on the location");
-								set_tool(86);
-								}
-							 	else {
-								set_string("This is a town-only function.","");
-								}
-							break;
-
-						case 400: //  Place Blocked Space
-							set_string("Make Spot Blocked","Select location");
-							set_tool(61);
-							object_sticky_draw = shift_key;
-							break;		
-						case 401: //  Place Web 
-							set_string("Place web","Select location");
-							set_tool(62);
-							object_sticky_draw = shift_key;
-							break;		
-						case 402: //  Place Crate 
-							set_string("Place crate","Select location");
-							set_tool(63);
-							object_sticky_draw = shift_key;
-							break;		
-						case 403: //  Place Barrel 
-							set_string("Place barrel","Select location");
-							set_tool(64);
-							object_sticky_draw = shift_key;
-							break;		
-						case 404: //  Place Fire Barrier 
-							set_string("Place fire barrier","Select location");
-							set_tool(65);
-							object_sticky_draw = shift_key;
-							break;
-						case 405: //  Place Force Barrier 
-							set_string("Place force barrier","Select location");
-							set_tool(66);
-							object_sticky_draw = shift_key;
-							break;		
-						case 406: // Place Oblique Mirror
-								set_tool(73);
-								object_sticky_draw = shift_key;
-								set_string("Place Oblique Mirror","");
-							break;
-						case 407: // Place Facing Mirror
-              					set_tool(74);
-								object_sticky_draw = shift_key;
-								set_string("Place Facing Mirror","");
-							break;
-						case 408: //  Clear Space
-							set_string("Clear space","Select space to clear");
-							set_tool(67);
-							object_sticky_draw = shift_key;
-							break;
-
-						case 500: //  Place Small Blood Stain 
-							set_string("Place small blood stain","Select stain location");
-							set_tool(75);
-							object_sticky_draw = shift_key;
-							break;
-						case 501: //   Place Average Blood Stain 
-							set_string("Place ave. blood stain","Select stain location");
-							set_tool(76);
-							object_sticky_draw = shift_key;
-							break;
-						case 502: //   Place Large Blood Stain 
-							set_string("Place large blood stain","Select stain location");
-							set_tool(77);
-							object_sticky_draw = shift_key;
-							break;
-						case 503: //   Place Small Slime Pool 
-							set_string("Place small slime pool","Select slime location");
-							set_tool(78);
-							object_sticky_draw = shift_key;
-							break;
-						case 504: //   Place Large Slime Pool 
-							set_string("Place large slime pool","Select slime location");
-							set_tool(79);
-							object_sticky_draw = shift_key;
-							break;
-						case 505: //   Place Dried Blood Stain 
-							set_string("Place dried blood","Select dried blood location");
-							set_tool(80);
-							object_sticky_draw = shift_key;
-							break;
-						case 506: //   Place Bones
-							set_string("Place bones","Select bones location");
-							set_tool(81);
-							object_sticky_draw = shift_key;
-							break;
-						case 507: //   Place Rocks 
-							set_string("Place rocks","Select rocks location");
-							set_tool(82);
-							object_sticky_draw = shift_key;					
-							break;
-						case 508: // currently unused
-							set_string("Select a square","All objects on square are selected.");
-							set_tool(88);
-							break;
-
-					
-					}
-				
-				place_right_buttons(/* 0 */);
-				
-				}
-				}
-		} // end right buttons
 		if (need_redraw)
 		{
 			draw_main_screen();
@@ -1645,6 +1554,363 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 		}
 		
 	return are_done;
+}
+
+Boolean handleToolPaletteClick(POINT the_point, WPARAM wparam, LPARAM lparam)
+{
+	short i,j;
+	Boolean are_done = FALSE;
+	char str_response[256] = "";
+	Boolean need_redraw = FALSE, option_hit = FALSE, right_click = FALSE;
+
+	location spot_hit;
+	POINT cur_point,cur_point2;
+	short old_mode,choice;
+
+	if (file_is_loaded == FALSE) 
+		return are_done; 
+	
+	Boolean ctrl_key = FALSE;
+	Boolean shift_key = FALSE;
+
+	if (MK_CONTROL & wparam)
+		option_hit = ctrl_key = TRUE;
+
+	if (MK_SHIFT & wparam)
+		shift_key = TRUE;
+
+	if (lparam == -2)
+		option_hit = TRUE;
+	if (lparam != -1)
+		the_point.x -= ulx;		the_point.y -= uly;
+
+	right_click = (GetKeyState( VK_RBUTTON ) & 0x8000) != 0;
+
+	int map_size = (editing_town) ? max_zone_dim[town_type] : 48;
+	cur_point = the_point;
+		// PRESSING MAIN BUTTONS
+		for (i = 0; i < 9; i++)
+			for (j = 0; j < ((editing_town) ? 6 : 4); j++) {
+			cur_point2 = the_point;
+				cur_point2.x -= RIGHT_BUTTONS_X_SHIFT;
+				if ((mouse_button_held == FALSE) && (POINTInRECT(cur_point2,palette_buttons[i][j]))) {
+					play_sound(34);
+					switch (i + 100 * j) {
+						case 0: //  Pencil
+							//pre-emptive support for creature and item placement modes
+							if(current_drawing_mode==3){
+								set_tool(46);
+								object_sticky_draw = shift_key;
+							}
+							else if(current_drawing_mode==4){
+								set_tool(47);
+								object_sticky_draw = shift_key;
+							}
+							else
+								reset_drawing_mode();
+							break;					
+						case 1: //  Paintbrush (Large)
+							set_string("Paintbrush (large)","");
+							set_tool(1);
+							break;					
+						case 2: //  Paintbrush (Small)
+							set_string("Paintbrush (small)","");
+							set_tool(2);
+							break;					
+						case 3: //  Spraycan (Large)
+							set_string("Spraycan (large)","");
+							set_tool(3);
+							break;					
+						case 4: //  Spraycan (Small)
+							set_string("Spraycan (small)","");
+							set_tool(4);
+							break;					
+						case 5: //  Change Height
+							set_string("Set Height","Select rectangle to set");
+							set_tool(shift_key?24:20); //if shift is on, add height
+							need_redraw = TRUE;
+							break;
+							
+						case 6: //  Paint Rectangle (Hollow)
+						case 7: //  Paint Rectangle (Full)
+							set_tool((i == 6) ? 11 : 10);
+							if (i == 6)
+								set_string("Fill rectangle (hollow)","Select upper left corner");
+									else set_string("Fill rectangle (solid)","Select upper left corner");
+							break;					
+				
+						case 8: // Eyedropper
+							set_string("Click on terrain/floor to select it.","   ");
+							set_tool(6);
+						break;
+
+						case 100: //  Zoom In/Zoom Out
+							//Not used
+							break;
+
+						case 101: //  2D/3D
+							//Not used
+							break;
+
+						case 102: //  Change Drawing Mode
+							//Not used
+							break;		
+						case 103: //  Place Walls
+							set_string("Place bounding walls","");
+							set_tool(19);
+							break;
+						case 104://  Switch Wall Types
+							set_string("Swap walls 1 <--> 2","Select rectangle to set");
+							set_tool(18);
+							break;		
+						case 105: //  Automatic Hills
+							current_height_mode = 1 - current_height_mode;
+							need_redraw = TRUE;
+							break;
+						case 106: // Copy Terrain Rectangle
+							set_string("Copy rectangle of terrain:","Select rectangle to copy.");
+							set_tool(23);
+						break;
+						case 107: // Paste Terrain Rectangle
+							set_string("Paste Terrain Rectangle:","Select location of upper left corner.");
+							set_tool(5);
+						break;
+						case 108: //  Change Terrain Randomly
+							swap_terrain();
+							need_redraw = TRUE;
+							mouse_button_held = FALSE;
+							break;
+
+						case 200: // Edit Sign
+							set_string("Edit sign","Select sign to edit");
+							set_tool(59);
+							break;		
+						case 201: //  Create Room Rectangle
+							set_tool(21);
+							set_string("Create room rectangle","Select upper left corner");
+							break;		
+						case 202: //  Place Spawn Point
+							set_tool(60);
+							set_string("Place 1st spawn point","");
+							break;		
+						case 203: //  Create Special Encounter
+							set_string("Create Special Encouter","Select rectangle for encounter");
+							set_tool(16);
+							break;		
+						case 204: //  Delete Special Encounter
+							set_string("Erase Special Encouter","");
+							set_tool(49);
+							break;		
+						case 205: //  Edit Special Encounter
+							set_string("Edit Special Encouter","");
+							set_tool(50);
+							break;		
+						case 206: //  Select/Edit Object
+							set_string("Select/edit placed object","Select object to edit");
+							set_tool(40);
+							break;
+						case 207: //  Delete Object
+							set_string("Delete an object","Select object");
+							set_tool(41);
+							break;
+
+						case 208: //  Fill Bucket
+						set_string("Paintbucket","Select location");
+		    			set_tool(7);
+						break;
+							
+						case 300: // Place Terrain Script (town),  Create Town Entrance (outdoor)
+							if (editing_town == TRUE) {						
+								set_string("Place Terrain Script","");
+								set_tool(70);
+							}
+							else {
+							set_string("Create town entrance","Select upper left corner");
+							set_tool(22);
+							}
+							break;
+
+						case 301: // Place Waypoint (town), Edit Town Entrance (outdoor)
+							if (editing_town == TRUE) {
+							set_string("Place a Waypoint","");
+							set_tool(57);
+							}
+							else {
+							set_string("Edit town entrance","");
+							set_tool(69);
+							}
+							break;		
+						case 302: // Delete Waypoint
+							if (editing_town == TRUE) {
+							set_string("Delete Waypoint","");
+							set_tool(58);
+							}
+							else {
+								set_string("This is a town-only function.","");
+							}
+							break;
+
+														
+						case 303: //  Set Town Entrance, North
+			            	if (editing_town == TRUE) {
+							set_string("Place north entrance","Select entrance location");
+							set_tool(30);
+							}
+							else {
+								set_string("This is a town-only function.","");
+							}
+							break;
+						case 304: //  Set Town Entrance, West
+							if (editing_town == TRUE) {
+							set_string("Place west entrance","Select entrance location");
+							set_tool(31);
+							}
+							else {
+								set_string("This is a town-only function.","");
+							}
+							break;
+						case 305: //  Set Town Entrance, South
+							if (editing_town == TRUE) {
+							set_string("Place south entrance","Select entrance location");
+							set_tool(32);
+							}
+							else {
+								set_string("This is a town-only function.","");
+							}
+							break;
+						case 306: //  Set Town Entrance, East
+							if (editing_town == TRUE) {
+							set_string("Place east entrance","Select entrance location");
+							set_tool(33);
+							}
+							else {
+								set_string("This is a town-only function.","");
+							}
+							break;
+
+						case 307: // Place a Horse
+							if (editing_town == TRUE) {
+								set_string("Place a Horse in this town","Click on the location");
+								set_tool(87);
+								}
+							 	else {
+								set_string("This is a town-only function.","");
+								}
+								break;
+								
+						case 308: // Place a Boat
+							if (editing_town == TRUE) {
+								set_string("Place a Boat in this town","Click on the location");
+								set_tool(86);
+								}
+							 	else {
+								set_string("This is a town-only function.","");
+								}
+							break;
+
+						case 400: //  Place Blocked Space
+							set_string("Make Spot Blocked","Select location");
+							set_tool(61);
+							object_sticky_draw = shift_key;
+							break;		
+						case 401: //  Place Web 
+							set_string("Place web","Select location");
+							set_tool(62);
+							object_sticky_draw = shift_key;
+							break;		
+						case 402: //  Place Crate 
+							set_string("Place crate","Select location");
+							set_tool(63);
+							object_sticky_draw = shift_key;
+							break;		
+						case 403: //  Place Barrel 
+							set_string("Place barrel","Select location");
+							set_tool(64);
+							object_sticky_draw = shift_key;
+							break;		
+						case 404: //  Place Fire Barrier 
+							set_string("Place fire barrier","Select location");
+							set_tool(65);
+							object_sticky_draw = shift_key;
+							break;
+						case 405: //  Place Force Barrier 
+							set_string("Place force barrier","Select location");
+							set_tool(66);
+							object_sticky_draw = shift_key;
+							break;		
+						case 406: // Place Oblique Mirror
+								set_tool(73);
+								object_sticky_draw = shift_key;
+								set_string("Place Oblique Mirror","");
+							break;
+						case 407: // Place Facing Mirror
+              					set_tool(74);
+								object_sticky_draw = shift_key;
+								set_string("Place Facing Mirror","");
+							break;
+						case 408: //  Clear Space
+							set_string("Clear space","Select space to clear");
+							set_tool(67);
+							object_sticky_draw = shift_key;
+							break;
+
+						case 500: //  Place Small Blood Stain 
+							set_string("Place small blood stain","Select stain location");
+							set_tool(75);
+							object_sticky_draw = shift_key;
+							break;
+						case 501: //   Place Average Blood Stain 
+							set_string("Place ave. blood stain","Select stain location");
+							set_tool(76);
+							object_sticky_draw = shift_key;
+							break;
+						case 502: //   Place Large Blood Stain 
+							set_string("Place large blood stain","Select stain location");
+							set_tool(77);
+							object_sticky_draw = shift_key;
+							break;
+						case 503: //   Place Small Slime Pool 
+							set_string("Place small slime pool","Select slime location");
+							set_tool(78);
+							object_sticky_draw = shift_key;
+							break;
+						case 504: //   Place Large Slime Pool 
+							set_string("Place large slime pool","Select slime location");
+							set_tool(79);
+							object_sticky_draw = shift_key;
+							break;
+						case 505: //   Place Dried Blood Stain 
+							set_string("Place dried blood","Select dried blood location");
+							set_tool(80);
+							object_sticky_draw = shift_key;
+							break;
+						case 506: //   Place Bones
+							set_string("Place bones","Select bones location");
+							set_tool(81);
+							object_sticky_draw = shift_key;
+							break;
+						case 507: //   Place Rocks 
+							set_string("Place rocks","Select rocks location");
+							set_tool(82);
+							object_sticky_draw = shift_key;					
+							break;
+						case 508: // currently unused
+							set_string("Select a square","All objects on square are selected.");
+							set_tool(88);
+							break;
+
+					
+					}
+				
+				place_right_buttons(/* 0 */);
+				
+				}
+				}
+		if (need_redraw)
+		{
+			draw_main_screen();
+		}
+		return are_done;
 }
 
 void set_drawing_mode(short new_mode)
@@ -3209,55 +3475,93 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	Boolean need_redraw = FALSE, option_hit = FALSE, right_click = FALSE;
 	extern short selected_item_number;
 	bool ctrl_key = (GetKeyState( VK_CONTROL ) & 0x8000) != 0;	// check MSB for current key state
+	bool shift_key = (GetKeyState( VK_SHIFT ) & 0x8000) != 0;	// check MSB for current key state
 
 	switch(chr)
 		{
-	case 'A': // Pencil
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][0].left;
-	pass_point.y = 6 + palette_buttons[0][0].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'B': // Paintbrush (Large)
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][0].left;
-	pass_point.y = 6 + palette_buttons[1][0].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'C': // Paintbrush (Small)
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][0].left;
-	pass_point.y = 6 + palette_buttons[2][0].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'D': // Spraycan (Large)
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][0].left;
-	pass_point.y = 6 + palette_buttons[3][0].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'E': // Spraycan (Small)
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][0].left;
-	pass_point.y = 6 + palette_buttons[4][0].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'F': // Change Height
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][0].left;
-	pass_point.y = 6 + palette_buttons[5][0].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'G': // Paint Rectangle (Hollow)
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][0].left;
-	pass_point.y = 6 + palette_buttons[6][0].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'H': // Paint Rectangle (Full)
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][0].left;
-	pass_point.y = 6 + palette_buttons[7][0].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'I': // Eyedropper
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[8][0].left;
-	pass_point.y = 6 + palette_buttons[8][0].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'J':  case '[': // Zoom Out/Zoom In
+		//Temporarily I have changed shortcuts back to the same as in the mac version
+		case 'M':
+			hintbook_mode1 = !hintbook_mode1;
+			small_any_drawn = FALSE;
+			draw_terrain();
+			break;
+		case 'F':
+			if (current_drawing_mode == 2) {//Change Height Rect
+				if(!(shift_key)){
+					set_tool(20);//Set Height Rect
+				}
+				else{
+					set_tool(24);//Change Height Rect
+				}
+			}
+			else {//Fill Rect Solid
+				set_tool(10);
+			}
+			break; 
+		case 'H':
+			if (current_drawing_mode == 2) {//Change Height Rect
+				if(!(shift_key)){
+					set_tool(20);//Set Height Rect
+				}
+				else{
+					set_tool(24);//Change Height Rect
+				}
+			}
+			else {//Fill Rect Hollow
+				set_tool(11);
+			}
+			break;
+		case 'P': //switch back to pencil drawing
+			set_tool(0);
+			break;
+		case ' ':
+			if (file_is_loaded == TRUE){
+				play_sound(34);
+				set_drawing_mode((current_drawing_mode + 1) % 3);
+				draw_main_screen();
+			}
+			break;
+		case VK_TAB:	
+			if (file_is_loaded == TRUE){
+				if ( ctrl_key ) {					// toggle Realistic mode
+					play_sound(34);
+					toggle_zoomedOut();
+				}
+				else {								// swap 2D/3D mode
+					play_sound(34);
+					toggle_3D();
+				}
+			}
+			break;
+		case 'S':
+			set_tool(40); //select
+			place_right_buttons();
+			break;
+		case 'W':
+			set_tool(18); //swap walls
+			place_right_buttons();
+			break;
+		case 'A': 
+			set_tool(19); //place bounding walls
+			place_right_buttons();
+			break;
+		case 'Z':
+			performUndo();
+			break;
+		case 'Y':
+			performRedo();
+			break;
+//		case 'J': //jump to selected object
+//			jumpToSelectedInstance();
+//			break;
+		case 'C':
+			set_tool(23); //copy terrain
+			break;
+		case 'V':
+			set_tool(5); //paste terrain
+			break;
+
+/*	case 'J':  case '[': // Zoom Out/Zoom In
 	if (file_is_loaded == TRUE){				// toggle Realistic mode
 		play_sound(34);
 		toggle_zoomedOut();
@@ -3276,96 +3580,12 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 		draw_main_screen();
 	}
 	break;
-	case 'M': // Place Walls
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][1].left;
-	pass_point.y = 6 + palette_buttons[3][1].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'N': // Switch Wall Types
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][1].left;
-	pass_point.y = 6 + palette_buttons[4][1].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'O': // Automatic Hills
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][1].left;
-	pass_point.y = 6 + palette_buttons[5][1].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'P': // Copy Terrain Rectangle
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][1].left;
-	pass_point.y = 6 + palette_buttons[6][1].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'Q': // Paste Terrain Rectangle
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][1].left;
-	pass_point.y = 6 + palette_buttons[7][1].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'R': // Change Terrain Randomly
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[8][1].left;
-	pass_point.y = 6 + palette_buttons[8][1].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'S': // Edit Sign
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][2].left;
-	pass_point.y = 6 + palette_buttons[0][2].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'T': // Create Room Rectangle
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[1][2].left;
-	pass_point.y = 6 + palette_buttons[1][2].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'U': // Place Spawn Point
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[2][2].left;
-	pass_point.y = 6 + palette_buttons[2][2].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'V': // Create Special Encounter
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[3][2].left;
-	pass_point.y = 6 + palette_buttons[3][2].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'W': // Delete Special Encounter
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[4][2].left;
-	pass_point.y = 6 + palette_buttons[4][2].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'X': // Edit Special Encounter
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[5][2].left;
-	pass_point.y = 6 + palette_buttons[5][2].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'Y': // Select/Edit Object
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[6][2].left;
-	pass_point.y = 6 + palette_buttons[6][2].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	case 'Z': // Delete Object
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[7][2].left;
-	pass_point.y = 6 + palette_buttons[7][2].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-	
 	case '\\': // toggle gridline mode
 				if (grid_mode == 2)
 				 grid_mode = 0;
 				 else  grid_mode =  grid_mode + 1;
 				small_any_drawn = FALSE;
 				draw_terrain();
-	break;
-
- 	case '=': // Clear selected instance
-	selected_item_number = -1;
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[0][0].left;
-	pass_point.y = 6 + palette_buttons[0][0].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
-	break;
-
-	case ';': // Clear Space
-	pass_point.x = RIGHT_BUTTONS_X_SHIFT + 6 + palette_buttons[8][4].left;
-	pass_point.y = 6 + palette_buttons[8][4].top;
-	handle_action(pass_point,wParam,-1,PALETTE_WINDOW);
 	break;
 
 	case ',': // Cut selected instance
@@ -3391,38 +3611,13 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 				}
 			set_string("Paste copied instance","Select location to place");
 			set_tool(48);
-	break;
-
-	case ' ':
-	if (file_is_loaded == TRUE){
-		play_sound(34);
-		set_drawing_mode((current_drawing_mode + 1) % 3);
-		draw_main_screen();
-	}
-	break;
-
-// q_3DModStart
-	case VK_TAB:	// '\t':
-//				if (option_hit != 0) {
-		if (file_is_loaded == TRUE){
-				if ( ctrl_key ) {					// toggle Realistic mode
-					play_sound(34);
-					toggle_zoomedOut();
-				}
-				else {								// swap 2D/3D mode
-					play_sound(34);
-					toggle_3D();
-				}
-		}
-	break;
-// q_3DModEnd
+	break;*/
 
 					
 			default:
-				Boolean ctrl = control_key_down();
 				
 				// Ctrl + D = outdoor/town details
-				if ((chr == 4) && (ctrl)) {
+				if ((chr == 4) && (ctrl_key)) {
 					if (editing_town)
 						handle_town_menu(2);
 						else handle_outdoor_menu(2);
@@ -3430,7 +3625,7 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 				}
 
 				// Ctrl + L = load new zone
-				if ((chr == 12) && (ctrl)) {
+				if ((chr == 12) && (ctrl_key)) {
 					if (editing_town)
 						handle_town_menu(1);
 						else handle_outdoor_menu(1);
