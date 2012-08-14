@@ -38,10 +38,10 @@ extern Boolean play_sounds;
 
 // Global variables
 
-RECT terrain_rects[330];
+RECT terrain_rects[516];
 // RECT terrain_rect_base = {0,0,16,16};							
 
-RECT terrain_rects_3D[330];
+RECT terrain_rects_3D[516];
 // RECT terrain_rect_base_3D = {0,0,16,16};
 
 RECT palette_buttons[9][6];
@@ -628,13 +628,6 @@ void toggle_3D( void )
 			set_cursor(5);
 		if(current_cursor == 9)
 			set_cursor(6);
-		// do proper modifications of scroll bar
-		if (current_drawing_mode != 0) {
-			//SetControlMinimum(right_sbar,0);
-//			SetControlMaximum(right_sbar,22);
-			SetScrollRange(right_sbar,SB_CTL,0,22,TRUE);
-			//SetControlValue(right_sbar,store_control_value);
-		}
 	}
 	else {
 		set_view_mode(10);
@@ -642,16 +635,10 @@ void toggle_3D( void )
 			set_cursor(8);
 		if(current_cursor == 6)
 			set_cursor(9);
-		// do proper modifications of scroll bar
-		if (current_drawing_mode != 0) {
-			//SetControlMinimum(right_sbar,0);
-//			SetControlMaximum(right_sbar,25);
-			SetScrollRange(right_sbar,SB_CTL,0,25,TRUE);
-			//SetControlValue(right_sbar,store_control_value);
-		}
 	}
+	// do proper modifications of scroll bar
+	SetScrollRange(right_sbar,SB_CTL,0,get_right_sbar_max(),TRUE);
 	set_up_terrain_buttons();
-	CreateMainToolTipRect();
 	reset_small_drawn();
 	redraw_screen();
 }
@@ -723,14 +710,17 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 			cur_point.y -= RIGHT_BUTTONS_Y_SHIFT;
 			
 			if (current_drawing_mode == 0) { // floor mode
+				short sbar_pos = GetControlValue(right_sbar);
 				for (i = 0; i < 256; i++)
+					if (sbar_pos * TILES_N_COLS + i < 256){
 
 	// q_3DModStart
 	//				if (point_in_rect(cur_point,&terrain_rects[i])) {
 					if (POINTInRECT(cur_point,((cur_viewing_mode >= 10 && current_drawing_mode > 0) ? terrain_rects_3D[i] : terrain_rects[i]))) {
 						reset_drawing_mode();
-						set_new_floor(i);
+						set_new_floor(sbar_pos * TILES_N_COLS + i);
 						}
+					}
 	// q_3DModEnd
 
 			}
@@ -738,14 +728,14 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 					short sbar_pos = GetControlValue(right_sbar);
 
 					for (i = 0; i < 330; i++)
-						if (sbar_pos * 15 + i < 512) {
+						if (sbar_pos * TILES_N_COLS + i < 512) {
 	// q_3DModStart
 	//						if (point_in_rect(cur_point,&terrain_rects[i])) {
 							if (POINTInRECT(cur_point,((cur_viewing_mode >= 10 && current_drawing_mode > 0) ? terrain_rects_3D[i] : terrain_rects[i]))) {
 								if (current_drawing_mode != 1)
 									set_drawing_mode(1);
 								reset_drawing_mode();
-								set_new_terrain(sbar_pos * 15 + i);
+								set_new_terrain(sbar_pos * TILES_N_COLS + i);
 								}
 							}
 	// q_3DModEnd
@@ -1660,22 +1650,16 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 void set_drawing_mode(short new_mode)
 {
 	current_drawing_mode = new_mode;
-							
+	
+	SetScrollRange(right_sbar,SB_CTL,0,get_right_sbar_max(),TRUE);
+	SetScrollPos(right_sbar,SB_CTL,store_control_value,TRUE);
+
 	// do proper modifications of scroll bar
 	if (current_drawing_mode == 0) {
-		SetScrollRange(right_sbar,SB_CTL,0,0,TRUE);
 		set_up_terrain_buttons();
 		set_new_floor(current_floor_drawn);
 	}
 	else {
-// q_3DModStart
-//		SetScrollRange(right_sbar,SB_CTL,0,22,TRUE);
-//		SetControlMinimum(right_sbar,0);
-//		SetControlMaximum(right_sbar,(cur_viewing_mode >= 10) ? 25 : 22 );
-		SetScrollRange(right_sbar,SB_CTL,0,(cur_viewing_mode >= 10) ? 25 : 22,TRUE);
-// q_3DModEnd
-
-		SetScrollPos(right_sbar,SB_CTL,store_control_value,TRUE);
 		set_up_terrain_buttons();
 		set_new_terrain(current_terrain_drawn);
 	}

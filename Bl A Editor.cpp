@@ -12,7 +12,7 @@
 #include "stdafx.h"
 #include "Resource.h"
 #include "global.h"
-#define kVersion "   Version:  Bourgeois Bat (r98)"
+#define kVersion "   Version:  Chivalrous Chitrach (r106)"
 
 // Global variables
 
@@ -25,6 +25,7 @@ HACCEL	accel;
 HWND	palettePtr;//this is the window which has the tools in it
 HWND	palette_tooltips;
 HWND	main_tooltips;
+HWND	tile_tooltips;
 HWND	tilesPtr;//this is the window with the terrain etc. tiles in it
 
 char szTilesName[] = "Tiles";
@@ -48,7 +49,6 @@ extern void update_screen_locs(void);
 extern Boolean play_sounds;
 extern void write_should_play_sounds(bool play);
 extern bool get_should_play_sounds();
-
 
 Boolean change_made_town = FALSE;
 Boolean change_made_outdoors = FALSE;
@@ -384,6 +384,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		right_sbar_rect.right - right_sbar_rect.left,
 		right_sbar_rect.bottom - right_sbar_rect.top,
 		tilesPtr,(HMENU) 1,(HINSTANCE) store_hInstance,(void *) NULL);
+	SetScrollRange(right_sbar,SB_CTL,0,get_right_sbar_max(),TRUE);
 
 	cd_init_dialogs();
 
@@ -423,11 +424,52 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 	short handled = 0,which_sbar,sbar_pos = 0,old_setting;
 	int min = 0, max = 0;
 //	HMENU menu;
+	int tool_index;
 	POINT p;
 	RECT r, wheelHitRect;
 	int wheel_delta, wheel_keystate;
 
+	char *tool_string_2d[2] = {"Toggle 3D", "Toggle Zoom"};
+	char *tool_string_3d[2] = {"Toggle 3D", "Toggle Realistic Mode"};
+
 	switch (message) {
+
+	case WM_NOTIFY:
+		//whee dynamic tooltips
+		if (hwnd == mainPtr){
+			switch (((LPNMHDR)lParam)->code){
+				case TTN_GETDISPINFO:
+					if (cur_viewing_mode >= 10){
+						((LPNMTTDISPINFO)lParam)->lpszText = TEXT(tool_string_3d[((LPNMTTDISPINFO)lParam)->lParam]);
+					}
+					else {
+						((LPNMTTDISPINFO)lParam)->lpszText = TEXT(tool_string_2d[((LPNMTTDISPINFO)lParam)->lParam]);
+					}
+					break;
+			}
+		}
+		else if (hwnd == tilesPtr){
+			switch (((LPNMHDR)lParam)->code){
+				case TTN_GETDISPINFO:
+					tool_index = ((LPNMTTDISPINFO)lParam)->lParam;
+					switch (current_drawing_mode) {
+						case 0:
+							if (!((scen_data.scen_floors[tool_index].pic.which_sheet < 0)||(scen_data.scen_floors[tool_index].pic.which_icon < 0)||(tool_index>255)))
+							{
+								((LPNMTTDISPINFO)lParam)->lpszText = TEXT(scen_data.scen_floors[tool_index].floor_name);
+							}
+						break;
+						case 1:
+							if (!((scen_data.scen_ter_types[tool_index].pic.which_sheet < 0)||(scen_data.scen_ter_types[tool_index].pic.which_icon < 0)))
+							{
+								((LPNMTTDISPINFO)lParam)->lpszText = TEXT(scen_data.scen_ter_types[tool_index].ter_name);
+							}
+						break;
+					}
+					break;
+			}
+		}
+		break;
 	case WM_MOUSEHWHEEL:
 		if (hwnd == mainPtr){
 			wheelHitRect = terrain_viewport_3d;
@@ -786,6 +828,7 @@ void handle_edit_menu(int item_hit)
 		 	Boolean need_redraw;
 			short x;
 			location spot_hit;
+			HMENU menu;
 
 	switch (item_hit) {
 		case 1: // Undo
@@ -1075,13 +1118,12 @@ void handle_edit_menu(int item_hit)
 
 		case 26: //Play Sounds
 			play_sounds = !play_sounds;
-			HMENU menu = GetMenu(mainPtr);
+			menu = GetMenu(mainPtr);
 			ModifyMenu(menu,126,(play_sounds) ? (MF_ENABLED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) :
 			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),126,"Play Sounds");
 			write_should_play_sounds(play_sounds);
 			play_sound(0);
 			break;
-
 		}
 	draw_main_screen();
 }

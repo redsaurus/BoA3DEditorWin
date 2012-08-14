@@ -20,6 +20,11 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define DEFAULT_INDOOR_DRAW_DISTANCE 10//realistic draw distance in towns
 #define DEFAULT_OUTDOOR_DRAW_DISTANCE 14//realistic draw distance outdoors
 
+#define TERRAIN_NUM_ROWS 43
+#define ITEM_NUM_ROWS 42
+#define CREATURE_NUM_ROWS 22
+#define FLOOR_NUM_ROWS 22
+
 #define MAIN_WINDOW_NUM	0
 #define PALETTE_WINDOW 1
 #define	TILES_WINDOW_NUM 2
@@ -55,6 +60,8 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define	PALETTE_BUT_HEIGHT		17
 #define	PALETTE_BUT_WIDTH		25
 
+#define TILES_DRAW_RECT_HEIGHT 520
+#define TILES_DRAW_RECT_WIDTH 260
 #define TILES_WINDOW_WIDTH 280
 
 #define	NUM_PC_I	34
@@ -77,6 +84,7 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define OUTDOOR_CREATURE_HEIGHT_3D	16
 
 #define	TER_BUTTON_HEIGHT_3D	19
+#define TILES_N_COLS	15
 // q_3DModEnd
 
 // new blades consts
@@ -1683,6 +1691,7 @@ Boolean loc_touches_rect_border(location loc,macRECT r);
 int coord2Index(int coord, int base, int step);
 
 // Graphics.c
+int get_right_sbar_max();
 void Set_up_win ();
 void lose_graphics();
 void recalculate_2D_view_details();
@@ -1732,6 +1741,7 @@ void take_Horse(short i,short j);
 void take_Boat(short i,short j);
 void CreateToolTipForRect(HWND hwndParent);
 void CreateMainToolTipRect();
+void CreateTilesToolTipRect();
 
 // graphutl
 HDIB load_pict(short which_pict);

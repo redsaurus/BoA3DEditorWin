@@ -28,7 +28,7 @@ HFONT underline_font;
 HFONT bold_font;
 HFONT tiny_font;
 
-RECT terrain_buttons_rect = {0,0,260,639}; /* was 550 */
+RECT terrain_buttons_rect = {0,0,260,415}; /* was 550 */
 
 RECT palette_buttons_rect = {0, 0, 280, 250};
 
@@ -44,6 +44,7 @@ extern HWND palettePtr;
 extern HWND right_sbar;
 extern HWND palette_tooltips;
 extern HWND main_tooltips;
+extern HWND tile_tooltips;
 extern RECT right_sbar_rect;
 
 extern scenario_data_type scenario;
@@ -76,9 +77,9 @@ extern void draw_mode_buttons();
 extern short current_floor_drawn;
 extern short current_terrain_drawn;
 
-extern RECT terrain_rects[330];
+extern RECT terrain_rects[516];
+extern RECT terrain_rects_3D[516];
 
-extern RECT terrain_rects_3D[330];
 extern short hill_c_heights[12][4];
 
 extern RECT palette_buttons[9][6];
@@ -178,6 +179,11 @@ int TER_RECT_UL_Y_2d_small;
 int indoor_draw_distance = DEFAULT_INDOOR_DRAW_DISTANCE;
 int outdoor_draw_distance = DEFAULT_OUTDOOR_DRAW_DISTANCE;
 
+RECT creature_buttons_size;
+RECT item_buttons_size;
+RECT terrain_buttons_size;
+RECT floor_buttons_size;
+
 // graphics library
 HDIB graphics_library[MAX_NUM_SHEETS_IN_LIBRARY];
 graphic_id_type graphics_library_index[MAX_NUM_SHEETS_IN_LIBRARY];
@@ -261,6 +267,42 @@ void add_border_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short bord
 
 // void refresh_graphics_on_screen();
 
+int get_right_sbar_max(){
+	int iconHeight=1;
+	int iconRows=1;
+	
+	switch(current_drawing_mode){
+		case 0: //floors
+			iconHeight=TER_BUTTON_SIZE;
+			iconRows=(256/TILES_N_COLS)+((256%TILES_N_COLS)>0);
+			break;
+		case 1: //terrains
+		case 2: //heights, which means just draw terrain icons
+			if(cur_viewing_mode == 10 || cur_viewing_mode == 11)
+				iconHeight=TER_BUTTON_HEIGHT_3D;
+			else
+				iconHeight=TER_BUTTON_SIZE;
+			iconRows=(512/TILES_N_COLS)+((512%TILES_N_COLS)>0);
+			break;
+		case 3: //creatures
+			iconHeight=TER_BUTTON_HEIGHT_3D;
+			iconRows=(256/TILES_N_COLS)+((256%TILES_N_COLS)>0);
+			break;
+		case 4: //items
+			iconHeight=TER_BUTTON_SIZE;
+			iconRows=(500/TILES_N_COLS)+((500%TILES_N_COLS)>0);
+			break;
+	}
+	
+	//The control maximum should be equal to the total number of icon rows minus the 
+	//number of full rows which are visible at any given time
+	int max=iconRows-((right_sbar_rect.bottom-terrain_buttons_rect.top)/(iconHeight+1)); //add 1 to icon height for spacing
+	//naturally this should be limited to be non-negative, 
+	//if there's extra space the scrollbar should just do nothing
+	if(max<0)
+		max=0;
+	return(max);
+}
 
 void Set_up_win ()
 {
@@ -291,13 +333,13 @@ void Set_up_win ()
 
 	set_up_view_buttons();
 
-	for (i = 0; i < 330; i++)
-		SetRECT(terrain_rects[i],3 + (i % 15) * (TER_BUTTON_SIZE + 1),2 + (i / 15) * (TER_BUTTON_SIZE + 1),
-			3 + (i % 15) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE,2 + (i / 15) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE);
+	for (i = 0; i < 516; i++)
+		SetRECT(terrain_rects[i],3 + (i % TILES_N_COLS) * (TER_BUTTON_SIZE + 1),2 + (i / TILES_N_COLS) * (TER_BUTTON_SIZE + 1),
+			3 + (i % TILES_N_COLS) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE,2 + (i / TILES_N_COLS) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE);
 
-	for (i = 0; i < 285; i++)
-		SetRECT(terrain_rects_3D[i],3 + (i % 15) * (TER_BUTTON_SIZE + 1),2 + (i / 15) * (TER_BUTTON_HEIGHT_3D + 1),
-			3 + (i % 15) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE,2 + (i / 15) * (TER_BUTTON_HEIGHT_3D + 1) + TER_BUTTON_HEIGHT_3D);
+	for (i = 0; i < 516; i++)
+		SetRECT(terrain_rects_3D[i],3 + (i % TILES_N_COLS) * (TER_BUTTON_SIZE + 1),2 + (i / TILES_N_COLS) * (TER_BUTTON_HEIGHT_3D + 1),
+			3 + (i % TILES_N_COLS) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE,2 + (i / TILES_N_COLS) * (TER_BUTTON_HEIGHT_3D + 1) + TER_BUTTON_HEIGHT_3D);
 
 	for (i = 0; i < MAX_NUM_SHEETS_IN_LIBRARY; i++) {
 		graphics_library[i] = NULL;
@@ -328,7 +370,12 @@ void load_main_screen()
 	SetMapMode(main_dc5,GetMapMode(main_dc));
 	SetStretchBltMode(main_dc5,STRETCH_DELETESCANS);
 
-	terrain_buttons_gworld = DibCreate (terrain_buttons_rect.right,terrain_buttons_rect.bottom, 16,0);
+	terrain_buttons_size.top=0;
+	terrain_buttons_size.left=0;
+	terrain_buttons_size.bottom=1+TERRAIN_NUM_ROWS*(1+TER_BUTTON_HEIGHT_3D);
+	terrain_buttons_size.right=TILES_DRAW_RECT_WIDTH;
+
+	terrain_buttons_gworld = DibCreate (terrain_buttons_size.right,terrain_buttons_size.bottom, 16,0);
 
 	palette_buttons_gworld = DibCreate (palette_buttons_rect.right, palette_buttons_rect.bottom, 16, 0);
 	
@@ -571,14 +618,14 @@ void set_up_terrain_buttons()
 	HBITMAP store_bmp;
 	HFONT store_font;
 
- 	paint_pattern(terrain_buttons_gworld,0,terrain_buttons_rect,2);
+ 	paint_pattern(terrain_buttons_gworld,0,terrain_buttons_size,2);
 	paint_pattern(palette_buttons_gworld,0,palette_buttons_rect,2);
 	
 	// frame rect around buttons
 	SetBkMode(main_dc5,TRANSPARENT);
 	store_font = (HFONT)SelectObject(main_dc5,bold_font);
 	store_bmp = (HBITMAP) SelectObject(main_dc5,DibBitmapHandle(terrain_buttons_gworld));
-	put_rect_in_gworld(main_dc5,terrain_buttons_rect,0,0,0);
+	put_rect_in_gworld(main_dc5,terrain_buttons_size,0,0,0);
 
 	if (file_is_loaded == FALSE) {
 		SelectObject(main_dc5,store_font);
@@ -586,9 +633,16 @@ void set_up_terrain_buttons()
 		return;
 	}
 
+	CreateTilesToolTipRect();
+
  	// first make terrain buttons
-	for (i = 0; i < ((cur_viewing_mode >= 10 && current_drawing_mode > 0) ? 285 : 330); i++){
-		if ((i < 256) || (current_drawing_mode > 0)) {
+	int max = 256;
+	if(current_drawing_mode == 1 || current_drawing_mode==2){
+		max = 512;
+	}
+	else if(current_drawing_mode == 4)
+		max = 500;
+	for (i = 0; i < max; i++){
 			ter_from = ter_from_base;
 			
 			graphic_id_type a;
@@ -607,33 +661,30 @@ void set_up_terrain_buttons()
 					break;
 				case 1: case 2:
 					short sbar_pos = GetControlValue(right_sbar);
-					store_ter_type = sbar_pos * 15 + i;
+					store_ter_type = i;
 					if(store_ter_type == 0)
 						fill_rect_in_gworld(main_dc5,terrain_rects_3D[i],255,255,255);
-					if (store_ter_type < 512) {
-						a = scen_data.scen_ter_types[store_ter_type].pic;
-						//if a wall (or fence - at least one move block, but not all)
-						//this doesn't include open fence gates, but perhaps that's good - they can 
-						//stick out of a square unpredictably
-						if( (store_ter_type >= 2 && store_ter_type <= 73)
-							|| (     !(scen_data.scen_ter_types[store_ter_type].move_block[0] == 1
-									&& scen_data.scen_ter_types[store_ter_type].move_block[1] == 1
-									&& scen_data.scen_ter_types[store_ter_type].move_block[2] == 1
-									&& scen_data.scen_ter_types[store_ter_type].move_block[3] == 1)
-								&&    (scen_data.scen_ter_types[store_ter_type].move_block[0] == 1
-									|| scen_data.scen_ter_types[store_ter_type].move_block[1] == 1
-									|| scen_data.scen_ter_types[store_ter_type].move_block[2] == 1
-									|| scen_data.scen_ter_types[store_ter_type].move_block[3] == 1) ) ) {
-							SelectObject(main_dc5,store_bmp);
-							draw_wall_3D_sidebar(store_ter_type, terrain_rects_3D[i]);
-							SelectObject(main_dc5,DibBitmapHandle(terrain_buttons_gworld));
-							do_this_item = FALSE;
-						}
-						OffsetRect(&ter_from,(1 + PICT_BOX_WIDTH_3D) * (a.which_icon % 10) + 1,(1 + PICT_BOX_HEIGHT_3D) * (a.which_icon / 10) + 1);
-						if (a.not_legit())
-							do_this_item = FALSE;
+					a = scen_data.scen_ter_types[store_ter_type].pic;
+					//if a wall (or fence - at least one move block, but not all)
+					//this doesn't include open fence gates, but perhaps that's good - they can 
+					//stick out of a square unpredictably
+					if( (store_ter_type >= 2 && store_ter_type <= 73)
+						|| (     !(scen_data.scen_ter_types[store_ter_type].move_block[0] == 1
+								&& scen_data.scen_ter_types[store_ter_type].move_block[1] == 1
+								&& scen_data.scen_ter_types[store_ter_type].move_block[2] == 1
+								&& scen_data.scen_ter_types[store_ter_type].move_block[3] == 1)
+							&&    (scen_data.scen_ter_types[store_ter_type].move_block[0] == 1
+								|| scen_data.scen_ter_types[store_ter_type].move_block[1] == 1
+								|| scen_data.scen_ter_types[store_ter_type].move_block[2] == 1
+								|| scen_data.scen_ter_types[store_ter_type].move_block[3] == 1) ) ) {
+						SelectObject(main_dc5,store_bmp);
+						draw_wall_3D_sidebar(store_ter_type, terrain_rects_3D[i]);
+						SelectObject(main_dc5,DibBitmapHandle(terrain_buttons_gworld));
+						do_this_item = FALSE;
 					}
-					else do_this_item = FALSE;
+					OffsetRect(&ter_from,(1 + PICT_BOX_WIDTH_3D) * (a.which_icon % 10) + 1,(1 + PICT_BOX_HEIGHT_3D) * (a.which_icon / 10) + 1);
+					if (a.not_legit())
+						do_this_item = FALSE;
 					break;
 				}
 			}
@@ -647,14 +698,11 @@ void set_up_terrain_buttons()
 					break;
 				case 1: case 2:
 					short sbar_pos = GetControlValue(right_sbar);
-					store_ter_type = sbar_pos * 15 + i;
-					if (store_ter_type < 512) {
-						a = scen_data.scen_ter_types[store_ter_type].ed_pic;
-						OffsetRect(&ter_from,(1 + TER_BUTTON_SIZE_OLD) * (a.which_icon % 10) + 1,(1 + TER_BUTTON_SIZE_OLD) * (a.which_icon / 10) + 1);
-						if (a.not_legit())
-							do_this_item = FALSE;
-					}
-					else do_this_item = FALSE;
+					store_ter_type = i;
+					a = scen_data.scen_ter_types[store_ter_type].ed_pic;
+					OffsetRect(&ter_from,(1 + TER_BUTTON_SIZE_OLD) * (a.which_icon % 10) + 1,(1 + TER_BUTTON_SIZE_OLD) * (a.which_icon / 10) + 1);
+					if (a.not_legit())
+						do_this_item = FALSE;
 					break;
 				}
 			}
@@ -679,7 +727,6 @@ void set_up_terrain_buttons()
 					terrain_rects_3D[i] : terrain_rects[i],0,0);
 				SelectObject(main_dc5,DibBitmapHandle(terrain_buttons_gworld));
 			}
-		}
 	}
 
 	SelectObject(main_dc5,store_font);
@@ -6216,8 +6263,18 @@ void place_right_buttons( /* short mode */ )
 	to_rect = terrain_buttons_rect;
 	OffsetRect(&to_rect,RIGHT_BUTTONS_X_SHIFT,RIGHT_BUTTONS_Y_SHIFT);
 	SelectObject(tiles_dc,store_bmp);
-	rect_draw_some_item(terrain_buttons_gworld,terrain_buttons_rect,
-		(HDIB) tiles_dc,to_rect,0,2);
+	if(current_drawing_mode==0){
+		RECT from_rect = terrain_buttons_rect;
+		//OffsetRect(&from_rect,0,-20);
+		OffsetRect(&from_rect,0,GetControlValue(right_sbar)*(1+TER_BUTTON_SIZE));
+		rect_draw_some_item(terrain_buttons_gworld,from_rect,(HDIB) tiles_dc,to_rect,0,2);
+	}
+	else if(current_drawing_mode==1||current_drawing_mode==2){
+		RECT from_rect = terrain_buttons_rect;
+		//OffsetRect(&from_rect,0,-20);
+		OffsetRect(&from_rect,0,GetControlValue(right_sbar)*(1+((cur_viewing_mode >= 10)?TER_BUTTON_HEIGHT_3D:TER_BUTTON_SIZE)));
+		rect_draw_some_item(terrain_buttons_gworld,from_rect,(HDIB) tiles_dc,to_rect,0,2);
+	}
 	SelectObject(tiles_dc,DibBitmapHandle(terrain_buttons_gworld));
 
 	to_rect = palette_buttons_rect;
@@ -6259,15 +6316,22 @@ void place_right_buttons( /* short mode */ )
 
 	// draw frames around selected ter
 	short selected_ter = -1;
+	short draw_position;
 	switch (current_drawing_mode) {
 		case 0:
-				 selected_ter = current_floor_drawn; to_rect = terrain_rects[selected_ter];
+			selected_ter = current_floor_drawn;
+			draw_position = selected_ter - TILES_N_COLS * GetControlValue(right_sbar);
+					//compare draw_position with the indices of the first positions off of both ends of the visible range
+			if (draw_position!= minmax(0,(cur_viewing_mode >= 10) ? 299 : 344,draw_position))
+				selected_ter = -1;
+			else
+				to_rect = terrain_rects[draw_position];
 		break;
 		case 1: case 2:
 			selected_ter = current_terrain_drawn;
-			short draw_position = selected_ter - 15 * GetControlValue(right_sbar);
+			draw_position = selected_ter - TILES_N_COLS * GetControlValue(right_sbar);
 
-			if (draw_position != minmax(0,(cur_viewing_mode >= 10) ? 284 : 329,draw_position))
+			if (draw_position != minmax(0,(cur_viewing_mode >= 10) ? 299 : 344,draw_position))
 				selected_ter = -1;
 			else
       to_rect = ((cur_viewing_mode >= 10) ? terrain_rects_3D[draw_position] : terrain_rects[draw_position]);
@@ -7225,8 +7289,6 @@ void add_border_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short bord
 void CreateMainToolTipRect()
 {
 	TOOLINFO ti[2];
-	char *tool_string_2d[2] = {"Toggle 3D", "Toggle Zoom"};
-	char *tool_string_3d[2] = {"Toggle 3D", "Toggle Realistic Mode"};
 
 	int i;
 	DestroyWindow(main_tooltips);
@@ -7248,7 +7310,9 @@ void CreateMainToolTipRect()
 		ti[i].uFlags   = TTF_SUBCLASS;
 		ti[i].hwnd     = mainPtr;
 		ti[i].hinst    = store_hInstance;
-		ti[i].lpszText = TEXT(((cur_viewing_mode >= 10) ? tool_string_3d[i] : tool_string_2d[i]));
+		ti[i].lpszText = LPSTR_TEXTCALLBACK;
+
+		ti[i].lParam = i;
 
 
 		ti[i].rect = view_buttons[i];
@@ -7257,6 +7321,44 @@ void CreateMainToolTipRect()
 		SendMessage(main_tooltips, TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) &ti[i]);	
 	} 
 } 
+
+void CreateTilesToolTipRect()
+{
+	TOOLINFO ti[330];
+
+	int i;
+	DestroyWindow(tile_tooltips);
+
+    tile_tooltips = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, 
+                                 WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, 
+                                 CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
+                                 mainPtr, NULL, store_hInstance,NULL);
+
+    SetWindowPos(tile_tooltips, HWND_TOPMOST, 0, 0, 0, 0, 
+                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+
+    // Set up "tool" information. In this case, the "tool" is the entire parent window.
+	
+	for (i = 0; i < 330; i++)
+	{
+//		ti[i][j] = { 0 };
+		ti[i].cbSize   = sizeof(TOOLINFO);
+		ti[i].uFlags   = TTF_SUBCLASS;
+		ti[i].hwnd     = tilesPtr;
+		ti[i].hinst    = store_hInstance;
+		ti[i].lpszText = LPSTR_TEXTCALLBACK;
+
+		ti[i].lParam = i;
+
+
+		ti[i].rect = terrain_rects[i];
+		ti[i].rect.bottom += RIGHT_BUTTONS_Y_SHIFT;
+		ti[i].rect.top += RIGHT_BUTTONS_Y_SHIFT;
+
+		// Associate the tooltip with the "tool" window.
+		SendMessage(tile_tooltips, TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) &ti[i]);	
+	} 
+}
 
 void CreateToolTipForRect(HWND hwndParent)
 {
