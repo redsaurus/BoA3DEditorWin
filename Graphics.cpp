@@ -28,9 +28,9 @@ HFONT underline_font;
 HFONT bold_font;
 HFONT tiny_font;
 
-RECT terrain_buttons_rect = {0,0,260,415}; /* was 550 */
+RECT terrain_buttons_rect = {0,0,TILES_DRAW_RECT_WIDTH,TILES_DRAW_RECT_HEIGHT};
 
-RECT palette_buttons_rect = {0, 0, 280, 250};
+RECT palette_buttons_rect = {0, 0, TILES_WINDOW_WIDTH, 250};
 
 RECT mode_buttons_rect = {0, 0, TILES_WINDOW_WIDTH, 20};
 

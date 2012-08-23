@@ -361,7 +361,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 	GetWindowRect(GetDesktopWindow(),&main_rect);
 
 	MoveWindow(tilesPtr,((main_rect.right - main_rect.left) + 546) / 2,
-		((main_rect.bottom - main_rect.top) - 650) / 2,280,435,TRUE);
+		((main_rect.bottom - main_rect.top) - 650) / 2,TILES_WINDOW_WIDTH,435,TRUE);
 //	center_window(tilesPtr);
 	ShowWindow(tilesPtr,nCmdShow);
 
@@ -377,7 +377,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 
 	right_sbar_rect.top = RIGHT_BUTTONS_Y_SHIFT;;
 	right_sbar_rect.left = terrain_buttons_rect.right + RIGHT_BUTTONS_X_SHIFT;
-	right_sbar_rect.bottom = 22 * (TER_BUTTON_SIZE + 1) + 1 + RIGHT_BUTTONS_Y_SHIFT;
+	right_sbar_rect.bottom = 22 * (TER_BUTTON_SIZE_OLD + 1) + 1 + RIGHT_BUTTONS_Y_SHIFT;
 	right_sbar_rect.right = terrain_buttons_rect.right + RIGHT_BUTTONS_X_SHIFT + 16;
 	right_sbar = CreateWindow("scrollbar",NULL,
 		WS_CHILD | WS_TABSTOP | SBS_VERT, right_sbar_rect.left + ulx,right_sbar_rect.top + uly,

@@ -20,10 +20,10 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define DEFAULT_INDOOR_DRAW_DISTANCE 10//realistic draw distance in towns
 #define DEFAULT_OUTDOOR_DRAW_DISTANCE 14//realistic draw distance outdoors
 
-#define TERRAIN_NUM_ROWS 43
-#define ITEM_NUM_ROWS 42
-#define CREATURE_NUM_ROWS 22
-#define FLOOR_NUM_ROWS 22
+#define TERRAIN_NUM_ROWS ((512/TILES_N_COLS)+((512%TILES_N_COLS)>0))
+#define ITEM_NUM_ROWS ((500/TILES_N_COLS)+((500%TILES_N_COLS)>0))
+#define CREATURE_NUM_ROWS ((256/TILES_N_COLS)+((256%TILES_N_COLS)>0))
+#define FLOOR_NUM_ROWS ((256/TILES_N_COLS)+((256%TILES_N_COLS)>0))
 
 #define MAIN_WINDOW_NUM	0
 #define PALETTE_WINDOW 1
@@ -49,8 +49,13 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define	LEFT_TEXT_LINE_ULY	440
 #define	LEFT_TEXT_LINE_WIDTH	240
 #define	TEXT_LINE_HEIGHT	12
-#define	TER_BUTTON_SIZE	16
+
+#define TER_BUTTON_SIZE	TER_BUTTON_SIZE_STD
+#define TER_BUTTON_SIZE_BIG 46
+#define TER_BUTTON_SIZE_MID 34
+#define	TER_BUTTON_SIZE_STD	23
 #define TER_BUTTON_SIZE_OLD 16
+
 #define	RIGHT_TEXT_LINE_ULX	5
 #define	RIGHT_TEXT_LINE_ULY	110//500
 #define	RIGHT_BUTTONS_X_SHIFT	0//540
@@ -60,9 +65,9 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define	PALETTE_BUT_HEIGHT		17
 #define	PALETTE_BUT_WIDTH		25
 
-#define TILES_DRAW_RECT_HEIGHT 520
-#define TILES_DRAW_RECT_WIDTH 260
-#define TILES_WINDOW_WIDTH 280
+#define TILES_DRAW_RECT_HEIGHT 415
+#define TILES_DRAW_RECT_WIDTH (5 + TILES_N_COLS * (TER_BUTTON_SIZE+1))//260
+#define TILES_WINDOW_WIDTH (TILES_DRAW_RECT_WIDTH + 20)//280
 
 #define	NUM_PC_I	34
 
@@ -83,8 +88,13 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define OUTDOOR_CREATURE_WIDTH_3D   11
 #define OUTDOOR_CREATURE_HEIGHT_3D	16
 
-#define	TER_BUTTON_HEIGHT_3D	19
-#define TILES_N_COLS	15
+#define	TER_BUTTON_HEIGHT_3D_OLD	19
+#define TER_BUTTON_HEIGHT_3D_STD	27
+#define TER_BUTTON_HEIGHT_3D_MID	41
+#define TER_BUTTON_HEIGHT_3D_BIG	55
+#define TER_BUTTON_HEIGHT_3D	TER_BUTTON_HEIGHT_3D_STD
+
+#define TILES_N_COLS	12
 // q_3DModEnd
 
 // new blades consts
