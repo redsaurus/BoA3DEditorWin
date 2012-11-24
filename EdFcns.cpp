@@ -79,6 +79,8 @@ extern char grid_mode;
 extern short last_large_mode;
 extern Boolean r1_in_r2(macRECT r1,macRECT r2);
 
+extern int tileZoomLevel;
+
 // if a terrain type has special property from 19-30, it is a slope. this
 // array says what corners for these 12 terrain types are elevated.
 // first field is nw corner
@@ -129,6 +131,7 @@ extern Boolean change_made_town;
 extern Boolean change_made_outdoors;
 
 extern HWND	mainPtr;
+extern HWND	tilesPtr;
 
 extern short selected_item_number;
 extern item_type copied_item;
@@ -954,7 +957,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 	// q_3DModEnd
 
 			}
-				else { // terrain/height mode
+				else if (current_drawing_mode < 3){ // terrain/height mode
 					short sbar_pos = GetControlValue(right_sbar);
 
 					for (i = 0; i < 330; i++)
@@ -969,11 +972,35 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 								}
 							}
 	// q_3DModEnd
-				}	
+				}
+				else if (current_drawing_mode == 3){ //creature mode
+					short sbar_pos = GetControlValue(right_sbar);
+
+					for (i = 0; i < 330; i++)
+						if (sbar_pos * TILES_N_COLS + i < 256) {
+							if (POINTInRECT(cur_point, terrain_rects_3D[i])) {
+								set_new_creature(sbar_pos * TILES_N_COLS + i);
+								object_sticky_draw = shift_key;
+								place_right_buttons();
+							}
+						}
+				}
+				else if (current_drawing_mode == 4){ //item mode
+					short sbar_pos = GetControlValue(right_sbar);
+
+					for (i = 0; i < 330; i++)
+						if (sbar_pos * TILES_N_COLS + i < 500) {
+							if (POINTInRECT(cur_point, terrain_rects[i])) {
+								set_new_item(sbar_pos * TILES_N_COLS + i);
+								object_sticky_draw = shift_key;
+								place_right_buttons();
+							}
+						}
+				}
 		}
 		else{
 				
-			for (i = 0; i < ((editing_town) ? 3 : 3); i++) {
+			for (i = 0; i < ((editing_town) ? 5 : 3); i++) {
 				if (POINTInRECT(cur_point, mode_buttons[i])) {
 					if (i != current_drawing_mode)
 					{
@@ -1924,10 +1951,16 @@ void set_drawing_mode(short new_mode)
 	if (current_drawing_mode == 0) {
 		set_up_terrain_buttons();
 		set_new_floor(current_floor_drawn);
+		reset_drawing_mode();
 	}
-	else {
+	else if (current_drawing_mode == 1 || current_drawing_mode == 2) { //terrain or height
 		set_up_terrain_buttons();
 		set_new_terrain(current_terrain_drawn);
+		reset_drawing_mode();
+	}
+	else if (current_drawing_mode == 3 || current_drawing_mode == 4) { //creatures or items
+		set_up_terrain_buttons();
+		set_tool(40);	//selection
 	}
 //	update_main_screen();
 }
@@ -2052,6 +2085,16 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				erasing_mode = FALSE;
 				set_cursor(0);
 				change_height(spot_hit,(option_hit != 0) ? 0 : 1);
+				break;
+			case 3: // place creature
+				create_new_creature(mode_count, spot_hit, NULL);
+				if (!object_sticky_draw)
+					set_tool(40);
+				break;
+			case 4: // place item
+				create_new_item(mode_count, spot_hit, FALSE, NULL);
+				if (!object_sticky_draw)
+					set_tool(40);
 				break;
 			}
 			break;
@@ -3040,6 +3083,13 @@ void set_new_creature(short selected_creature)
 	set_tool(0);
 	current_drawing_mode = 3;
 	mode_count = selected_creature;
+
+	char str1[256],str2[256];
+	sprintf(str1,"Drawing creature number %d:", (int)mode_count);
+	sprintf(str2,"  %s",scen_data.scen_creatures[mode_count].name);
+	set_string(str1,str2);
+
+	place_right_buttons(/* 0 */);
 }
 
 
@@ -3052,6 +3102,13 @@ void set_new_item(short selected_item)
 	set_tool(0);
 	current_drawing_mode = 4;
 	mode_count = selected_item;
+
+	char str1[256],str2[256];
+	sprintf(str1,"Drawing item number %d:", (int)mode_count);
+	sprintf(str2,"  %s",scen_data.scen_items[mode_count].full_name);
+	set_string(str1,str2);
+
+	place_right_buttons(/* 0 */);
 }
 
 Boolean control_key_down()
@@ -3517,7 +3574,7 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 		case ' ':
 			if (file_is_loaded == TRUE){
 				play_sound(34);
-				set_drawing_mode((current_drawing_mode + 1) % 3);
+				set_drawing_mode((current_drawing_mode + 1) % (editing_town ? 5 : 3));
 				draw_main_screen();
 			}
 			break;
@@ -4962,6 +5019,31 @@ void recursive_adjust_space_height_raise(location l)
 		recursive_hill_up_depth--;
 	}
 	adjust_space(l);
+}
+
+void shut_down_tile_menus()
+{
+	HMENU menu;
+
+	menu = GetSystemMenu(tilesPtr,false);
+	
+	if (file_is_loaded == FALSE) {
+		EnableMenuItem(menu,1701,MF_GRAYED | MF_BYCOMMAND);
+		EnableMenuItem(menu,1702,MF_GRAYED | MF_BYCOMMAND);
+	}
+	else if (tileZoomLevel == 0) {
+		EnableMenuItem(menu,1701,MF_ENABLED | MF_BYCOMMAND);
+		EnableMenuItem(menu,1702,MF_GRAYED | MF_BYCOMMAND);
+	}
+	else if (tileZoomLevel == 3) {
+		EnableMenuItem(menu,1702,MF_ENABLED | MF_BYCOMMAND);
+		EnableMenuItem(menu,1701,MF_GRAYED | MF_BYCOMMAND);
+	}
+	else {
+		EnableMenuItem(menu,1701,MF_ENABLED | MF_BYCOMMAND);
+		EnableMenuItem(menu,1702,MF_ENABLED | MF_BYCOMMAND);
+	}
+
 }
 
 //disables menu items which aren't applicable at the moment

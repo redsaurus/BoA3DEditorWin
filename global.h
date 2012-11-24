@@ -50,7 +50,7 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define	LEFT_TEXT_LINE_WIDTH	240
 #define	TEXT_LINE_HEIGHT	12
 
-#define TER_BUTTON_SIZE	TER_BUTTON_SIZE_STD
+#define TER_BUTTON_SIZE	TER_BUTTON_SIZE_MID
 #define TER_BUTTON_SIZE_BIG 46
 #define TER_BUTTON_SIZE_MID 34
 #define	TER_BUTTON_SIZE_STD	23
@@ -92,7 +92,7 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define TER_BUTTON_HEIGHT_3D_STD	27
 #define TER_BUTTON_HEIGHT_3D_MID	41
 #define TER_BUTTON_HEIGHT_3D_BIG	55
-#define TER_BUTTON_HEIGHT_3D	TER_BUTTON_HEIGHT_3D_STD
+#define TER_BUTTON_HEIGHT_3D	TER_BUTTON_HEIGHT_3D_MID
 
 #define TILES_N_COLS	12
 // q_3DModEnd
@@ -1613,6 +1613,7 @@ void set_new_item(short selected_item);
 Boolean handle_keystroke(WPARAM wParam,LPARAM lParam);
 void set_terrain(location l,short terrain_type);
 void shut_down_menus(/* short mode */);
+void shut_down_tile_menus();
 Boolean save_check(short which_dlog);
 void update_item_menu();
 void delete_selected_instance();

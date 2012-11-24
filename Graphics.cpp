@@ -66,6 +66,8 @@ extern short ulx,uly;
 
 extern short cen_x, cen_y;
 
+extern short mode_count;
+
 extern short available_dlog_buttons[NUM_DLOG_B];
 extern short max_zone_dim[3];
 extern RECT windRect;
@@ -279,6 +281,9 @@ void add_border_to_graphic(HDIB *src_gworld_ptr, RECT *from_rect_ptr, short bord
 
 // void refresh_graphics_on_screen();
 
+Boolean setUpCreaturePalette = FALSE;
+Boolean setUpItemPalette = FALSE;
+
 int get_right_sbar_max(){
 	int iconHeight=1;
 	int iconRows=1;
@@ -316,6 +321,20 @@ int get_right_sbar_max(){
 	return(max);
 }
 
+void set_up_terrain_rects()
+{
+	int i;
+	
+	for (i = 0; i < 516; i++)
+		SetRECT(terrain_rects[i],3 + (i % TILES_N_COLS) * (TER_BUTTON_SIZE + 1),2 + (i / TILES_N_COLS) * (TER_BUTTON_SIZE + 1),
+				3 + (i % TILES_N_COLS) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE,2 + (i / TILES_N_COLS) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE);
+	
+	for (i = 0; i < 516; i++)
+		SetRECT(terrain_rects_3D[i],3 + (i % TILES_N_COLS) * (TER_BUTTON_SIZE + 1),2 + (i / TILES_N_COLS) * (TER_BUTTON_HEIGHT_3D + 1),
+				3 + (i % TILES_N_COLS) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE,2 + (i / TILES_N_COLS) * (TER_BUTTON_HEIGHT_3D + 1) + TER_BUTTON_HEIGHT_3D);
+}	
+	
+
 void Set_up_win ()
 {
 	short i,j;
@@ -344,14 +363,8 @@ void Set_up_win ()
 	reset_mode_number();
 
 	set_up_view_buttons();
-
-	for (i = 0; i < 516; i++)
-		SetRECT(terrain_rects[i],3 + (i % TILES_N_COLS) * (TER_BUTTON_SIZE + 1),2 + (i / TILES_N_COLS) * (TER_BUTTON_SIZE + 1),
-			3 + (i % TILES_N_COLS) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE,2 + (i / TILES_N_COLS) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE);
-
-	for (i = 0; i < 516; i++)
-		SetRECT(terrain_rects_3D[i],3 + (i % TILES_N_COLS) * (TER_BUTTON_SIZE + 1),2 + (i / TILES_N_COLS) * (TER_BUTTON_HEIGHT_3D + 1),
-			3 + (i % TILES_N_COLS) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE,2 + (i / TILES_N_COLS) * (TER_BUTTON_HEIGHT_3D + 1) + TER_BUTTON_HEIGHT_3D);
+	
+	set_up_terrain_rects();
 
 	for (i = 0; i < MAX_NUM_SHEETS_IN_LIBRARY; i++) {
 		graphics_library[i] = NULL;
@@ -360,6 +373,20 @@ void Set_up_win ()
 	load_main_screen();
 }
 
+void make_tile_gworlds(bool first_time)
+{
+	if (!first_time) {
+		delete_graphic(&terrain_buttons_gworld);
+	}
+	
+	terrain_buttons_size.top=0;
+	terrain_buttons_size.left=0;
+	terrain_buttons_size.bottom=1+TERRAIN_NUM_ROWS*(1+TER_BUTTON_HEIGHT_3D);
+	terrain_buttons_size.right=TILES_DRAW_RECT_WIDTH;
+	
+	terrain_buttons_gworld = DibCreate (terrain_buttons_size.right,terrain_buttons_size.bottom, 16,0);
+}
+	
 void load_main_screen()
 {
 	main_dc = GetDC(mainPtr);
@@ -381,13 +408,8 @@ void load_main_screen()
 	main_dc5 = CreateCompatibleDC(main_dc);
 	SetMapMode(main_dc5,GetMapMode(main_dc));
 	SetStretchBltMode(main_dc5,STRETCH_DELETESCANS);
-
-	terrain_buttons_size.top=0;
-	terrain_buttons_size.left=0;
-	terrain_buttons_size.bottom=1+TERRAIN_NUM_ROWS*(1+TER_BUTTON_HEIGHT_3D);
-	terrain_buttons_size.right=TILES_DRAW_RECT_WIDTH;
-
-	terrain_buttons_gworld = DibCreate (terrain_buttons_size.right,terrain_buttons_size.bottom, 16,0);
+	
+	make_tile_gworlds(true);
 
 	palette_buttons_gworld = DibCreate (palette_buttons_rect.right, palette_buttons_rect.bottom, 16, 0);
 	
@@ -630,6 +652,11 @@ void set_up_terrain_buttons()
 	HBITMAP store_bmp;
 	HFONT store_font;
 
+	if ((current_drawing_mode == 3 && setUpCreaturePalette) || (current_drawing_mode == 4 && setUpItemPalette)) {
+		//short circuited
+	//	return;
+	}
+
  	paint_pattern(terrain_buttons_gworld,0,terrain_buttons_size,2);
 	paint_pattern(palette_buttons_gworld,0,palette_buttons_rect,2);
 	
@@ -665,6 +692,7 @@ void set_up_terrain_buttons()
 			if(cur_viewing_mode == 10 || cur_viewing_mode == 11) {
 				SetRECT(ter_from,0,0,PICT_BOX_WIDTH_3D,PICT_BOX_HEIGHT_3D);
 				switch (current_drawing_mode) {
+					short sbar_pos;
 				case 0:
 					a = scen_data.scen_floors[i].pic;
 					OffsetRect(&ter_from,(1 + PICT_BOX_WIDTH_3D) * (a.which_icon % 10) + 1,(1 + PICT_BOX_HEIGHT_3D) * (a.which_icon / 10) + 1);
@@ -672,7 +700,7 @@ void set_up_terrain_buttons()
 						do_this_item = FALSE;
 					break;
 				case 1: case 2:
-					short sbar_pos = GetControlValue(right_sbar);
+					sbar_pos = GetControlValue(right_sbar);
 					store_ter_type = i;
 					if(store_ter_type == 0)
 						fill_rect_in_gworld(main_dc5,terrain_rects_3D[i],255,255,255);
@@ -698,10 +726,29 @@ void set_up_terrain_buttons()
 					if (a.not_legit())
 						do_this_item = FALSE;
 					break;
+				case 3:
+					sbar_pos = GetControlValue(right_sbar);
+					store_ter_type = i;
+					a= scen_data.scen_creatures[i].char_graphic;
+					SetRect(&ter_from, 0, 0, PICT_BOX_WIDTH_3D, PICT_BOX_HEIGHT_3D);
+					OffsetRect(&ter_from,2 * (1 + PICT_BOX_WIDTH_3D) + 1, 1);
+					if (a.not_legit())
+						do_this_item = FALSE;
+					break;
+				case 4:
+					sbar_pos = GetControlValue(right_sbar);
+					store_ter_type = i;
+					SetRect(&ter_from, 0, 0, ITEM_BOX_SIZE_3D, ITEM_BOX_SIZE_3D);
+					a = scen_data.scen_items[i].item_floor_graphic;
+					OffsetRect(&ter_from,(1 + ITEM_BOX_SIZE_3D) * (a.which_icon % 10) + 1, (1 + ITEM_BOX_SIZE_3D) * (a.which_icon / 10) + 1);
+					if (a.not_legit())
+						do_this_item = FALSE;
+					break;
 				}
 			}
             else {
 				switch (current_drawing_mode) {
+					short sbar_pos;
 				case 0:
 					a = scen_data.scen_floors[i].ed_pic;
 					OffsetRect(&ter_from,(1 + TER_BUTTON_SIZE_OLD) * (a.which_icon % 10) + 1,(1 + TER_BUTTON_SIZE_OLD) * (a.which_icon / 10) + 1);
@@ -709,10 +756,28 @@ void set_up_terrain_buttons()
 						do_this_item = FALSE;
 					break;
 				case 1: case 2:
-					short sbar_pos = GetControlValue(right_sbar);
+					sbar_pos = GetControlValue(right_sbar);
 					store_ter_type = i;
 					a = scen_data.scen_ter_types[store_ter_type].ed_pic;
 					OffsetRect(&ter_from,(1 + TER_BUTTON_SIZE_OLD) * (a.which_icon % 10) + 1,(1 + TER_BUTTON_SIZE_OLD) * (a.which_icon / 10) + 1);
+					if (a.not_legit())
+						do_this_item = FALSE;
+					break;
+				case 3:
+					sbar_pos = GetControlValue(right_sbar);
+					store_ter_type = i;
+					a= scen_data.scen_creatures[i].char_graphic;
+					SetRect(&ter_from, 0, 0, PICT_BOX_WIDTH_3D, PICT_BOX_HEIGHT_3D);
+					OffsetRect(&ter_from,2 * (1 + PICT_BOX_WIDTH_3D) + 1, 1);
+					if (a.not_legit())
+						do_this_item = FALSE;
+					break;
+				case 4:
+					sbar_pos = GetControlValue(right_sbar);
+					store_ter_type = i;
+					SetRect(&ter_from, 0, 0, ITEM_BOX_SIZE_3D, ITEM_BOX_SIZE_3D);
+					a = scen_data.scen_items[sbar_pos * TILES_N_COLS + i].item_floor_graphic;
+					OffsetRect(&ter_from,(1 + ITEM_BOX_SIZE_3D) * (a.which_icon % 10) + 1, (1 + ITEM_BOX_SIZE_3D) * (a.which_icon / 10) + 1);
 					if (a.not_legit())
 						do_this_item = FALSE;
 					break;
@@ -725,8 +790,12 @@ void set_up_terrain_buttons()
 					SelectObject(main_dc5,store_bmp);
 					if (current_drawing_mode == 0)
 						cant_draw_graphics_error(a,"Error was for floor type",i);
-					else
+					else if (current_drawing_mode <= 2)
 						cant_draw_graphics_error(a,"Error was for terrain type",store_ter_type);
+					else if (current_drawing_mode == 3)
+						cant_draw_graphics_error(a,"Error was for creature type",store_ter_type);
+					else if (current_drawing_mode == 4)
+						cant_draw_graphics_error(a,"Error was for item type",store_ter_type);
 					return;	
 				}
                 
@@ -734,9 +803,20 @@ void set_up_terrain_buttons()
 					ter_from.top += (PICT_BOX_HEIGHT_3D - PICT_BOX_WIDTH_3D);
 				
 				SelectObject(main_dc5,store_bmp);
-				rect_draw_some_item(graphics_library[index],
+				if (current_drawing_mode == 0)
+					rect_draw_some_item(graphics_library[index],
+					ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
+				else if (current_drawing_mode < 3)
+					rect_draw_some_item(graphics_library[index],
 					ter_from,terrain_buttons_gworld,(cur_viewing_mode >= 10 && current_drawing_mode > 0) ? 
 					terrain_rects_3D[i] : terrain_rects[i],0,0);
+				else if (current_drawing_mode == 3)
+					rect_draw_some_item(graphics_library[index],
+					ter_from,terrain_buttons_gworld,terrain_rects_3D[i],0,0);
+				else if (current_drawing_mode == 4)
+					rect_draw_some_item(graphics_library[index],
+					ter_from,terrain_buttons_gworld,terrain_rects[i],0,0);
+
 				SelectObject(main_dc5,DibBitmapHandle(terrain_buttons_gworld));
 			}
 	}
@@ -777,6 +857,10 @@ void set_up_terrain_buttons()
 				from_rect,palette_buttons_gworld,to_rect,0,0);
 		}
     }
+	if (current_drawing_mode == 3)
+		setUpCreaturePalette = TRUE;
+	else if (current_drawing_mode == 4)
+		setUpItemPalette = TRUE;
 }
 
 void delete_graphic(HDIB *to_delete)
@@ -6287,6 +6371,19 @@ void place_right_buttons( /* short mode */ )
 		OffsetRect(&from_rect,0,GetControlValue(right_sbar)*(1+((cur_viewing_mode >= 10)?TER_BUTTON_HEIGHT_3D:TER_BUTTON_SIZE)));
 		rect_draw_some_item(terrain_buttons_gworld,from_rect,(HDIB) tiles_dc,to_rect,0,2);
 	}
+	else if (current_drawing_mode==3){
+		RECT from_rect = terrain_buttons_rect;
+		//OffsetRect(&from_rect,0,-20);
+		OffsetRect(&from_rect,0,GetControlValue(right_sbar)*(1+TER_BUTTON_HEIGHT_3D));
+		rect_draw_some_item(terrain_buttons_gworld,from_rect,(HDIB) tiles_dc,to_rect,0,2);
+	}
+	else if (current_drawing_mode==4){
+		RECT from_rect = terrain_buttons_rect;
+		//OffsetRect(&from_rect,0,-20);
+		OffsetRect(&from_rect,0,GetControlValue(right_sbar)*(1+TER_BUTTON_SIZE));
+		rect_draw_some_item(terrain_buttons_gworld,from_rect,(HDIB) tiles_dc,to_rect,0,2);
+	}
+
 	SelectObject(tiles_dc,DibBitmapHandle(terrain_buttons_gworld));
 
 	to_rect = palette_buttons_rect;
@@ -6296,6 +6393,8 @@ void place_right_buttons( /* short mode */ )
 		case 0: sprintf((char *) draw_str,"Drawing mode: FLOORS"); break;
 		case 1: sprintf((char *) draw_str,"Drawing mode: TERRAIN"); break;
 		case 2: sprintf((char *) draw_str,"Drawing mode: HEIGHT"); break;
+		case 3: sprintf((char *) draw_str,"Drawing mode: CREATURES"); break;
+		case 4: sprintf((char *) draw_str,"Drawing mode: ITEMS"); break;
 		}
 	char_win_draw_string(palette_dc,right_text_lines[0],(char *) draw_str,2,12);
 	char_win_draw_string(palette_dc,right_text_lines[1],(char *) current_string,2,12);
@@ -6348,6 +6447,24 @@ void place_right_buttons( /* short mode */ )
 			else
       to_rect = ((cur_viewing_mode >= 10) ? terrain_rects_3D[draw_position] : terrain_rects[draw_position]);
 		break;
+		case 3:
+			selected_ter = mode_count;
+			draw_position = selected_ter - TILES_N_COLS * GetControlValue(right_sbar);
+					//compare draw_position with the indices of the first positions off of both ends of the visible range
+			if (draw_position!= minmax(0,299,draw_position))
+				selected_ter = -1;
+			else
+				to_rect = terrain_rects_3D[draw_position];
+		break;
+		case 4:
+			selected_ter = mode_count;
+			draw_position = selected_ter - TILES_N_COLS * GetControlValue(right_sbar);
+					//compare draw_position with the indices of the first positions off of both ends of the visible range
+			if (draw_position!= minmax(0,344,draw_position))
+				selected_ter = -1;
+			else
+				to_rect = terrain_rects[draw_position];
+		break;
 	}	
 	if (selected_ter >= 0) {
 		OffsetRect(&to_rect,RIGHT_BUTTONS_X_SHIFT,RIGHT_BUTTONS_Y_SHIFT);
@@ -6362,7 +6479,7 @@ void place_right_buttons( /* short mode */ )
 void draw_mode_buttons(){
 	RECT to_rect;
 	int i;
-	for (i = 0; i < ((editing_town) ? 3 : 3); i++){
+	for (i = 0; i < ((editing_town) ? 5 : 3); i++){
 		to_rect = mode_buttons[i];
 		RECT from_rect = to_rect;
 		ZeroRectCorner(&from_rect);
@@ -6377,7 +6494,7 @@ void draw_mode_buttons(){
 	to_rect = mode_buttons_rect;
 	to_rect.right = mode_buttons[0].left;
 	paint_pattern((HDIB)tiles_dc, 2, to_rect, 2);
-	to_rect.left = mode_buttons[(editing_town) ? 2 : 2].right + 1;
+	to_rect.left = mode_buttons[(editing_town) ? 4 : 2].right + 1;
 	to_rect.right = mode_buttons_rect.right;
 	paint_pattern((HDIB)tiles_dc, 2, to_rect, 2);
 	to_rect.right = to_rect.left;

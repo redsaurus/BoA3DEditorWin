@@ -90,6 +90,7 @@ short cur_viewing_mode = 10;
 // 2 - medium icons = 32*32 view
 // 10 - big 3D icons
 // 11 - 3D view as in game
+int tileZoomLevel = 1;
 
 short overall_mode = 0;
 // 0 - 9 - different terrain painting modes
@@ -174,6 +175,9 @@ extern short max_zone_dim[3];
 extern RECT terrain_buttons_rect;
 extern RECT terrain_rects[330];
 extern Boolean use_custom_name;
+
+extern Boolean setUpCreaturePalette;
+extern Boolean setUpItemPalette;
 // local variables
 
 char szAppName[] = "Blades of Avernum Scenario Editor";
@@ -197,6 +201,7 @@ void handle_item_menu(int item_hit);
 void handle_monst_menu(int item_hit);
 void handle_edit_menu(int item_hit);
 void handle_help_menu(int item_hit);
+void handle_tiles_menu(int item_hit);
 short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam);
 // void max_window(HWND window);
 void check_colors();
@@ -334,7 +339,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		hInstance,
 		NULL);
 
-	tilesPtr = CreateWindow ( szTilesName, "Tiles", WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX, 0, 0, 280, 435, mainPtr, NULL, hInstance, NULL);
+	tilesPtr = CreateWindow ( szTilesName, "Tiles", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_SIZEBOX, 0, 0, 280, 435, mainPtr, NULL, hInstance, NULL);
 
 	palettePtr = CreateWindow ( szPaletteName, "Tools", WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX, 0, 0, 240, 225, mainPtr, NULL, hInstance, NULL);
 
@@ -400,6 +405,17 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 	update_item_menu();
 	play_sounds = get_should_play_sounds();
 	shut_down_menus(/* 0 */);
+
+	//add extra menus to tiles menu
+	HMENU menu = GetSystemMenu(tilesPtr,false);
+	RemoveMenu(menu,6,MF_BYPOSITION);
+	RemoveMenu(menu,4,MF_BYPOSITION);
+	RemoveMenu(menu,3,MF_BYPOSITION);
+	RemoveMenu(menu,0,MF_BYPOSITION);
+	AppendMenu(menu,MF_GRAYED|MF_DISABLED|MF_STRING,1701,"Zoom In\tCtrl+");
+	AppendMenu(menu,MF_GRAYED|MF_DISABLED|MF_STRING,1702,"Zoom Out\tCtrl-");
+
+	shut_down_tile_menus();
 
 	load_sounds();
 	init_warriors_grove();
@@ -698,6 +714,13 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 	    SetFocus(tilesPtr);
 		return 0;
 
+	case WM_SYSCOMMAND:
+		if (hwnd == tilesPtr && ((short) wParam == 1701 || (short) wParam == 1702)) {
+			handle_menu_choice((short) wParam);
+			return 0;
+		}
+		break;
+
 	case WM_COMMAND:
 		if (hwnd == mainPtr || hwnd == tilesPtr || hwnd == palettePtr) {
 
@@ -769,6 +792,9 @@ void handle_menu_choice(short choice)
 			case 16:	// patch for ctrl-<key> command
 				handle_keystroke( choice % 100, 0 );
 				break;
+			case 17:
+				handle_tiles_menu(menu_item % 100);
+				break;
 			}
 		} 
 }
@@ -783,11 +809,14 @@ void handle_file_menu(int item_hit)
 			}
 			load_campaign();
 			if (file_is_loaded) {
+				setUpCreaturePalette = FALSE;
+				setUpItemPalette = FALSE;
 				update_item_menu();
 				purgeUndo();
 				purgeRedo();
 				redraw_screen();
 				shut_down_menus(); // (0)
+				shut_down_tile_menus();
 			}
 			break;
 		case 2: // Save Scenario
@@ -1219,7 +1248,9 @@ void handle_campaign_menu(int item_hit)
 			if (load_individual_scenario_data(file_name /*,TRUE */) == FALSE) {
 				file_is_loaded = FALSE;
 				return;
-				}			
+				}	
+			setUpCreaturePalette = FALSE;
+			setUpItemPalette = FALSE;
 			update_item_menu();
 			set_up_terrain_buttons();
 			place_right_buttons(); /* (0) */
@@ -1668,6 +1699,25 @@ void handle_help_menu(int item_hit)
 			
 		}
 	draw_main_screen();		
+}
+
+void handle_tiles_menu(int item_hit)
+{
+	char string[64];
+	switch(item_hit){
+		case 1:
+			tileZoomLevel++;
+			shut_down_tile_menus();
+			sprintf(string, "zoomIn: zoom level %d", tileZoomLevel);
+			MessageBox(mainPtr,string,"zoom",MB_OK);
+			break;
+		case 2:
+			tileZoomLevel--;
+			shut_down_tile_menus();
+			sprintf(string, "zoomOut: zoom level %d", tileZoomLevel);
+			MessageBox(mainPtr,string,"zoom",MB_OK);
+			break;
+	}
 }
 
 void check_colors()
