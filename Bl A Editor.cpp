@@ -12,7 +12,7 @@
 #include "stdafx.h"
 #include "Resource.h"
 #include "global.h"
-#define kVersion "   Version:  Dapper Doomguard (r112)"
+#define kVersion "   Version:  Dapper Doomguard (r113)"
 
 // Global variables
 
