@@ -233,6 +233,8 @@ BEGIN
         MENUITEM "&Clear All Special Encounters", 317
         MENUITEM "Clear All &Preset Fields",    318
         MENUITEM "Clear All Placed S&tains",    319
+        MENUITEM SEPARATOR
+        MENUITEM "Change Town Size",            321
     END
     POPUP "&Outdoors"
     BEGIN
@@ -2112,6 +2114,24 @@ BEGIN
     LTEXT           "Please select ""Blades of Avernum.exe"" application under ""Blades of Avernum"" folder.\n\n""Blades of Avernum"" folder will be found under ""Program Files"" on the C drive.",IDC_STATIC,7,7,172,46
 END
 
+831 DIALOGEX 10, 10, 360, 241
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",1,479,423,31,10,WS_GROUP
+    LTEXT           "1_63",3,285,249,62,16
+    LTEXT           "~Change Town Size",4,28,24,150,17
+    LTEXT           "*Town size:",6,28,151,77,14
+    LTEXT           "*Large (64x64)",7,123,151,139,14
+    LTEXT           "*Medium (48x48)",8,123,168,139,14
+    LTEXT           "*Small (32x32)",9,123,185,139,14
+    LTEXT           "2_0",10,281,152,23,14
+    LTEXT           "2_0",11,281,169,23,14
+    LTEXT           "2_0",12,281,186,23,14
+    LTEXT           "0_5",15,220,249,62,16
+    LTEXT           "Note: This operation will destroy all contents and settings of the current town.",16,44,64,300,48
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2121,11 +2141,35 @@ END
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO
 BEGIN
+    800, DIALOG
+    BEGIN
+    END
+
     804, DIALOG
     BEGIN
     END
 
+    808, DIALOG
+    BEGIN
+    END
+
     820, DIALOG
+    BEGIN
+    END
+
+    829, DIALOG
+    BEGIN
+    END
+
+    830, DIALOG
+    BEGIN
+    END
+
+    832, DIALOG
+    BEGIN
+    END
+
+    855, DIALOG
     BEGIN
     END
 
@@ -2141,11 +2185,31 @@ BEGIN
     BEGIN
     END
 
+    876, DIALOG
+    BEGIN
+    END
+
     991, DIALOG
     BEGIN
     END
 
     1000, DIALOG
+    BEGIN
+    END
+
+    1062, DIALOG
+    BEGIN
+    END
+
+    1063, DIALOG
+    BEGIN
+    END
+
+    1070, DIALOG
+    BEGIN
+    END
+
+    1071, DIALOG
     BEGIN
     END
 
@@ -2155,6 +2219,10 @@ BEGIN
         RIGHTMARGIN, 179
         TOPMARGIN, 7
         BOTTOMMARGIN, 70
+    END
+
+    831, DIALOG
+    BEGIN
     END
 END
 #endif    // APSTUDIO_INVOKED

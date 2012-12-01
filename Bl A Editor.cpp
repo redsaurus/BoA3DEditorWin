@@ -1505,6 +1505,18 @@ void handle_town_menu(int item_hit)
 				draw_terrain();
 				change_made_town = TRUE;
 			break;
+		case 21://change town size
+			if (change_made_town || change_made_outdoors) {
+				give_error("You need to save the changes made to your scenario before you can add a new town.","",0);
+				return;
+			}
+			if(change_town_size()){
+				purgeUndo();
+				purgeRedo();
+				change_made_town = TRUE;
+			}
+			redraw_screen();
+			break;
 		}
 }
 
@@ -1833,6 +1845,7 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam)
 		case 828: how_many_dlog_event_filter(item_hit); break;
 		case 829: get_str_dlog_event_filter(item_hit); break;
 		case 830: new_town_event_filter(item_hit); break;
+		case 831: change_town_size_event_filter(item_hit); break;
 		case 832: edit_town_details_event_filter(item_hit); break;
 		case 835: edit_town_wand_event_filter(item_hit); break;
 		case 837: edit_placed_monst_event_filter(item_hit); break;

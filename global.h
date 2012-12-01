@@ -1836,6 +1836,8 @@ void new_town_event_filter (short item_hit);
 Boolean new_town();
 void delete_last_town();
 void delete_town();
+Boolean change_town_size();
+void change_town_size_event_filter(short item_hit);
 void pick_import_town_event_filter (short item_hit);
 short pick_import_town(short which_dlog /*,short def */);
 Boolean terrains_match(short terrain_drawn,short terrain_there);

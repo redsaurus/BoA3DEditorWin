@@ -2650,6 +2650,69 @@ void edit_scen_intro_pic()
 	cd_kill_dialog(805,0);
 }
 
+void change_town_size_event_filter(short item_hit)
+{
+	//10,11,12 are the leds
+	//15 is cancel, 3 is ok
+	switch (item_hit) {
+		case 3:
+			dialog_answer = 1;
+			dialog_not_toast = FALSE; 
+			break;
+		case 15:
+			dialog_answer = -1;
+			dialog_not_toast = FALSE; 
+			break;
+		default:
+			cd_hit_led_range(831,10,12,item_hit);
+			cd_flip_led(831,18,item_hit);
+			break;
+	}
+}
+
+Boolean change_town_size()
+{
+	short i,j;
+	int size = -1;// 0 - large, 1 - medium, 2 - small
+	short old_size=scenario.town_size[cur_town];
+	short basic_dlog_hit;
+	cd_create_dialog_parent_num(831,0);
+	cd_set_led(831,10+old_size,1);
+	while (dialog_not_toast)
+		ModalDialog();
+	size = cd_get_led_range(831,10,12);
+	cd_kill_dialog(831,0);
+	if (dialog_answer<0 || size<0 || size>2)
+		return FALSE;
+	if(old_size==size)
+		return(FALSE);//no change made, so do nothing
+	scenario.town_size[cur_town] = size;
+	scenario.last_town_edited = cur_town;
+	town.clear_town_record_type();
+	town.set_start_locs(size);
+	t_d.clear_big_tr_type();
+	town_type = size;
+	if (town.is_on_surface) {
+		for (i = 0; i < 64; i++){
+			for (j = 0; j < 64; j++){
+				t_d.floor[i][j] = 37;
+			}
+		}
+	}
+	// set walls appropriately
+	if (town.is_on_surface) {
+		town.wall_1_sheet = 600;
+		town.wall_2_sheet = 605;
+		town.cliff_sheet = 650;
+	}
+	else {
+		town.wall_1_sheet = 601;
+		town.wall_2_sheet = 600;
+		town.cliff_sheet = 651;
+	}
+	return TRUE;
+}
+
 void edit_horses()
 // ignore parent in Mac version
 {

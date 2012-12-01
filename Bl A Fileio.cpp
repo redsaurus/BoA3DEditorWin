@@ -420,6 +420,10 @@ void save_campaign()
 		scenario.port();
 
 	len = sizeof(scenario_data_type); // scenario data
+	if ((error = FSRead(scen_f, &len, (char *) &temp_scenario)) != 0){
+		EdSysBeep( /* 2 */ ); FSClose(scen_f); FSClose(dummy_f);oops_error(201);
+		return;
+	}
 	if ((error = FSWrite(dummy_f, &len, (char *) &scenario)) != 0) {
 		EdSysBeep( /* 2 */ ); FSClose(scen_f); FSClose(dummy_f);oops_error(62);
 		return;
@@ -525,7 +529,7 @@ void save_campaign()
 			//SetFPos(scen_f,3,save_town_size);
 				len = (long) (sizeof(town_record_type));
 				error = FSRead(scen_f, &len, buffer);
-				switch (scenario.town_size[k]) {
+				switch (temp_scenario.town_size[k]) {
 					case 0: len = (long) ( sizeof(big_tr_type)); break;
 					case 1: len = (long) ( sizeof(ave_tr_type)); break;
 					case 2: len = (long) ( sizeof(tiny_tr_type)); break;
