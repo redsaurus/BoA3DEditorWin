@@ -1818,6 +1818,19 @@ void delete_last_town()
 	save_campaign();
 }
 
+// before calling this, be sure to do all checks to make sure it's safe.
+void delete_town()
+{
+	for(int i=cur_town; i<scenario.num_towns; i++){
+		scenario.town_size[i]=scenario.town_size[i+1];
+		scenario.town_starts_hidden[i]=scenario.town_starts_hidden[i+1];
+	}
+	if(scenario.start_in_what_town == cur_town){
+		scenario.start_in_what_town=0;
+	}
+	scenario.num_towns--;
+	save_remove_town();
+}
 
 void pick_import_town_event_filter (short item_hit)
 {	

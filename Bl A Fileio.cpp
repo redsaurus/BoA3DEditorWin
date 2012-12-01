@@ -590,6 +590,183 @@ void save_campaign()
 	GlobalFree(temp_buffer);	
 }
 
+void save_remove_town()
+{
+	short i,j,k,num_outdoors;
+	FILE *dummy_f,*scen_f;
+	char *buffer = NULL;
+	DWORD buf_len = 100000;
+	short error;
+	short out_num;
+	long len,scen_ptr_move = 0,save_town_size = 0,save_out_size = 0;
+	outdoor_record_type *dummy_out_ptr;
+	HGLOBAL temp_buffer;
+
+	// before saving, do all the final processing that needs to be done (liek readjusting lights)
+	set_up_lights();
+	
+	//OK. FIrst find out what file name we're working with, and make the dummy file 
+	// which we'll build the new scenario in
+	// first, create the dummy file name and then aler it slightly so it different from original
+	strcpy(szFileName2,szFileName);
+	if (szFileName2[strlen(szFileName2) - 1] == 's') // this shoult be true, should end in .bas
+		szFileName2[strlen(szFileName2) - 1] = 't';
+		else szFileName2[strlen(szFileName2) - 1] = 's';
+	if (NULL == (dummy_f = fopen(szFileName2, "wb"))) {
+		oops_error(11);
+		return;
+		}	
+
+	if (NULL == (scen_f = fopen(szFileName, "rb"))) {
+		oops_error(12);
+		return;
+		}	
+
+	// Now we need to set up a buffer for moving the data over to the dummy
+	temp_buffer = GlobalAlloc(GMEM_FIXED,buf_len);
+	if (temp_buffer == NULL) {
+		FSClose(scen_f); FSClose(dummy_f); oops_error(14);
+		return;
+		}
+	buffer = (char *) GlobalLock(temp_buffer);
+	if (buffer == NULL) {
+		FSClose(scen_f); FSClose(dummy_f); oops_error(14);
+		return;
+		}
+	scenario.prog_make_ver[0] = 2;
+	scenario.prog_make_ver[1] = 0;
+	scenario.prog_make_ver[2] = 0;
+
+	// Now, the pointer in scen_f needs to move along, so that the correct towns are sucked in.
+	// To do so, we'll remember the size of the saved town and out now.
+	// this is much simple thabn it was in Blades of Exile, since chunks have a constant length now
+	out_num = cur_out.y * scenario.out_width + cur_out.x;
+	save_out_size = (long) (sizeof (outdoor_record_type));
+	scen_ptr_move = sizeof(scenario_data_type);
+
+	scenario.last_town_edited = cur_town;
+	while(scenario.last_town_edited >= scenario.num_towns)
+		scenario.last_town_edited--;
+	scenario.last_out_edited = cur_out;
+
+	// now, if editing windows scenario, we need to write it in a windows friendly
+	// way.
+	if (currently_editing_windows_scenario == FALSE)
+		scenario.port();
+
+	len = sizeof(scenario_data_type); // scenario data
+	if ((error = FSRead(scen_f, &len, (char *) &temp_scenario)) != 0){
+		EdSysBeep( /* 2 */ ); FSClose(scen_f); FSClose(dummy_f);oops_error(201);
+		return;
+	}
+	if ((error = FSWrite(dummy_f, &len, (char *) &scenario)) != 0) {
+		EdSysBeep( /* 2 */ ); FSClose(scen_f); FSClose(dummy_f);oops_error(62);
+		return;
+		}	
+
+	if (currently_editing_windows_scenario == FALSE)
+		scenario.port();
+	
+	SetFPos(scen_f,1,scen_ptr_move);
+	
+	// OK ... scenario written. Now outdoors.
+	num_outdoors = scenario.out_width * scenario.out_height;
+	for (i = 0; i < num_outdoors; i++)
+		if (i == out_num) {
+			if (currently_editing_windows_scenario == FALSE)
+				current_terrain.port();
+
+			len = sizeof(outdoor_record_type);
+			error = FSWrite(dummy_f, &len, (char *) &current_terrain); 
+
+			if (currently_editing_windows_scenario == FALSE)
+				current_terrain.port();
+
+			if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(63);}
+			
+			// Now skip ahead scen_f position to match
+			// Kludge ... should be using SetFPos, but for some reason it now working
+			//SetFPos(scen_f,3,sizeof (outdoor_record_type));
+			len = (long) (sizeof (outdoor_record_type));
+			error = FSRead(scen_f, &len, buffer);
+			}
+			else {
+				len = (long) (sizeof (outdoor_record_type));
+				error = FSRead(scen_f, &len, buffer);
+				dummy_out_ptr = (outdoor_record_type *) buffer;
+				if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(64);}
+				if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {
+					EdSysBeep(/* 2 */); FSClose(scen_f); FSClose(dummy_f);oops_error(65);
+					return;
+					}			
+
+
+				}
+				
+	// now, finally, write towns.
+	for (k = 0; k < temp_scenario.num_towns; k++){
+		 /// load unedited town into buffer and save, doing translataions when necessary
+
+				len = (long) (sizeof(town_record_type));
+				switch (temp_scenario.town_size[k]) {
+					case 0: len += (long) ( sizeof(big_tr_type)); break;
+					case 1: len += (long) ( sizeof(ave_tr_type)); break;
+					case 2: len += (long) ( sizeof(tiny_tr_type)); break;
+					}
+
+
+				//for (long count = 0; count < len; count++) {
+				//	int next_char = fgetc(scen_f);
+					
+				//	if (count < 100)
+				//		dbug_first_chars[count] = (char) next_char;
+				//	fputc(next_char,dummy_f);
+				//	}
+				error = FSRead(scen_f, &len, buffer);
+				if (error != 0) {
+					FSClose(scen_f); 
+					FSClose(dummy_f);
+					oops_error(67);
+					}
+				if (k != cur_town){
+					if ((error = FSWrite(dummy_f, &len, buffer)) != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(68);return;}
+				}
+
+
+	}
+	
+	if (cur_town == temp_scenario.num_towns - 1)
+		cur_town--;
+
+	change_made_town = change_made_outdoors = FALSE;
+	
+	// now, everything is moved over. Delete the original, and rename the dummy
+	
+	// first close everything up
+	error = FSClose(scen_f); 
+	if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(71);}
+
+	error = FSClose(dummy_f);		
+	if (error != 0) {FSClose(scen_f); FSClose(dummy_f);oops_error(72);}
+
+	// delete original
+	if (OpenFile(szFileName,&store,OF_DELETE) == HFILE_ERROR) {
+		if (remove(szFileName) != 0) {
+			GlobalUnlock(temp_buffer);
+			GlobalFree(temp_buffer);
+			oops_error(101);
+			give_error("File name that could not be deleted:",szFileName,0);
+			return;
+			}
+		}
+
+	// rename copy to be original
+	rename(szFileName2,szFileName);
+	
+	GlobalUnlock(temp_buffer);
+	GlobalFree(temp_buffer);	
+}
+
 int make_backup_file( char * filePath )
 {
 	char backupFile[_MAX_PATH];
@@ -612,6 +789,7 @@ int make_backup_file( char * filePath )
 	}
 	return 0;
 }
+
 
 
 #define SetLocation( loc, x0, y0 )	loc.x = x0;	loc.y = y0

@@ -1288,7 +1288,7 @@ void handle_campaign_menu(int item_hit)
 			edit_item_placement();
 			change_made_town = TRUE;
 			break;
-		case 18: // Delete Last Town
+/*		case 18: // Delete Last Town
 			if (change_made_town || change_made_outdoors) {
 				give_error("You need to save the changes made to your scenario before you can delete a town.",
 					"",0);
@@ -1311,6 +1311,30 @@ void handle_campaign_menu(int item_hit)
 				purgeRedo();
 				redraw_screen();
 				change_made_town = TRUE;
+			}
+			break;*/
+		case 18: //Delete Current Town
+			if (change_made_town || change_made_outdoors) {
+				give_error("You need to save the changes made to your scenario before you can delete a town.","",0);
+				return;
+			}
+			if (scenario.num_towns == 1) {
+				give_error("You can't delete the only town in a scenario. All scenarios must have at least 1 town.","",0);
+				return;
+			}
+			if (fancy_choice_dialog(865,0) == 1) {
+				delete_town();
+				load_all_town_names(NULL);
+				load_town(cur_town);
+				clear_selected_copied_objects();
+				set_up_terrain_buttons();
+				change_made_town = FALSE;
+				cen_x = max_zone_dim[town_type] / 2; cen_y = max_zone_dim[town_type] / 2;
+				reset_drawing_mode();
+				reset_small_drawn();
+				purgeUndo();
+				purgeRedo();
+				redraw_screen();
 			}
 			break;
 		case 20: // Change Outdoor Size
