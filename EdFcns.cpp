@@ -28,6 +28,11 @@ extern int TER_RECT_UL_Y_2d_big;
 extern int TER_RECT_UL_X_2d_small;
 extern int TER_RECT_UL_Y_2d_small;
 
+extern int terrain_button_height;
+extern int terrain_button_width;
+
+extern int tiles_n_columns;
+
 extern int indoor_draw_distance;
 extern int outdoor_draw_distance;
 
@@ -511,6 +516,7 @@ void init_screen_locs()
 void update_screen_locs()
 {
 	int i;
+	GetClientRect(mainPtr,&windRect);
 	for (i = 0; i < 14; i++)
 		SetRECT(left_text_lines[i],LEFT_TEXT_LINE_WIDTH * (i / 7) + LEFT_TEXT_LINE_ULX,
 			windRect.bottom - 100 + (i % 7) * TEXT_LINE_HEIGHT,
@@ -960,7 +966,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 				else if (current_drawing_mode < 3){ // terrain/height mode
 					short sbar_pos = GetControlValue(right_sbar);
 
-					for (i = 0; i < 330; i++)
+					for (i = 0; i < 516; i++)
 						if (sbar_pos * TILES_N_COLS + i < 512) {
 	// q_3DModStart
 	//						if (point_in_rect(cur_point,&terrain_rects[i])) {
@@ -976,7 +982,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 				else if (current_drawing_mode == 3){ //creature mode
 					short sbar_pos = GetControlValue(right_sbar);
 
-					for (i = 0; i < 330; i++)
+					for (i = 0; i < 516; i++)
 						if (sbar_pos * TILES_N_COLS + i < 256) {
 							if (POINTInRECT(cur_point, terrain_rects_3D[i])) {
 								set_new_creature(sbar_pos * TILES_N_COLS + i);
@@ -988,7 +994,7 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 				else if (current_drawing_mode == 4){ //item mode
 					short sbar_pos = GetControlValue(right_sbar);
 
-					for (i = 0; i < 330; i++)
+					for (i = 0; i < 516; i++)
 						if (sbar_pos * TILES_N_COLS + i < 500) {
 							if (POINTInRECT(cur_point, terrain_rects[i])) {
 								set_new_item(sbar_pos * TILES_N_COLS + i);

@@ -103,6 +103,7 @@ extern const char* tool_names[83];
 extern RECT tool_details_text_lines[10];
 }
 
+extern int tileZoomLevel;
 extern short selected_item_number;
 
 extern HINSTANCE store_hInstance;
@@ -190,6 +191,11 @@ int TER_RECT_UL_Y_2d_big;
 int TER_RECT_UL_X_2d_small;
 int TER_RECT_UL_Y_2d_small;
 
+int terrain_button_height = TER_BUTTON_HEIGHT_3D_STD;
+int terrain_button_width = TER_BUTTON_SIZE_STD;
+
+int tiles_n_columns = TILES_N_COLS_STD;
+
 int indoor_draw_distance = DEFAULT_INDOOR_DRAW_DISTANCE;
 int outdoor_draw_distance = DEFAULT_OUTDOOR_DRAW_DISTANCE;
 
@@ -197,6 +203,11 @@ RECT creature_buttons_size;
 RECT item_buttons_size;
 RECT terrain_buttons_size;
 RECT floor_buttons_size;
+
+unsigned int terrain_num_rows = TERRAIN_NUM_ROWS;
+unsigned int creature_num_rows = CREATURE_NUM_ROWS;
+unsigned int item_num_rows = ITEM_NUM_ROWS;
+unsigned int floor_num_rows = FLOOR_NUM_ROWS;
 
 // graphics library
 HDIB graphics_library[MAX_NUM_SHEETS_IN_LIBRARY];
@@ -291,7 +302,7 @@ int get_right_sbar_max(){
 	switch(current_drawing_mode){
 		case 0: //floors
 			iconHeight=TER_BUTTON_SIZE;
-			iconRows=(256/TILES_N_COLS)+((256%TILES_N_COLS)>0);
+			iconRows=floor_num_rows;
 			break;
 		case 1: //terrains
 		case 2: //heights, which means just draw terrain icons
@@ -299,21 +310,21 @@ int get_right_sbar_max(){
 				iconHeight=TER_BUTTON_HEIGHT_3D;
 			else
 				iconHeight=TER_BUTTON_SIZE;
-			iconRows=(512/TILES_N_COLS)+((512%TILES_N_COLS)>0);
+			iconRows=terrain_num_rows;
 			break;
 		case 3: //creatures
 			iconHeight=TER_BUTTON_HEIGHT_3D;
-			iconRows=(256/TILES_N_COLS)+((256%TILES_N_COLS)>0);
+			iconRows=creature_num_rows;
 			break;
 		case 4: //items
 			iconHeight=TER_BUTTON_SIZE;
-			iconRows=(500/TILES_N_COLS)+((500%TILES_N_COLS)>0);
+			iconRows=item_num_rows;
 			break;
 	}
 	
 	//The control maximum should be equal to the total number of icon rows minus the 
 	//number of full rows which are visible at any given time
-	int max=iconRows-((right_sbar_rect.bottom-terrain_buttons_rect.top)/(iconHeight+1)); //add 1 to icon height for spacing
+	int max=iconRows-((terrain_buttons_rect.bottom-terrain_buttons_rect.top)/(iconHeight+1)); //add 1 to icon height for spacing
 	//naturally this should be limited to be non-negative, 
 	//if there's extra space the scrollbar should just do nothing
 	if(max<0)
@@ -332,6 +343,11 @@ void set_up_terrain_rects()
 	for (i = 0; i < 516; i++)
 		SetRECT(terrain_rects_3D[i],3 + (i % TILES_N_COLS) * (TER_BUTTON_SIZE + 1),2 + (i / TILES_N_COLS) * (TER_BUTTON_HEIGHT_3D + 1),
 				3 + (i % TILES_N_COLS) * (TER_BUTTON_SIZE + 1) + TER_BUTTON_SIZE,2 + (i / TILES_N_COLS) * (TER_BUTTON_HEIGHT_3D + 1) + TER_BUTTON_HEIGHT_3D);
+
+	floor_num_rows = (256/TILES_N_COLS)+((256%TILES_N_COLS)>0);
+	terrain_num_rows = (512/TILES_N_COLS)+((512%TILES_N_COLS)>0);
+	item_num_rows = (500/TILES_N_COLS)+((500%TILES_N_COLS)>0);
+	creature_num_rows = (256/TILES_N_COLS)+((256%TILES_N_COLS)>0);
 }	
 	
 
@@ -373,6 +389,39 @@ void Set_up_win ()
 	load_main_screen();
 }
 
+void resize_recalculate_num_tiles()
+{
+	unsigned int whole_buttons_width;
+
+	whole_buttons_width = terrain_buttons_rect.right - terrain_buttons_rect.left;
+
+	tiles_n_columns = whole_buttons_width / (terrain_button_width + 1);
+}
+
+void zoom_tiles_recalculate()
+{
+	switch(tileZoomLevel){
+	case 0:
+		terrain_button_width = TER_BUTTON_SIZE_OLD;
+		terrain_button_height = TER_BUTTON_HEIGHT_3D_OLD;
+		break;
+	case 2:
+		terrain_button_width = TER_BUTTON_SIZE_MID;
+		terrain_button_height = TER_BUTTON_HEIGHT_3D_MID;
+		break;	
+	case 3:
+		terrain_button_width = TER_BUTTON_SIZE_BIG;
+		terrain_button_height = TER_BUTTON_HEIGHT_3D_BIG;
+		break;	
+	case 1:
+		terrain_button_width = TER_BUTTON_SIZE_STD;
+		terrain_button_height = TER_BUTTON_HEIGHT_3D_STD;
+		break;
+	}
+
+	resize_recalculate_num_tiles();
+}
+
 void make_tile_gworlds(bool first_time)
 {
 	if (!first_time) {
@@ -381,8 +430,8 @@ void make_tile_gworlds(bool first_time)
 	
 	terrain_buttons_size.top=0;
 	terrain_buttons_size.left=0;
-	terrain_buttons_size.bottom=1+TERRAIN_NUM_ROWS*(1+TER_BUTTON_HEIGHT_3D);
-	terrain_buttons_size.right=TILES_DRAW_RECT_WIDTH;
+	terrain_buttons_size.bottom=1+terrain_num_rows*(1+TER_BUTTON_HEIGHT_3D);
+	terrain_buttons_size.right=terrain_buttons_rect.right - terrain_buttons_rect.left;
 	
 	terrain_buttons_gworld = DibCreate (terrain_buttons_size.right,terrain_buttons_size.bottom, 16,0);
 }
@@ -492,6 +541,7 @@ void lose_graphics()
 }
 
 void recalculate_2D_view_details(){
+	GetClientRect(mainPtr,&windRect);
 	terrain_width_2d = ((windRect.right-windRect.left)-2*(TERRAIN_BORDER_WIDTH+TER_RECT_UL_X))/BIG_SPACE_SIZE;
 	terrain_height_2d = ((windRect.bottom-windRect.top-80)-2*(TERRAIN_BORDER_WIDTH+TER_RECT_UL_Y))/BIG_SPACE_SIZE;
 	TER_RECT_UL_X_2d_big = (((windRect.right-windRect.left)-2*TERRAIN_BORDER_WIDTH)-(terrain_width_2d*BIG_SPACE_SIZE))/2;
@@ -538,6 +588,7 @@ Boolean set_view_mode(int mode){
 void redraw_screen(Boolean redrawSmall)
 {
 	// fill main window with pattern
+	GetClientRect(mainPtr,&windRect);
 	RECT to_rect = windRect;
 	RECT whole_area_rect = terrainViewRect();
 
@@ -619,9 +670,11 @@ void reset_mode_number()
 {
 	int i, offset;
 
-	offset = TILES_WINDOW_WIDTH/2;//find middle of tiles window...
+	GetClientRect(tilesPtr, &windRect);
 
-	offset -= (PALETTE_BUT_WIDTH * ((editing_town) ? 3 : 3)) / 2;//and shift over by 3/2 buttons worth to centre buttons
+	offset = (windRect.right - windRect.left)/2;//find middle of tiles window...
+
+	offset -= (PALETTE_BUT_WIDTH * ((editing_town) ? 5 : 3)) / 2;//and shift over by 3/2 buttons worth to centre buttons
 
 	for (i = 0; i < 5; i++) {
 		mode_buttons[i] = mode_button_base;
@@ -633,6 +686,8 @@ void reset_mode_number()
 void set_up_view_buttons()
 {
 	int i, offset;
+
+	GetClientRect(mainPtr,&windRect);
 
 	offset = (windRect.right - windRect.left)/2;
 
@@ -5788,6 +5843,8 @@ void place_left_text()
 {
 	char draw_str[256];
 	short i,j;
+
+	GetClientRect(mainPtr,&windRect);
 	
 	RECT to_rect = windRect;
 	RECT whole_area_rect = terrainViewRect();
@@ -7453,7 +7510,7 @@ void CreateMainToolTipRect()
 
 void CreateTilesToolTipRect()
 {
-	TOOLINFO ti[330];
+	TOOLINFO ti[516];
 
 	int i;
 	DestroyWindow(tile_tooltips);
@@ -7468,7 +7525,7 @@ void CreateTilesToolTipRect()
 
     // Set up "tool" information. In this case, the "tool" is the entire parent window.
 	
-	for (i = 0; i < 330; i++)
+	for (i = 0; i < 516; i++)
 	{
 //		ti[i][j] = { 0 };
 		ti[i].cbSize   = sizeof(TOOLINFO);
@@ -7480,7 +7537,14 @@ void CreateTilesToolTipRect()
 		ti[i].lParam = i;
 
 
-		ti[i].rect = terrain_rects[i];
+		if ((current_drawing_mode == 3) || ((cur_viewing_mode >= 10) && (current_drawing_mode > 0) && (current_drawing_mode < 3))) 
+		{
+			ti[i].rect = terrain_rects_3D[i];
+		}
+		else
+		{
+			ti[i].rect = terrain_rects[i];
+		}
 		ti[i].rect.bottom += RIGHT_BUTTONS_Y_SHIFT;
 		ti[i].rect.top += RIGHT_BUTTONS_Y_SHIFT;
 

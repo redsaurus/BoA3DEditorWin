@@ -12,7 +12,7 @@
 #include "stdafx.h"
 #include "Resource.h"
 #include "global.h"
-#define kVersion "   Version:  Chivalrous Chitrach (r106)"
+#define kVersion "   Version:  Dapper Doomguard (r112)"
 
 // Global variables
 
@@ -170,14 +170,19 @@ in_town_on_ter_script_type copied_ter_script;
 // external global variables
 extern char hintbook_mode8;
 extern HDC main_dc;
+extern HDC tiles_dc;
 extern HBITMAP main_bitmap;
 extern short max_zone_dim[3];
 extern RECT terrain_buttons_rect;
-extern RECT terrain_rects[330];
+extern RECT terrain_rects[516];
 extern Boolean use_custom_name;
+
+extern RECT mode_buttons_rect;
 
 extern Boolean setUpCreaturePalette;
 extern Boolean setUpItemPalette;
+
+extern int tiles_n_columns;
 // local variables
 
 char szAppName[] = "Blades of Avernum Scenario Editor";
@@ -380,7 +385,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 
 	cen_x = 24; cen_y = 24;
 
-	right_sbar_rect.top = RIGHT_BUTTONS_Y_SHIFT;;
+	right_sbar_rect.top = RIGHT_BUTTONS_Y_SHIFT;
 	right_sbar_rect.left = terrain_buttons_rect.right + RIGHT_BUTTONS_X_SHIFT;
 	right_sbar_rect.bottom = 22 * (TER_BUTTON_SIZE_OLD + 1) + 1 + RIGHT_BUTTONS_Y_SHIFT;
 	right_sbar_rect.right = terrain_buttons_rect.right + RIGHT_BUTTONS_X_SHIFT + 16;
@@ -468,6 +473,7 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			switch (((LPNMHDR)lParam)->code){
 				case TTN_GETDISPINFO:
 					tool_index = ((LPNMTTDISPINFO)lParam)->lParam;
+					tool_index += GetControlValue(right_sbar) * TILES_N_COLS;
 					switch (current_drawing_mode) {
 						case 0:
 							if (!((scen_data.scen_floors[tool_index].pic.which_sheet < 0)||(scen_data.scen_floors[tool_index].pic.which_icon < 0)||(tool_index>255)))
@@ -476,9 +482,22 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 							}
 						break;
 						case 1:
-							if (!((scen_data.scen_ter_types[tool_index].pic.which_sheet < 0)||(scen_data.scen_ter_types[tool_index].pic.which_icon < 0)))
+						case 2:
+							if (!((scen_data.scen_ter_types[tool_index].pic.which_sheet < 0)||(scen_data.scen_ter_types[tool_index].pic.which_icon < 0)||(tool_index>512)))
 							{
 								((LPNMTTDISPINFO)lParam)->lpszText = TEXT(scen_data.scen_ter_types[tool_index].ter_name);
+							}
+						break;
+						case 3:
+							if (!((scen_data.scen_creatures[tool_index].char_graphic.which_sheet < 0)||(tool_index>256)))
+							{
+								((LPNMTTDISPINFO)lParam)->lpszText = TEXT(scen_data.scen_creatures[tool_index].name);
+							}
+						break;
+						case 4:
+							if (!((scen_data.scen_items[tool_index].inven_icon < 0) || (scen_data.scen_items[tool_index].item_floor_graphic.which_sheet < 0) || (tool_index>500)))
+							{
+								((LPNMTTDISPINFO)lParam)->lpszText = TEXT(scen_data.scen_items[tool_index].full_name);
 							}
 						break;
 					}
@@ -518,8 +537,8 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				handle_scroll((editing_town) ? max_zone_dim[town_type] : 48, (wheel_keystate & MK_SHIFT) ? eSCRL_Right : eSCRL_Bottom, (wheel_keystate & MK_CONTROL), FALSE);
 		}
 		else if (hwnd == tilesPtr){
-			wheelHitRect = terrain_buttons_rect;
-			wheelHitRect.bottom = right_sbar_rect.bottom;
+			GetClientRect(tilesPtr,&windRect);
+			wheelHitRect = windRect;
 			wheel_delta = GET_WHEEL_DELTA_WPARAM(wParam);
 			press.x = GET_X_LPARAM(lParam);
 			press.y = GET_Y_LPARAM(lParam);
@@ -677,6 +696,22 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			set_up_view_buttons();
 			update_screen_locs();
 			redraw_screen((cur_viewing_mode == 1) ? true : false);
+		}
+		else if (hwnd == tilesPtr && tiles_dc != NULL){
+			GetClientRect(tilesPtr,&windRect);
+			mode_buttons_rect.right = windRect.right - windRect.left;
+			terrain_buttons_rect.right = windRect.right - windRect.left - 16;
+			terrain_buttons_rect.bottom = windRect.bottom - windRect.top - 11;
+			MoveWindow(right_sbar, terrain_buttons_rect.right, RIGHT_BUTTONS_Y_SHIFT, 16, windRect.bottom - windRect.top - RIGHT_BUTTONS_Y_SHIFT, false);
+			reset_mode_number();
+			resize_recalculate_num_tiles();
+			set_up_terrain_rects();
+			make_tile_gworlds();
+			SetScrollRange(right_sbar,SB_CTL,0,get_right_sbar_max(),TRUE);
+			setUpCreaturePalette = false;
+			setUpItemPalette = false;
+			set_up_terrain_buttons();
+			redraw_screen();
 		}
 		return 0;
 
@@ -1743,17 +1778,30 @@ void handle_tiles_menu(int item_hit)
 	switch(item_hit){
 		case 1:
 			tileZoomLevel++;
+			if(tileZoomLevel > 3){
+				tileZoomLevel = 3;
+			}
 			shut_down_tile_menus();
-			sprintf(string, "zoomIn: zoom level %d", tileZoomLevel);
-			MessageBox(mainPtr,string,"zoom",MB_OK);
+			zoom_tiles_recalculate();
 			break;
 		case 2:
 			tileZoomLevel--;
+			if (tileZoomLevel < 0){
+				tileZoomLevel = 0;
+			}
 			shut_down_tile_menus();
-			sprintf(string, "zoomOut: zoom level %d", tileZoomLevel);
-			MessageBox(mainPtr,string,"zoom",MB_OK);
+			zoom_tiles_recalculate();
 			break;
+		default:
+			return;
 	}
+	set_up_terrain_rects();
+	make_tile_gworlds();
+	SetScrollRange(right_sbar,SB_CTL,0,get_right_sbar_max(),TRUE);
+	setUpCreaturePalette = false;
+	setUpItemPalette = false;
+	set_up_terrain_buttons();
+	redraw_screen();
 }
 
 void check_colors()

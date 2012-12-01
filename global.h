@@ -50,7 +50,7 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define	LEFT_TEXT_LINE_WIDTH	240
 #define	TEXT_LINE_HEIGHT	12
 
-#define TER_BUTTON_SIZE	TER_BUTTON_SIZE_MID
+#define TER_BUTTON_SIZE	terrain_button_width
 #define TER_BUTTON_SIZE_BIG 46
 #define TER_BUTTON_SIZE_MID 34
 #define	TER_BUTTON_SIZE_STD	23
@@ -66,7 +66,7 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define	PALETTE_BUT_WIDTH		25
 
 #define TILES_DRAW_RECT_HEIGHT 415
-#define TILES_DRAW_RECT_WIDTH (5 + TILES_N_COLS * (TER_BUTTON_SIZE+1))//260
+#define TILES_DRAW_RECT_WIDTH (5 + TILES_N_COLS_STD * (TER_BUTTON_SIZE_STD+1))//260
 #define TILES_WINDOW_WIDTH (TILES_DRAW_RECT_WIDTH + 20)//280
 
 #define	NUM_PC_I	34
@@ -92,9 +92,10 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define TER_BUTTON_HEIGHT_3D_STD	27
 #define TER_BUTTON_HEIGHT_3D_MID	41
 #define TER_BUTTON_HEIGHT_3D_BIG	55
-#define TER_BUTTON_HEIGHT_3D	TER_BUTTON_HEIGHT_3D_MID
+#define TER_BUTTON_HEIGHT_3D	terrain_button_height
 
-#define TILES_N_COLS	12
+#define TILES_N_COLS	tiles_n_columns
+#define TILES_N_COLS_STD 12
 // q_3DModEnd
 
 // new blades consts
@@ -1709,6 +1710,10 @@ void Set_up_win ();
 void lose_graphics();
 void recalculate_2D_view_details();
 void recalculate_draw_distances();
+void resize_recalculate_num_tiles();
+void zoom_tiles_recalculate();
+void set_up_terrain_rects();
+void make_tile_gworlds(bool first_time=false);
 Boolean set_view_mode(int mode);
 void redraw_screen(Boolean redrawSmall=false);
 void draw_main_screen();
