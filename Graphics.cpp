@@ -32,7 +32,7 @@ RECT terrain_buttons_rect = {0,0,TILES_DRAW_RECT_WIDTH,TILES_DRAW_RECT_HEIGHT};
 
 RECT palette_buttons_rect = {0, 0, TILES_WINDOW_WIDTH, 250};
 
-RECT mode_buttons_rect = {0, 0, TILES_WINDOW_WIDTH, 20};
+RECT mode_buttons_rect = {0, 0, (TILES_WINDOW_WIDTH - 80 - 16), 20};
 
 Boolean showed_graphics_error = FALSE;
 
@@ -103,7 +103,7 @@ extern const char* tool_names[83];
 extern RECT tool_details_text_lines[10];
 }
 
-extern int tileZoomLevel;
+extern short tile_zoom_level;
 extern short selected_item_number;
 
 extern HINSTANCE store_hInstance;
@@ -400,7 +400,7 @@ void resize_recalculate_num_tiles()
 
 void zoom_tiles_recalculate()
 {
-	switch(tileZoomLevel){
+	switch(tile_zoom_level){
 	case 0:
 		terrain_button_width = TER_BUTTON_SIZE_OLD;
 		terrain_button_height = TER_BUTTON_HEIGHT_3D_OLD;

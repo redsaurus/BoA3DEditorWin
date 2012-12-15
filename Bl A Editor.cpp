@@ -20,6 +20,7 @@ HINSTANCE store_hInstance;
 
 HWND	mainPtr;
 HWND	right_sbar;
+HWND	tiles_zoom_slider;
 HACCEL	accel;
 
 HWND	palettePtr;//this is the window which has the tools in it
@@ -90,7 +91,7 @@ short cur_viewing_mode = 10;
 // 2 - medium icons = 32*32 view
 // 10 - big 3D icons
 // 11 - 3D view as in game
-int tileZoomLevel = 1;
+short tile_zoom_level = 1;
 
 short overall_mode = 0;
 // 0 - 9 - different terrain painting modes
@@ -190,6 +191,7 @@ char file_path_name[_MAX_PATH];
 Boolean All_Done = FALSE;
 Boolean window_in_front = TRUE;
 RECT right_sbar_rect;
+RECT tiles_zoom_slider_rect;
 Boolean force_game_end = FALSE;
 
 // Function prototype
@@ -206,9 +208,9 @@ void handle_item_menu(int item_hit);
 void handle_monst_menu(int item_hit);
 void handle_edit_menu(int item_hit);
 void handle_help_menu(int item_hit);
-void handle_tiles_menu(int item_hit);
 short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam);
 // void max_window(HWND window);
+void tiles_zoom_slider_change(int value);
 void check_colors();
 void check_game_done();
 short last_file_printed = 0;
@@ -344,7 +346,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		hInstance,
 		NULL);
 
-	tilesPtr = CreateWindow ( szTilesName, "Tiles", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_SIZEBOX, 0, 0, 280, 435, mainPtr, NULL, hInstance, NULL);
+	tilesPtr = CreateWindow ( szTilesName, "Tiles", WS_OVERLAPPED | WS_CAPTION | WS_SIZEBOX, 0, 0, 280, 435, mainPtr, NULL, hInstance, NULL);
 
 	palettePtr = CreateWindow ( szPaletteName, "Tools", WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX, 0, 0, 240, 225, mainPtr, NULL, hInstance, NULL);
 
@@ -396,6 +398,21 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 		tilesPtr,(HMENU) 1,(HINSTANCE) store_hInstance,(void *) NULL);
 	SetScrollRange(right_sbar,SB_CTL,0,get_right_sbar_max(),TRUE);
 
+	InitCommonControls();
+	tiles_zoom_slider_rect.top = 0;
+	tiles_zoom_slider_rect.right = terrain_buttons_rect.right + 16;;
+	tiles_zoom_slider_rect.left = tiles_zoom_slider_rect.right - 80;
+	tiles_zoom_slider_rect.bottom = RIGHT_BUTTONS_Y_SHIFT;
+	tiles_zoom_slider = CreateWindow(TRACKBAR_CLASS,NULL,WS_CHILD | TBS_AUTOTICKS | TBS_TRANSPARENTBKGND, tiles_zoom_slider_rect.left, 0, 80, RIGHT_BUTTONS_Y_SHIFT, tilesPtr, (HMENU) 2, (HINSTANCE) store_hInstance, (void *)NULL);
+	SendMessage(tiles_zoom_slider, TBM_SETRANGE, 
+        (WPARAM) TRUE,                   // redraw flag 
+        (LPARAM) MAKELONG(0, 3));  // min. & max. positions
+	SendMessage(tiles_zoom_slider, TBM_SETPOS, 
+        (WPARAM) TRUE,                   // redraw flag 
+        (LPARAM) 1); 
+	ShowWindow(tiles_zoom_slider,nCmdShow);
+//	SetFocus(tiles_zoom_slider);
+
 	cd_init_dialogs();
 
 	DWORD d = GetDialogBaseUnits();
@@ -411,17 +428,6 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 	play_sounds = get_should_play_sounds();
 	shut_down_menus(/* 0 */);
 
-	//add extra menus to tiles menu
-	HMENU menu = GetSystemMenu(tilesPtr,false);
-	RemoveMenu(menu,6,MF_BYPOSITION);
-	RemoveMenu(menu,4,MF_BYPOSITION);
-	RemoveMenu(menu,3,MF_BYPOSITION);
-	RemoveMenu(menu,0,MF_BYPOSITION);
-	AppendMenu(menu,MF_GRAYED|MF_DISABLED|MF_STRING,1701,"Zoom In\tCtrl+");
-	AppendMenu(menu,MF_GRAYED|MF_DISABLED|MF_STRING,1702,"Zoom Out\tCtrl-");
-
-	shut_down_tile_menus();
-
 	load_sounds();
 	init_warriors_grove();
 	set_up_terrain_buttons();
@@ -429,6 +435,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 	ShowScrollBar(right_sbar,SB_CTL,TRUE);
 //	UpdateWindow(mainPtr);
 	UpdateWindow(tilesPtr);
+//	UpdateWindow(tiles_zoom_slider);
 	UpdateWindow(palettePtr);
 
 	return TRUE;
@@ -699,10 +706,11 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		}
 		else if (hwnd == tilesPtr && tiles_dc != NULL){
 			GetClientRect(tilesPtr,&windRect);
-			mode_buttons_rect.right = windRect.right - windRect.left;
+			mode_buttons_rect.right = windRect.right - windRect.left - 80;
 			terrain_buttons_rect.right = windRect.right - windRect.left - 16;
 			terrain_buttons_rect.bottom = windRect.bottom - windRect.top - 11;
 			MoveWindow(right_sbar, terrain_buttons_rect.right, RIGHT_BUTTONS_Y_SHIFT, 16, windRect.bottom - windRect.top - RIGHT_BUTTONS_Y_SHIFT, false);
+			MoveWindow(tiles_zoom_slider,windRect.right - 80,0,80,RIGHT_BUTTONS_Y_SHIFT,false);
 			reset_mode_number();
 			resize_recalculate_num_tiles();
 			set_up_terrain_rects();
@@ -714,6 +722,23 @@ LRESULT CALLBACK WndProc (HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			redraw_screen();
 		}
 		return 0;
+
+	case WM_HSCROLL:
+		which_sbar = (short)GetWindowLong((HWND) lParam, GWL_ID);
+		if (which_sbar == 2){
+			switch (LOWORD(wParam)) { 
+				case TB_ENDTRACK:
+					sbar_pos = SendMessage(tiles_zoom_slider, TBM_GETPOS, 0, 0);
+					tiles_zoom_slider_change(sbar_pos);
+					break;
+				default:
+					break;
+			}
+			SetFocus(tilesPtr);
+			return 0;
+		}
+		break;
+
 
 	case WM_VSCROLL:
 		which_sbar = (short)GetWindowLong((HWND) lParam, GWL_ID);
@@ -827,9 +852,6 @@ void handle_menu_choice(short choice)
 			case 16:	// patch for ctrl-<key> command
 				handle_keystroke( choice % 100, 0 );
 				break;
-			case 17:
-				handle_tiles_menu(menu_item % 100);
-				break;
 			}
 		} 
 }
@@ -851,7 +873,6 @@ void handle_file_menu(int item_hit)
 				purgeRedo();
 				redraw_screen();
 				shut_down_menus(); // (0)
-				shut_down_tile_menus();
 			}
 			break;
 		case 2: // Save Scenario
@@ -1772,29 +1793,13 @@ void handle_help_menu(int item_hit)
 	draw_main_screen();		
 }
 
-void handle_tiles_menu(int item_hit)
+void tiles_zoom_slider_change(int value)
 {
-	char string[64];
-	switch(item_hit){
-		case 1:
-			tileZoomLevel++;
-			if(tileZoomLevel > 3){
-				tileZoomLevel = 3;
-			}
-			shut_down_tile_menus();
-			zoom_tiles_recalculate();
-			break;
-		case 2:
-			tileZoomLevel--;
-			if (tileZoomLevel < 0){
-				tileZoomLevel = 0;
-			}
-			shut_down_tile_menus();
-			zoom_tiles_recalculate();
-			break;
-		default:
-			return;
+	if (value == tile_zoom_level){
+		return;
 	}
+	tile_zoom_level = value;
+	zoom_tiles_recalculate();
 	set_up_terrain_rects();
 	make_tile_gworlds();
 	SetScrollRange(right_sbar,SB_CTL,0,get_right_sbar_max(),TRUE);

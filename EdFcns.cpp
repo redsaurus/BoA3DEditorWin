@@ -84,8 +84,6 @@ extern char grid_mode;
 extern short last_large_mode;
 extern Boolean r1_in_r2(macRECT r1,macRECT r2);
 
-extern int tileZoomLevel;
-
 // if a terrain type has special property from 19-30, it is a slope. this
 // array says what corners for these 12 terrain types are elevated.
 // first field is nw corner
@@ -5025,31 +5023,6 @@ void recursive_adjust_space_height_raise(location l)
 		recursive_hill_up_depth--;
 	}
 	adjust_space(l);
-}
-
-void shut_down_tile_menus()
-{
-	HMENU menu;
-
-	menu = GetSystemMenu(tilesPtr,false);
-	
-	if (file_is_loaded == FALSE) {
-		EnableMenuItem(menu,1701,MF_GRAYED | MF_BYCOMMAND);
-		EnableMenuItem(menu,1702,MF_GRAYED | MF_BYCOMMAND);
-	}
-	else if (tileZoomLevel == 0) {
-		EnableMenuItem(menu,1701,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu,1702,MF_GRAYED | MF_BYCOMMAND);
-	}
-	else if (tileZoomLevel == 3) {
-		EnableMenuItem(menu,1702,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu,1701,MF_GRAYED | MF_BYCOMMAND);
-	}
-	else {
-		EnableMenuItem(menu,1701,MF_ENABLED | MF_BYCOMMAND);
-		EnableMenuItem(menu,1702,MF_ENABLED | MF_BYCOMMAND);
-	}
-
 }
 
 //disables menu items which aren't applicable at the moment

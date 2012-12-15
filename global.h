@@ -1615,7 +1615,6 @@ void set_new_item(short selected_item);
 Boolean handle_keystroke(WPARAM wParam,LPARAM lParam);
 void set_terrain(location l,short terrain_type);
 void shut_down_menus(/* short mode */);
-void shut_down_tile_menus();
 Boolean save_check(short which_dlog);
 void update_item_menu();
 void delete_selected_instance();
