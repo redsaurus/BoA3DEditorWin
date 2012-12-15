@@ -23,7 +23,10 @@ extern short overall_mode;
 extern char *attitude_types[4];
 extern  Boolean file_is_loaded;
 extern short max_zone_dim[3];
+extern SelectionType::SelectionType_e selected_object_type;
+extern unsigned short selected_object_number;
 // local variables
+
 creature_start_type store_placed_monst;
 short store_which_placed_monst;
 short extra_dialog_answer[4];

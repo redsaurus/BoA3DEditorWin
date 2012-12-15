@@ -104,7 +104,9 @@ extern RECT tool_details_text_lines[10];
 }
 
 extern short tile_zoom_level;
-extern short selected_item_number;
+extern short selected_item_number;//TODO: get rid of all selected_item_number stuff
+extern SelectionType::SelectionType_e selected_object_type;
+extern unsigned short selected_object_number;
 
 extern HINSTANCE store_hInstance;
 
@@ -6387,10 +6389,6 @@ void place_right_buttons( /* short mode */ )
 
 	SetBkMode(tiles_dc,TRANSPARENT);
 	SetBkMode(palette_dc, TRANSPARENT);
-
-	for (short i = 0; i < 7; i++){
- //		paint_pattern(terrain_buttons_gworld,0,right_text_lines[i],2);
-	}
 	
 	if (file_is_loaded == FALSE){
 		to_rect = terrain_buttons_rect;

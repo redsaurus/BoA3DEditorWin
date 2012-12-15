@@ -151,7 +151,11 @@ short overall_mode = 0;
 // 77 - make_horse
 
 // file selection editing files
-short selected_item_number = -1;
+SelectionType::SelectionType_e selected_object_type = SelectionType::None;
+unsigned short selected_object_number;
+
+// file selection editing files
+short selected_item_number = -1;//TODO: Get rid of all references to selected_item_number
 // codes for selected items
 //  7000 + x - creature x
 //  9000 + x - terrain script x

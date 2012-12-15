@@ -127,6 +127,14 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define SDF_RANGE_X	300
 #define SDF_RANGE_Y	30
 
+#define TOOL_PALETTE_GUTTER_WIDTH 10
+#define TOOL_TITLE_HEIGHT 12
+#define TOOL_PALETTE_TEXT_LINE_WIDTH 240
+#define TOOL_PALETTE_TEXT_LINE_HEIGHT 12
+#define TOOL_PALETTE_TEXT_LINE_SPACING 2
+#define TOOL_PALETTE_HEIGHT (4*TOOL_PALETTE_GUTTER_WIDTH + TOOL_TITLE_HEIGHT + TOOL_PALETTE_TEXT_LINE_SPACING + PALETTE_BUT_HEIGHT+1 + 10*(TOOL_PALETTE_TEXT_LINE_HEIGHT+TOOL_PALETTE_TEXT_LINE_SPACING))
+#define TOOL_PALETTE_WIDTH (7*TOOL_PALETTE_GUTTER_WIDTH + PALETTE_BUT_WIDTH+1 + TOOL_PALETTE_TEXT_LINE_WIDTH)
+
 
 typedef char Boolean;
 
@@ -153,6 +161,27 @@ typedef struct {
 //typedef struct {
 //	short type,sd1,sd2,pic,m1,m2,ex1a,ex1b,ex2a,ex2b,jumpto;
 //	} special_node_type;
+
+//use a wrapping namespace to simulate C++0x strongly typed enum
+//when possible this should be switched to an actual strongly type enum
+//by removing the namespace and changing 'enum SelectionType_e' to
+//'enum class SelectionType'
+namespace SelectionType{
+	enum SelectionType_e {
+		None,
+		//Town only:
+		Creature,
+		Item,
+		TerrainScript,
+		Waypoint,
+		//Town or outdoor:
+		SpecialEncounter, 
+		AreaDescription,
+		Sign,
+		//Outdoor only:
+		TownEntrance
+	};
+} //namespace SelectionType
 
 typedef struct {
 	short which_state,which_personality;
