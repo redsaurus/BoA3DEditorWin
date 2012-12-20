@@ -3502,7 +3502,7 @@ void draw_ter_large()
 						draw_creature(main_dc5,store_bmp,i,loc_drawn,q,r);
 						}
 					if(selected_object_type==SelectionType::Creature)
-						draw_creature(selected_object_number,loc_drawn,q,r,true);
+						draw_creature(main_dc5,store_bmp,selected_object_number,loc_drawn,q,r,true);
 					}
 					
 			if ((hintbook_mode2 == 0) && (hintbook_mode4 == 0)) {
@@ -3513,7 +3513,7 @@ void draw_ter_large()
 						}	
 				// draw selected instance
 					if(selected_object_type==SelectionType::Item)
-						draw_item(selected_object_number,loc_drawn,q,r,true);						
+						draw_item(main_dc5,store_bmp,selected_object_number,loc_drawn,q,r,true);						
 					}
 					
 				SelectObject(main_dc5,DibBitmapHandle(ter_draw_gworld));

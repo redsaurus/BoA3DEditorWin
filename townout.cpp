@@ -1945,7 +1945,8 @@ Boolean edit_area_rect_str(short which_str /*,short mode */)
 	
 	if (editing_town == FALSE)
 		CDST(840,2,current_terrain.info_rect_text[store_which_str]);
-		else CDST(840,2,town.info_rect_text[store_which_str]);
+	else 
+		CDST(840,2,town.info_rect_text[store_which_str]);
 		
 	while (dialog_not_toast)
 		ModalDialog();	
@@ -1960,7 +1961,7 @@ void edit_out_strs()
 {
 	short i;
 
-	for (i = 0; i < 8; i++)
+	for (i = 0; i < NUM_OUT_DESCRIPTION_AREAS; i++)
 		str_do_delete[i] = 0;
 
 	cd_create_dialog_parent_num(850,0);
@@ -1978,7 +1979,7 @@ void put_out_strs_in_dlog()
 	char str[256];
 	short i;
 
-	for (i = 0; i < 8; i++) {
+	for (i = 0; i < NUM_OUT_DESCRIPTION_AREAS; i++) {
 		if ((current_terrain.info_rect[i].right <= 0) || (str_do_delete[i] > 0)) {
 			sprintf((char *) str,"Not yet placed.");
 			csit(850,13 + i,(char *) str);
@@ -2031,9 +2032,14 @@ Boolean save_out_strs()
 		CDGT(850,2 + i,(char *) str);
 		str[29] = 0;
 		sprintf((char *)current_terrain.info_rect_text[i],"%s",str);
-		if (str_do_delete[i] > 0)
+		if (str_do_delete[i] > 0){
 			current_terrain.info_rect[i].right = -1;
+			if(selected_object_type==SelectionType::AreaDescription && selected_object_number==i){
+				selected_object_type=SelectionType::None;
+				selected_object_number=0;
+			}
 		}
+	}
 	return TRUE;
 }
 
@@ -2042,7 +2048,7 @@ void edit_town_strs()
 {
 	short i;
 	
-	for (i = 0; i < 16; i++)
+	for (i = 0; i < NUM_TOWN_DESCRIPTION_AREAS; i++)
 		str_do_delete[i] = 0;
 		
 	cd_create_dialog_parent_num(839,0);
@@ -2060,22 +2066,21 @@ void put_town_strs_in_dlog()
 	char str[256];
 	short i;
 
-	for (i = 0; i < 16; i++) {
+	for (i = 0; i < NUM_TOWN_DESCRIPTION_AREAS; i++) {
 		if ((town.room_rect[i].right <= 0) || (str_do_delete[i] > 0)) {
 			sprintf((char *) str,"Not yet placed.");
 			csit(839,21 + i,(char *) str);
 			csit(839,57 + i,(char *) str);
 			cd_activate_item(839,41 + i,0);
-			}
-			else {
+		}
+		else {
 			sprintf((char *) str,"L = %d, T = %d",(int)town.room_rect[i].left,(int)town.room_rect[i].top);
 		csit(839,21 + i,(char *) str);
 			sprintf((char *) str,"R = %d, B = %d",(int)town.room_rect[i].right, (int)town.room_rect[i].bottom);
 		csit(839,57 + i,(char *) str);
 		}
 		CDST(839,2 + i,town.info_rect_text[i]);
-		}
-
+	}
 }
 
 void edit_town_strs_event_filter (short item_hit)
@@ -2097,7 +2102,7 @@ void edit_town_strs_event_filter (short item_hit)
 				town.room_rect[item_hit - 41].right = -1;
 				str_do_delete[item_hit - 41] = 1;
 				put_town_strs_in_dlog();
-				}
+			}
 			break;
 		}
 }
@@ -2107,13 +2112,18 @@ Boolean save_town_strs()
 	char str[256];
 	short i;
 
-	for (i = 0; i < 16; i++) {
+	for (i = 0; i < NUM_TOWN_DESCRIPTION_AREAS; i++) {
 		CDGT(839,2 + i,(char *) str);
 		str[29] = 0;
 		sprintf((char *)town.info_rect_text[i],"%s",str);
-		if (str_do_delete[i] > 0)
+		if (str_do_delete[i] > 0){
 			town.room_rect[i].right = -1;
+			if(selected_object_type==SelectionType::AreaDescription && selected_object_number==i){
+				selected_object_type=SelectionType::None;
+				selected_object_number=0;
+			}
 		}
+	}
 	return TRUE;
 }
 

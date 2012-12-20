@@ -2646,226 +2646,220 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				break;		
 
 		case 40: // 40 - select instance
-				// 7000 + x - creature x
-				// 11000 + x - items x
-				for (i = 0; i < 22000; i++) {
-					item_to_try = (selected_item_number + i + 1) % 22000;
-
-	if (editing_town){
-					// select creature
-					if ((item_to_try >= 7000) && (item_to_try < 7000 + NUM_TOWN_PLACED_CREATURES) && (cur_viewing_mode != 1)  && (town.creatures[item_to_try % 1000].exists())) {
-						if (same_point(spot_hit,town.creatures[item_to_try % 1000].start_loc)) {
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
+			//TODO: this block is enormous; it should be its own function
+			if(editing_town){
+				SelectionType::SelectionType_e which_type=selected_object_type;
+				item_to_try=selected_object_number;
+				do{
+					//test next selectable object
+					item_to_try++;
+					//jump to next category if necessary
+					switch(which_type){
+						case SelectionType::None:
+							if(item_to_try>0){
+								which_type=SelectionType::Creature;
+								item_to_try=0;
 							}
-						}
-
-					// select terrain script
-					if ((item_to_try >= 9000) && (item_to_try < 9000 + NUM_TER_SCRIPTS) && (cur_viewing_mode != 1) && (town.ter_scripts[item_to_try % 1000].exists)) {
-						if (same_point(spot_hit,town.ter_scripts[item_to_try % 1000].loc)) {
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
+							break;
+						case SelectionType::Creature:
+							if(item_to_try>=NUM_TOWN_PLACED_CREATURES){
+								which_type=SelectionType::Item;
+								item_to_try=0;
 							}
-						}
-
-					// select item
-					if ((item_to_try >= 11000) && (item_to_try < 11000 + NUM_TOWN_PLACED_ITEMS) && (cur_viewing_mode != 1) && (town.preset_items[item_to_try % 1000].exists())) {
-						if (same_point(spot_hit,town.preset_items[item_to_try % 1000].item_loc)) {
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
+							break;
+						case SelectionType::Item:
+							if(item_to_try>=NUM_TOWN_PLACED_ITEMS){
+								which_type=SelectionType::TerrainScript;
+								item_to_try=0;
 							}
-						}
-
-					// select placed special
-					if ((item_to_try >= 13000) && (item_to_try < 13000 + NUM_TOWN_PLACED_SPECIALS) && (cur_viewing_mode != 1)) {
-						if (town.spec_id[item_to_try % 1000] != kNO_TOWN_SPECIALS && loc_touches_rect_border(spot_hit, town.special_rects[item_to_try % 1000])){
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
+							break;
+						case SelectionType::TerrainScript:
+							if(item_to_try>=NUM_TER_SCRIPTS){
+								which_type=SelectionType::Waypoint;
+								item_to_try=0;
 							}
-						}
-
-					// select area rectangle
-					if ((item_to_try >= 14000) && (item_to_try < 14016) && (cur_viewing_mode != 1)) {
-							if ((town.room_rect[item_to_try % 1000].right > 0) && loc_touches_rect_border(spot_hit, town.room_rect[item_to_try % 1000])){
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
+							break;
+						case SelectionType::Waypoint:
+							if(item_to_try>=NUM_WAYPOINTS){
+								which_type=SelectionType::SpecialEncounter;
+								item_to_try=0;
 							}
-						}
-						
-					// select town boundary
-					if ((item_to_try == 15000) && (cur_viewing_mode != 1)) {
-						if ((spot_hit.x == town.in_town_rect.left) || (spot_hit.x == town.in_town_rect.right) || (spot_hit.y == town.in_town_rect.top) || (spot_hit.y == town.in_town_rect.bottom)) {
-						selected_item_number = item_to_try;
-						play_sound(37);
-						return;
+							break;
+						case SelectionType::SpecialEncounter:
+							if(item_to_try>=NUM_TOWN_PLACED_SPECIALS){
+								which_type=SelectionType::AreaDescription;
+								item_to_try=0;
 							}
-						}
-
-					// town sign
-					if ((item_to_try >= 16000) && (item_to_try < 16015) && (cur_viewing_mode != 1)) {
-						if (same_point(spot_hit,town.sign_locs[item_to_try % 1000])) {
-							selected_item_number = item_to_try;
-							sign_terrain = t_d.terrain[town.sign_locs[item_to_try % 1000].x][town.sign_locs[item_to_try % 1000].y];
-							play_sound(37);
-							return;
+							break;
+						case SelectionType::AreaDescription:
+							if(item_to_try>=NUM_TOWN_DESCRIPTION_AREAS){
+								which_type=SelectionType::Sign;
+								item_to_try=0;
 							}
-						}
-						
-					// town wandering monster locations
-					if ((item_to_try >= 17000) && (item_to_try < 17006) && (cur_viewing_mode != 1)) {
-						if (same_point(spot_hit,town.respawn_locs[item_to_try % 1000])) {
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
+							break;
+						case SelectionType::Sign:
+							if(item_to_try>=15) {
+								which_type = SelectionType::None;
+								item_to_try=0;
 							}
-						}
-						
-					// select field
-					if ((item_to_try >= 18000) && (item_to_try < 18000 + NUM_TOWN_PLACED_FIELDS) && (cur_viewing_mode != 1) && (town.preset_fields[item_to_try % 1000].field_type > 0)) {
-						if (same_point(spot_hit,town.preset_fields[item_to_try % 1000].field_loc)) {
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
-							}
-						}
-						
-					// waypoints
-					if ((item_to_try >= 19000) && (item_to_try < 19000 + NUM_WAYPOINTS) && (cur_viewing_mode != 1)) {
-						if (same_point(spot_hit,town.waypoints[item_to_try % 1000])) {
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
-							}
-						}
-						
-					// scenario horses
-					if ((item_to_try >= 20000) && (item_to_try < 20030) && (cur_viewing_mode != 1) && (scenario.scen_horses[item_to_try % 1000].exists = TRUE)) {
-						if (same_point(spot_hit,scenario.scen_horses[item_to_try % 1000].horse_loc)) {
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
-							}
-						}
-
-					// scenario boats						
-					if ((item_to_try >= 20030) && (item_to_try < 20060) && (cur_viewing_mode != 1)) {
-							short j = ((item_to_try - 30) % 1000);
-						if (scenario.scen_boats[j].exists = TRUE) {
-						if (same_point(spot_hit,scenario.scen_boats[j].boat_loc)) {
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
-							}
-						}
-						}
-					
-						}
-						
-					else {
-					// select placed special
-					if ((item_to_try >= 13000) && (item_to_try < 13000 + NUM_OUT_PLACED_SPECIALS) && (cur_viewing_mode != 1)) {
-						if (current_terrain.spec_id[item_to_try % 1000] != kNO_OUT_SPECIALS && loc_touches_rect_border(spot_hit, current_terrain.special_rects[item_to_try % 1000])){
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
-							}
-						}
-
-					// select area rectangle
-					if ((item_to_try >= 14000) && (item_to_try < 14008) && (cur_viewing_mode != 1)) {
-							if ((current_terrain.info_rect[item_to_try % 1000].right > 0) && loc_touches_rect_border(spot_hit, current_terrain.info_rect[item_to_try % 1000])){
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
-							}
-						}
-
-					// select town entrance
-					if ((item_to_try >= 15000) && (item_to_try < 15008) && (cur_viewing_mode != 1)) {
-							if (current_terrain.exit_dests[item_to_try % 1000]!=kNO_OUT_TOWN_ENTRANCE && loc_touches_rect(spot_hit, current_terrain.exit_rects[item_to_try % 1000])){
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
-							}
-						}
-					// current_terrain sign
-					if ((item_to_try >= 16000) && (item_to_try < 16008) && (cur_viewing_mode != 1)) {
-						if (same_point(spot_hit,current_terrain.sign_locs[item_to_try % 1000])) {
-							selected_item_number = item_to_try;
-							sign_terrain = current_terrain.terrain[current_terrain.sign_locs[item_to_try % 1000].x][current_terrain.sign_locs[item_to_try % 1000].y];
-							play_sound(37);
-							return;
-							}
-						}
-
-					// outdoor wandering monster locations
-					if ((item_to_try >= 17000) && (item_to_try < 17004) && (cur_viewing_mode != 1)) {
-						if (same_point(spot_hit,current_terrain.wandering_locs[item_to_try % 1000])) {
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
-							}
-						}
-						
-					// outdoor wandering encounter start locations
-					if ((item_to_try >= 18000) && (item_to_try < 18004) && (cur_viewing_mode != 1)) {
-						if (same_point(spot_hit,current_terrain.wandering[item_to_try % 1000].start_loc)) {
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
-							}
-						}
-					// outdoor special encounter start locations
-					if ((item_to_try >= 19000) && (item_to_try < 19004) && (cur_viewing_mode != 1)) {
-						if (same_point(spot_hit,current_terrain.special_enc[item_to_try % 1000].start_loc)) {
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
-							}
-						}
-					// outdoor preset encounter start locations
-					if ((item_to_try >= 20000) && (item_to_try < 20008) && (cur_viewing_mode != 1)) {
-						if (same_point(spot_hit,current_terrain.preset[item_to_try % 1000].start_loc)) {
-							selected_item_number = item_to_try;
-							play_sound(37);
-							return;
-							}
-						}						
-
+						default:
+							break;
 					}
-						
+					//check whether the item being tested matches
+					switch(which_type){
+						case SelectionType::None:
+							break;
+						case SelectionType::Creature:
+							if(town.creatures[item_to_try].exists() && same_point(spot_hit,town.creatures[item_to_try].start_loc)){
+								selected_object_number=item_to_try;
+								selected_object_type=which_type;
+								play_sound(37);
+								return;
+							}
+							break;
+						case SelectionType::Item:
+							if(town.preset_items[item_to_try].exists() && same_point(spot_hit,town.preset_items[item_to_try].item_loc)){
+								selected_object_number=item_to_try;
+								selected_object_type=which_type;
+								play_sound(37);
+								return;
+							}
+							break;
+						case SelectionType::TerrainScript:
+							if(town.ter_scripts[item_to_try].exists && same_point(spot_hit,town.ter_scripts[item_to_try].loc)){
+								selected_object_number=item_to_try;
+								selected_object_type=which_type;
+								play_sound(37);
+								return;
+							}
+							break;
+						case SelectionType::Waypoint:
+							if(town.waypoints[item_to_try].x>=0 && same_point(spot_hit,town.waypoints[item_to_try])){
+								selected_object_number=item_to_try;
+								selected_object_type=which_type;
+								play_sound(37);
+								return;
+							}
+							break;
+						case SelectionType::SpecialEncounter:
+							if(town.spec_id[item_to_try]!=kNO_TOWN_SPECIALS && loc_touches_rect(spot_hit, town.special_rects[item_to_try])){
+								selected_object_number=item_to_try;
+								selected_object_type=which_type;
+								play_sound(37);
+								return;
+							}
+							break;
+						case SelectionType::AreaDescription:
+							if(town.room_rect[item_to_try].right>0 && loc_touches_rect(spot_hit, town.room_rect[item_to_try])){
+								selected_object_number=item_to_try;
+								selected_object_type=which_type;
+								play_sound(37);
+								return;
+							}
+							break;
+						case SelectionType::Sign:
+							if(same_point(spot_hit, town.sign_locs[item_to_try])){
+								selected_object_number=item_to_try;
+								selected_object_type=which_type;
+								play_sound(37);
+								return;								
+							}
+							break;
+						default:
+							break;
 					}
-				break;		
+				} while(which_type!=selected_object_type || item_to_try!=selected_object_number);
+				selected_object_number=0;
+				selected_object_type=SelectionType::None;
+			}
+			else{ //editing outdoors
+				//currently, special rectangles are the only things to select outdoors
+				SelectionType::SelectionType_e which_type=selected_object_type;
+				item_to_try=selected_object_number;
+				do{
+					//test next selectable object
+					item_to_try++;
+					//jump to next category if necessary
+					switch(which_type){
+						case SelectionType::None:
+							if(item_to_try>0){
+								which_type=SelectionType::SpecialEncounter;
+								item_to_try=0;
+							}
+							break;
+						case SelectionType::SpecialEncounter:
+							if(item_to_try>=NUM_OUT_PLACED_SPECIALS){
+								which_type=SelectionType::AreaDescription;
+								item_to_try=0;
+							}
+							break;
+						case SelectionType::AreaDescription:
+							if(item_to_try>=NUM_OUT_DESCRIPTION_AREAS){
+								which_type=SelectionType::TownEntrance;
+								item_to_try=0;
+							}
+							break;
+						case SelectionType::TownEntrance:
+							if(item_to_try>=NUM_OUT_TOWN_ENTRANCES){
+								which_type=SelectionType::Sign;
+								item_to_try=0;
+							}
+							break;
+						case SelectionType::Sign:
+							if(item_to_try>=8){
+								which_type=SelectionType::None;
+								item_to_try = 0;
+							}
+							break;
+						default:
+							break;
+					}
+					//check whether the item being tested matches
+					switch(which_type){
+						case SelectionType::None:
+							break;
+						case SelectionType::SpecialEncounter:
+							if(current_terrain.spec_id[item_to_try]!=kNO_OUT_SPECIALS && loc_touches_rect(spot_hit, current_terrain.special_rects[item_to_try])){
+								selected_object_number=item_to_try;
+								selected_object_type=which_type;
+								play_sound(37);
+								return;
+							}
+							break;
+						case SelectionType::AreaDescription:
+							if(current_terrain.info_rect[item_to_try].right>0 && loc_touches_rect(spot_hit, current_terrain.info_rect[item_to_try])){
+								selected_object_number=item_to_try;
+								selected_object_type=which_type;
+								play_sound(37);
+								return;
+							}
+							break;
+						case SelectionType::TownEntrance:
+							if(current_terrain.exit_dests[item_to_try]!=kNO_OUT_TOWN_ENTRANCE && loc_touches_rect(spot_hit, current_terrain.exit_rects[item_to_try])){
+								selected_object_number=item_to_try;
+								selected_object_type=which_type;
+								play_sound(37);
+								return;
+							}
+							break;
+						case SelectionType::Sign:
+							if(same_point(spot_hit, current_terrain.sign_locs[item_to_try])){
+								selected_object_number=item_to_try;
+								selected_object_type=which_type;
+								play_sound(37);
+								return;
+							}
+							break;
+						default:
+							break;
+					}
+				} while(which_type!=selected_object_type || item_to_try!=selected_object_number);
+				selected_object_number=0;
+				selected_object_type=SelectionType::None;
+			}
+			break;
+
 		case 41: // 41 - delete instance and return to mode 40: select instance.
-				for (i = 0; i < 22000; i++) {
-
-					item_to_try = (selected_item_number + i) % 22000;
-					// select creature
-					if ((item_to_try >= 7000) && (item_to_try < 7000 + NUM_TOWN_PLACED_CREATURES) && (town.creatures[item_to_try % 1000].exists())) {
-						if (same_point(spot_hit,town.creatures[item_to_try % 1000].start_loc)) {
-							town.creatures[item_to_try % 1000].number = -1;
-							}
-						}
-
-					// select ter script
-					if ((item_to_try >= 7000) && (item_to_try < 7000 + NUM_TER_SCRIPTS) && (town.ter_scripts[item_to_try % 1000].exists)) {
-						if (same_point(spot_hit,town.ter_scripts[item_to_try % 1000].loc)) {
-							town.ter_scripts[item_to_try % 1000].exists = FALSE;
-							}
-						}
-
-					// select item
-					if ((item_to_try >= 11000) && (item_to_try < 11000 + NUM_TOWN_PLACED_ITEMS) && (town.preset_items[item_to_try % 1000].exists())) {
-						if (same_point(spot_hit,town.preset_items[item_to_try % 1000].item_loc)) {
-							town.preset_items[item_to_try % 1000].which_item = -1;
-							}
-						}					
-					}
 				set_tool(40); 
 				break;		
 	
@@ -2898,22 +2892,6 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				//reset_drawing_mode(); 
 				break;		
 		case 49: // 49 - delete special enc
-				if (editing_town) {
-					for (i = 0; i < NUM_TOWN_PLACED_SPECIALS; i++)
-						if ((town.spec_id[i] != kNO_TOWN_SPECIALS) && (loc_touches_rect(spot_hit,town.special_rects[i]))) {
-							town.spec_id[i] = kNO_TOWN_SPECIALS;
-							SetMacRect(&town.special_rects[i],-1,-1,-1,-1);
-							break;
-							}
-					}
-					else {
-						for (i = 0; i < 30; i++)
-							if ((current_terrain.spec_id[i] != kNO_OUT_SPECIALS) && (loc_touches_rect(spot_hit,current_terrain.special_rects[i]))) {
-								current_terrain.spec_id[i] = kNO_OUT_SPECIALS;
-								SetMacRect(&current_terrain.special_rects[i],-1,-1,-1,-1);
-								break;
-								}
-						}
 				reset_drawing_mode(); 
 				break;		
 		case 50: // 50 - set special enc
@@ -3202,6 +3180,8 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 							town.special_rects[i].left = (short)working_rect.left;
 							town.special_rects[i].bottom =(short)working_rect.bottom;
 							town.special_rects[i].right = (short)working_rect.right;
+							selected_object_type=SelectionType::SpecialEncounter;
+							selected_object_number=i;
 							i = 500;
 							}
 						}
@@ -3220,6 +3200,8 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 							current_terrain.special_rects[i].left = (short)working_rect.left;
 							current_terrain.special_rects[i].bottom = (short)working_rect.bottom;
 							current_terrain.special_rects[i].right = (short)working_rect.right;
+							selected_object_type=SelectionType::SpecialEncounter;
+							selected_object_number=i;
 							i = 500;
 							}
 
@@ -3229,6 +3211,8 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 							}
 
 						}
+				set_tool(40);
+				return;
 				break;
 			case 17: // 17 - town boundaries
 				town.in_town_rect.top = (short)working_rect.top;
@@ -3254,9 +3238,15 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 							town.room_rect[x].left = (short)working_rect.left;
 							town.room_rect[x].bottom = (short)working_rect.bottom;
 							town.room_rect[x].right = (short)working_rect.right;
-							sprintf(town.info_rect_text[x],"");
-							if (edit_area_rect_str(x /*,1 */) == FALSE)
+							*(town.info_rect_text[x]) = '\0';
+							if(edit_area_rect_str(x) == FALSE)
 								town.room_rect[x].right = 0;
+							else{
+								selected_object_type=SelectionType::AreaDescription;
+								selected_object_number=x;
+								set_tool(40);
+								set_string("Select/edit placed object","Select object to edit");
+							}
 							x = 500;
 						}
 				}
@@ -3267,9 +3257,15 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 							current_terrain.info_rect[x].left = (short)working_rect.left;
 							current_terrain.info_rect[x].bottom = (short)working_rect.bottom;
 							current_terrain.info_rect[x].right = (short)working_rect.right;
-							sprintf(current_terrain.info_rect_text[x],"");
-							if (edit_area_rect_str(x /*,0 */) == FALSE)
+							*(current_terrain.info_rect_text[x]) = '\0';
+							if(edit_area_rect_str(x) == FALSE)
 								current_terrain.info_rect[x].right = 0;
+							else{
+								selected_object_type=SelectionType::AreaDescription;
+								selected_object_number=x;
+								set_tool(40);
+								set_string("Select/edit placed object","Select object to edit");
+							}
 							x = 500;
 						}
 				}
@@ -3287,43 +3283,38 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				add_rect_height(working_rect);
 				break;
 	case 25: // Redraw special encounter
-	if(editing_town) {
-		if ((selected_item_number >= 13000) && (selected_item_number < 13000 + NUM_TOWN_PLACED_SPECIALS)) 
-						town.special_rects[selected_item_number % 1000] = working_rect;
-			}
-	else {
-		if ((selected_item_number >= 13000) && (selected_item_number < 13000 + NUM_OUT_PLACED_SPECIALS))
-						current_terrain.special_rects[selected_item_number % 1000] = working_rect;
-			}			
-				set_tool(40);
-				set_string("Redraw special encounter","Select corners of the rectangle.");
-	return;
-	break;
-
-			case 26: // redraw town entrance
-				if ((selected_item_number >= 15000) && (selected_item_number < 15008) && (cur_viewing_mode != 1)) {
-					current_terrain.exit_rects[selected_item_number % 1000] = working_rect;
-				}
-				set_tool(40);
-				set_string("Redraw town entrance","Select corners of the rectangle.");
-				return;
-				break;
+		if(selected_object_type==SelectionType::SpecialEncounter && selected_object_number<(editing_town?NUM_TOWN_PLACED_SPECIALS:NUM_OUT_PLACED_SPECIALS)){
+			if(editing_town)
+				town.special_rects[selected_object_number] = working_rect;
+			else
+				current_terrain.special_rects[selected_object_number] = working_rect;
+		}
+		set_tool(40);
+		set_string("Redraw special encounter","Select corners of the rectangle.");
+		return;
+		break;
+	case 26: // redraw town entrance
+		if(selected_object_type==SelectionType::TownEntrance && selected_object_number<NUM_OUT_TOWN_ENTRANCES){
+			current_terrain.exit_rects[selected_object_number] = working_rect;
+		}
+		set_tool(40);
+		set_string("Redraw town entrance","Select corners of the rectangle.");
+		return;
+		break;
 	case 27: // redraw area description
-	if(editing_town) {
-		if ((selected_item_number >= 14000) && (selected_item_number < 14016))
-						town.room_rect[selected_item_number % 1000] = working_rect;
-			}
-	else {
-		if ((selected_item_number >= 14000) && (selected_item_number < 14008)) 
-						current_terrain.info_rect[selected_item_number % 1000] = working_rect;
-			}			
-				set_tool(40);
-				set_string("Redraw Area Description:","Select corners of the rectangle.");
+		if(selected_object_type==SelectionType::AreaDescription && selected_object_number<(editing_town?NUM_TOWN_DESCRIPTION_AREAS:NUM_OUT_DESCRIPTION_AREAS)){
+			if(editing_town)
+				town.room_rect[selected_object_number] = working_rect;
+			else
+				current_terrain.info_rect[selected_object_number] = working_rect;
+		}
+		set_tool(40);
+		set_string("Redraw Area Description:","Select corners of the rectangle.");
 		return;
 		break;	
 
-		default:
-				set_string("Default case triggered!","This is not meant to happen");
+	default:
+		set_string("Default case triggered!","This is not meant to happen");
 		break;
 		
 			}
@@ -3338,16 +3329,16 @@ void reset_drawing_mode()
 {
 	if (current_drawing_mode == 0) {
 		set_new_floor(current_floor_drawn);
-		}
-		else if (current_drawing_mode < 3){
-			set_new_terrain(current_terrain_drawn);
-			}
-		else if (current_drawing_mode == 3){
-			set_new_creature(mode_count);
-		}
-		else{
-			set_new_item(mode_count);
-		}
+	}
+	else if (current_drawing_mode < 3){
+		set_new_terrain(current_terrain_drawn);
+	}
+	else if (current_drawing_mode == 3){
+		set_new_creature(mode_count);
+	}
+	else{
+		set_new_item(mode_count);
+	}
 	set_tool(0);
 }
 
@@ -3736,20 +3727,15 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 		return FALSE;
 	}
 
-	if ((wParam == VK_BACK) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
-	if (selected_item_number > -1) {
-	delete_selected_instance();
-	set_string("Selected Instance Deleted","");
-	}
+	if((wParam == VK_BACK) || (wParam == VK_DELETE)){
+		delete_selected_instance();
+		set_string("Selected Instance Deleted","");
 	}
 
-	if ((wParam == VK_DELETE) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
-		set_string("Delete an object","Select object");
-		set_tool(41);		
-	}
 	if ((wParam == VK_HOME) && (cur_viewing_mode != 1)) {
 		set_string("Select/edit placed object","Select object to edit");
 		set_tool(40);
+		place_right_buttons();
 	}
 
 	if ((wParam == VK_END) && (editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
@@ -4015,6 +4001,15 @@ if (wParam == 0x39) {
 // q_3DModEnd
 }
 
+//returns true if loc is not conveniently visible from the current 3D viewport
+bool out_of_view_3D(location loc){
+	if(cen_x-loc.x>10 || loc.x-cen_x>9 || cen_y-loc.y>10 || loc.y-cen_y>9)
+		return(true);
+	int x = loc.x-cen_x;
+	int y = loc.y-cen_y;
+	return((y<x-9) || (y<-12-x) || (y>x+9) || (y>11-x));
+}
+
 Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 {
 	POINT pass_point;
@@ -4101,9 +4096,9 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 		case 'Y':
 			performRedo();
 			break;
-//		case 'J': //jump to selected object
-//			jumpToSelectedInstance();
-//			break;
+		case 'J': //jump to selected object
+			jumpToSelectedInstance();
+			break;
 		case 'C':
 			set_tool(23); //copy terrain
 			break;
@@ -4356,7 +4351,7 @@ int flood_fill_floor(short new_floor, short old_floor, int x, int y)
 	int minx=x, maxx=x;
 	if(floors_match(new_floor,old_floor))
 		return(-1);
-	short i,max_size=((editing_town == TRUE) ? max_zone_dim[town_type] : 48);
+	short i,max_size=((editing_town == TRUE) ? max_zone_dim[town_type] : OUTDOOR_SIZE);
 	//start at the seed point and move right to find one end of the line
 	for (i = x; i < max_size; i++){
 		if(editing_town){
@@ -4681,11 +4676,12 @@ void set_terrain(location l,short terrain_type)
 			mouse_button_held = FALSE;
 		}
 		if (editing_town == FALSE) { // outdoor mode, it's a sign
-			for (i = 0; i < 8; i++) // find is this sign has already been assigned
+			for (i = 0; i < 8; i++){ // find is this sign has already been assigned
 				if (which_sign < 0) {
 					if ((current_terrain.sign_locs[i].x == l.x) && (current_terrain.sign_locs[i].y == l.y))
 						which_sign = i;
 					}
+			}
 			if (which_sign < 0) { // if not assigned, pick a new sign
 				for (i = 0; i < 8; i++) 
 					if ((current_terrain.sign_locs[i].x > 64) || (current_terrain.sign_locs[i].x < 0) )
@@ -5688,69 +5684,165 @@ short locs_to_dir(location l1,location l2)
 
 //destroys whatever creature, terrain script, or item the user has selected
 void delete_selected_instance()
-{					
-	if (selected_item_number < 0) {
-		beep();
-		return;
-	}		
-	// select creature
-	if ((selected_item_number >= 7000) && (selected_item_number < 7000 + NUM_TOWN_PLACED_CREATURES)) {
-		town.creatures[selected_item_number % 1000].number = -1;
+{
+	short real_drawing_mode;
+	if(editing_town){
+		switch(selected_object_type){
+			case SelectionType::None:
+				beep();
+				break;
+			case SelectionType::Creature:
+				if(selected_object_number<NUM_TOWN_PLACED_CREATURES){
+//					pushUndoStep(new Undo::CreateCreature(selected_object_number,
+//														  town.creatures[selected_object_number],false));
+					town.creatures[selected_object_number].number = -1;
+				}
+				break;
+			case SelectionType::Item:
+				if(selected_object_number<NUM_TOWN_PLACED_ITEMS){
+//					pushUndoStep(new Undo::CreateItem(selected_object_number,
+//													  town.preset_items[selected_object_number],false));
+					town.preset_items[selected_object_number].which_item = -1;
+				}
+				break;
+			case SelectionType::TerrainScript:
+				if(selected_object_number<NUM_TER_SCRIPTS){
+//					pushUndoStep(new Undo::CreateTerrainScript(selected_object_number,
+//															   town.ter_scripts[selected_object_number],false));
+					town.ter_scripts[selected_object_number].exists = FALSE;
+				}
+				break;
+			case SelectionType::Waypoint:
+				if(selected_object_number<NUM_WAYPOINTS){
+	//				pushUndoStep(new Undo::CreateWaypoint(selected_object_number,town.waypoints[selected_object_number],false));
+					town.waypoints[selected_object_number].x = -1;
+				}
+				break;
+			case SelectionType::SpecialEncounter:
+				if(selected_object_number<NUM_TOWN_PLACED_SPECIALS){
+//					pushUndoStep(new Undo::CreateSpecialEncounter(selected_object_number,
+	//															  town.special_rects[selected_object_number],
+		//														  town.spec_id[selected_object_number],false));
+					town.spec_id[selected_object_number] = kNO_TOWN_SPECIALS;
+					SetMacRect(&town.special_rects[selected_object_number],-1,-1,-1,-1);
+				}
+				break;
+			case SelectionType::AreaDescription:
+				if(selected_object_number<NUM_TOWN_DESCRIPTION_AREAS)
+					town.room_rect[selected_object_number].right = 0;
+				break;
+			case SelectionType::Sign:
+				if(selected_object_number<15){
+					real_drawing_mode = current_drawing_mode;
+					current_drawing_mode = 1;
+//					pushUndoStep(new Undo::UndoGroupDelimiter(Undo::UndoStep::BEGIN_GROUP));
+					set_terrain(town.sign_locs[selected_object_number],0);
+//					pushUndoStep(new Undo::UndoGroupDelimiter(Undo::UndoStep::END_GROUP));
+					current_drawing_mode = real_drawing_mode;
+				}
+				break;
+			default: //other cases should never happen; do nothing
+				break;
+		}
 	}
-	
-	// select ter script
-	if ((selected_item_number >= 9000) && (selected_item_number < 9000 + NUM_TER_SCRIPTS)) {
-		town.ter_scripts[selected_item_number % 1000].exists = FALSE;
+	else{
+		switch(selected_object_type){
+			case SelectionType::None:
+				beep();
+				break;
+			case SelectionType::SpecialEncounter:
+				if(selected_object_number<NUM_OUT_PLACED_SPECIALS){
+//					pushUndoStep(new Undo::CreateSpecialEncounter(selected_object_number,
+//																  current_terrain.special_rects[selected_object_number],
+//																  current_terrain.spec_id[selected_object_number],false));
+					current_terrain.spec_id[selected_object_number] = kNO_OUT_SPECIALS;
+					SetMacRect(&current_terrain.special_rects[selected_object_number],-1,-1,-1,-1);
+				}
+				break;
+			case SelectionType::AreaDescription:
+				if(selected_object_number<NUM_OUT_DESCRIPTION_AREAS)
+					current_terrain.info_rect[selected_object_number].right = 0;
+				break;
+			case SelectionType::TownEntrance:
+				if(selected_object_number<NUM_OUT_TOWN_ENTRANCES){
+//					pushUndoStep(new Undo::CreateTownEntrance(selected_object_number,current_terrain.exit_rects[selected_object_number],current_terrain.exit_dests[selected_object_number],false));
+					current_terrain.exit_dests[selected_object_number] = kNO_OUT_TOWN_ENTRANCE;
+					current_terrain.exit_rects[selected_object_number].right = 0;
+				}
+				break;
+			case SelectionType::Sign:
+				if(selected_object_number<8){
+					real_drawing_mode = current_drawing_mode;
+					current_drawing_mode = 1;
+//					pushUndoStep(new Undo::UndoGroupDelimiter(Undo::UndoStep::BEGIN_GROUP));
+					set_terrain(current_terrain.sign_locs[selected_object_number],0);
+//					pushUndoStep(new Undo::UndoGroupDelimiter(Undo::UndoStep::END_GROUP));
+					current_drawing_mode = real_drawing_mode;
+				}
+				break;
+			default: //other cases should never happen; do nothing
+				break;
+		}
 	}
-	
-	// select item
-	if ((selected_item_number >= 11000) && (selected_item_number < 11000 + NUM_TOWN_PLACED_ITEMS)) {
-		town.preset_items[selected_item_number % 1000].which_item = -1;
-	}				
-	check_selected_item_number();
+	selected_object_type=SelectionType::None;
+	selected_object_number=0;
 	set_all_items_containment();
 }
 
 //copies the selected creature, terrain script, or item for later pasting
 //NOTE: this actually only makes a reference to the copied item
+//copies the selected creature, terrain script, or item for later pasting
+//NOTE: this actually only makes a reference to the copied item
 void copy_selected_instance()
 {		
-	if (selected_item_number < 0) {
+	//must have something selected which isn't a rectangle
+	if(selected_object_type==SelectionType::None || selected_object_type==SelectionType::SpecialEncounter
+	   || selected_object_type==SelectionType::AreaDescription || selected_object_type==SelectionType::TownEntrance){
 		beep();
 		return;
-	}		
-	copied_creature.number = -1;			
+	}
+	//TODO: Make this work with signs and waypoints
+	if (selected_object_type==SelectionType::Sign || selected_object_type==SelectionType::Waypoint){
+		beep();
+		return;
+	}
+	copied_creature.number = -1;
 	copied_item.which_item = -1;
-	copied_ter_script.exists = FALSE;	
-	
-	// select creature
-	if ((selected_item_number >= 7000) && (selected_item_number < 7000 + NUM_TOWN_PLACED_CREATURES)) {
-		copied_creature = town.creatures[selected_item_number % 1000];
+	copied_ter_script.exists = FALSE;
+	switch(selected_object_type){
+		case SelectionType::Creature:
+			copied_creature = town.creatures[selected_object_number];
+			break;
+		case SelectionType::Item:
+			copied_item = town.preset_items[selected_object_number];
+			break;
+		case SelectionType::TerrainScript:
+			copied_ter_script = town.ter_scripts[selected_object_number];
+			break;
+		default: //other cases have already been ruled out
+			break;
 	}
-	
-	// select ter script
-	if ((selected_item_number >= 9000) && (selected_item_number < 9000 + NUM_TER_SCRIPTS)) {
-		copied_ter_script = town.ter_scripts[selected_item_number % 1000];
-	}
-	
-	// select item
-	if ((selected_item_number >= 11000) && (selected_item_number < 11000 + NUM_TOWN_PLACED_ITEMS)) {
-		copied_item = town.preset_items[selected_item_number % 1000];
-	}					
 	set_all_items_containment();
 }
 
 //copies and then deletes the selected creature, terrain script or item.
-void cut_selected_instance()
-{			
-	if (selected_item_number < 0) {
+//copies and then deletes the selected creature, terrain script or item.
+void cut_selected_instance(){
+	//must have something selected which isn't a rectangle
+	if(selected_object_type==SelectionType::None || selected_object_type==SelectionType::SpecialEncounter
+	   || selected_object_type==SelectionType::AreaDescription || selected_object_type==SelectionType::TownEntrance){
 		beep();
 		return;
-	}		
-	copy_selected_instance();	
-	delete_selected_instance();		
-	set_all_items_containment();
+	}
+	//TODO: Make this work with signs and waypoints
+	if (selected_object_type==SelectionType::Sign || selected_object_type==SelectionType::Waypoint){
+		beep();
+		return;
+	}
+	copy_selected_instance();
+	delete_selected_instance();
 }
+
 
 void paste_selected_instance(location create_loc)
 {	
@@ -5772,28 +5864,89 @@ void paste_selected_instance(location create_loc)
 }
 
 // looks to make sure that the selected item is still legal. If not, undoes it.
-void check_selected_item_number()
-{
-	// select creature
-	if ((selected_item_number >= 7000) && (selected_item_number < 7000 + NUM_TOWN_PLACED_CREATURES) && (town.creatures[selected_item_number % 1000].exists() == FALSE)) {
-		selected_item_number = -1;
+void check_selected_item_number(){
+	switch(selected_object_type){
+		case SelectionType::None:
+			break;
+		case SelectionType::Creature:
+			if(selected_object_number>=NUM_TOWN_PLACED_CREATURES || !town.creatures[selected_object_number].exists()){
+				selected_object_type=SelectionType::None;
+				selected_object_number=0;
+			}
+			break;
+		case SelectionType::Item:
+			if(selected_object_number>=NUM_TOWN_PLACED_ITEMS || !town.preset_items[selected_object_number].exists()){
+				selected_object_type=SelectionType::None;
+				selected_object_number=0;
+			}
+			break;
+		case SelectionType::TerrainScript:
+			if(selected_object_number>=NUM_TER_SCRIPTS || !town.ter_scripts[selected_object_number].exists){
+				selected_object_type=SelectionType::None;
+				selected_object_number=0;
+			}
+			break;
+		case SelectionType::Waypoint:
+			if(selected_object_number>=NUM_WAYPOINTS || town.waypoints[selected_object_number].x<0){
+				selected_object_type=SelectionType::None;
+				selected_object_number=0;
+			}
+			break;
+		case SelectionType::SpecialEncounter:
+			if(editing_town){
+				if(selected_object_number>=NUM_TOWN_PLACED_SPECIALS || town.spec_id[selected_object_number] == kNO_TOWN_SPECIALS){
+					selected_object_type=SelectionType::None;
+					selected_object_number=0;
+				}
+			}
+			else{ //editing outdoors
+				if(selected_object_number>=NUM_OUT_PLACED_SPECIALS || current_terrain.spec_id[selected_object_number] == kNO_OUT_SPECIALS){
+					selected_object_type=SelectionType::None;
+					selected_object_number=0;
+				}
+			}
+			break;
+		case SelectionType::AreaDescription:
+			if(editing_town){
+				if(selected_object_number>=NUM_TOWN_DESCRIPTION_AREAS || town.room_rect[selected_object_number].right<=0){
+					selected_object_type=SelectionType::None;
+					selected_object_number=0;
+				}
+			}
+			else{ //editing outdoors
+				if(selected_object_number>=NUM_OUT_DESCRIPTION_AREAS || current_terrain.info_rect[selected_object_number].right<=0){
+					selected_object_type=SelectionType::None;
+					selected_object_number=0;
+				}
+			}
+			break;
+		case SelectionType::TownEntrance:
+			if(selected_object_number>=NUM_OUT_TOWN_ENTRANCES || current_terrain.exit_dests[selected_object_number]==kNO_OUT_TOWN_ENTRANCE){
+				selected_object_type=SelectionType::None;
+				selected_object_number=0;
+			}
+			break;
+		case SelectionType::Sign:
+			if(editing_town){
+				if(selected_object_number>=15 || town.sign_locs[selected_object_number].x==kNO_SIGN){
+					selected_object_type=SelectionType::None;
+					selected_object_number=0;
+				}
+			}
+			else{ //editing outdoors
+				if(selected_object_number>=8 || current_terrain.sign_locs[selected_object_number].x==kNO_SIGN){
+					selected_object_type=SelectionType::None;
+					selected_object_number=0;
+				}
+			}
+			break;			
 	}
-	
-	// select ter script
-	if ((selected_item_number >= 9000) && (selected_item_number < 9000 + NUM_TER_SCRIPTS) && (town.ter_scripts[selected_item_number % 1000].exists == FALSE)) {
-		selected_item_number = -1;
-	}
-	
-	// select item
-	if ((selected_item_number >= 11000) && (selected_item_number < 11000 + NUM_TOWN_PLACED_ITEMS) && (town.preset_items[selected_item_number % 1000].exists() == FALSE)) {
-		selected_item_number = -1;
-	}	
 	set_all_items_containment();
 }
 
-void clear_selected_copied_objects()
-{
-	selected_item_number = -1;
+void clear_selected_copied_objects(){
+	selected_object_type=SelectionType::None;
+	selected_object_number=0;
 	copied_creature.number = -1;
 	copied_item.which_item = -1;
 	copied_ter_script.exists = FALSE;
@@ -5801,65 +5954,72 @@ void clear_selected_copied_objects()
 
 location selected_instance_location(){
 	location loc={-1,-1};
-	
- if (editing_town) {	
-	if ((selected_item_number >= 7000) && (selected_item_number < 7000 + NUM_TOWN_PLACED_CREATURES) && (town.creatures[selected_item_number % 1000].exists()))
-		loc = town.creatures[selected_item_number % 1000].start_loc;
-	else if ((selected_item_number >= 9000) && (selected_item_number < 9000 + NUM_TER_SCRIPTS) && (town.ter_scripts[selected_item_number % 1000].exists))
-		loc = town.ter_scripts[selected_item_number % 1000].loc;
-	else if ((selected_item_number >= 11000) && (selected_item_number < 11000 + NUM_TOWN_PLACED_ITEMS) && (town.preset_items[selected_item_number % 1000].exists()))
-		loc = town.preset_items[selected_item_number % 1000].item_loc;
-	else if ((selected_item_number >= 13000) && (selected_item_number < 13000 + NUM_TOWN_PLACED_SPECIALS)) {
-		loc.x = town.special_rects[selected_item_number % 1000].left;
-		loc.y = town.special_rects[selected_item_number % 1000].top;		
-	}
-	else if ((selected_item_number >= 14000) && (selected_item_number < 14016)) {
-		loc.x = town.room_rect[selected_item_number % 1000].left;
-		loc.y = town.room_rect[selected_item_number % 1000].top;		
-	}
-	else if (selected_item_number == 15000) {
-		loc.x = town.in_town_rect.left;
-		loc.y = town.in_town_rect.top;		
-	}	
-	else if ((selected_item_number >= 16000) && (selected_item_number < 16015)) 
-		loc = town.sign_locs[selected_item_number % 1000];
-	else if ((selected_item_number >= 17000) && (selected_item_number < 17006))
-		loc = town.respawn_locs[selected_item_number % 1000];
-	else if ((selected_item_number >= 18000) && (selected_item_number < 18000 + NUM_TOWN_PLACED_FIELDS))
-		loc = town.preset_fields[selected_item_number % 1000].field_loc;
-	else if ((selected_item_number >= 19000) && (selected_item_number < 19000 + NUM_WAYPOINTS))
-		loc = town.waypoints[selected_item_number % 1000];		
-	else if ((selected_item_number >= 20000) && (selected_item_number < 20030))
-		loc = scenario.scen_horses[selected_item_number % 1000].horse_loc;
-	else if ((selected_item_number >= 20030) && (selected_item_number < 20060)) {
-		short j = ((selected_item_number - 30) % 1000);
-		loc = scenario.scen_boats[j].boat_loc;
+	switch(selected_object_type){
+		case SelectionType::None:
+			beep();
+			break;
+		case SelectionType::Creature:
+			if(selected_object_number<NUM_TOWN_PLACED_CREATURES)
+				loc = town.creatures[selected_object_number].start_loc;
+			break;
+		case SelectionType::Item:
+			if(selected_object_number<NUM_TOWN_PLACED_ITEMS)
+				loc = town.preset_items[selected_object_number].item_loc;
+			break;
+		case SelectionType::TerrainScript:
+			if(selected_object_number<NUM_TER_SCRIPTS)
+				loc = town.ter_scripts[selected_object_number].loc;
+			break;
+		case SelectionType::Waypoint:
+			if(selected_object_number<NUM_WAYPOINTS)
+				loc = town.waypoints[selected_object_number];
+			break;
+		case SelectionType::SpecialEncounter:
+			if(editing_town){
+				if(selected_object_number<NUM_TOWN_PLACED_SPECIALS){
+					loc.x = (town.special_rects[selected_object_number].left+town.special_rects[selected_object_number].right)/2;
+					loc.y = (town.special_rects[selected_object_number].top+town.special_rects[selected_object_number].bottom)/2;
 				}
-	}
-	
-	else {
-	if ((selected_item_number >= 13000) && (selected_item_number < 13000 + NUM_OUT_PLACED_SPECIALS)) {
-		loc.x = current_terrain.special_rects[selected_item_number % 1000].left;
-		loc.y = current_terrain.special_rects[selected_item_number % 1000].top;		
-	}
-	else if ((selected_item_number >= 14000) && (selected_item_number < 14008)) {
-		loc.x = current_terrain.info_rect[selected_item_number % 1000].left;
-		loc.y = current_terrain.info_rect[selected_item_number % 1000].top;		
-	}
-	else if ((selected_item_number >= 15000) && (selected_item_number < 15008)) {
-		loc.x = current_terrain.exit_rects[selected_item_number % 1000].left;
-		loc.y = current_terrain.exit_rects[selected_item_number % 1000].top;		
-	}	
-	else if ((selected_item_number >= 16000) && (selected_item_number < 16008)) 
-		loc = current_terrain.sign_locs[selected_item_number % 1000];
-	else if ((selected_item_number >= 17000) && (selected_item_number < 17004))
-		loc = current_terrain.wandering_locs[selected_item_number % 1000];
-	else if ((selected_item_number >= 18000) && (selected_item_number < 18004)) 
-		loc = current_terrain.wandering[selected_item_number % 1000].start_loc;
-	else if ((selected_item_number >= 19000) && (selected_item_number < 19004))
-		loc = current_terrain.special_enc[selected_item_number % 1000].start_loc;
-	else if ((selected_item_number >= 20000) && (selected_item_number < 20008))
-		loc = current_terrain.preset[selected_item_number % 1000].start_loc;			
+			}
+			else{
+				if(selected_object_number<NUM_OUT_PLACED_SPECIALS){
+					loc.x = (current_terrain.special_rects[selected_object_number].left+current_terrain.special_rects[selected_object_number].right)/2;
+					loc.y = (current_terrain.special_rects[selected_object_number].top+current_terrain.special_rects[selected_object_number].bottom)/2;
+				}
+			}
+			break;
+		case SelectionType::AreaDescription:
+			if(editing_town){
+				if(selected_object_number<NUM_TOWN_DESCRIPTION_AREAS){
+					loc.x = (town.room_rect[selected_object_number].left+town.room_rect[selected_object_number].right)/2;
+					loc.y = (town.room_rect[selected_object_number].top+town.room_rect[selected_object_number].bottom)/2;
+				}
+			}
+			else{
+				if(selected_object_number<NUM_OUT_DESCRIPTION_AREAS){
+					loc.x = (current_terrain.info_rect[selected_object_number].left+current_terrain.info_rect[selected_object_number].right)/2;
+					loc.y = (current_terrain.info_rect[selected_object_number].top+current_terrain.info_rect[selected_object_number].bottom)/2;
+				}
+			}
+			break;
+		case SelectionType::TownEntrance:
+			if(selected_object_number<NUM_OUT_TOWN_ENTRANCES){
+				loc.x = (current_terrain.exit_rects[selected_object_number].left+current_terrain.exit_rects[selected_object_number].right)/2;
+				loc.y = (current_terrain.exit_rects[selected_object_number].top+current_terrain.exit_rects[selected_object_number].bottom)/2;
+			}
+			break;
+		case SelectionType::Sign:
+			if(editing_town){
+				if(selected_object_number<15){
+					loc = town.sign_locs[selected_object_number];
+				}
+			}
+			else{
+				if(selected_object_number<8){
+					loc = current_terrain.sign_locs[selected_object_number];
+				}
+			}
+			break;
 	}
 	return(loc);
 }
@@ -6103,13 +6263,34 @@ void shift_selected_instance(short dx,short dy)
 void rotate_selected_instance(int dir)
 {
 	//only work on creatures
-	if ((selected_item_number >= 7000) && (selected_item_number < 7000 + NUM_TOWN_PLACED_CREATURES) && (town.creatures[selected_item_number % 1000].exists())) {
-		short facing = town.creatures[selected_item_number % 1000].facing + dir;
+	if(selected_object_type==SelectionType::Creature && selected_object_number<NUM_TOWN_PLACED_CREATURES && town.creatures[selected_object_number].exists()){
+		short facing = town.creatures[selected_object_number].facing + dir;
 		if(facing<0)
 			facing+=4;
 		else if(facing>3)
 			facing-=4;
-		town.creatures[selected_item_number % 1000].facing = facing;
+	//	pushUndoStep(new Undo::MiscCreaturePropertyChange(facing, town.creatures[selected_object_number].facing, Undo::MiscCreaturePropertyChange::FACING, selected_object_number));
+		town.creatures[selected_object_number].facing = facing;
+	//	drawToolDetails();
+	}
+}
+
+void setSelection(SelectionType::SelectionType_e type, unsigned short num, bool jumpTo){
+	selected_object_type=type;
+	selected_object_number=num;
+	if(jumpTo)
+		jumpToSelectedInstance();
+}
+
+void jumpToSelectedInstance(){
+	if(selected_object_type==SelectionType::None)
+		return;
+	location loc=selected_instance_location();
+	//TODO: the 2D in-bounds logic here is out of date, it needs to take into acount the curent window dimensions
+	if((cur_viewing_mode == 0 && (abs(loc.x-cen_x)>4 || abs(loc.y-cen_y)>4)) || ((cur_viewing_mode==10 || cur_viewing_mode==11) && out_of_view_3D(loc))){
+		cen_x = loc.x;
+		cen_y = loc.y;
+		draw_terrain();
 	}
 }
 
@@ -6274,7 +6455,8 @@ void create_new_creature(short c_to_create,location create_loc,creature_start_ty
 	for (i = 0; i < NUM_TOWN_PLACED_CREATURES; i++){
 		if (town.creatures[i].exists() == FALSE) {
 			town.creatures[i].clear_creature_start_type();
-			selected_item_number = 7000 + i;
+			selected_object_number=i;
+			selected_object_type=SelectionType::Creature;
 			if (c_to_make != NULL) {
 				town.creatures[i] = *c_to_make;
 				town.creatures[i].start_loc = create_loc;
@@ -6317,7 +6499,8 @@ Boolean create_new_item(short item_to_create,location create_loc,Boolean propert
 	
 	for (i = 0; i < NUM_TOWN_PLACED_ITEMS; i++){
 		if (town.preset_items[i].exists() == FALSE) {
-			selected_item_number = 11000 + i;
+			selected_item_number=i;
+			selected_object_type=SelectionType::Item;
 			if (i_to_make != NULL) {
 				town.preset_items[i] = *i_to_make;
 				town.preset_items[i].item_loc = create_loc;
@@ -6369,7 +6552,8 @@ Boolean create_new_ter_script(char *ter_script_name,location create_loc,in_town_
 		if (town.ter_scripts[i].exists == FALSE) {
 			town.ter_scripts[i].clear_in_town_on_ter_script_type();
 			
-			selected_item_number = 9000 + i;
+			selected_object_number=i;
+			selected_object_type=SelectionType::TerrainScript;
 			if (script_to_make != NULL) {
 				town.ter_scripts[i] = *script_to_make;
 				town.ter_scripts[i].loc = create_loc;
@@ -6441,8 +6625,8 @@ void create_town_entry(macRECT rect_hit)
 {
 	short x,y;
 
-	for (x = 0; x < 8; x++)
-		if ((current_terrain.exit_dests[x] < 0) || (current_terrain.exit_rects[x].right <= 0)) {
+	for (x = 0; x < 8; x++){
+		if (current_terrain.exit_dests[x] == kNO_OUT_TOWN_ENTRANCE) {
 			y = get_a_number(856,0,0,scenario.num_towns - 1);
 			if (cre(y,0,scenario.num_towns - 1,"The town number you gave was out of range. It must be from 0 to the number of towns in the scenario - 1.","",0) == TRUE) return;
 			if (y >= 0) {
@@ -6451,9 +6635,12 @@ void create_town_entry(macRECT rect_hit)
 				current_terrain.exit_rects[x].left = (short)rect_hit.left;
 				current_terrain.exit_rects[x].bottom = (short)rect_hit.bottom;
 				current_terrain.exit_rects[x].right = (short)rect_hit.right;
+				selected_object_type=SelectionType::TownEntrance;
+				selected_object_number=x;
 				}
 			return;
 			}
+	}
 		give_error("You can't set more than 8 town entrances in any outdoor section.","",0);
 
 }
@@ -6463,14 +6650,12 @@ void edit_town_entry(location spot_hit)
 	short x,y;
 	
 	for (x = 0; x < 8; x++){
-		if ((current_terrain.exit_dests[x] >= 0) && (loc_touches_rect(spot_hit,current_terrain.exit_rects[x]))) {
+		if ((current_terrain.exit_dests[x] != kNO_OUT_TOWN_ENTRANCE) && (loc_touches_rect(spot_hit,current_terrain.exit_rects[x]))) {
 			y = get_a_number(856,current_terrain.exit_dests[x],0,scenario.num_towns - 1);
+			if(y==-1)
+				return;//the user cancelled the action
 			if (cre(y,-1,scenario.num_towns - 1,"The town number you gave was out of range. It must be from 0 to the number of towns in the scenario - 1. You can also enter -1 to delete this town.","",0) == TRUE) return;
-			if (y < 0) {
-				current_terrain.exit_dests[x] = -1;
-				current_terrain.exit_rects[x].right = 0;							
-			}
-			else current_terrain.exit_dests[x] = y;
+			current_terrain.exit_dests[x] = y;
 			return;
 		}
 	}

@@ -121,6 +121,7 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define kNO_TOWN_SPECIALS		0xFF	// No Special encounter on town map
 #define kNO_OUT_SPECIALS		-1		// No special encounter on outdoor map
 #define kNO_OUT_TOWN_ENTRANCE	-1	// No town entrance on outdoor map
+#define kNO_SIGN				-1	//No sign in town or outdoors
 
 #define kINVAL_LOC_XY			-1		// invalid location, x or y
 #define kINVAL_LOC				{kINVAL_LOC_XY, kINVAL_LOC_XY}	// invalid location
@@ -1652,6 +1653,8 @@ void update_item_menu();
 void delete_selected_instance();
 void copy_selected_instance();
 void cut_selected_instance();
+void setSelection(SelectionType::SelectionType_e type, unsigned short num, bool jumpTo=false);
+void jumpToSelectedInstance();
 void frill_terrain();
 void unfrill_terrain();
 Boolean create_new_item(short item_to_create,location create_loc,Boolean property,item_type *i_to_make);
