@@ -114,6 +114,9 @@ const size_t kSizeOfTiny_tr_type		=  5120;	// is varied by the byte alignment se
 #define NUM_TOWN_PLACED_CREATURES	80
 #define NUM_TOWN_PLACED_SPECIALS	60
 #define NUM_OUT_PLACED_SPECIALS	30
+#define NUM_OUT_TOWN_ENTRANCES 8
+#define NUM_TOWN_DESCRIPTION_AREAS 16
+#define NUM_OUT_DESCRIPTION_AREAS 8
 
 #define kNO_TOWN_SPECIALS		0xFF	// No Special encounter on town map
 #define kNO_OUT_SPECIALS		-1		// No special encounter on outdoor map
@@ -204,7 +207,12 @@ typedef struct {
 // The data for the locaiton for an icon in memory.
 class graphic_id_type {
 public:
-	graphic_id_type();
+	graphic_id_type():
+	which_sheet(-1),which_icon(0),graphic_adjust(0){}
+
+	graphic_id_type(short sheet, short icon, short adjust):
+	which_sheet(sheet),which_icon(icon),graphic_adjust(adjust){}
+
 	void clear_graphic_id_type();
 	Boolean not_legit();
 	
@@ -394,13 +402,13 @@ public:
 	void SetSurface( short onSurface );
 
 	char name[20];
-	unsigned char floor[48][48];
-	unsigned char height[48][48];
-	short terrain[48][48];
+	unsigned char floor[OUTDOOR_SIZE][OUTDOOR_SIZE];
+	unsigned char height[OUTDOOR_SIZE][OUTDOOR_SIZE];
+	short terrain[OUTDOOR_SIZE][OUTDOOR_SIZE];
 	macRECT special_rects[NUM_OUT_PLACED_SPECIALS];
 	short spec_id[NUM_OUT_PLACED_SPECIALS];
-	macRECT exit_rects[8];
-	short exit_dests[8];
+	macRECT exit_rects[NUM_OUT_TOWN_ENTRANCES];
+	short exit_dests[NUM_OUT_TOWN_ENTRANCES];
 
 	// signs
 	location sign_locs[8];
@@ -410,8 +418,8 @@ public:
 	out_wandering_type wandering[4],special_enc[4],preset[8];
 	location wandering_locs[4];
 
-	macRECT info_rect[8];
-	char info_rect_text[8][30];
+	macRECT info_rect[NUM_OUT_DESCRIPTION_AREAS];
+	char info_rect_text[NUM_OUT_DESCRIPTION_AREAS][30];
 
 	// scripts and special flags
 	char section_script[SCRIPT_NAME_LEN]; // the name of the default script
@@ -725,8 +733,8 @@ public:
 	short monster_respawn_chance;
 	char town_script[SCRIPT_NAME_LEN]; 
 	in_town_on_ter_script_type ter_scripts[NUM_TER_SCRIPTS];
-	macRECT room_rect[16];
-	char info_rect_text[16][30];
+	macRECT room_rect[NUM_TOWN_DESCRIPTION_AREAS];
+	char info_rect_text[NUM_TOWN_DESCRIPTION_AREAS][30];
 	creature_start_type creatures[NUM_TOWN_PLACED_CREATURES];
 	short extra[20];
 	location waypoints[NUM_WAYPOINTS];
@@ -1298,12 +1306,9 @@ public:
 	listNode* next;
 	void* data;
 	
-	listNode():next(NULL), data(NULL)
-	{}
-	listNode(listNode* n, void* d):next(n), data(d)
-	{}
-	void print()
-	{
+	listNode():next(NULL), data(NULL){}
+	listNode(listNode* n, void* d):next(n), data(d){}
+	void print(){
 		printf("listnode with data=%p and next=%p",data,next);
 	}
 };
@@ -1324,31 +1329,26 @@ private:
 	listNode* currentItem;
 	int indexOfCurrentItem;
 public:
-		linkedList()
-	{
+		linkedList(){
 			start=NULL;
 			numItems=0;
 			currentItem=NULL;
 			indexOfCurrentItem=-1;
 	}
-	~linkedList()
-	{
+	~linkedList(){
 		this->clear();
 	}
-	int size()
-	{
+	int size(){
 		return(numItems);
 	}
-	void push(void* newItem)
-	{
+	void push(void* newItem){
 		listNode* temp = new listNode(start,newItem);
 		start=temp;
 		currentItem=start;
 		indexOfCurrentItem=0;
 		numItems++;
 	}
-	void* pop()
-	{
+	void* pop(){
 		if(start == NULL)
 			return(NULL);
 		listNode* temp = start;
@@ -1363,8 +1363,7 @@ public:
 		numItems--;
 		return(data);
 	}
-	void* itemAtIndex(int i)
-	{
+	void* itemAtIndex(int i){
 		if(i<0 || i>=numItems)
 			return(NULL);
 		if(indexOfCurrentItem>=0){//we have a cached index, test if it's useful
@@ -1390,8 +1389,7 @@ public:
 		}
 		return(currentItem->data);
 	}
-	void clear()
-	{
+	void clear(){
 		if(numItems==0)
 			return;
 		currentItem=start;
@@ -1404,8 +1402,7 @@ public:
 		indexOfCurrentItem=-1;
 		start=NULL;
 	}
-	void print()
-	{
+	void print(){
 		printf("linkedList: there are %i nodes\n",numItems);
 		listNode* temp=start;
 		int i=0;
@@ -1417,6 +1414,16 @@ public:
 			i++;
 		}
 	}
+};
+
+class undoStep : public printable{
+protected:
+	Boolean locked;
+public:
+	virtual void invert()=0;
+	virtual Boolean apply()=0;
+	Boolean isLocked() const { return(locked); }
+	void lock(){ locked = true; }
 };
 
 //a drawing change object represents a change in one of the floor, terrain 
@@ -1437,16 +1444,13 @@ public:
 	//2 = terrain change
 	//3 = height change
 	
-	drawingChange(short xloc, short yloc, short nval, short oval, short t):x(xloc), y(yloc), newval(nval), oldval(oval), type(t)
-	{}
-	void invert()
-	{
+	drawingChange(short xloc, short yloc, short nval, short oval, short t):x(xloc), y(yloc), newval(nval), oldval(oval), type(t){}
+	void invert(){
 		short temp=oldval;
 		oldval=newval;
 		newval=temp;
 	}
-	void print()
-	{
+	void print(){
 		printf("change of type %i at (%i,%i) from %i to %i",type,x,y,oldval,newval);
 	}
 };
@@ -1557,7 +1561,6 @@ typedef struct {
 // short max(short a,short b);
 // short min(short a,short b);
 // short minmax(short min,short max,short k);
-// short n_abs(short x);
 // Boolean same_point(location l1,location l2);
 
 // Declared in Bl A Fileio
@@ -1688,7 +1691,6 @@ short dist(location p1,location p2);
 short smax(short a,short b);
 short smin(short a,short b);
 short minmax(short min,short max,short k);
-short n_abs(short x);
 Boolean same_point(location l1,location l2);
 void pause(short length);
 void beep();

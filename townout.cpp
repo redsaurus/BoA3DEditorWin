@@ -1664,13 +1664,13 @@ void change_outdoor_size_event_filter (short item_hit)
 	
 	extra_dialog_answer[extra_dialog_answer_index] = extra_dialog_answer[extra_dialog_answer_index] + extra_dialog_answer_add;
 	
-	sprintf(temp_str,"%s%d",extra_dialog_answer[0] < 0 ? "-" : "+",(int)n_abs(extra_dialog_answer[0]));
+	sprintf(temp_str,"%s%d",extra_dialog_answer[0] < 0 ? "-" : "+",(int)abs(extra_dialog_answer[0]));
 	csit(991,12,temp_str);
-	sprintf(temp_str,"%s%d",extra_dialog_answer[1] < 0 ? "-" : "+",(int)n_abs(extra_dialog_answer[1]));
+	sprintf(temp_str,"%s%d",extra_dialog_answer[1] < 0 ? "-" : "+",(int)abs(extra_dialog_answer[1]));
 	csit(991,15,temp_str);
-	sprintf(temp_str,"%s%d",extra_dialog_answer[2] < 0 ? "-" : "+",(int)n_abs(extra_dialog_answer[2]));
+	sprintf(temp_str,"%s%d",extra_dialog_answer[2] < 0 ? "-" : "+",(int)abs(extra_dialog_answer[2]));
 	csit(991,18,temp_str);
-	sprintf(temp_str,"%s%d",extra_dialog_answer[3] < 0 ? "-" : "+",(int)n_abs(extra_dialog_answer[3]));
+	sprintf(temp_str,"%s%d",extra_dialog_answer[3] < 0 ? "-" : "+",(int)abs(extra_dialog_answer[3]));
 	csit(991,21,temp_str);
 
 	cdsin(991,28,new_x_size);
@@ -2027,7 +2027,7 @@ Boolean save_out_strs()
 	char str[256];
 	short i;
 
-	for (i = 0; i < 8; i++) {
+	for (i = 0; i < NUM_OUT_DESCRIPTION_AREAS; i++) {
 		CDGT(850,2 + i,(char *) str);
 		str[29] = 0;
 		sprintf((char *)current_terrain.info_rect_text[i],"%s",str);
