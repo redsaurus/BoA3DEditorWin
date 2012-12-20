@@ -88,13 +88,6 @@ short minmax(short min,short max,short k)
 	return k;
 }
 
-short n_abs(short x)
-{
-	if (x < 0)
-		return x * -1;
-	return x;
-}
-
 Boolean same_point(location l1,location l2)
 {
 	if ((l1.x == l2.x) && (l1.y == l2.y))

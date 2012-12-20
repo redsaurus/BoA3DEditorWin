@@ -6142,9 +6142,13 @@ void frill_terrain()
 	short i,j;
 	short terrain_type;
 	unsigned char floor_type;
+	int edge_correct = 0;
+	//if the edge floor repeats to infinity, don't add frills to edge spaces , to avoid weird looking rows
+	if (town.external_floor_type == -1)
+		edge_correct = 1;
 	
-	for (i = 0; i < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); i++){
-		for (j = 0; j < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48); j++) {
+	for (i = edge_correct; i < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48)-edge_correct; i++){
+		for (j = edge_correct; j < ((editing_town == TRUE) ? max_zone_dim[town_type] : 48)-edge_correct; j++) {
 			terrain_type = (editing_town == TRUE) ? t_d.terrain[i][j] : current_terrain.terrain[i][j];
 			floor_type = (editing_town == TRUE) ? t_d.floor[i][j] : current_terrain.floor[i][j];
 			
@@ -7549,9 +7553,9 @@ void set_up_corner_and_sight_map()
 				
 				//in the game, things a certain distance away aren't drawn.  Also, 
 				//that helps here by reducing the number of line-of-sight calculations needed
-				if(editing_town && (n_abs(view_to.x - cen_x) > indoor_draw_distance || n_abs(view_to.y - cen_y) > indoor_draw_distance))
+				if(editing_town && (abs(view_to.x - cen_x) > indoor_draw_distance || abs(view_to.y - cen_y) > indoor_draw_distance))
 					continue;
-				if(!editing_town && (n_abs(view_to.x - cen_x) + n_abs(view_to.y - cen_y) > outdoor_draw_distance))
+				if(!editing_town && (abs(view_to.x - cen_x) + abs(view_to.y - cen_y) > outdoor_draw_distance))
 					continue;
 			}
 			
@@ -7627,9 +7631,9 @@ void set_up_corner_and_sight_map()
 				
 				//in the game, things a certain distance away aren't drawn.  Also, 
 				//that helps here by reducing the number of line-of-sight calculations needed
-				if(editing_town && (n_abs(view_to.x - cen_x) > indoor_draw_distance || n_abs(view_to.y - cen_y) > indoor_draw_distance))
+				if(editing_town && (abs(view_to.x - cen_x) > indoor_draw_distance || abs(view_to.y - cen_y) > indoor_draw_distance))
 					continue;
-				if(!editing_town && (n_abs(view_to.x - cen_x) + n_abs(view_to.y - cen_y) > outdoor_draw_distance))
+				if(!editing_town && (abs(view_to.x - cen_x) + abs(view_to.y - cen_y) > outdoor_draw_distance))
 					continue;
 				
 				can_see(view_from, view_to, TRUE, FALSE,&see_to,&see_in);
@@ -7706,9 +7710,9 @@ void set_up_corner_and_sight_map()
 				
 				//in the game, things a certain distance away aren't drawn.  Also, 
 				//that helps here by reducing the number of line-of-sight calculations needed
-				if(editing_town && (n_abs(view_to.x - cen_x) > 10 || n_abs(view_to.y - cen_y) > 10))
+				if(editing_town && (abs(view_to.x - cen_x) > 10 || abs(view_to.y - cen_y) > 10))
 					continue;
-				if(!editing_town && (n_abs(view_to.x - cen_x) + n_abs(view_to.y - cen_y) > 14))
+				if(!editing_town && (abs(view_to.x - cen_x) + abs(view_to.y - cen_y) > 14))
 					continue;
 			
 				for(view_to.x = 0; view_to.x < 3; view_to.x++) {

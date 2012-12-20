@@ -38,8 +38,6 @@ void display_error_dialog(const char* theStr,Boolean shut_down);
 Boolean r1_in_r2(macRECT r1,macRECT r2);
 // RECT rect_centered_around_point(RECT r, location l);
 // Boolean loc_in_rect(location loc,RECT r);
-// Boolean loc_touch_rect(location loc,macRECT r);
-// short a_v(short x);
 
 
 // for cross-platform compatibility
@@ -313,23 +311,6 @@ Boolean loc_touches_rect(location loc,macRECT r)
 		return TRUE;
 	return FALSE;
 }
-
-/*
-Boolean loc_touch_rect(location loc,macRECT r)
-{
-	if ((loc.x >= r.left) && (loc.x <= r.right) && (loc.y >= r.top) && (loc.y <= r.bottom))
-		return TRUE;
-	return FALSE;
-}
-*/
-/*
-short a_v(short x)
-{
-	if (x < 0)
-		return (-1 * x);
-		else return x;
-}
-*/
 
 terrain_type_type get_ter(short which_ter)
 {

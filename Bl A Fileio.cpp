@@ -994,7 +994,7 @@ void load_campaign()
 	// out of szFileName
 	strcpy(scenario_path,szFileName);
 	for (i = 0; i < _MAX_PATH - 1; i++)
-		if (same_string((char *) (szFileName + i),szTitleName)) {
+		if (strcmp((char *) (szFileName + i),szTitleName)==0) {
 			scenario_path[i] = 0;
 			break;
 			}	
@@ -3575,7 +3575,7 @@ void port_scenario_script(char *script_name,char *directory_id)
 	add_string(file_id,"// a save file is loaded.");
 
 		for (short i = 0; i < 50; i++)
-		if (same_string( boe_scen_text.scen_strs[60 + i * 2],"Unused Special Item") == FALSE) {
+		if (strcmp( boe_scen_text.scen_strs[60 + i * 2],"Unused Special Item")!=0) {
 				get_all_bl_str(temp_str1,0,(i * 2) + 60);
 				get_all_bl_str(temp_str2,0,(i * 2) + 61);
 			sprintf(new_line,"\tinit_special_item(%d,\"%s\",\"%s\");",i,temp_str1,temp_str2);
@@ -3586,7 +3586,7 @@ void port_scenario_script(char *script_name,char *directory_id)
 			}
 
 	for (short i = 0; i < 50; i++)
-		if (same_string( boe_scen_text.scen_strs[60 + i * 2],"Unused Special Item") == FALSE) {
+		if (strcmp( boe_scen_text.scen_strs[60 + i * 2],"Unused Special Item")!=0) {
 			if (boe_scenario.special_item_special[i] >= 0) {
 				sprintf(new_line,"// Special Item %d invokes scenario state %d when used.", i,
 				boe_scenario.special_item_special[i] + 10);
@@ -3613,7 +3613,7 @@ void port_scenario_script(char *script_name,char *directory_id)
 			}
 
 	for (short i = 0; i < 50; i++)
-		if (same_string( boe_scen_text.scen_strs[60 + i * 2],"Unused Special Item") == FALSE) {
+		if (strcmp( boe_scen_text.scen_strs[60 + i * 2],"Unused Special Item")!=0) {
 			if (boe_scenario.special_items[i] >= 10) {
 				sprintf(new_line,"\tchange_spec_item(%d,1);", i);
 				add_string(file_id,new_line);
@@ -3794,7 +3794,7 @@ void port_town_dialogue_script(char *script_name,char *directory_id,short which_
 	// first, we have dialogue at all?
 	Boolean have_dialogue = FALSE;
 	for (short i = 0; i < 10; i++)
-		if (same_string(boe_scen_text.talk_strs[i],"Unused") == FALSE)
+		if (strcmp(boe_scen_text.talk_strs[i],"Unused")!=0)
 			have_dialogue = TRUE;
 	if (have_dialogue == FALSE)
 		return;
@@ -3819,7 +3819,7 @@ void port_town_dialogue_script(char *script_name,char *directory_id,short which_
 	short current_dialogue_node = 1;
 
 	for (short i = 0; i < 10; i++)
-		if (same_string(boe_scen_text.talk_strs[i],"Unused") == FALSE) {
+		if (strcmp(boe_scen_text.talk_strs[i],"Unused")!=0) {
 			port_dialogue_intro_text(&current_dialogue_node,i,file_id,which_town);
 
 			for (short j = 0; j < 60 ; j++) {

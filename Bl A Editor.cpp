@@ -112,6 +112,9 @@ short overall_mode = 0;
 // 21 - place text rectangle
 // 22 - outdoor only - town entrance
 // 24 - change height rectangle (delta)
+// 25 - redraw special enc
+// 26 - redraw town entrance
+// 27 - redraw area description
 
 // regular select modes
 // 30 - place north entrance
@@ -208,8 +211,6 @@ Boolean handle_menu (short, HMENU);
 void handle_menu_choice(short choice);
 void handle_file_menu(int item_hit);
 void handle_campaign_menu(int item_hit);
-void handle_item_menu(int item_hit);
-void handle_monst_menu(int item_hit);
 void handle_edit_menu(int item_hit);
 void handle_help_menu(int item_hit);
 short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam);
@@ -845,10 +846,10 @@ void handle_menu_choice(short choice)
 				break;
 
 			case 6: case 7: case 8: case 9: case 10:
-				handle_item_menu(menu_item - 600);
+				set_new_item(menu_item - 600);
 				break;
 			case 11: case 12: case 13: 
-				handle_monst_menu(menu_item - 1100);
+				set_new_creature(menu_item - 1100);
 				break;
 			case 15:
 				handle_help_menu(menu_item % 100);					 
@@ -1657,32 +1658,6 @@ void handle_outdoor_menu(int item_hit)
 
 		}
 }
-
-
-void handle_item_menu(int item_hit)
-{
-
-	//if (same_string("Unused",scen_data.scen_items[item_hit].full_name)) {
-	//	give_error("You can't place an item named 'Unused'.","",0);
-	//	return;
-	//	}
-	set_tool(47);
-	mode_count = (short)item_hit;
-	set_string("Place New Item","Select location to place");
-
-}
-
-void handle_monst_menu(int item_hit)
-{
-	if (same_string("Unused",scen_data.scen_creatures[item_hit].name)) {
-		give_error("You can't place an creature named 'Unused'.","",0);
-		return;
-		}
-	set_tool(46);
-	mode_count = (short)item_hit;
-	set_string("Place New Creature","Select location to place");
-}
-
 
 void handle_help_menu(int item_hit)
 {   
