@@ -2726,6 +2726,42 @@ Boolean change_town_size()
 	return TRUE;
 }
 
+void edit_item_properties_event_filter (short item_hit)
+{
+	switch (item_hit) {
+	case 13:
+	case 12:
+	case 11:
+	case 10:
+	case 9:
+		cd_flip_led(836,item_hit,item_hit);
+		break;
+	case 3:
+		town.preset_items[store_which_placed_item].properties=0;
+		for(int i=9; i<14; i++){
+			if(cd_get_led(836,i)>0)
+				town.preset_items[store_which_placed_item].properties|=(1<<(i-9));
+		}
+	case 2:
+		dialog_not_toast = FALSE;
+		break;
+	}
+}
+
+void edit_item_properties(short which_i){
+	short item_properties_hit;
+	cd_create_dialog_parent_num(836,0);
+	//put the properties in the dialog
+	for(int i=9; i<14; i++){
+		if(town.preset_items[which_i].properties&(1<<(i-9)))
+			cd_flip_led(836,i,i);
+	}
+	store_which_placed_item = which_i;
+	while(dialog_not_toast)
+		ModalDialog();
+	cd_kill_dialog(836,0);
+}
+
 void edit_horses()
 // ignore parent in Mac version
 {

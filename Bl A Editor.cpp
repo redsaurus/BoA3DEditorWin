@@ -1880,6 +1880,7 @@ short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam)
 		case 831: change_town_size_event_filter(item_hit); break;
 		case 832: edit_town_details_event_filter(item_hit); break;
 		case 835: edit_town_wand_event_filter(item_hit); break;
+		case 836: edit_item_properties_event_filter(item_hit); break;//TODO: at the minute the same thing is at number 838 in the mac version; fix this!
 		case 837: edit_placed_monst_event_filter(item_hit); break;
 		case 838: edit_placed_script_event_filter(item_hit); break;
 		case 839: edit_town_strs_event_filter(item_hit); break;

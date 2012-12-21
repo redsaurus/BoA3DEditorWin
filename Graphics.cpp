@@ -3688,8 +3688,7 @@ void draw_ter_large()
 	
 	// Town mode: special encs and other rectangles
 	if (editing_town) {
-		
-				for (i = 0; i < NUM_TOWN_PLACED_CREATURES; i++) {
+		for (i = 0; i < NUM_TOWN_PLACED_CREATURES; i++) {
 			if (town.creatures[i].exists()) {
 				rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (town.creatures[i].start_loc.x - cen_x + 4);
 				rectangle_draw_rect.right = 14 + BIG_SPACE_SIZE * (town.creatures[i].start_loc.x - cen_x + 5);
@@ -3844,7 +3843,7 @@ void draw_ter_large()
 			}
 		}
 		
-			for (i = 0; i < NUM_TOWN_PLACED_SPECIALS; i++) {
+		for (i = 0; i < NUM_TOWN_PLACED_SPECIALS; i++) {
 			if (town.spec_id[i] != kNO_TOWN_SPECIALS) {
 				rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (town.special_rects[i].left - cen_x + 4);
 				rectangle_draw_rect.right = 14 + BIG_SPACE_SIZE * (town.special_rects[i].right - cen_x + 5);
@@ -5938,495 +5937,226 @@ void place_left_text()
 		
 	if (editing_town){
 		// Erase and draw bottom text strs
-		if (selected_item_number < 0) {
-			sprintf((char *) draw_str,"Editing Town/Dungeon %d", (int)cur_town);
-			char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-			sprintf((char *) draw_str,"  %s",town.town_name);
-			char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-			sprintf((char *) draw_str,"Unrestricted Movement:       %d ",hintbook_mode0);
-			char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-			sprintf((char *) draw_str,"Drawing Number Mode:       %d = %s",numerical_display_mode,numerical_display_captions[numerical_display_mode]);
-			char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
-			sprintf((char *) draw_str,"Group Display Mode:          %d = %s",hintbook_mode8,group_display_captions[hintbook_mode8]);
-			char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
-			if (object_display_mode == 0)
-			sprintf((char *) draw_str,"Object Number Mode:        0 = (Null Display)");
-			if (object_display_mode == 1)
-			sprintf((char *) draw_str,"Object Number Mode:        1 = Object Number");
-			if (object_display_mode == 2)
-			sprintf((char *) draw_str,"Object Number Mode:        2 = Location");
-			if (object_display_mode == 3)
-			sprintf((char *) draw_str,"Object Number Mode:        3 = %s",object_display_mode_towncaptions3[hintbook_mode8]);
-			if (object_display_mode == 4)
-			sprintf((char *) draw_str,"Object Number Mode:        4 = %s",object_display_mode_towncaptions4[hintbook_mode8]);
-			char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);
-			sprintf((char *) draw_str,"Selected square: x = %d, y = %d",selected_square.x,selected_square.y);
-			char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);
-		}
-
-		if ((selected_item_number >= 7000) && (selected_item_number < 7000 + NUM_TOWN_PLACED_CREATURES)) {
-				j = selected_item_number % 1000;
-			sprintf((char *) draw_str,"Creature %d: %s",j + 6,scen_data.scen_creatures[town.creatures[j].number].name); 
-			char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);		
-
-			sprintf((char *) draw_str,"  Edit This Creature  (Type %d, L%d)",(int)town.creatures[j].number,(int)scen_data.scen_creatures[town.creatures[j].number].level); 
-			char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);	
-
-			sprintf((char *) draw_str,"  Attitude: %s",attitude_types[town.creatures[j].start_attitude - 2]); 
-			char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-			
-			if (strlen(town.creatures[j].char_script) <= 0)
-				sprintf((char *) draw_str,"  Script: Default");
-			else sprintf((char *) draw_str,"  Script: %s",
-			  	town.creatures[j].char_script);
-			char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
-
-			sprintf((char *) draw_str,"  Personality: %d",(int)town.creatures[j].personality);
-			char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
-
-			sprintf((char *) draw_str,"  Character ID: %d",(int)town.creatures[j].character_id); 
-			char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);
-
-			sprintf((char *) draw_str,"  Hidden Class: %d",(int)town.creatures[j].hidden_class);
-			char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);
-
-			sprintf((char *) draw_str,"  Creature Location: x = %d, y = %d",(int)town.creatures[j].start_loc.x,(int)town.creatures[j].start_loc.y);
-			char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);
-	
-			sprintf((char *) draw_str,"  Attached Event: %d",(int)town.creatures[j].attached_event);
-			char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);
-
-			sprintf((char *) draw_str,"  Facing: %s",facings[town.creatures[j].facing]); 
-			char_win_draw_string(main_dc,left_text_lines[9],(char *) draw_str,2,10);		
-
-			for (short i = 0; i < 4; i++) {
-				sprintf((char *) draw_str,"  Memory Cell %d: %d",i, (int)town.creatures[j].memory_cells[i]);
-				char_win_draw_string(main_dc,left_text_lines[i + 10],(char *) draw_str,2,10);
-			}
-		}
-			
-		if ((selected_item_number >= 9000) && (selected_item_number < 9000 + NUM_TER_SCRIPTS)) {
-				j = selected_item_number % 1000;
-			sprintf((char *) draw_str,"Terrain Script %d:",j); 
-			char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);		
-			sprintf((char *) draw_str,"  Edit This Script");
-			char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-			for (i = 0; i < 5; i++) {
-				sprintf((char *) draw_str,"  Memory Cell %d: %d",i, (int)town.ter_scripts[j].memory_cells[i]);
-				char_win_draw_string(main_dc,left_text_lines[i + 2],(char *) draw_str,2,10);
-			}
-			sprintf((char *) draw_str,"  Script Location: x = %d, y = %d",(int)town.ter_scripts[j].loc.x,(int)town.ter_scripts[j].loc.y);
-			char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);
-			sprintf((char *) draw_str,"  Script: %s",town.ter_scripts[j].script_name); 
-			char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);
-			for (i = 5; i < 10; i++) {
-				sprintf((char *) draw_str,"  Memory Cell %d: %d",i, (int)town.ter_scripts[j].memory_cells[i]); 
-				char_win_draw_string(main_dc,left_text_lines[i + 4],(char *) draw_str,2,10);
-			}
-		}
-
-		if ((selected_item_number >= 11000) && (selected_item_number < 11000 + NUM_TOWN_PLACED_ITEMS)) {
-			j = selected_item_number % 1000;
-			sprintf((char *) draw_str,"Item %d: %s",j,scen_data.scen_items[town.preset_items[j].which_item].full_name);
-			char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-			sprintf((char *) draw_str,"  Edit This Placed Item  (Type %d)",(int)town.preset_items[j].which_item);
-			char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-			if (town.preset_items[j].properties & 1)
-						sprintf((char *) draw_str,"  Identified");
-			else sprintf((char *) draw_str,"  Not Identified");
-			char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-			if (town.preset_items[j].properties & 2)
-						sprintf((char *) draw_str,"  Property");
-			else sprintf((char *) draw_str,"  Not Property");
-			char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);		
-			if (town.preset_items[j].properties & 4)
-						sprintf((char *) draw_str,"  Contained");
-			else sprintf((char *) draw_str,"  Not Contained");
-			char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);		
-			if (town.preset_items[j].properties & 8)
-						sprintf((char *) draw_str,"  Cursed");
-			else sprintf((char *) draw_str,"  Not Cursed");
-			char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);
-			if (town.preset_items[j].properties & 16)
-						sprintf((char *) draw_str,"  Once per Day");
-			else sprintf((char *) draw_str,"  Not Once per Day");
-			char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);
-			sprintf((char *) draw_str,"  Placed Item Location: x = %d, y = %d",(int)town.preset_items[j].item_loc.x,(int)town.preset_items[j].item_loc.y);
-			char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);
-
-			sprintf((char *) draw_str,"  Drawing Shift X: %d",(int)town.preset_items[j].item_shift.x);
-			char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);
-			sprintf((char *) draw_str,"  Drawing Shift Y: %d",(int)town.preset_items[j].item_shift.y);
-			char_win_draw_string(main_dc,left_text_lines[9],(char *) draw_str,2,10);
-			if (scen_data.scen_items[town.preset_items[j].which_item].charges > 0)
-				sprintf((char *) draw_str,"  Charges/Amount: %d",(int)town.preset_items[j].charges);
-			else sprintf((char *) draw_str,"  Needs no Charges");
-				char_win_draw_string(main_dc,left_text_lines[10],(char *) draw_str,2,10);
-			for (i = 11; i < 14; i++) {
-				sprintf((char *) draw_str,"  ");
-				char_win_draw_string(main_dc,left_text_lines[i],(char *) draw_str,2,10);
-			}
-		}
-
-		if ((selected_item_number >= 13000) && (selected_item_number < 13000 + NUM_TOWN_PLACED_SPECIALS)) {
-				j = selected_item_number % 1000;
-				sprintf((char *) draw_str,"Special Encounter Rectangle %d",j);
+				switch(selected_object_type){
+			case SelectionType::None:
+				sprintf((char *) draw_str,"Editing Town/Dungeon %d",cur_town);
 				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  State: %d",town.spec_id[j]);
+				sprintf((char *) draw_str,"  %s",town.town_name);
 				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Top Boundary: %d",town.special_rects[j].top);
-				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Left Boundary: %d",town.special_rects[j].left);
-				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Bottom Boundary: %d",town.special_rects[j].bottom);
-				char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Right Boundary: %d",town.special_rects[j].right);
-				char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"[Redraw]");
-				char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);
-			}
-
-		if ((selected_item_number >= 14000) && (selected_item_number < 14016)) {
-				j = selected_item_number % 1000;
-				sprintf((char *) draw_str,"Area Description %d",j);
-				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Text: %s",town.info_rect_text[j]);
-				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Top Boundary: %d",town.room_rect[j].top);
-				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Left Boundary: %d",town.room_rect[j].left);
-				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Bottom Boundary: %d",town.room_rect[j].bottom);
-				char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Right Boundary: %d",town.room_rect[j].right);
-				char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"[Redraw]");
-				char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);
-			}
-
-	if (selected_item_number == 15000) {
-				sprintf((char *) draw_str,"Town Boundary");
-				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Top Boundary: %d",town.in_town_rect.top);
-				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Left Boundary: %d",town.in_town_rect.left);
-				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Bottom Boundary: %d",town.in_town_rect.bottom);
-				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Right Boundary: %d",town.in_town_rect.right);
-				char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
-			}
-
-		if ((selected_item_number >= 16000) && (selected_item_number < 16015)) {
-				j = selected_item_number % 1000;
-				char k[65]; short l;
-				sprintf((char *) draw_str,"Town sign %d",j);
-				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-				for (l = 0; l < 64; l++)
-				k[l] = town.sign_text[j][l];
-				k[64] = 0;
-				sprintf((char *) draw_str,"Text: \"%s\"",k);
-				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-				for (l = 0; l < 64; l++)
-				k[l] = town.sign_text[j][l + 64];
-				k[64] = 0;
-				sprintf((char *) draw_str,"Text: \"%s\"",k);
-				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-				for (l = 0; l < 64; l++)
-				k[l] = town.sign_text[j][l + 128];
-				k[64] = 0;
-				sprintf((char *) draw_str,"Text: \"%s\"",k);
-				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
-				for (l = 0; l < 64; l++)
-				k[l] = town.sign_text[j][l + 192];
-				k[64] = 0;
-				sprintf((char *) draw_str,"Text: \"%s\"",k);
-				char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"[Redraw]");
-				char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Sign Location: x = %d, y = %d",(int)town.sign_locs[j].x,(int)town.sign_locs[j].y);
-				char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);
-			}
-
-		if ((selected_item_number >= 17000) && (selected_item_number < 17006)) {
-				j = selected_item_number % 1000;
-				sprintf((char *) draw_str,"Town Wandering Location %d",j);
-				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Wandering Location: x = %d",town.respawn_locs[j].x);
-				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Wandering Location: y = %d",town.respawn_locs[j].y);
-				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-			}
-
-		if ((selected_item_number >= 18000) && (selected_item_number < 18000 + NUM_TOWN_PLACED_FIELDS)) {
-				j = selected_item_number % 1000;
-				sprintf((char *) draw_str,"Preset Field %d",j);
-				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-				i = town.preset_fields[j].field_type;
-				sprintf((char *) draw_str,"  Name: %s",BOAFieldnames[i]);
-				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Preset Field Location: x = %d, y = %d",(int)town.preset_fields[j].field_loc.x,(int)town.preset_fields[j].field_loc.y);
-				char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"[Redraw]");
-				char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);
-			}
-
-		if ((selected_item_number >= 19000) && (selected_item_number < 19010)) {
-				j = selected_item_number % 1000;
-				sprintf((char *) draw_str,"Town Waypoint %d",j);
-				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Waypoint: x = %d",town.waypoints[j].x);
-				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Waypoint: y = %d",town.waypoints[j].y);
-				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-			}
-			
-		if ((selected_item_number >= 20000) && (selected_item_number < 20030)) {
-				j = selected_item_number % 1000;
-				sprintf((char *) draw_str,"Scenario Horse %d",j);
-				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Horse: x = %d",scenario.scen_horses[j].horse_loc.x);
-				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Horse: y = %d",scenario.scen_horses[j].horse_loc.y);
-				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Party Property? = %d",scenario.scen_horses[j].property);
-				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
-			}
-		if ((selected_item_number >= 20030) && (selected_item_number < 20060)) {
-				j = selected_item_number % 1000;
-				sprintf((char *) draw_str,"Scenario Boat %d",j - 30);
-				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Boat: x = %d",scenario.scen_boats[j - 30].boat_loc.x);
-				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Boat: y = %d",scenario.scen_boats[j - 30].boat_loc.y);
-				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Party Property? = %d",scenario.scen_boats[j - 30].property);
-				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
-			}
-
-		}
-		else {
-
-	if (selected_item_number < 0) {
-       short out_num = cur_out.y * scenario.out_width + cur_out.x;
-			sprintf((char *) draw_str,"Editing Outdoors");
-			char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-			sprintf((char *) draw_str,"  %s",current_terrain.name);
-			char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-			sprintf((char *) draw_str,"  Section %d,  X = %d, Y = %d",out_num, (int)cur_out.x, (int)cur_out.y);
-			char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-			sprintf((char *) draw_str,"Unrestricted Movement:       %d ",hintbook_mode0);
-			char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
-			sprintf((char *) draw_str,"Drawing Number Mode:       %d = %s",numerical_display_mode,numerical_display_captions[numerical_display_mode]);
-			char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
-			sprintf((char *) draw_str,"Group Display Mode:          %d = %s",hintbook_mode8,out_group_display_captions[hintbook_mode8]);
-			char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);
-			if (object_display_mode == 0)
-			sprintf((char *) draw_str,"Object Number Mode:        0 = (Null Display)");
-			if (object_display_mode == 1)
-			sprintf((char *) draw_str,"Object Number Mode:        1 = Object Number");
-			if (object_display_mode == 2)
-			sprintf((char *) draw_str,"Object Number Mode:        2 = Location");
-			if (object_display_mode == 3)
-			sprintf((char *) draw_str,"Object Number Mode:        3 = %s",object_display_mode_outcaptions3[hintbook_mode8]);
-			if (object_display_mode == 4)
-			sprintf((char *) draw_str,"Object Number Mode:        4 = %s",object_display_mode_outcaptions4[hintbook_mode8]);
-			char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);
-		}				 
-		
-		if ((selected_item_number >= 13000) && (selected_item_number < 13000 + NUM_OUT_PLACED_SPECIALS)) {
-				j = selected_item_number % 1000;
-				sprintf((char *) draw_str,"Special Encounter Rectangle %d",j);
-				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  State: %d",current_terrain.spec_id[j]);
-				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Top Boundary: %d",current_terrain.special_rects[j].top);
-				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Left Boundary: %d",current_terrain.special_rects[j].left);
-				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Bottom Boundary: %d",current_terrain.special_rects[j].bottom);
-				char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Right Boundary: %d",current_terrain.special_rects[j].right);
-				char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"[Redraw]");
-				char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);
+				break;
+			case SelectionType::Creature:
+				sprintf((char *) draw_str,"Creature %d: %s",selected_object_number + 6,
+						scen_data.scen_creatures[town.creatures[selected_object_number].number].name); 
+				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);		
+				
+				sprintf((char *) draw_str,"  Edit This Creature  (Type %d, L%d)",
+						town.creatures[selected_object_number].number,
+						scen_data.scen_creatures[town.creatures[selected_object_number].number].level); 
+				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);	
+				
+				if (strlen(town.creatures[selected_object_number].char_script) <= 0){
+					if(strlen(scen_data.scen_creatures[town.creatures[selected_object_number].number].default_script) <=0)
+						sprintf((char *) draw_str,"  Script: basicnpc");
+					else
+						sprintf((char *) draw_str,"  Script: %s", scen_data.scen_creatures[town.creatures[selected_object_number].number].default_script);
 				}
-
-		if ((selected_item_number >= 14000) && (selected_item_number < 14008)) {
-				j = selected_item_number % 1000;			
-				sprintf((char *) draw_str,"Area Description %d",j);
-				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Description: %s",current_terrain.info_rect_text[j]);
-				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Top Boundary: %d",current_terrain.info_rect[j].top);
-				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Left Boundary: %d",current_terrain.info_rect[j].left);
-				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Bottom Boundary: %d",current_terrain.info_rect[j].bottom);
-				char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Right Boundary: %d",current_terrain.info_rect[j].right);
-				char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"[Redraw]");
+				else 
+					sprintf((char *) draw_str,"  Script: %s",town.creatures[selected_object_number].char_script); 
+				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);		
+				
+				sprintf((char *) draw_str,"  Attitude: %s",attitude_types[town.creatures[selected_object_number].start_attitude - 2]); 
+				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);		
+				
+				sprintf((char *) draw_str,"  Character ID: %d",town.creatures[selected_object_number].character_id); 
+				char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);		
+				
+				sprintf((char *) draw_str,"  Hidden Class: %d",town.creatures[selected_object_number].hidden_class); 
+				char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);		
+				
+				//TODO: what is this doing here?
+				if (town.creatures[selected_object_number].extra_item == 0)
+					town.creatures[selected_object_number].extra_item = -1;
+				
+				if (town.creatures[selected_object_number].extra_item < 0)
+					sprintf((char *) draw_str,"  Drop Item 1: None");
+				else 
+					sprintf((char *) draw_str,"  Drop Item 1: %s %%%d",scen_data.scen_items[town.creatures[selected_object_number].extra_item].full_name,
+							town.creatures[selected_object_number].extra_item_chance_1); 
+				char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);		
+				
+				if (town.creatures[selected_object_number].extra_item_2 == 0)
+					town.creatures[selected_object_number].extra_item_2 = -1;
+				
+				if (town.creatures[selected_object_number].extra_item_2 < 0)
+					sprintf((char *) draw_str,"  Drop Item 2: None");
+				else sprintf((char *) draw_str,"  Drop Item 2: %s %%%d",
+							 scen_data.scen_items[town.creatures[selected_object_number].extra_item_2].full_name,
+							 town.creatures[selected_object_number].extra_item_chance_2);
 				char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);
 				
-			}
-
-		if ((selected_item_number >= 15000) && (selected_item_number < 15008)) {
-				j = selected_item_number % 1000;
-				sprintf((char *) draw_str,"Town Entrance %d",j);
+				sprintf((char *) draw_str,"  Personality: %d",
+						town.creatures[selected_object_number].personality);
+				char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);
+				
+				sprintf((char *) draw_str,"  Facing: %s",
+						facings[town.creatures[selected_object_number].facing]);
+				char_win_draw_string(main_dc,left_text_lines[9],(char *) draw_str,2,10);
+				break;
+			case SelectionType::Item:
+				sprintf((char *) draw_str,"Item %d",selected_object_number);
 				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Town %d: %s",current_terrain.exit_dests[j],zone_names.town_names[current_terrain.exit_dests[j]]);
+				sprintf((char *) draw_str,"  %s",
+						scen_data.scen_items[town.preset_items[selected_object_number].which_item].full_name);
 				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Top Boundary: %d",current_terrain.exit_rects[j].top);
-				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Left Boundary: %d",current_terrain.exit_rects[j].left);
-				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Bottom Boundary: %d",current_terrain.exit_rects[j].bottom);
-				char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Right Boundary: %d",current_terrain.exit_rects[j].right);
+				if (scen_data.scen_items[town.preset_items[selected_object_number].which_item].charges > 0) {
+					sprintf((char *) draw_str,"  Charges/Amount: %d",
+							town.preset_items[selected_object_number].charges);
+					char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
+				}
+				if (town.preset_items[selected_object_number].properties & 2)
+					sprintf((char *) draw_str,"  Property");
+				else sprintf((char *) draw_str,"  Not Property");
 				char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"[Redraw]");
+				if (town.preset_items[selected_object_number].properties & 4)
+					sprintf((char *) draw_str,"  Contained");
+				else sprintf((char *) draw_str,"  Not Contained");
+				char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"  Drawing Shift X: %d",
+						town.preset_items[selected_object_number].item_shift.x);
+				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"  Drawing Shift Y: %d",
+						town.preset_items[selected_object_number].item_shift.y);
+				char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"  Edit Properties");
 				char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);
+				break;
+			case SelectionType::TerrainScript:
+				sprintf((char *) draw_str,"Terrain Script %d:",selected_object_number); 
+				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);		
+				
+				sprintf((char *) draw_str,"  Script: %s",
+						town.ter_scripts[selected_object_number].script_name); 
+				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);		
+				for (short i = 0; i < 8; i++) {
+					sprintf((char *) draw_str,"  Memory Cell %d: %d",
+							i,town.ter_scripts[selected_object_number].memory_cells[i]); 
+					char_win_draw_string(main_dc,left_text_lines[i + 2],(char *) draw_str,2,10);		
+				}
+				break;
+			case SelectionType::SpecialEncounter:
+				sprintf((char *) draw_str,"Special Encounter Rectangle %d",selected_object_number);
+				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"  State: %d",town.spec_id[selected_object_number]);
+				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
+				
+				sprintf((char *) draw_str,"  Top Boundary: %d",town.special_rects[selected_object_number].top);
+				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"  Left Boundary: %d",town.special_rects[selected_object_number].left);
+				char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
+				
+				sprintf((char *) draw_str,"[Redraw]");
+				char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);
+				
+				sprintf((char *) draw_str,"  Bottom Boundary: %d",town.special_rects[selected_object_number].bottom);
+				char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"  Right Boundary: %d",town.special_rects[selected_object_number].right);
+				char_win_draw_string(main_dc,left_text_lines[9],(char *) draw_str,2,10);
+				break;
+			case SelectionType::AreaDescription:
+				sprintf((char *) draw_str,"Area Description %d",selected_object_number);
+				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
+				//use line 2, and effectively line 7 as well
+				sprintf((char *) draw_str,"  Description: %s",town.info_rect_text[selected_object_number]);
+				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
+				
+				sprintf((char *) draw_str,"  Top Boundary: %d",town.room_rect[selected_object_number].top);
+				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"  Left Boundary: %d",town.room_rect[selected_object_number].left);
+				char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
+				
+				sprintf((char *) draw_str,"[Redraw]");
+				char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);
+				//7 is taken up by possible overflow from 2
+				sprintf((char *) draw_str,"  Bottom Boundary: %d",town.room_rect[selected_object_number].bottom);
+				char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"  Right Boundary: %d",town.room_rect[selected_object_number].right);
+				char_win_draw_string(main_dc,left_text_lines[9],(char *) draw_str,2,10);
+				break;
+			default: //TownEntrance
+				break;
+		}
 	}
-
-			if ((selected_item_number >= 16000) && (selected_item_number < 16008)) {
-				j = selected_item_number % 1000;
-				char k[65];	short l;
-				sprintf((char *) draw_str,"Outdoor Zone sign %d",j);
+	else{ //editing outdoors
+		switch(selected_object_type){
+			case SelectionType::None:
+				sprintf((char *) draw_str,"Editing Outdoors"); 
 				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-				for (l = 0; l < 64; l++)
-				k[l] = current_terrain.sign_text[j][l];
-				k[64] = 0;
-				sprintf((char *) draw_str,"Text: \"%s\"",k);
+				sprintf((char *) draw_str,"  %s",current_terrain.name);
 				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-				for (l = 0; l < 64; l++)
-				k[l] = current_terrain.sign_text[j][l + 64];
-				k[64] = 0;
-				sprintf((char *) draw_str,"Text: \"%s\"",k);
+				sprintf((char *) draw_str,"  Section X = %d, Y = %d",cur_out.x,cur_out.y);
 				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-				for (l = 0; l < 64; l++)
-				k[l] = current_terrain.sign_text[j][l + 128];
-				k[64] = 0;
-				sprintf((char *) draw_str,"Text: \"%s\"",k);
+				break;
+			case SelectionType::SpecialEncounter:
+				sprintf((char *) draw_str,"Special Encounter Rectangle %d",selected_object_number);
+				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"  State: %d",current_terrain.spec_id[selected_object_number]);
+				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
+				
+				sprintf((char *) draw_str,"  Top Boundary: %d",current_terrain.special_rects[selected_object_number].top);
 				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
-				for (l = 0; l < 64; l++)
-				k[l] = current_terrain.sign_text[j][l + 192];
-				k[64] = 0;
-				sprintf((char *) draw_str,"Text: \"%s\"",k);
+				sprintf((char *) draw_str,"  Left Boundary: %d",current_terrain.special_rects[selected_object_number].left);
 				char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
+				
 				sprintf((char *) draw_str,"[Redraw]");
-				char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"  Sign Location: x = %d, y = %d",(int)current_terrain.sign_locs[j].x,(int)current_terrain.sign_locs[j].y);
-				char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);
-			}
-
-		if ((selected_item_number >= 17000) && (selected_item_number < 17004)) {
-				j = selected_item_number % 1000;
-				sprintf((char *) draw_str,"Outdoor Wandering Location %d",j);
+				char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);
+				
+				sprintf((char *) draw_str,"  Bottom Boundary: %d",current_terrain.special_rects[selected_object_number].bottom);
+				char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"  Right Boundary: %d",current_terrain.special_rects[selected_object_number].right);
+				char_win_draw_string(main_dc,left_text_lines[9],(char *) draw_str,2,10);
+				break;
+			case SelectionType::AreaDescription:
+				sprintf((char *) draw_str,"Area Description %d",selected_object_number);
 				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"Outdoor Wandering Location: x = %d",current_terrain.wandering_locs[j].x);
-				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
-				sprintf((char *) draw_str,"Outdoor Wandering Location: y = %d",current_terrain.wandering_locs[j].y);
+				//use line 2, and effectively line 7 as well
+				sprintf((char *) draw_str,"  Description: %s",current_terrain.info_rect_text[selected_object_number]);
 				char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-			}
-			
-				// outdoor wandering encounter start locations
-					if ((selected_item_number >= 18000) && (selected_item_number < 18004)) {
-					j = selected_item_number % 1000;
-					sprintf((char *) draw_str,"Outdoor Wandering Encounter %d",j);
-					char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-					sprintf((char *) draw_str,"Start location X: %d",current_terrain.wandering[j].start_loc.x);
-					char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Start location Y: %d",current_terrain.wandering[j].start_loc.y);
-					char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-					sprintf((char *) draw_str,"Script State When Met: %d",current_terrain.wandering[j].start_state_when_encountered);
-					char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Script State When Beaten: %d",current_terrain.wandering[j].start_state_when_defeated);
-					char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
-					sprintf((char *) draw_str,"Script State When Fled: %d",current_terrain.wandering[j].start_state_when_fled);
-					char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Party can't evade: %d",current_terrain.wandering[j].cant_flee);
-					char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Encounter is forced: %d",current_terrain.wandering[j].forced); 
-					char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Check every turn: %d",current_terrain.wandering[j].check_every_turn);
-					char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);				
-					sprintf((char *) draw_str,"Move type: %d",current_terrain.wandering[j].move_type);
-					char_win_draw_string(main_dc,left_text_lines[9],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Random Move Chance: %d",current_terrain.wandering[j].random_move_chance);
-					char_win_draw_string(main_dc,left_text_lines[10],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"SDF To Avert: %d, %d",current_terrain.wandering[j].end_spec1,current_terrain.wandering[j].end_spec2);
-					char_win_draw_string(main_dc,left_text_lines[11],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Defeated SDF: %d, %d",current_terrain.wandering[j].killed_flag1,current_terrain.wandering[j].killed_flag2);
-					char_win_draw_string(main_dc,left_text_lines[12],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Delete Encounter");
-					char_win_draw_string(main_dc,left_text_lines[13],(char *) draw_str,2,10);					
-					}
-
-
-					if ((selected_item_number >= 19000) && (selected_item_number < 19004)) {
-					j = selected_item_number % 1000;
-					sprintf((char *) draw_str,"Outdoor Special Encounter %d",j);
-					char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-					sprintf((char *) draw_str,"Start location X: %d",current_terrain.special_enc[j].start_loc.x);
-					char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Start location Y: %d",current_terrain.special_enc[j].start_loc.y);
-					char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-					sprintf((char *) draw_str,"Script State When Met: %d",current_terrain.special_enc[j].start_state_when_encountered);
-					char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Script State When Beaten: %d",current_terrain.special_enc[j].start_state_when_defeated);
-					char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
-					sprintf((char *) draw_str,"Script State When Fled: %d",current_terrain.special_enc[j].start_state_when_fled);
-					char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Party can't evade: %d",current_terrain.special_enc[j].cant_flee);
-					char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Encounter is forced: %d",current_terrain.special_enc[j].forced); 
-					char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Check every turn: %d",current_terrain.special_enc[j].check_every_turn);
-					char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);				
-					sprintf((char *) draw_str,"Move type: %d",current_terrain.special_enc[j].move_type);
-					char_win_draw_string(main_dc,left_text_lines[9],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Random Move Chance: %d",current_terrain.special_enc[j].random_move_chance);
-					char_win_draw_string(main_dc,left_text_lines[10],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"SDF To Avert: %d, %d",current_terrain.special_enc[j].end_spec1,current_terrain.special_enc[j].end_spec2);
-					char_win_draw_string(main_dc,left_text_lines[11],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Defeated SDF: %d, %d",current_terrain.special_enc[j].killed_flag1,current_terrain.special_enc[j].killed_flag2);
-					char_win_draw_string(main_dc,left_text_lines[12],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Delete Encounter");
-					char_win_draw_string(main_dc,left_text_lines[13],(char *) draw_str,2,10);					
-					}
-
-					if ((selected_item_number >= 20000) && (selected_item_number < 20008)) {
-					j = selected_item_number % 1000;
-					sprintf((char *) draw_str,"Outdoor Preset Encounter %d",j);
-					char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
-					sprintf((char *) draw_str,"Start location X: %d",current_terrain.preset[j].start_loc.x);
-					char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Start location Y: %d",current_terrain.preset[j].start_loc.y);
-					char_win_draw_string(main_dc,left_text_lines[2],(char *) draw_str,2,10);
-					sprintf((char *) draw_str,"Script State When Met: %d",current_terrain.preset[j].start_state_when_encountered);
-					char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Script State When Beaten: %d",current_terrain.preset[j].start_state_when_defeated);
-					char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
-					sprintf((char *) draw_str,"Script State When Fled: %d",current_terrain.preset[j].start_state_when_fled);
-					char_win_draw_string(main_dc,left_text_lines[5],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Party can't evade: %d",current_terrain.preset[j].cant_flee);
-					char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Encounter is forced: %d",current_terrain.preset[j].forced); 
-					char_win_draw_string(main_dc,left_text_lines[7],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Check every turn: %d",current_terrain.preset[j].check_every_turn);
-					char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);				
-					sprintf((char *) draw_str,"Move type: %d",current_terrain.preset[j].move_type);
-					char_win_draw_string(main_dc,left_text_lines[9],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Random Move Chance: %d",current_terrain.preset[j].random_move_chance);
-					char_win_draw_string(main_dc,left_text_lines[10],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"SDF To Avert: %d, %d",current_terrain.preset[j].end_spec1,current_terrain.preset[j].end_spec2);
-					char_win_draw_string(main_dc,left_text_lines[11],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Defeated SDF: %d, %d",current_terrain.preset[j].killed_flag1,current_terrain.preset[j].killed_flag2);
-					char_win_draw_string(main_dc,left_text_lines[12],(char *) draw_str,2,10);					
-					sprintf((char *) draw_str,"Delete Encounter");
-					char_win_draw_string(main_dc,left_text_lines[13],(char *) draw_str,2,10);					
-					}
+				
+				sprintf((char *) draw_str,"  Top Boundary: %d",current_terrain.info_rect[selected_object_number].top);
+				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"  Left Boundary: %d",current_terrain.info_rect[selected_object_number].left);
+				char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
+				
+				sprintf((char *) draw_str,"[Redraw]");
+				char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);
+				
+				sprintf((char *) draw_str,"  Bottom Boundary: %d",current_terrain.info_rect[selected_object_number].bottom);
+				char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"  Right Boundary: %d",current_terrain.info_rect[selected_object_number].right);
+				char_win_draw_string(main_dc,left_text_lines[9],(char *) draw_str,2,10);
+				break;
+			case SelectionType::TownEntrance:
+				sprintf((char *) draw_str,"Town Entrance %d",selected_object_number);
+				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"  Town: %d",current_terrain.exit_dests[selected_object_number]);
+				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,2,10);
+				
+				sprintf((char *) draw_str,"  Top Boundary: %d",current_terrain.exit_rects[selected_object_number].top);
+				char_win_draw_string(main_dc,left_text_lines[3],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"  Left Boundary: %d",current_terrain.exit_rects[selected_object_number].left);
+				char_win_draw_string(main_dc,left_text_lines[4],(char *) draw_str,2,10);
+				
+				sprintf((char *) draw_str,"[Redraw]");
+				char_win_draw_string(main_dc,left_text_lines[6],(char *) draw_str,2,10);
+				
+				sprintf((char *) draw_str,"  Bottom Boundary: %d",current_terrain.exit_rects[selected_object_number].bottom);
+				char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"  Right Boundary: %d",current_terrain.exit_rects[selected_object_number].right);
+				char_win_draw_string(main_dc,left_text_lines[9],(char *) draw_str,2,10);
+				break;
+			default: //other cases should never occur; do nothing
+				break;
+		}
 
 			
 		}

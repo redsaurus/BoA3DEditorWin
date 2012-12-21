@@ -2134,6 +2134,26 @@ BEGIN
     LTEXT           "Note: This operation will destroy all contents and settings of the current town.",16,44,64,300,48
 END
 
+836 DIALOGEX 10, 10, 360, 241
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "OK",1,479,423,31,10,WS_GROUP
+    LTEXT           "1_63",3,285,249,62,16
+    LTEXT           "~Edit Placed Item Properties",4,28,24,150,17
+    LTEXT           "*Identified",7,25,46,139,14
+    LTEXT           "*Property",8,25,63,139,14
+    LTEXT           "*Contained",2,25,81,139,14
+    LTEXT           "2_0",10,183,65,23,14
+    LTEXT           "2_0",11,183,81,23,14
+    LTEXT           "2_0",12,183,97,23,14
+    LTEXT           "0_5",15,220,249,62,16
+    LTEXT           "*Used Today",17,25,113,139,14
+    LTEXT           "*Cursed",14,25,97,78,14
+    LTEXT           "2_0",9,183,49,23,14
+    LTEXT           "2_0",13,183,113,23,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2168,6 +2188,18 @@ BEGIN
     END
 
     832, DIALOG
+    BEGIN
+    END
+
+    835, DIALOG
+    BEGIN
+    END
+
+    837, DIALOG
+    BEGIN
+    END
+
+    838, DIALOG
     BEGIN
     END
 
@@ -2224,6 +2256,10 @@ BEGIN
     END
 
     831, DIALOG
+    BEGIN
+    END
+
+    836, DIALOG
     BEGIN
     END
 END

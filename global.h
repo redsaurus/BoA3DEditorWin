@@ -627,7 +627,13 @@ public:
 	unsigned char properties; 
 		// bit 0 - ident   1 - property   2 - contained   3 - cursed 4 - used today
 	location item_shift;
-	} ;
+
+	static unsigned char identified_bit;
+	static unsigned char property_bit;
+	static unsigned char contained_bit;
+	static unsigned char cursed_bit;
+	static unsigned char usedToday_bit;
+};
 
 
 class creature_start_type {
@@ -1899,3 +1905,5 @@ void edit_scen_intro_event_filter (short item_hit);
 void edit_scen_intro(short which_part);
 void edit_scen_intro_pic_event_filter (short item_hit);
 void edit_scen_intro_pic();
+void edit_item_properties_event_filter (short item_hit);
+void edit_item_properties(short which_i);
