@@ -12,7 +12,7 @@
 #include "stdafx.h"
 #include "Resource.h"
 #include "global.h"
-#define kVersion "   Version:  Dapper Doomguard (r113)"
+#define kVersion "   Version:  Eccentric Eyebeast (r124)"
 
 // Global variables
 
@@ -340,7 +340,7 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 
 	mainPtr = CreateWindow (
 		szAppName,
-		"3D Blades of Avernum Variant Scenario Editor " kVersion,
+		"3D Blades of Avernum Scenario Editor " kVersion,
 		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SIZEBOX,
 		0,
 		0,
