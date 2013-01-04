@@ -1602,6 +1602,17 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 							}
 						}
 						break;
+					case SelectionType::Sign:
+						if(selected_object_number<((editing_town) ? 15 : 8)){
+							switch (i) {
+							case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+								{
+									edit_sign(selected_object_number);
+									need_redraw=TRUE;
+								}
+								break;
+							}
+						}
 				}
 			}
 		}
@@ -3249,9 +3260,7 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 							if(edit_area_rect_str(x) == FALSE)
 								town.room_rect[x].right = 0;
 							else{
-								selected_object_type=SelectionType::AreaDescription;
-								selected_object_number=x;
-								set_tool(40);
+								setSelection(SelectionType::AreaDescription, x, false);
 								set_string("Select/edit placed object","Select object to edit");
 							}
 							x = 500;
@@ -3268,9 +3277,7 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 							if(edit_area_rect_str(x) == FALSE)
 								current_terrain.info_rect[x].right = 0;
 							else{
-								selected_object_type=SelectionType::AreaDescription;
-								selected_object_number=x;
-								set_tool(40);
+								setSelection(SelectionType::AreaDescription, x, false);
 								set_string("Select/edit placed object","Select object to edit");
 							}
 							x = 500;
@@ -6315,6 +6322,7 @@ void create_navpoint(location spot_hit)
 	for (i = 0; i < NUM_WAYPOINTS; i++) {
 		if (town.waypoints[i].x < 0) {
 			town.waypoints[i] = spot_hit;
+			setSelection(SelectionType::Waypoint, i, false);
 			return;
 		}
 	}

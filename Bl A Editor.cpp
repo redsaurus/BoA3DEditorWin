@@ -1248,6 +1248,7 @@ void handle_campaign_menu(int item_hit)
 			reset_drawing_mode();
 			purgeUndo();
 			purgeRedo();
+			selected_object_type = SelectionType::None;
 			redraw_screen();
 			break;
 		case 2: // Edit Outdoor Section
@@ -1266,6 +1267,7 @@ void handle_campaign_menu(int item_hit)
 			reset_drawing_mode();
 			purgeUndo();
 			purgeRedo();
+			selected_object_type = SelectionType::None;
 			redraw_screen();
 			break;
 		case 3: // Create New Town
@@ -1279,13 +1281,15 @@ void handle_campaign_menu(int item_hit)
 					"",0);
 				return;
 			}
-			new_town();
-			reset_drawing_mode();
-			cen_x = max_zone_dim[town_type] / 2; cen_y = max_zone_dim[town_type] / 2;
-			purgeUndo();
-			purgeRedo();
+			if (new_town()){
+				reset_drawing_mode();
+				cen_x = max_zone_dim[town_type] / 2; cen_y = max_zone_dim[town_type] / 2;
+				purgeUndo();
+				purgeRedo();
+				change_made_town = TRUE;
+				selected_object_type = SelectionType::None;
+			}
 			redraw_screen();
-			change_made_town = TRUE;
 			break;
 		case 5: // Basic Scenario Details
 			edit_scen_details();

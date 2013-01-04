@@ -235,17 +235,17 @@ void load_main_screen();
 void delete_graphic(HDIB *to_delete);
 void draw_wall_3D_sidebar(short t_to_draw, RECT to_rect);
 Boolean place_icon_into_3D_sidebar(graphic_id_type icon, RECT to_rect, short unscaled_offset_x, short unscaled_offset_y);
-Boolean place_icon_into_ter_3D_large(graphic_id_type icon,short at_point_center_x,short at_point_center_y,RECT *to_whole_area_rect,short lighting);
+Boolean place_icon_into_ter_3D_large(graphic_id_type icon,short at_point_center_x,short at_point_center_y,RECT *to_whole_area_rect,short lighting,Boolean selected=false);
 Boolean place_creature_icon_into_ter_3D_large(graphic_id_type icon,short at_point_center_x,short at_point_center_y,RECT *to_whole_area_rect,short lighting,short r,short g,short b,Boolean selected);
 Boolean place_cliff_icon_into_ter_3D_large(short sheet,short at_point_center_x,short at_point_center_y,	short direction,RECT *to_whole_area_rect,short lighting);
 Boolean place_item_icon_into_ter_3D_large(graphic_id_type icon,short at_point_center_x,short at_point_center_y,RECT *to_whole_area_rect,short lighting,Boolean selected);
 Boolean place_outdoor_creature_icon_into_ter_3D_large(graphic_id_type icon,short at_point_center_x,short at_point_center_y,RECT *to_whole_area_rect,short lighting);
 Boolean place_corner_wall_icon_into_ter_3D_large(graphic_id_type icon,short at_point_center_x,short at_point_center_y,Boolean left_side_of_template,RECT *to_whole_area_rect,short lighting);
-void place_ter_icon_on_tile_3D(short at_point_center_x,short at_point_center_y,short position,short which_icon,RECT *to_whole_area_rect);
+void place_ter_icon_on_tile_3D(short at_point_center_x,short at_point_center_y,short position,short which_icon,RECT *to_whole_area_rect,Boolean selected=false);
 void draw_ter_script_3D(short at_point_center_x,short at_point_center_y,RECT *to_whole_area_rect, Boolean selected);
 void place_ter_icons_3D(location which_outdoor_sector, outdoor_record_type *drawing_terrain, short square_x, short square_y,short t_to_draw, short floor_to_draw, short at_point_center_x,short at_point_center_y,RECT *to_whole_area_rect);
-void draw_ter_icon_3D(short terrain_number,short icon_number,short x,short y,graphic_id_type a,short t_to_draw,RECT *to_whole_area_rect,short lighting,short height);
-void draw_terrain_3D(short t_to_draw, short x, short y, short sector_x, short sector_y, short at_x, short at_y, Boolean see_in_neighbors[3][3], Boolean is_wall_corner,RECT *to_whole_area_rect,short lighting);
+void draw_ter_icon_3D(short terrain_number,short icon_number,short x,short y,graphic_id_type a,short t_to_draw,RECT *to_whole_area_rect,short lighting,short height,Boolean selected=false);
+void draw_terrain_3D(short t_to_draw, short x, short y, short sector_x, short sector_y, short at_x, short at_y, Boolean see_in_neighbors[3][3], Boolean is_wall_corner,RECT *to_whole_area_rect,short lighting,Boolean selected=false);
 void draw_creature_3D(short creature_num,short at_point_center_x,short at_point_center_y, short square_x, short square_y,RECT *to_whole_area_rect,short lighting,Boolean selected=false);
 void draw_item_3D(short item_num,short at_point_center_x,short at_point_center_y, short square_x, short square_y,RECT *to_whole_area_rect,short lighting,Boolean selected=false);
 void put_line_segment_in_gworld_3D(HDC line_gworld,outdoor_record_type *drawing_terrain,short at_point_center_3D_x,short at_point_center_3D_y,short square_2D_x, short square_2D_y, short line_on_2D_x_side, short line_on_2D_y_side, Boolean corner_label_x,Boolean corner_label_y, short inset_3D_y, short offset_3D_y,short r,short g, short b,RECT *to_whole_area_rect);
@@ -258,7 +258,7 @@ void draw_ter_small();
 Boolean place_terrain_icon_into_ter_large(graphic_id_type icon,short in_square_x,short in_square_y);
 Boolean place_terrain_icon_into_ter_medium(graphic_id_type icon,short in_square_x,short in_square_y);
 Boolean place_terrain_icon_into_ter_small(graphic_id_type icon,short in_square_x,short in_square_y);
-void place_ter_icon_on_tile(short tile_x,short tile_y,short position,short which_icon);
+void place_ter_icon_on_tile(HDC ter_hdc,HBITMAP store_bmp,short tile_x,short tile_y,short position,short which_icon,Boolean selected=false);
 void draw_creature(HDC ter_hdc,HBITMAP store_bmp,short creature_num,location loc_drawn,short in_square_x,short in_square_y,Boolean selected=false);
 void draw_creature_medium(HDC ter_hdc,HBITMAP store_bmp,short creature_num,location loc_drawn,short in_square_x,short in_square_y);
 void draw_item(HDC ter_hdc,HBITMAP store_bmp,short item_num,location loc_drawn,short in_square_x,short in_square_y,Boolean selected=false);
@@ -1046,7 +1046,7 @@ Boolean place_icon_into_3D_sidebar(graphic_id_type icon, RECT to_rect, short uns
 	return TRUE;
 }
 
-Boolean place_icon_into_ter_3D_large(graphic_id_type icon,short at_point_center_x,short at_point_center_y,RECT *to_whole_area_rect,short lighting)
+Boolean place_icon_into_ter_3D_large(graphic_id_type icon,short at_point_center_x,short at_point_center_y,RECT *to_whole_area_rect,short lighting,Boolean selected)
 {
 	RECT to_rect;
 	RECT from_rect;
@@ -1072,6 +1072,13 @@ Boolean place_icon_into_ter_3D_large(graphic_id_type icon,short at_point_center_
 	HDIB src_gworld = graphics_library[index];
 	adjust_graphic(&src_gworld,&from_rect,a.graphic_adjust);
 	apply_lighting_to_graphic(&src_gworld,&from_rect,lighting);
+
+	if(cur_viewing_mode != 11){
+		if(selected){
+			add_border_to_graphic(&src_gworld,&from_rect,27,0,31);
+			add_border_to_graphic(&src_gworld,&from_rect,31,0,31);
+		}
+	}
 	
 	rect_draw_some_item(src_gworld,from_rect,ter_draw_gworld,to_rect,1,0);
 	return TRUE;
@@ -1266,7 +1273,7 @@ Boolean place_corner_wall_icon_into_ter_3D_large(graphic_id_type icon,short at_p
 	return TRUE;
 }
 
-void place_ter_icon_on_tile_3D(short at_point_center_x,short at_point_center_y,short position,short which_icon,RECT *to_whole_area_rect)
+void place_ter_icon_on_tile_3D(short at_point_center_x,short at_point_center_y,short position,short which_icon,RECT *to_whole_area_rect,Boolean selected)
 {
 	//too bad, there's no room left
 	if(position > 9)
@@ -1281,7 +1288,14 @@ void place_ter_icon_on_tile_3D(short at_point_center_x,short at_point_center_y,s
 	RECT tiny_from = base_small_3D_button_from;
 	OffsetRect(&tiny_from,16 * (which_icon % 10),11 * (which_icon / 10));
 	
-	rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,1,0);
+	HDIB src_gworld = editor_mixed;
+
+	if(selected){
+		add_border_to_graphic(&src_gworld,&tiny_from,27,0,31);
+		add_border_to_graphic(&src_gworld,&tiny_from,31,0,31);
+	}
+
+	rect_draw_some_item(src_gworld,tiny_from,ter_draw_gworld,tiny_to,1,0);
 }
 
 void draw_ter_script_3D(short at_point_center_x,short at_point_center_y,RECT *to_whole_area_rect, Boolean selected)
@@ -1373,7 +1387,7 @@ void place_ter_icons_3D(location which_outdoor_sector, outdoor_record_type *draw
 
 		for (i = 0; i < NUM_WAYPOINTS; i++) {
 			if ((town.waypoints[i].x < 255) && (same_point(loc_drawn,town.waypoints[i]))) {
-				place_ter_icon_on_tile_3D(at_point_center_x,at_point_center_y,small_icon_position,10 + i,to_whole_area_rect);
+				place_ter_icon_on_tile_3D(at_point_center_x,at_point_center_y,small_icon_position,10 + i,to_whole_area_rect,selected_object_type==SelectionType::Waypoint && selected_object_number==i);
 				small_icon_position++;
 			}	
 		}
@@ -1438,14 +1452,14 @@ void place_ter_icons_3D(location which_outdoor_sector, outdoor_record_type *draw
 	}
 }
 
-void draw_ter_icon_3D(short terrain_number,short icon_number,short x,short y,graphic_id_type a,short t_to_draw,RECT *to_whole_area_rect,short lighting,short height)
+void draw_ter_icon_3D(short terrain_number,short icon_number,short x,short y,graphic_id_type a,short t_to_draw,RECT *to_whole_area_rect,short lighting,short height,Boolean selected)
 {
 	a.which_icon = icon_number;
 	short i;
 	if (a.not_legit() == FALSE) {
 		for(i = 0; i < height; i++) {
 			if (place_icon_into_ter_3D_large(a,x + scen_data.scen_ter_types[terrain_number].icon_offset_x,
-			y + scen_data.scen_ter_types[terrain_number].icon_offset_y - i * 35,to_whole_area_rect,lighting) == FALSE) {
+			y + scen_data.scen_ter_types[terrain_number].icon_offset_y - i * 35,to_whole_area_rect,lighting,selected) == FALSE) {
 				cant_draw_graphics_error(a,"Error was for terrain type",t_to_draw);
 				break;
 			}
@@ -1453,7 +1467,7 @@ void draw_ter_icon_3D(short terrain_number,short icon_number,short x,short y,gra
 	}
 }
 
-void draw_terrain_3D(short t_to_draw, short x, short y, short sector_x, short sector_y, short at_x, short at_y, Boolean see_in_neighbors[3][3], Boolean is_wall_corner,RECT *to_whole_area_rect,short lighting)
+void draw_terrain_3D(short t_to_draw, short x, short y, short sector_x, short sector_y, short at_x, short at_y, Boolean see_in_neighbors[3][3], Boolean is_wall_corner,RECT *to_whole_area_rect,short lighting,Boolean selected)
 {			
 	graphic_id_type a;
 	short temp_t_to_draw;
@@ -1462,6 +1476,18 @@ void draw_terrain_3D(short t_to_draw, short x, short y, short sector_x, short se
 	Boolean cutaway = FALSE;
 	
 	short cutHeight = height;
+
+	if (cur_viewing_mode == 10)
+	{
+		if(editing_town && selected_object_type==SelectionType::Sign && town.sign_locs[selected_object_number].x == x && town.sign_locs[selected_object_number].y == y)
+		{
+			selected = true;
+		}
+		else if (selected_object_type==SelectionType::Sign && current_terrain.sign_locs[selected_object_number].x == x && current_terrain.sign_locs[selected_object_number].y == y)
+		{
+			selected = true;
+		}
+	}
 
 	if(cur_viewing_mode == 10) {
 		//use cutaway when possible, so user can see better
@@ -1658,7 +1684,7 @@ void draw_terrain_3D(short t_to_draw, short x, short y, short sector_x, short se
 		if (a.not_legit() == FALSE) {
 			for(i = 0; i < cutHeight; i++) {
 				if (place_icon_into_ter_3D_large(a,at_x + scen_data.scen_ter_types[t_to_draw].icon_offset_x,
-				at_y + scen_data.scen_ter_types[t_to_draw].icon_offset_y - i * 35,to_whole_area_rect, lighting) == FALSE) {
+				at_y + scen_data.scen_ter_types[t_to_draw].icon_offset_y - i * 35,to_whole_area_rect, lighting,selected) == FALSE) {
 					cant_draw_graphics_error(a,"Error was for terrain type",t_to_draw);
 					break;
 				}
@@ -1668,7 +1694,7 @@ void draw_terrain_3D(short t_to_draw, short x, short y, short sector_x, short se
 		a.which_icon = scen_data.scen_ter_types[t_to_draw].second_icon;
 		if (a.not_legit() == FALSE)
 			if (place_icon_into_ter_3D_large(a,at_x + scen_data.scen_ter_types[t_to_draw].second_icon_offset_x,
-			at_y + scen_data.scen_ter_types[t_to_draw].second_icon_offset_y,to_whole_area_rect, lighting) == FALSE)
+			at_y + scen_data.scen_ter_types[t_to_draw].second_icon_offset_y,to_whole_area_rect, lighting,selected) == FALSE)
 				cant_draw_graphics_error(a,"Error was for terrain type",t_to_draw);
 	}
 }
@@ -3582,40 +3608,46 @@ void draw_ter_large()
 			// now place the tiny icons in the lower right corner
 			// first, stuff that is done for both town and outdoors
 			// signs
+			if (editing_town && scen_data.scen_ter_types[t_to_draw].special == 39 && town.sign_locs[selected_object_number].x == x_coord && town.sign_locs[selected_object_number].y == y_coord){
+				selected = true;
+			}
+			else if (scen_data.scen_ter_types[t_to_draw].special == 39 && current_terrain.sign_locs[selected_object_number].x == x_coord && current_terrain.sign_locs[selected_object_number].y == y_coord){
+				selected = true;
+			}
 			if (scen_data.scen_ter_types[t_to_draw].special == 39) {
-				place_ter_icon_on_tile(q,r,small_icon_position,20);
+				place_ter_icon_on_tile(main_dc5,store_bmp,q,r,small_icon_position,20,selected);
 				small_icon_position++;
 				}			
 			if (scen_data.scen_ter_types[t_to_draw].special == 40) {
-				place_ter_icon_on_tile(q,r,small_icon_position,21);
+				place_ter_icon_on_tile(main_dc5,store_bmp,q,r,small_icon_position,21);
 				small_icon_position++;
 				}			
 			
 			// icons for secret doors
 			if (((t_to_draw >= 18) && (t_to_draw <= 21)) || ((t_to_draw >= 54) && (t_to_draw <= 57))) {
-				place_ter_icon_on_tile(q,r,small_icon_position,26);
+				place_ter_icon_on_tile(main_dc5,store_bmp,q,r,small_icon_position,26);
 				small_icon_position++;
 				}
 			// icons for floor damage
 			if ((scen_data.scen_ter_types[t_to_draw].special == 1) || 
 			  (scen_data.scen_floors[floor_to_draw].special == 1)) {
-				place_ter_icon_on_tile(q,r,small_icon_position,37);
+				place_ter_icon_on_tile(main_dc5,store_bmp,q,r,small_icon_position,37);
 				small_icon_position++;
 			  	}
 			if ((scen_data.scen_ter_types[t_to_draw].special == 2) || 
 			  (scen_data.scen_floors[floor_to_draw].special == 2)) {
-				place_ter_icon_on_tile(q,r,small_icon_position,38);
+				place_ter_icon_on_tile(main_dc5,store_bmp,q,r,small_icon_position,38);
 				small_icon_position++;
 			  	}
 			if ((scen_data.scen_ter_types[t_to_draw].special == 3) || 
 			  (scen_data.scen_floors[floor_to_draw].special == 3)) {
-				place_ter_icon_on_tile(q,r,small_icon_position,39);
+				place_ter_icon_on_tile(main_dc5,store_bmp,q,r,small_icon_position,39);
 				small_icon_position++;
 			  	}
 
 			if ((scen_data.scen_ter_types[t_to_draw].special == 6) || 
 			  (scen_data.scen_floors[floor_to_draw].special == 6)) {
-				place_ter_icon_on_tile(q,r,small_icon_position,22);
+				place_ter_icon_on_tile(main_dc5,store_bmp,q,r,small_icon_position,22);
 				small_icon_position++;
 			  	}
 			  	
@@ -3623,32 +3655,32 @@ void draw_ter_large()
 			if (editing_town) {
 				for (i = 0; i < 4; i++){	
 					if (same_point(loc_drawn,town.start_locs[i])) {
-						place_ter_icon_on_tile(q,r,small_icon_position,i);
+						place_ter_icon_on_tile(main_dc5,store_bmp,q,r,small_icon_position,i);
 						small_icon_position++;
 					}
         }
 
 				for (i = 0; i < NUM_WAYPOINTS; i++){	
 					if (same_point(loc_drawn,town.waypoints[i])) {
-						place_ter_icon_on_tile(q,r,small_icon_position,10 + i);
+						place_ter_icon_on_tile(main_dc5,store_bmp,q,r,small_icon_position,10 + i,selected_object_type==SelectionType::Waypoint && selected_object_number==i);
 						small_icon_position++;
 					}
         }
 				for (i = 0; i < 6; i++)	{
 					if (same_point(loc_drawn,town.respawn_locs[i])) {
-						place_ter_icon_on_tile(q,r,small_icon_position,24);
+						place_ter_icon_on_tile(main_dc5,store_bmp,q,r,small_icon_position,24);
 						small_icon_position++;
 					}
         }
 				// start scenario icon
 				if ((scenario.start_in_what_town == cur_town) && (same_point(loc_drawn,scenario.what_start_loc_in_town))) {
-					place_ter_icon_on_tile(q,r,small_icon_position,23);
+					place_ter_icon_on_tile(main_dc5,store_bmp,q,r,small_icon_position,23);
 					small_icon_position++;
 				}
 
 				// blocked spaces
 				if (is_blocked(loc_drawn.x,loc_drawn.y)) {
-					place_ter_icon_on_tile(q,r,small_icon_position,22);
+					place_ter_icon_on_tile(main_dc5,store_bmp,q,r,small_icon_position,22);
 					small_icon_position++;
 					}
         }
@@ -3661,7 +3693,7 @@ void draw_ter_large()
 				// WANDERING MONST ICON
 				for (i = 0; i < 4; i++){	
 					if (same_point(loc_drawn,current_terrain.wandering_locs[i])) {
-						place_ter_icon_on_tile(q,r,small_icon_position,24);
+						place_ter_icon_on_tile(main_dc5,store_bmp,q,r,small_icon_position,24);
 						small_icon_position++;
 					}
         }
@@ -3669,14 +3701,14 @@ void draw_ter_large()
 				for (i = 0; i < 8; i++){	
 					if ((current_terrain.preset[i].start_loc.x > 0) &&
 					  (same_point(loc_drawn,current_terrain.preset[i].start_loc))) {
-						place_ter_icon_on_tile(q,r,small_icon_position,25);
+						place_ter_icon_on_tile(main_dc5,store_bmp,q,r,small_icon_position,25);
 						small_icon_position++;
 					}
 				}
 				// start scenario icon
 				if ((same_point(cur_out,scenario.what_outdoor_section_start_in)) && 
 				  (same_point(loc_drawn,scenario.start_where_in_outdoor_section))) {
-					place_ter_icon_on_tile(q,r,small_icon_position,23);
+					place_ter_icon_on_tile(main_dc5,store_bmp,q,r,small_icon_position,23);
 					small_icon_position++;
 				}
 				SelectObject(main_dc5,DibBitmapHandle(ter_draw_gworld));
@@ -4724,9 +4756,10 @@ Boolean place_terrain_icon_into_ter_small(graphic_id_type icon,short in_square_x
 	return TRUE;
 }
 
-void place_ter_icon_on_tile(short tile_x,short tile_y,short position,short which_icon)
+void place_ter_icon_on_tile(HDC ter_hdc,HBITMAP store_bmp,short tile_x,short tile_y,short position,short which_icon,Boolean selected)
 {
 	RECT tiny_to = largeTileScreenRect(tile_x,tile_y);
+	RECT clip_rect = tiny_to;
 	tiny_to.right = tiny_to.left + 10;
 	tiny_to.bottom = tiny_to.top + 10;
 	OffsetRect(&tiny_to,10 * (position / 4) + 1,10 * (position % 4) + 1);
@@ -4734,6 +4767,15 @@ void place_ter_icon_on_tile(short tile_x,short tile_y,short position,short which
 	RECT tiny_from = base_small_button_from;
 	OffsetRect(&tiny_from,10 * (which_icon % 10),10 * (which_icon / 10));
 	rect_draw_some_item(editor_mixed,tiny_from,ter_draw_gworld,tiny_to,0,0);
+	SelectObject(ter_hdc,DibBitmapHandle(ter_draw_gworld));
+	if(selected){
+		MacInsetRect(&tiny_to,-1,-1);
+		put_rect_in_gworld(ter_hdc,tiny_to,215,0,255);
+		MacInsetRect(&tiny_to,-1,-1);
+		put_rect_in_gworld(ter_hdc,tiny_to,255,0,255);
+		MacInsetRect(&tiny_to,2,2);
+	}
+	SelectObject(ter_hdc,store_bmp);
 }
 
 // obj_num is num of object to drawn (in zone's list of objects)
@@ -5042,6 +5084,10 @@ void place_left_text()
 					char_win_draw_string(main_dc,left_text_lines[i + 2],(char *) draw_str,2,10);		
 				}
 				break;
+			case SelectionType::Waypoint:
+				sprintf((char *)draw_str,"Waypoint %d",selected_object_number);
+				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
+				break;
 			case SelectionType::SpecialEncounter:
 				sprintf((char *) draw_str,"Special Encounter Rectangle %d",selected_object_number);
 				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
@@ -5080,6 +5126,12 @@ void place_left_text()
 				char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);
 				sprintf((char *) draw_str,"  Right Boundary: %d",town.room_rect[selected_object_number].right);
 				char_win_draw_string(main_dc,left_text_lines[9],(char *) draw_str,2,10);
+				break;
+			case SelectionType::Sign:
+				sprintf((char *) draw_str,"Sign %d",selected_object_number);
+				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"Sign Text: %s", town.sign_text[selected_object_number]);
+				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,0,10);
 				break;
 			default: //TownEntrance
 				break;
@@ -5152,6 +5204,12 @@ void place_left_text()
 				char_win_draw_string(main_dc,left_text_lines[8],(char *) draw_str,2,10);
 				sprintf((char *) draw_str,"  Right Boundary: %d",current_terrain.exit_rects[selected_object_number].right);
 				char_win_draw_string(main_dc,left_text_lines[9],(char *) draw_str,2,10);
+				break;
+			case SelectionType::Sign:
+				sprintf((char *) draw_str,"Sign %d",selected_object_number);
+				char_win_draw_string(main_dc,left_text_lines[0],(char *) draw_str,2,10);
+				sprintf((char *) draw_str,"Sign Text: %s", current_terrain.sign_text[selected_object_number]);
+				char_win_draw_string(main_dc,left_text_lines[1],(char *) draw_str,0,10);
 				break;
 			default: //other cases should never occur; do nothing
 				break;
