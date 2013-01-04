@@ -1304,6 +1304,11 @@ void handle_campaign_menu(int item_hit)
 		case 12: // Reload Scenario Data Script
 			if (fancy_choice_dialog(871,0) == 2)
 				break;
+			scen_data.clear_scen_item_data_type();
+			if(load_core_scenario_data() == FALSE) {
+				file_is_loaded = FALSE;
+				return;
+			}
 			char file_name[256];
 			get_name_of_current_scenario(file_name);
 			if (load_individual_scenario_data(file_name /*,TRUE */) == FALSE) {

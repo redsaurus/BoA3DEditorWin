@@ -2931,35 +2931,8 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				break;		
 				
 		case 51: // 51 - delete instance and remain in delete mode
-				if ((editing_town) == FALSE)
-							break;
-				else {
-				set_cursor(7);
-				for (i = 0; i < 22000; i++) {
-
-					item_to_try = (selected_item_number + i) % 22000;
-					// select creature
-					if ((item_to_try >= 7000) && (item_to_try < 7000 + NUM_TOWN_PLACED_CREATURES) && (town.creatures[item_to_try % 1000].exists())) {
-						if (same_point(spot_hit,town.creatures[item_to_try % 1000].start_loc)) {
-							town.creatures[item_to_try % 1000].clear_creature_start_type();
-							}
-						}
-
-					// select ter script
-					if ((item_to_try >= 7000) && (item_to_try < 7000 + NUM_TER_SCRIPTS) && (town.ter_scripts[item_to_try % 1000].exists)) {
-						if (same_point(spot_hit,town.ter_scripts[item_to_try % 1000].loc)) {
-							town.ter_scripts[item_to_try % 1000].clear_in_town_on_ter_script_type();
-							}
-						}
-
-					// select item
-					if ((item_to_try >= 11000) && (item_to_try < 11000 + NUM_TOWN_PLACED_ITEMS) && (town.preset_items[item_to_try % 1000].exists())) {
-						if (same_point(spot_hit,town.preset_items[item_to_try % 1000].item_loc)) {
-							town.preset_items[item_to_try % 1000].clear_item_type();
-							}
-						}
-					}
-					}
+				set_tool(40);
+				reset_drawing_mode();
 				break;
 
 		case 57: // 57 - place nav point
