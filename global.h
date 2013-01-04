@@ -1667,6 +1667,7 @@ Boolean create_new_item(short item_to_create,location create_loc,Boolean propert
 void place_items_in_town();
 void clean_walls();
 void set_all_items_containment();
+void set_items_containment(int x, int y, int mode=0);
 void set_up_lights();
 // q_3DModStart
 Boolean get_see_in(short sector_offset_x, short sector_offset_y, short x, short y);

@@ -2342,7 +2342,7 @@ for (short j = 14; j < 22; j++) {
 	// draw items
 			if ((hintbook_mode2 == 0) && (hintbook_mode4 == 0)) {
 	for (i = 0; i < NUM_TOWN_PLACED_ITEMS; i++)
-		if (town.preset_items[i].which_item >= 0/*exists()*/ && town.preset_items[i].item_loc.x == x && town.preset_items[i].item_loc.y == y)
+		if (town.preset_items[i].which_item >= 0/*exists()*/ && town.preset_items[i].item_loc.x == x && town.preset_items[i].item_loc.y == y && (cur_viewing_mode==10 || !(town.preset_items[i].properties&item_type::contained_bit)))
 			draw_item_3D((short)i,at_point_center_x,at_point_center_y,x,y,to_whole_area_rect,lighting);
 
 	// draw selected instance (why's this needed? what does/did it do in 2D?)
