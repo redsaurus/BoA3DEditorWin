@@ -2056,7 +2056,7 @@ Boolean create_basic_scenario(char *scen_name_short,char *scen_name_with_ext,cha
 	current_terrain.is_on_surface = on_surface;
 	town.is_on_surface = on_surface;
 	
-	sprintf(scenario.scen_name,scen_full_name);
+	sprintf(scenario.scen_name,"%s",scen_full_name);
 	scenario.out_width = out_width;
 	scenario.out_height = out_height;
 

@@ -104,7 +104,6 @@ extern RECT tool_details_text_lines[10];
 }
 
 extern short tile_zoom_level;
-extern short selected_item_number;//TODO: get rid of all selected_item_number stuff
 extern SelectionType::SelectionType_e selected_object_type;
 extern unsigned short selected_object_number;
 
@@ -224,6 +223,8 @@ char *facings[4] = {"North","West","South","East"};
 short small_what_drawn[64][64];
 short small_what_floor_drawn[64][64];
 
+extern Boolean object_sticky_draw;
+
 HDIB tint_area;
 RECT tint_rect = {0,0,PICT_BOX_WIDTH_3D,PICT_BOX_HEIGHT_3D};
 
@@ -252,7 +253,7 @@ void maybe_draw_part_of_3D_rect(outdoor_record_type *drawing_terrain, short cent
 void draw_town_objects_3D(short x, short y, short at_point_center_x, short at_point_center_y,RECT *to_whole_area_rect,short lighting);
 void draw_ter_3D_large();
 void draw_ter_large();
-void draw_ter_medium();
+//void draw_ter_medium();//Medium drawing mode out for now
 void draw_ter_small();
 Boolean place_terrain_icon_into_ter_large(graphic_id_type icon,short in_square_x,short in_square_y);
 Boolean place_terrain_icon_into_ter_medium(graphic_id_type icon,short in_square_x,short in_square_y);
@@ -3687,17 +3688,15 @@ void draw_ter_large()
 	RECT clip_rect = whole_area_rect;
 	MacInsetRect(&clip_rect,15,15);
 	Boolean show_rect_select;
-	short ish_left, ish_right, ish_top, ish_bottom;
 
-	
 		// Town mode: special encs and other rectangles
 		if (editing_town) {
 			for (i = 0; i < NUM_TOWN_PLACED_SPECIALS; i++){
 				if (town.spec_id[i] != kNO_TOWN_SPECIALS){
-					rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (town.special_rects[i].left - cen_x + 4);
-					rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (town.special_rects[i].right - cen_x + 4 + 1) - 1;
-					rectangle_draw_rect.top = 15 + BIG_SPACE_SIZE * (town.special_rects[i].top - cen_y + 4 - 1);
-					rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (town.special_rects[i].bottom - cen_y + 4) - 1;				
+					rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (town.special_rects[i].left - cen_x + half_width);
+					rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (town.special_rects[i].right - cen_x + half_width + 1) - 1;
+					rectangle_draw_rect.top = 15 + BIG_SPACE_SIZE * (town.special_rects[i].top - cen_y + half_height);
+					rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (town.special_rects[i].bottom - cen_y + half_height + 1) - 1;				
 					MacInsetRect(&rectangle_draw_rect,1,1);
 					put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,200,200,255);
 					MacInsetRect(&rectangle_draw_rect,1,1);
@@ -3711,20 +3710,20 @@ void draw_ter_large()
 				}
 			}
 			// zone border rect
-			rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (town.in_town_rect.left - cen_x + 4);
-			rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (town.in_town_rect.right - cen_x + 4 + 1) - 1;
-			rectangle_draw_rect.top = 15 + BIG_SPACE_SIZE * (town.in_town_rect.top - cen_y + 4 - 1);
-			rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (town.in_town_rect.bottom - cen_y + 4) - 1;				
+			rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (town.in_town_rect.left - cen_x + half_width);
+			rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (town.in_town_rect.right - cen_x + half_width + 1) - 1;
+			rectangle_draw_rect.top = 15 + BIG_SPACE_SIZE * (town.in_town_rect.top - cen_y + half_height);
+			rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (town.in_town_rect.bottom - cen_y + half_height + 1) - 1;				
 			MacInsetRect(&rectangle_draw_rect,3,3);
 			put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,255,0,0); 
 						
 			// description rects
 			for (i = 0; i < 16; i++){
 				if (town.room_rect[i].right > 0) {
-					rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (town.room_rect[i].left - cen_x + 4);
-					rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (town.room_rect[i].right - cen_x + 4 + 1) - 1;
-					rectangle_draw_rect.top = 15 + BIG_SPACE_SIZE * (town.room_rect[i].top - cen_y + 4 - 1);
-					rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (town.room_rect[i].bottom - cen_y + 4) - 1;				
+					rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (town.room_rect[i].left - cen_x + half_width);
+					rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (town.room_rect[i].right - cen_x + 4 + half_width) - 1;
+					rectangle_draw_rect.top = 15 + BIG_SPACE_SIZE * (town.room_rect[i].top - cen_y + half_height);
+					rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (town.room_rect[i].bottom - cen_y + half_height + 1) - 1;				
 					MacInsetRect(&rectangle_draw_rect,4,4);
 					put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,0,255,0);
 					if(selected_object_type==SelectionType::AreaDescription && selected_object_number==i){
@@ -3741,10 +3740,10 @@ void draw_ter_large()
 			// town entry rects
 			for (i = 0; i < NUM_OUT_TOWN_ENTRANCES; i++){
 				if ((current_terrain.exit_rects[i].right > 0) && (current_terrain.exit_dests[i] >= 0)) {
-					rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (current_terrain.exit_rects[i].left - cen_x + 4);
-					rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (current_terrain.exit_rects[i].right - cen_x + 4 + 1) - 1;
-					rectangle_draw_rect.top = 15 + BIG_SPACE_SIZE * (current_terrain.exit_rects[i].top - cen_y + 4 - 1);
-					rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (current_terrain.exit_rects[i].bottom - cen_y + 4) - 1;				
+					rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (current_terrain.exit_rects[i].left - cen_x + half_width);
+					rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (current_terrain.exit_rects[i].right - cen_x + half_width + 1) - 1;
+					rectangle_draw_rect.top = 15 + BIG_SPACE_SIZE * (current_terrain.exit_rects[i].top - cen_y + half_height);
+					rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (current_terrain.exit_rects[i].bottom - cen_y + half_height + 1) - 1;				
 					MacInsetRect(&rectangle_draw_rect,1,1);
 					put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,255,0,255);
 					if(selected_object_type==SelectionType::TownEntrance && selected_object_number==i){
@@ -3758,10 +3757,10 @@ void draw_ter_large()
 			// special enc rects
 			for (i = 0; i < NUM_OUT_PLACED_SPECIALS; i++){
 				if (current_terrain.spec_id[i] >= 0) {
-					rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (current_terrain.special_rects[i].left - cen_x + 4);
-					rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (current_terrain.special_rects[i].right - cen_x + 4 + 1) - 1;
-					rectangle_draw_rect.top = 15 + BIG_SPACE_SIZE * (current_terrain.special_rects[i].top - cen_y + 4 - 1);
-					rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (current_terrain.special_rects[i].bottom - cen_y + 4) - 1;				
+					rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (current_terrain.special_rects[i].left - cen_x + half_width);
+					rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (current_terrain.special_rects[i].right - cen_x + half_width + 1) - 1;
+					rectangle_draw_rect.top = 15 + BIG_SPACE_SIZE * (current_terrain.special_rects[i].top - cen_y + half_height);
+					rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (current_terrain.special_rects[i].bottom - cen_y + half_height + 1) - 1;				
 					MacInsetRect(&rectangle_draw_rect,1,1);
 					put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,200,200,255);
 					MacInsetRect(&rectangle_draw_rect,1,1);
@@ -3777,10 +3776,10 @@ void draw_ter_large()
 			// description rects
 			for (i = 0; i < 8; i++){
 				if (current_terrain.info_rect[i].right > 0) {
-					rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (current_terrain.info_rect[i].left - cen_x + 4);
-					rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (current_terrain.info_rect[i].right - cen_x + 4 + 1) - 1;
-					rectangle_draw_rect.top = 15 + BIG_SPACE_SIZE * (current_terrain.info_rect[i].top - cen_y + 4 - 1);
-					rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (current_terrain.info_rect[i].bottom - cen_y + 4) - 1;				
+					rectangle_draw_rect.left = 15 + BIG_SPACE_SIZE * (current_terrain.info_rect[i].left - cen_x + half_width);
+					rectangle_draw_rect.right = 15 + BIG_SPACE_SIZE * (current_terrain.info_rect[i].right - cen_x + half_width + 1) - 1;
+					rectangle_draw_rect.top = 15 + BIG_SPACE_SIZE * (current_terrain.info_rect[i].top - cen_y + half_height);
+					rectangle_draw_rect.bottom = 15 + BIG_SPACE_SIZE * (current_terrain.info_rect[i].bottom - cen_y + half_height + 1) - 1;				
 					MacInsetRect(&rectangle_draw_rect,4,4);
 					put_clipped_rect_in_gworld(main_dc5,rectangle_draw_rect,clip_rect,0,255,0);
 					if(selected_object_type==SelectionType::AreaDescription && selected_object_number==i){
@@ -3805,7 +3804,7 @@ void draw_ter_large()
 	small_any_drawn = FALSE;
 }
 
-
+/*Medium drawing mode out for nnow
 void draw_ter_medium()
 {
 	short q,r,i;
@@ -4422,7 +4421,7 @@ void draw_ter_medium()
 	OffsetRect(&to_rect,TER_RECT_UL_X,TER_RECT_UL_Y);
 	rect_draw_some_item(ter_draw_gworld,
 		whole_area_rect,ter_draw_gworld,to_rect,0,1);
-}
+}*/
 
 void draw_ter_small()
 {
@@ -4494,7 +4493,7 @@ void draw_ter_small()
 		}
 
 			else
-			t_to_draw == 0;
+			t_to_draw = 0;
 
 				small_what_drawn[q][r] = t_to_draw;
 				small_what_floor_drawn[q][r] = floor_to_draw;
@@ -4654,7 +4653,7 @@ void draw_terrain()
 			draw_ter_small();
 			
 	if (cur_viewing_mode == 2)
-		draw_ter_medium();
+		draw_ter_small();//draw_ter_medium();//Medium drawing mode out for now
 
 	if (cur_viewing_mode == 10 || cur_viewing_mode == 11) 
 		draw_ter_3D_large();

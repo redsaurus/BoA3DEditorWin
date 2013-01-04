@@ -138,7 +138,6 @@ extern HWND	tilesPtr;
 
 extern SelectionType::SelectionType_e selected_object_type;
 extern unsigned short selected_object_number;
-extern short selected_item_number;//TODO: get rid of all selected_item_number references
 extern item_type copied_item;
 extern creature_start_type copied_creature;
 extern short max_zone_dim[3];
@@ -149,6 +148,7 @@ extern in_town_on_ter_script_type copied_ter_script;
 extern Boolean kill_next_win_char;
 
 extern short current_cursor;
+extern Boolean scroll_dialog_lock;
 
 namespace tools{
 RECT toolCategoryTownRect;
@@ -405,6 +405,7 @@ short recursive_hill_down_depth = 0;
 linkedList undo;
 linkedList redo;
 short last_selected_item_number;
+SelectionType::SelectionType_e last_selected_object_type;
 short store_control_value = 0;
 short sign_terrain;
 location selected_square;
@@ -662,6 +663,9 @@ bool handle_scroll( int map_size, int scrl, bool ctrl_key, bool shft_key )
 	int dx = 0;		// displacement
 	int dy = 0;
 
+	if(scroll_dialog_lock)
+		return false;
+
 
 	if (hintbook_mode0 == 1) {
 	if (ctrl_key) {
@@ -825,14 +829,15 @@ Boolean clean_up_from_scrolling( int map_size, int dx, int dy )
 			|| (sector_move_to.y >= scenario.out_height))
 			return FALSE;
 
-		bool save_dlg_displayed = false;
 		if (change_made_outdoors == TRUE) {
-			save_dlg_displayed = true;
+			scroll_dialog_lock = true;
 			if ( save_check(990) == FALSE ) {	// canceled
 				cen_x = cen_x_save;				// recover center position
 				cen_y = cen_y_save;
+				scroll_dialog_lock = false;
 				return TRUE;					// stop mouse tracking
 			}
+			scroll_dialog_lock = false;
 		}
 
 		clear_selected_copied_objects();
@@ -855,7 +860,7 @@ Boolean clean_up_from_scrolling( int map_size, int dx, int dy )
 //			draw_main_screen();					//   only edit screen and terrain palette
 
 		change_made_outdoors = FALSE;
-		return save_dlg_displayed;
+		return FALSE;
 	}
 	return FALSE;
 }
@@ -1552,8 +1557,14 @@ Boolean handle_action(POINT the_point, WPARAM wparam, LPARAM lparam, short which
 						if(selected_object_number<NUM_OUT_TOWN_ENTRANCES){
 							switch (i) {
 								case 1:
-									current_terrain.spec_id[selected_object_number] = 
-									how_many_dlog(current_terrain.exit_dests[selected_object_number],0,200,"Set town number:");
+									{
+										int temp = get_a_number(856,current_terrain.exit_dests[selected_object_number],0,scenario.num_towns - 1);
+										if(temp==-1)
+											break;//the user cancelled the action
+										if (cre(temp,-1,scenario.num_towns - 1,"The town number you gave was out of range. It must be from 0 to the number of towns in the scenario - 1. ","",0))
+											break;
+										current_terrain.exit_dests[selected_object_number] = temp;
+									}
 									need_redraw=TRUE;
 									break;
 								case 3:
@@ -1890,12 +1901,12 @@ Boolean handleToolPaletteClick(POINT the_point, WPARAM wparam, LPARAM lparam)
 						case 406: // Place Oblique Mirror
 								set_tool(73);
 								object_sticky_draw = shift_key;
-								set_string("Place Oblique Mirror","");
+								set_string("Place Oblique Mirror","Select Location");
 							break;
 						case 407: // Place Facing Mirror
               					set_tool(74);
 								object_sticky_draw = shift_key;
-								set_string("Place Facing Mirror","");
+								set_string("Place Facing Mirror","Select Location");
 							break;
 						case 408: //  Clear Space
 							set_string("Clear space","Select space to clear");
@@ -2496,18 +2507,21 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 	if (shift_key == TRUE) {          
 		 if (overall_mode == 40) {
 			set_string("Drawing mode","  ");
-			last_selected_item_number = selected_item_number;
-			selected_item_number = -1;
+			last_selected_item_number = selected_object_number;
+			last_selected_object_type = selected_object_type;
+			selected_object_number = 0;
+			selected_object_type = SelectionType::None;
 	 		set_tool(0);
 			}
 		 	else {	
 			set_string("Select/edit placed object"," Ctrl + Right Click on square to move it.");
-			selected_item_number = last_selected_item_number;
+			selected_object_number = last_selected_item_number;
+			selected_object_type = last_selected_object_type;
 			set_tool(40);
 			}
 			}
 
-  if ((selected_item_number >= 0) && (ctrl_key == TRUE)) {
+	if ((selected_object_type!=SelectionType::None) && (ctrl_key == TRUE)) {
 			set_cursor(0);
 		 // define current position, if rectangle it is the upper left corner, else it is the current square.
 		current_loc = selected_instance_location();
@@ -2935,7 +2949,8 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 
 		case 57: // 57 - place nav point
 				create_navpoint(spot_hit); 
-				reset_drawing_mode(); 
+				if(!object_sticky_draw)
+					set_tool(40);
 				break;
 		case 58: // 58 - delete nav point
 				delete_navpoint(spot_hit);
@@ -3109,12 +3124,12 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				if(!object_sticky_draw)
 					reset_drawing_mode(); 
 				break;		
-		case 73: 
+		case 73:  //place NE/SW mirror
 				make_oblique_mirror(spot_hit.x,spot_hit.y);
 				if(!object_sticky_draw)
 					reset_drawing_mode();
 				break;
-		case 74:
+		case 74: //place NW/SE mirror
 				make_facing_mirror(spot_hit.x,spot_hit.y);
 				if(!object_sticky_draw)
 					reset_drawing_mode();
@@ -3200,7 +3215,10 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 							}
 
 						}
-				set_tool(40);
+				if(!object_sticky_draw)
+					set_tool(40);
+				else
+					set_tool(16);
 				return;
 				break;
 			case 17: // 17 - town boundaries
@@ -3260,6 +3278,12 @@ void handle_ter_spot_press(location spot_hit,Boolean option_hit,Boolean right_cl
 				}
 				if (x < 500)
 					give_error("You have placed the maximum number of area rectangles (16 in town, 8 outdoors).","",0);
+				else{
+					if(!object_sticky_draw)
+						set_tool(40);
+					else
+						set_tool(21);
+				}
 				break;
 
 			case 22: // 22 - outdoor only - town entrance
@@ -3602,6 +3626,14 @@ Boolean control_key_down()
 	
 }
 
+//returns true if loc is not conveniently visible from the current 3D viewport
+bool out_of_view_3D(location loc){
+	if(cen_x-loc.x>10 || loc.x-cen_x>9 || cen_y-loc.y>10 || loc.y-cen_y>9)
+		return(true);
+	int x = loc.x-cen_x;
+	int y = loc.y-cen_y;
+	return((y<x-9) || (y<-12-x) || (y>x+9) || (y>11-x));
+}
 
 // "Outdoor: drawing mode failure after moving section" fix
 // As the scroll handler of edit screen is revised,
@@ -3700,14 +3732,22 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 
 	if (((wParam == VK_LEFT) || (wParam == VK_DOWN) || (wParam == VK_UP) ||
 	(wParam == VK_RIGHT)) && (cur_viewing_mode != 1)) {
-		if ((wParam == VK_UP) && (selected_item_number >= 0))
+		if ((wParam == VK_UP) && (selected_object_type!=SelectionType::None))
 			shift_selected_instance(0, -1);
-		if ((wParam == VK_RIGHT) && (selected_item_number >= 0))
+		if ((wParam == VK_RIGHT) && (selected_object_type!=SelectionType::None))
 			shift_selected_instance(1,0);
-		if ((wParam == VK_LEFT) && (selected_item_number >= 0))
+		if ((wParam == VK_LEFT) && (selected_object_type!=SelectionType::None))
 			shift_selected_instance(-1,0);
-		if ((wParam == VK_DOWN) && (selected_item_number >= 0))
+		if ((wParam == VK_DOWN) && (selected_object_type!=SelectionType::None))
 			shift_selected_instance(0, 1);
+		location new_loc = selected_instance_location();
+		if(new_loc.x>-1){
+			if((cur_viewing_mode == 0 && (abs(new_loc.x-cen_x)>4 || abs(new_loc.y-cen_y)>4)) || ((cur_viewing_mode==10 || cur_viewing_mode==11) && out_of_view_3D(new_loc))){
+				cen_x = new_loc.x;
+				cen_y = new_loc.y;
+				draw_terrain();
+			}
+		}
 
 		if ((wParam == VK_UP) && (selected_square.x > 0) && (selected_square.y > 0))
 			shift_square_contents(0, -1);
@@ -3996,15 +4036,6 @@ if (wParam == 0x39) {
 // q_3DModEnd
 }
 
-//returns true if loc is not conveniently visible from the current 3D viewport
-bool out_of_view_3D(location loc){
-	if(cen_x-loc.x>10 || loc.x-cen_x>9 || cen_y-loc.y>10 || loc.y-cen_y>9)
-		return(true);
-	int x = loc.x-cen_x;
-	int y = loc.y-cen_y;
-	return((y<x-9) || (y<-12-x) || (y>x+9) || (y>11-x));
-}
-
 Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 {
 	POINT pass_point;
@@ -4013,7 +4044,6 @@ Boolean handle_keystroke(WPARAM wParam, LPARAM /* lParam */)
 	chr = (char) wParam;
 	store_ter = current_terrain_type;
 	Boolean need_redraw = FALSE, option_hit = FALSE, right_click = FALSE;
-	extern short selected_item_number;
 	bool ctrl_key = (GetKeyState( VK_CONTROL ) & 0x8000) != 0;	// check MSB for current key state
 	bool shift_key = (GetKeyState( VK_SHIFT ) & 0x8000) != 0;	// check MSB for current key state
 
@@ -6483,7 +6513,7 @@ Boolean create_new_item(short item_to_create,location create_loc,Boolean propert
 	
 	for (i = 0; i < NUM_TOWN_PLACED_ITEMS; i++){
 		if (town.preset_items[i].exists() == FALSE) {
-			selected_item_number=i;
+			selected_object_number=i;
 			selected_object_type=SelectionType::Item;
 			if (i_to_make != NULL) {
 				town.preset_items[i] = *i_to_make;
@@ -6632,7 +6662,7 @@ void edit_town_entry(location spot_hit)
 {
 	short x,y;
 	
-	for (x = 0; x < 8; x++){
+	for (x = 0; x < NUM_OUT_TOWN_ENTRANCES; x++){
 		if ((current_terrain.exit_dests[x] != kNO_OUT_TOWN_ENTRANCE) && (loc_touches_rect(spot_hit,current_terrain.exit_rects[x]))) {
 			y = get_a_number(856,current_terrain.exit_dests[x],0,scenario.num_towns - 1);
 			if(y==-1)

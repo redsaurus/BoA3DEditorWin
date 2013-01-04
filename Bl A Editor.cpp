@@ -35,6 +35,7 @@ char szWinName[] = "Blades of Avernum dialogs";
 
 RECT	windRect;
 Boolean mouse_button_held = FALSE;
+Boolean scroll_dialog_lock = FALSE;
 short cen_x, cen_y;
 short ulx = 0, uly = 0;
 short mode_count = 0;
@@ -158,7 +159,6 @@ SelectionType::SelectionType_e selected_object_type = SelectionType::None;
 unsigned short selected_object_number;
 
 // file selection editing files
-short selected_item_number = -1;//TODO: Get rid of all references to selected_item_number
 // codes for selected items
 //  7000 + x - creature x
 //  9000 + x - terrain script x
@@ -968,7 +968,8 @@ void handle_edit_menu(int item_hit)
 				change_made_outdoors = TRUE;
 			break;
 		case 8: // clear selected instance: "Clear Screen"
-				selected_item_number = -1;
+				selected_object_number = 0;
+				selected_object_type = SelectionType::None;
 				set_string("Item De-selected","");
 		break;
 		case 9: // clear selected instance: "Clear Screen"
@@ -1127,7 +1128,7 @@ void handle_edit_menu(int item_hit)
 
 	case 20: // Delete Selected Object Only
 	if ((editing_town == TRUE) && (cur_viewing_mode == 0 || cur_viewing_mode == 10 || cur_viewing_mode == 11)) {
-		if (selected_item_number > -1) {
+		if (selected_object_type!=SelectionType::None) {
 	delete_selected_instance();
 	set_string("Selected Instance Deleted","");
 	set_cursor(7);

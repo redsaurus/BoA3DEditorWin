@@ -223,16 +223,16 @@ void outdoor_record_type::port()
 {
 	int i,j;
 	
-	for (i = 0; i < 48; i++)
-		for (j = 0; j < 48; j++)
+	for (i = 0; i < OUTDOOR_SIZE; i++)
+		for (j = 0; j < OUTDOOR_SIZE; j++)
 			flip_short(&terrain[i][j]);
 	for (i = 0; i < NUM_OUT_PLACED_SPECIALS; i++) 
 		flip_rect(&special_rects[i]);
 	for (i = 0; i < NUM_OUT_PLACED_SPECIALS; i++) 
 		flip_short(&spec_id[i]);
-	for (i = 0; i < 8; i++) 
+	for (i = 0; i < NUM_OUT_TOWN_ENTRANCES; i++) 
 		flip_rect(&exit_rects[i]);
-	for (i = 0; i < 8; i++) 
+	for (i = 0; i < NUM_OUT_TOWN_ENTRANCES; i++) 
 		flip_short(&exit_dests[i]);
 	for (i = 0; i < 4; i++) {
 		wandering[i].port();
@@ -241,7 +241,7 @@ void outdoor_record_type::port()
 	for (i = 0; i < 8; i++) {
 		preset[i].port();		
 		}
-	for (i = 0; i < 8; i++) 
+	for (i = 0; i < NUM_OUT_DESCRIPTION_AREAS; i++) 
 		flip_rect(&info_rect[i]);
 	flip_short(&is_on_surface);
 	for (i = 0; i < 10; i++) 
@@ -595,7 +595,7 @@ void town_record_type::port()
 
 	for (i =0 ; i < NUM_TER_SCRIPTS; i++) 
 		ter_scripts[i].port();
-	for (i = 0; i < 16; i++)
+	for (i = 0; i < NUM_TOWN_DESCRIPTION_AREAS; i++)
 		flip_rect(&room_rect[i]);
 	for (i = 0; i < NUM_TOWN_PLACED_CREATURES; i++) 
 		creatures[i].port();
