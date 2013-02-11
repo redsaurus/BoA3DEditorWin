@@ -12,7 +12,7 @@
 #include "stdafx.h"
 #include "Resource.h"
 #include "global.h"
-#define kVersion "   Version:  Thursday  24  February  2011"
+#define kVersion "   Version:  Monday  11  February  2013"
 
 // Global variables
 
@@ -1346,6 +1346,10 @@ void handle_help_menu(int item_hit)
 		case 2: // 3D Editor Credits
 				fancy_choice_dialog(1063,0);
 			break;	
+		case 3: // 3D Editor - Getting Started
+				fancy_choice_dialog(986,0);
+			break;	
+			
 		case 4: //   Write Scenario Data to Text File
 			if (fancy_choice_dialog(866,0) == 1) {
          last_file_printed = 0;
@@ -1388,6 +1392,10 @@ void handle_help_menu(int item_hit)
 				 set_string("Repeat Printing of Last File:","Full Town Report.txt");
 				 start_full_town_data_dump();
 				 }
+         if (last_file_printed == 14) {
+				 set_string("Repeat Printing of Last File:","Scenario Text and Data.txt");
+				 scenariotext_data_dump();
+				 }
          if (last_file_printed == 15) {
 				 set_string("Repeat Printing of Last File:","Outdoor Zones Write Up.txt");
 				 start_full_data_dump();
@@ -1398,7 +1406,19 @@ void handle_help_menu(int item_hit)
 				 }
          if (last_file_printed == 17) {
 				 set_string("Repeat Printing of Last File:","Scenario Text and Data.txt");
-				 scenariotext_data_dump();
+                 floor_type_data_dump();
+				 }
+         if (last_file_printed == 18) {
+				 set_string("Repeat Printing of Last File:","Scenario Text and Data.txt");
+				terrain_type_data_dump();
+				 }
+         if (last_file_printed == 19) {
+				 set_string("Repeat Printing of Last File:","Scenario Text and Data.txt");
+				creature_type_data_dump();
+				 }
+         if (last_file_printed == 20) {
+				 set_string("Repeat Printing of Last File:","Scenario Text and Data.txt");
+				item_data_dump();
 				 }
 
 				break;
@@ -1412,21 +1432,18 @@ void handle_help_menu(int item_hit)
 
 		case 10: // Current Outdoor Zone: Full Write up
 			if (fancy_choice_dialog(888,0) == 1) {
-         last_file_printed = 16;
+                 last_file_printed = 16;
 				 start_currentout_data_dump();
 				 }
 			break;
 			
 		case 11: // Write Scenario Text To Text File
 			if (fancy_choice_dialog(889,0) == 1) {
-         last_file_printed = 17;
+                 last_file_printed = 14;
 				 scenariotext_data_dump();
 				 }
 			break;
 
-		case 12: // 3D Editor - Getting Started
-				fancy_choice_dialog(986,0);
-			break;	
 
 		case 13: // Shortcut keys 1 screen
 				fancy_choice_dialog(987,0);
@@ -1440,10 +1457,30 @@ void handle_help_menu(int item_hit)
 				fancy_choice_dialog(989,0);
 			break;
 
-		case 19: // Display a specified dialog
-				short j = how_many_dlog(0,800,1063,"Which dialog?  (800 - 1063)");
-				fancy_choice_dialog(j,0);
+		case 17: //   Write Scenario Floor Data to Text File
+			if (fancy_choice_dialog(846,0) == 1) {
+               last_file_printed = 17;
+               floor_type_data_dump();
+			}
 			break;
+		case 18: //   Write Scenario Terrain Data to Text File
+			if (fancy_choice_dialog(847,0) == 1) {
+               last_file_printed = 18;                                           
+				terrain_type_data_dump();
+			}
+			break;
+		case 19: //   Write Scenario Creature Data to Text File
+			if (fancy_choice_dialog(848,0) == 1) {
+               last_file_printed = 19;                                           
+				creature_type_data_dump();
+			}
+			break;                        				
+		case 20: //   Write Scenario Item Data to Text File
+			if (fancy_choice_dialog(849,0) == 1) {
+               last_file_printed = 20;                                           
+				item_data_dump();
+			}
+			break;	
 			
 		}
 	draw_main_screen();		

@@ -68,7 +68,6 @@ extern char hintbook_mode6;
 extern char hintbook_mode7;
 extern char hintbook_mode8;
 extern char hintbook_mode9;
-extern Boolean use_custom_name;
 extern char grid_mode;
 extern short last_large_mode;
 extern Boolean r1_in_r2(macRECT r1,macRECT r2);
@@ -4634,7 +4633,7 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 1503; i < 1516; i++)
+		for (short i = 1504; i < 1521; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 
 		return;
@@ -4661,7 +4660,7 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
-		for (short i = 1503; i < 1516; i++)
+		for (short i = 1504; i < 1521; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 	}
 
@@ -4679,7 +4678,7 @@ void shut_down_menus()
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 1100; i < 1356; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		for (short i = 1503; i < 1516; i++)
+		for (short i = 1504; i < 1521; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 	}
 }
@@ -5340,15 +5339,14 @@ void unfrill_terrain()
 void create_new_creature(short c_to_create,location create_loc,creature_start_type *c_to_make)
 {
 	short i;
-	
+	if (file_is_loaded == TRUE)
 	//if (!strcmp(scen_data.scen_creatures[c_to_create].name,"Unused"))
 	//	return;
 	if (c_to_create < 0)	
 		return;
 	if (loc_in_active_area(create_loc) == FALSE) {
-		 if (use_custom_name == 0)
+    	if (file_is_loaded == TRUE)
 		 		give_error("You can't place a creature here. This space is outside of the active town area.","",0);
-		 else set_string("You can't place a creature here:","outside of the active town area.");
 		return;
 	}
 
@@ -5396,10 +5394,8 @@ Boolean create_new_item(short item_to_create,location create_loc,Boolean propert
 	if (item_to_create < 0)	
 		return TRUE;
 	if (loc_in_active_area(create_loc) == FALSE) {
-		 if (use_custom_name == 0)
+    	if (file_is_loaded == TRUE)
 		 		give_error("You can't place an item here. This space is outside of the active town area.","",0);
-		 else
-		 		set_string("You can't place an item here:","outside of the active town area.");
 		return TRUE;
 	}
 	
@@ -5441,9 +5437,8 @@ Boolean create_new_ter_script(char *ter_script_name,location create_loc,in_town_
 	if (strlen(ter_script_name) >= SCRIPT_NAME_LEN)	
 		return TRUE;
 	if (loc_in_active_area(create_loc) == FALSE) {
- 		 if (use_custom_name == 0)
+    	if (file_is_loaded == TRUE)
 		 			give_error("You can't place a terrain script here. This space is outside of the active town area.","",0);
-		 else set_string("You can't place a script here:","outside of the active town area.");
 		return TRUE;
 	}
 	
@@ -5470,11 +5465,8 @@ Boolean create_new_ter_script(char *ter_script_name,location create_loc,in_town_
 			return TRUE;
 		}	
 	}
-		 if (use_custom_name == 0)
-		 		 	give_error("You can only have 100 active terrain scripts in a zone. No terrain script has been created.","",0);
-		 else set_string("You can only have 100 terrain scripts.","No terrain script has been created.");
-
-	return FALSE;
+	  give_error("You can only have 100 active terrain scripts in a zone. No terrain script has been created.","",0);
+      return FALSE;
 }
 
 void shift_item_locs(location spot_hit)

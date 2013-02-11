@@ -257,9 +257,9 @@ BEGIN
     BEGIN
         MENUITEM "&Original 2D Editor Credits", 1501
         MENUITEM "3D Editor &Credits", 1502
-        MENUITEM "Blades Of Avernum: &Getting Started", 1512
+        MENUITEM "Blades Of Avernum: &Getting Started", 1503
         MENUITEM SEPARATOR
-        MENUITEM "Query Functions:",1503
+        MENUITEM "Query Functions:",1512
         MENUITEM "Write Scenario Data To Text File\tCtrl+&1", 1504
         MENUITEM "Write Scenario Text To Text File\tCtrl+&2", 1511
         MENUITEM "Full Write up: Outdoor/Town Names\tCtrl+&3", 1505
@@ -268,6 +268,11 @@ BEGIN
         MENUITEM "Town: Write Data To File\tCtrl+&6", 1506
         MENUITEM "Town: Full Write Data To File\tCtrl+&7", 1507
         MENUITEM "&Repeat Printing of Last File\tCtrl+P", 1508
+        MENUITEM SEPARATOR
+        MENUITEM "Print Out BoA Floor Data", 1517
+        MENUITEM "Print Out BoA Terrain Data", 1518
+        MENUITEM "Print Out BoA Creature Data", 1519
+        MENUITEM "Print Out BoA Item Data", 1520
         MENUITEM SEPARATOR
         MENUITEM "&Shortcut Keys 1: Folio Keys and Mouse", 1513
         MENUITEM "&Shortcut Keys 2: Number Pad and Nearby Keys", 1514
@@ -1377,6 +1382,38 @@ BEGIN
     LTEXT           "Creature Type, Extra Item 1, Extra Item 2, Creature Script and Appear Type numbers can be entered via the two white boxes or by the dialog screens created by the Choose buttons.",83,430,186,140,125
 END
 
+846 DIALOG  10, 10, 357, 108
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,228,89,66,20
+    LTEXT           "0_5",2,162,89,62,20
+    LTEXT           "This will list all of the main scenario floor data in a handy decimal array that includes informative labels.",3,22,21,271,66
+END
+
+847 DIALOG  10, 10, 357, 108
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,228,89,66,20
+    LTEXT           "0_5",2,162,89,62,20
+    LTEXT           "This will list all of the main scenario terrain data in a handy decimal array that includes informative labels.",3,22,21,271,66
+END
+
+848 DIALOG  10, 10, 357, 108
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,228,89,66,20
+    LTEXT           "0_5",2,162,89,62,20
+    LTEXT           "This will list all of the main scenario monster data in a handy decimal array that includes informative labels.",3,22,21,271,66
+END
+
+849 DIALOG  10, 10, 357, 108
+STYLE WS_POPUP | WS_DLGFRAME
+BEGIN
+    LTEXT           "1_63",1,228,89,66,20
+    LTEXT           "0_5",2,162,89,62,20
+    LTEXT           "This will list all of the main scenario item data in a handy decimal array that includes informative labels.",3,22,21,271,66
+END
+
 850 DIALOG  10, 10, 521, 526 // Outdoor area descriptions
 STYLE WS_POPUP | WS_DLGFRAME
 BEGIN
@@ -1921,8 +1958,8 @@ BEGIN
     LTEXT           "To get to this documentation, open BoA Editor Docs v1.2.doc. This file contains the full instructions for the editor, ready to be printed out.",3,50,77,412,40
     LTEXT           "Of special importance is the section 'How to Make a Simple Scenario'.  It describes, in exact, step-by-step detail, how to make a simple scenario with dungeons, monsters, and treasure. This section will give you a quick, easy start.",4,50,108,412,53
     LTEXT           "Once you've mastered the basics, using this section, skim through the documentation. Unfortunately, this is not a program you will be able to get the best use out of without using the instructions.",5,50,172,418,40
-    LTEXT           "Editor documentation is included with the official Spiderweb 2005 2D Editor, this can be downloaded from the Spiderweb site, see http://www.spiderwebsoftware.com/.",6,50,223,418,45
-    LTEXT           "Finally, if you're stuck and need ideas, go to Spiderweb Forums:|http://www.spiderwebforums.com/forum/ubbthreads.php. |There is a Scenario Editor forum there, which has all kinds of hints, tips, and answers for better scenario design.",7,50,274,418,60
+    LTEXT           "Editor documentation is included with the official Spiderweb 2005 2D Editor, this can be downloaded from the Spiderweb site, see |http://www.avernum.com/blades/scen_workshop.html",6,50,223,418,45
+    LTEXT           "Finally, if you're stuck and need ideas, go to Spiderweb Forums:|http://spiderwebforums.ipbhost.com/|There is a Scenario Editor forum there, which has all kinds of hints, tips, and answers for better scenario design.",7,50,274,418,60
     LTEXT           "BLADES OF AVERNUM - GETTING STARTED",8,50,14,265,16
 END
 
@@ -2029,7 +2066,7 @@ BEGIN
     LTEXT           "Blades of Avernum Editor v1.0 |  Copyright 2004, Spiderweb Software, Inc., All rights reserved.",2,22,24,425,51
     LTEXT           "Blades of Avernum is $25 shareware. The hint book is $10 ($7 with game registration). To find out how to order, select 'How To Order' on the title screen.",3,22,230,449,50
     LTEXT           "Comments and questions? The creators of Blades of Avernum want to hear them. Send them to:",4,22,281,371,32
-    LTEXT           "E-Mail: spidweb@spiderwebsoftware.com |WWW: http://www.spiderwebsoftware.com",5,32,314,353,53
+    LTEXT           "E-Mail: support@spiderwebsoftware.com |WWW: http://spiderwebforums.ipbhost.com/",5,32,314,353,53
     LTEXT           "Blades of Avernum is brought to you by Spiderweb Software - |   _Where our aberrations become your reality._ |_Avernum and Spiderweb Software are trademarks of Spiderweb Software.",6,22,162,451,67
     LTEXT           "CREDITS: |   Concept, Design, Programming: Jeff Vogel |   Icon Design: Andrew Hunter (Wormius@aol.com) |   Assistant Design: Mariann Krizsan (krizsan@spidweb.com)|   Business Manager: Linda Strout",7,22,78,439,83
 END
@@ -2043,7 +2080,7 @@ BEGIN
     LTEXT           "Ported to Windows by Isaac, who is also missing in action."4,22,72,440,22
     LTEXT           "Latest version: serious programming by Niemand.  Aesthetic touches by Ishad Nha.",5,22,96,440,22
     LTEXT           "Any problems, be sure to consult the Editor documentation, which comes with the official Spiderweb editor.",6,22,130,440,22
-    LTEXT           "There is an official Spiderweb forum see: http://www.ironycentral.com/forum/ubbthreads.php?ubb=cfrm",7,22,164,440,23
+    LTEXT           "There is an official Spiderweb forum see: |http://spiderwebforums.ipbhost.com/",7,22,164,440,23
 END
 
 

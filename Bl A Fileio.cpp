@@ -169,6 +169,7 @@ void clean_str(char *str);
 void kludge_correct_old_bad_data();
 short SetFPos(FILE *file, short mode, long len);
 short FSWrite(FILE *file_id, long *len, char *data);
+Boolean use_custom_name = 0;
 
 // registry constant
 const char* kRegistryKey = "Software\\Spiderweb Software\\BoA 3D Editor";
@@ -1130,7 +1131,6 @@ void oops_error(short error)
 //	redraw_screen();
 }
 
-
 void start_data_dump()
 {
 	short i;
@@ -1184,6 +1184,151 @@ void start_data_dump()
 		FSWrite(data_dump_file_id, &len, (char *) get_text);
 	FSClose(data_dump_file_id);
 }	
+
+
+void floor_type_data_dump()
+{
+	short i;
+	char get_text[1280];
+	FILE *data_dump_file_id;
+	long len;
+
+	 sprintf(get_text,"%s - Floor Type Data.txt",scenario.scen_name);
+	if (NULL == (data_dump_file_id = fopen(get_text, "wb"))) {
+		oops_error(11);
+		return;
+		}
+
+	sprintf((char *)get_text,"\r\rScenario Floor Type Data for %s:\r\r",scenario.scen_name);
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+	
+	sprintf((char *)get_text,"i\tfloor_name\tpic.which_sheet\tpic.which_icon\tpic.graphic_adjust\ted_pic.which_sheet\ted_pic.which_icon\ted_pic.graphic_adjust\tblocked\tstep_sound\tlight_radius\tfloor_height\tnum_anim_steps\tspecial\teffect_adjust\tis_water\tis_floor\tis_ground\tis_rough\tfly_over\tshimmers\toutdoor_combat_town_used\tshortcut_key\textra[0]\textra[1]\textra[2]\textra[3]\textra[4]\textra[5]\r\r");
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+	sprintf((char *)get_text,"1\t2\t3\t4\t5\t6\t7\t8\t9\t10\t11\t12\t13\t14\t15\t16\t17\t18\t19\t20\t21\t22\t23\t24\t25\t26\t27\t28\t29\r\r");
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+		for (i = 0; i < 256; i++) {
+		sprintf((char *)get_text,"%d\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\r",i,scen_data.scen_floors[i].floor_name,scen_data.scen_floors[i].pic.which_sheet,scen_data.scen_floors[i].pic.which_icon,scen_data.scen_floors[i].pic.graphic_adjust,scen_data.scen_floors[i].ed_pic.which_sheet,scen_data.scen_floors[i].ed_pic.which_icon,scen_data.scen_floors[i].ed_pic.graphic_adjust,scen_data.scen_floors[i].blocked,scen_data.scen_floors[i].step_sound,scen_data.scen_floors[i].light_radius,scen_data.scen_floors[i].floor_height,scen_data.scen_floors[i].num_anim_steps,scen_data.scen_floors[i].special,scen_data.scen_floors[i].effect_adjust,scen_data.scen_floors[i].is_water,scen_data.scen_floors[i].is_floor,scen_data.scen_floors[i].is_ground,scen_data.scen_floors[i].is_rough,scen_data.scen_floors[i].fly_over,scen_data.scen_floors[i].shimmers,scen_data.scen_floors[i].outdoor_combat_town_used,scen_data.scen_floors[i].shortcut_key,scen_data.scen_floors[i].extra[0],scen_data.scen_floors[i].extra[1],scen_data.scen_floors[i].extra[2],scen_data.scen_floors[i].extra[3],scen_data.scen_floors[i].extra[4],scen_data.scen_floors[i].extra[5]);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		}
+		sprintf((char *)get_text,"\r\r");
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+	FSClose(data_dump_file_id);
+}	
+
+void terrain_type_data_dump()
+{
+	short i;
+	char get_text[1280];
+	FILE *data_dump_file_id;
+	long len;
+
+	 sprintf(get_text,"%s - Terrain Type Data.txt",scenario.scen_name);
+	if (NULL == (data_dump_file_id = fopen(get_text, "wb"))) {
+		oops_error(11);
+		return;
+		}
+
+	sprintf((char *)get_text,"\r\rScenario Terrain Type Data for %s:\r\r",scenario.scen_name);
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+	sprintf((char *)get_text,"i\tter_name\tpic.which_sheet\tpic.which_icon\tpic.graphic_adjust\tcut_away_pic.which_sheet\tcut_away_pic.which_icon\tcut_away_pic.graphic_adjust\ted_pic.which_sheet\ted_pic.which_icon\ted_pic.graphic_adjust\ticon_offset_x\ticon_offset_y\tsecond_icon\tsecond_icon_offset_x\tsecond_icon_offset_y\tcut_away_second_icon\tcut_away_offset_x\tcut_away_offset_y\tanim_steps\tmove_block[0]\tmove_block[1]\tmove_block[2]\tmove_block[3]\tsee_block[0]\tsee_block[1]\tsee_block[2]\tsee_block[3]\tblocks_view[0]\tblocks_view[1]\tblocks_view[2]\tblocks_view[3]\theight_adj\tsuppress_floor\tlight_radius\tstep_sound\tshortcut_key\tcrumble_type\tbeam_hit_type\tterrain_to_crumble_to\thidden_town_terrain\tswap_terrain\tis_bridge\tis_road\tcan_look_at\tdraw_on_automap\tdefault_script\tshimmers\toutdoor_combat_town_used\tspecial\teffect_adjust\r\r");
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+	sprintf((char *)get_text,"1\t2\t3\t4\t5\t6\t7\t8\t9\t10\t11\t12\t13\t14\t15\t16\t17\t18\t19\t20\t21\t22\t23\t24\t25\t26\t27\t28\t29\t30\t31\t32\t33\t34\t35\t36\t37\t38\t39\t40\t41\t42\t43\t44\t45\t46\t47\t48\t49\t50\t51\r\r");
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+		for (i = 0; i < 512; i++) {
+		sprintf((char *)get_text,"%d\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%d\t%d\t%d\t%d\r",(int)i,scen_data.scen_ter_types[i].ter_name,scen_data.scen_ter_types[i].pic.which_sheet,scen_data.scen_ter_types[i].pic.which_icon,scen_data.scen_ter_types[i].pic.graphic_adjust,scen_data.scen_ter_types[i].cut_away_pic.which_sheet,scen_data.scen_ter_types[i].cut_away_pic.which_icon,scen_data.scen_ter_types[i].cut_away_pic.graphic_adjust,scen_data.scen_ter_types[i].ed_pic.which_sheet,scen_data.scen_ter_types[i].ed_pic.which_icon,scen_data.scen_ter_types[i].ed_pic.graphic_adjust,scen_data.scen_ter_types[i].icon_offset_x,scen_data.scen_ter_types[i].icon_offset_y,scen_data.scen_ter_types[i].second_icon,scen_data.scen_ter_types[i].second_icon_offset_x,scen_data.scen_ter_types[i].second_icon_offset_y,scen_data.scen_ter_types[i].cut_away_second_icon,scen_data.scen_ter_types[i].cut_away_offset_x,scen_data.scen_ter_types[i].cut_away_offset_y,scen_data.scen_ter_types[i].anim_steps,scen_data.scen_ter_types[i].move_block[0],scen_data.scen_ter_types[i].move_block[1],scen_data.scen_ter_types[i].move_block[2],scen_data.scen_ter_types[i].move_block[3],scen_data.scen_ter_types[i].see_block[0],scen_data.scen_ter_types[i].see_block[1],scen_data.scen_ter_types[i].see_block[2],scen_data.scen_ter_types[i].see_block[3],scen_data.scen_ter_types[i].blocks_view[0],scen_data.scen_ter_types[i].blocks_view[1],scen_data.scen_ter_types[i].blocks_view[2],scen_data.scen_ter_types[i].blocks_view[3],scen_data.scen_ter_types[i].height_adj,scen_data.scen_ter_types[i].suppress_floor,scen_data.scen_ter_types[i].light_radius,scen_data.scen_ter_types[i].step_sound,scen_data.scen_ter_types[i].shortcut_key,scen_data.scen_ter_types[i].crumble_type,scen_data.scen_ter_types[i].beam_hit_type,scen_data.scen_ter_types[i].terrain_to_crumble_to,scen_data.scen_ter_types[i].hidden_town_terrain,scen_data.scen_ter_types[i].swap_terrain,scen_data.scen_ter_types[i].is_bridge,scen_data.scen_ter_types[i].is_road,scen_data.scen_ter_types[i].can_look_at,scen_data.scen_ter_types[i].draw_on_automap,scen_data.scen_ter_types[i].default_script,scen_data.scen_ter_types[i].shimmers,scen_data.scen_ter_types[i].outdoor_combat_town_used,scen_data.scen_ter_types[i].special,scen_data.scen_ter_types[i].effect_adjust);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		}
+		sprintf((char *)get_text,"\r\r");
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+	FSClose(data_dump_file_id);
+}	
+
+
+void creature_type_data_dump()
+{
+	short i;
+	char get_text[1280];
+	FILE *data_dump_file_id;
+	long len;
+
+	 sprintf(get_text,"%s - Creature Type Data.txt",scenario.scen_name);
+	if (NULL == (data_dump_file_id = fopen(get_text, "wb"))) {
+		oops_error(11);
+		return;
+		}
+
+	sprintf((char *)get_text,"\r\rScenario Creature Type Data for %s:\r\r",scenario.scen_name);
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+	sprintf((char *)get_text,"i\tname\tlevel\twhich_to_add_to[0]\twhich_to_add_to[1]\twhich_to_add_to[2]\twhich_to_add_to[3]\twhich_to_add_to[4]\twhich_to_add_to[5]\thow_much[0]\thow_much[1]\thow_much[2]\thow_much[3]\thow_much[4]\thow_much[5]\titems[0]\titems[1]\titems[2]\titems[3]\titems[4]\titems[5]\titems[6]\titems[7]\titem_chances[0]\titem_chances[1]\titem_chances[2]\titem_chances[3]\titem_chances[4]\titem_chances[5]\titem_chances[6]\titem_chances[7]\thp_bonus\tsp_bonus\tspec_abil\tdefault_attitude\tspecies\timmunities[0]\timmunities[1]\timmunities[2]\timmunities[3]\timmunities[4]\timmunities[5]\tnatural_armor\tchar_graphic.which_sheet\tchar_graphic.which_icon\tchar_graphic.graphic_adjust\tchar_upper_graphic_sheet\tsmall_or_large_template\ta[0]\ta[1]\ta[2]\ta1_type\ta23_type\tap_bonus\tdefault_script\tdefault_strategy\tdefault_aggression\tdefault_courage\tsummon_class\textra[0]\textra[1]\textra[2]\textra[3]\textra[4]\textra[5]\textra[6]\textra[7]\textra[8]\textra[9]\r\r");
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+	sprintf((char *)get_text,"1\t2\t3\t4\t5\t6\t7\t8\t9\t10\t11\t12\t13\t14\t15\t16\t17\t18\t19\t20\t21\t22\t23\t24\t25\t26\t27\t28\t29\t30\t31\t32\t33\t34\t35\t36\t37\t38\t39\t40\t41\t42\t43\t44\t45\t46\t47\t48\t49\t50\t51\t52\t53\t54\t55\t56\t57\t58\t59\t60\t61\t62\t63\t64\t65\t66\t67\t68\t69\r\r");
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+		for (i = 0; i < 256; i++) {
+		sprintf((char *)get_text,"%d\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\r",i,scen_data.scen_creatures[i].name,scen_data.scen_creatures[i].level,scen_data.scen_creatures[i].which_to_add_to[0],scen_data.scen_creatures[i].which_to_add_to[1],scen_data.scen_creatures[i].which_to_add_to[2],scen_data.scen_creatures[i].which_to_add_to[3],scen_data.scen_creatures[i].which_to_add_to[4],scen_data.scen_creatures[i].which_to_add_to[5],scen_data.scen_creatures[i].how_much[0],scen_data.scen_creatures[i].how_much[1],scen_data.scen_creatures[i].how_much[2],scen_data.scen_creatures[i].how_much[3],scen_data.scen_creatures[i].how_much[4],scen_data.scen_creatures[i].how_much[5],scen_data.scen_creatures[i].items[0],scen_data.scen_creatures[i].items[1],scen_data.scen_creatures[i].items[2],scen_data.scen_creatures[i].items[3],scen_data.scen_creatures[i].items[4],scen_data.scen_creatures[i].items[5],scen_data.scen_creatures[i].items[6],scen_data.scen_creatures[i].items[7],scen_data.scen_creatures[i].item_chances[0],scen_data.scen_creatures[i].item_chances[1],scen_data.scen_creatures[i].item_chances[2],scen_data.scen_creatures[i].item_chances[3],scen_data.scen_creatures[i].item_chances[4],scen_data.scen_creatures[i].item_chances[5],scen_data.scen_creatures[i].item_chances[6],scen_data.scen_creatures[i].item_chances[7],scen_data.scen_creatures[i].hp_bonus,scen_data.scen_creatures[i].sp_bonus,scen_data.scen_creatures[i].spec_abil,scen_data.scen_creatures[i].default_attitude,scen_data.scen_creatures[i].species,scen_data.scen_creatures[i].immunities[0],scen_data.scen_creatures[i].immunities[1],scen_data.scen_creatures[i].immunities[2],scen_data.scen_creatures[i].immunities[3],scen_data.scen_creatures[i].immunities[4],scen_data.scen_creatures[i].immunities[5],scen_data.scen_creatures[i].natural_armor,scen_data.scen_creatures[i].char_graphic.which_sheet,scen_data.scen_creatures[i].char_graphic.which_icon,scen_data.scen_creatures[i].char_graphic.graphic_adjust,scen_data.scen_creatures[i].char_upper_graphic_sheet,scen_data.scen_creatures[i].small_or_large_template,scen_data.scen_creatures[i].a[0],scen_data.scen_creatures[i].a[1],scen_data.scen_creatures[i].a[2],scen_data.scen_creatures[i].a1_type,scen_data.scen_creatures[i].a23_type,scen_data.scen_creatures[i].ap_bonus,scen_data.scen_creatures[i].default_script,scen_data.scen_creatures[i].default_strategy,scen_data.scen_creatures[i].default_aggression,scen_data.scen_creatures[i].default_courage,scen_data.scen_creatures[i].summon_class,scen_data.scen_creatures[i].extra[0],scen_data.scen_creatures[i].extra[1],scen_data.scen_creatures[i].extra[2],scen_data.scen_creatures[i].extra[3],scen_data.scen_creatures[i].extra[4],scen_data.scen_creatures[i].extra[5],scen_data.scen_creatures[i].extra[6],scen_data.scen_creatures[i].extra[7],scen_data.scen_creatures[i].extra[8],scen_data.scen_creatures[i].extra[9]);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		}
+		sprintf((char *)get_text,"\r\r");
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+	FSClose(data_dump_file_id);
+}	
+
+
+void item_data_dump()
+{
+	short i;
+	char get_text[580];
+	FILE *data_dump_file_id;
+	long len;
+
+	 sprintf(get_text,"%s - Item Data.txt",scenario.scen_name);
+	if (NULL == (data_dump_file_id = fopen(get_text, "wb"))) {
+		oops_error(11);
+		return;
+		}
+
+	sprintf((char *)get_text,"\r\rScenario Item Data for %s:\r\r",scenario.scen_name);
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+	sprintf((char *)get_text,"\r\ritem#\tfull_name\tvariety\tdamage\tbonus\tweap_type\tprotection\tcharges\tencumbrance\twhich_sheet\twhich_icon\tgraphic_adjust\tinven_icon\tmissile_anim_type\tability_in_slot[0]\tability_strength[0]\tability_in_slot[1]\tability_strength[1]\tability_in_slot[2]\tability_strength[2]\tability_in_slot[3]\tability_strength[3]\tspecial_class\tvalue\tweight\tvalue_class\tident\tmagic\tcursed\tonce_per_day\tjunk_item\textra[0]\textra[1]\textra[2]\textra[3]\tname\r\r");
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+
+	sprintf((char *)get_text,"1\t2\t3\t4\t5\t6\t7\t8\t9\t10\t11\t12\t13\t14\t15\t16\t17\t18\t19\t20\t21\t22\t23\t24\t25\t26\t27\t28\t29\t30\t31\t32\t33\t34\t35\t36\r\r");
+	len = (long) (strlen((char *)get_text));
+	FSWrite(data_dump_file_id, &len, (char *) get_text);
+	
+		for (i = 0; i < NUM_SCEN_ITEMS; i++) {
+		sprintf((char *)get_text,"%d\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%s\r",(int)i,scen_data.scen_items[i].full_name,scen_data.scen_items[i].variety,scen_data.scen_items[i].damage,scen_data.scen_items[i].bonus,scen_data.scen_items[i].weap_type,scen_data.scen_items[i].protection,scen_data.scen_items[i].charges,scen_data.scen_items[i].encumbrance,scen_data.scen_items[i].item_floor_graphic.which_sheet ,scen_data.scen_items[i].item_floor_graphic.which_icon ,scen_data.scen_items[i].item_floor_graphic.graphic_adjust,scen_data.scen_items[i].inven_icon,scen_data.scen_items[i].missile_anim_type,scen_data.scen_items[i].ability_in_slot[0],scen_data.scen_items[i].ability_strength[0],scen_data.scen_items[i].ability_in_slot[1],scen_data.scen_items[i].ability_strength[1],scen_data.scen_items[i].ability_in_slot[2],scen_data.scen_items[i].ability_strength[2],scen_data.scen_items[i].ability_in_slot[3],scen_data.scen_items[i].ability_strength[3],scen_data.scen_items[i].special_class,scen_data.scen_items[i].value,scen_data.scen_items[i].weight,scen_data.scen_items[i].value_class,scen_data.scen_items[i].ident,scen_data.scen_items[i].magic,scen_data.scen_items[i].cursed,scen_data.scen_items[i].once_per_day,scen_data.scen_items[i].junk_item,scen_data.scen_items[i].extra[0],scen_data.scen_items[i].extra[1],scen_data.scen_items[i].extra[2],scen_data.scen_items[i].extra[3],scen_data.scen_items[i].name);
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+		}
+		sprintf((char *)get_text,"\r\r");
+		len = (long) (strlen((char *)get_text));
+		FSWrite(data_dump_file_id, &len, (char *) get_text);
+	FSClose(data_dump_file_id);
+}	
+
 
 void start_full_data_dump()
 {
@@ -2369,14 +2514,7 @@ void import_blades_of_exile_scenario()
 			dummy_str[SCRIPT_NAME_LEN - 1] = 0;
 			strcpy(current_terrain.section_script,dummy_str);
 			sprintf((char *) out_script_name,"%s.txt",dummy_str);
-
-		try {
-		port_outdoor_script(out_script_name,new_scen_path,n,m);
-		}
-		catch(...) {
-			sprintf(str1,"Tried to create an outdoor script for zone X %d, Y = %d,but there was an error.",n,m);
-			give_error(str1,"",0);
-		}
+			port_outdoor_script(out_script_name,new_scen_path,n,m);
 	}
 }
 			// write ported outdoor section
@@ -2472,14 +2610,7 @@ void import_blades_of_exile_scenario()
 		sprintf((char *) dummy_str,"%s",BOAPortTownScriptnames[m]);
 		strcpy(town.town_script,dummy_str);
 		sprintf((char *) town_script_name,"%s.txt",dummy_str);
-
-		try {
 		port_town_script(town_script_name,new_scen_path,m);
-		}
-		catch(...) {
-		sprintf(str1,"Tried to create a town script for town %d, %s, but there was an error.",m,dummy_str);
-		give_error(str1,"",0);
-		}
 
 		// port town dlog script
 		char town_dlg_script_name[256];
@@ -2588,6 +2719,10 @@ void port_boe_scenario_data()
 		scenario.flag_to_add_to_town[i][0] = boe_scenario.flag_to_add_to_town[i][0];
 		scenario.flag_to_add_to_town[i][1] = boe_scenario.flag_to_add_to_town[i][1];
 		}
+	for ( i = 0; i < 30; i++) {
+			scenario.scen_boats[i] = boe_scenario.scen_boats[i];
+		scenario.scen_horses[i] = boe_scenario.scen_horses[i];
+		}
 	
 	// Port scenario script
 	
@@ -2610,17 +2745,17 @@ void port_boe_out_data()
 		strcpy(town.town_name,BOAPortOutnames[out_num]);
 // out_num needs to be made a parameter?
 	 }
+	 
 	for (i = 0; i < 48; i++)
 		for (j = 0; j < 48; j++) {
 			current_terrain.floor[i][j] = (unsigned char)old_ter_to_floor[boe_outdoor.terrain[i][j]];
 			current_terrain.terrain[i][j] = old_ter_to_ter[boe_outdoor.terrain[i][j]];
-			current_terrain.height[i][j] = 9;
-			
-			if (current_terrain.floor[i][j] < 4)
-				current_section_on_surface = FALSE;
-				else if ((current_terrain.floor[i][j] >= 37) && (current_terrain.floor[i][j] <= 40))
-					current_section_on_surface = TRUE;
+			if ((current_terrain.floor[i][j] == 194) || (current_terrain.floor[i][j] == 195))
+				current_terrain.height[i][j] = 10;
+			else
+				current_terrain.height[i][j] = 9;			
 			}
+	 
 	for (i = 0; i < 18; i++) 
 		if ((boe_outdoor.special_locs[i].x >= 0) && (boe_outdoor.special_locs[i].y >= 0) && (boe_outdoor.special_id[i] >= 0)) {
 			current_terrain.special_rects[i].left = current_terrain.special_rects[i].right = boe_outdoor.special_locs[i].x;
@@ -2701,10 +2836,10 @@ void port_boe_out_data()
 	// process roads. first, roads inside of terrain
 	for (i = 1; i < 47; i++)
 		for (j = 1; j < 47; j++) 
-			if ((is_old_road(i,j)) && (boe_outdoor.terrain[i][j] > 70)) {
-				if ((is_old_road(i,j-1)) && (is_old_road(i,j+1)))
+			if ((is_old_road(i,j)) && (old_ter_variety[boe_outdoor.terrain[i][j]] == 15)) {
+				if ((is_old_road(i,j-1)) || (is_old_road(i,j+1))) 
 					current_terrain.terrain[i][j] = 410;
-				if ((is_old_road(i-1,j)) && (is_old_road(i+1,j)))
+				if ((is_old_road(i-1,j)) || (is_old_road(i+1,j)))
 					current_terrain.terrain[i][j] = 411;
 				if ((is_old_road(i+1,j)) && (is_old_road(i,j+1)))
 					current_terrain.terrain[i][j] = 412;
@@ -2716,37 +2851,89 @@ void port_boe_out_data()
 					current_terrain.terrain[i][j] = 415;
 				if ((is_old_road(i-1,j)) && (is_old_road(i,j+1)) && (is_old_road(i,j-1)))
 					current_terrain.terrain[i][j] = 416;
-				if ((is_old_road(i+1,j)) && (is_old_road(i-1,j)) && (is_old_road(i,j-1)))
+				if ((is_old_road(i-1,j)) && (is_old_road(i+1,j)) && (is_old_road(i,j-1)))
 					current_terrain.terrain[i][j] = 417;
-				if ((is_old_road(i+1,j)) && (is_old_road(i,j+1)) && (is_old_road(i,j-1)))
+				if ((is_old_road(i+1,j)) && (is_old_road(i,j-1)) && (is_old_road(i,j+1)))
 					current_terrain.terrain[i][j] = 418;
-				if ((is_old_road(i+1,j)) && (is_old_road(i-1,j)) && (is_old_road(i,j+1)))
+				if ((is_old_road(i-1,j)) && (is_old_road(i+1,j)) && (is_old_road(i,j+1)))
 					current_terrain.terrain[i][j] = 419;
-				if ((is_old_road(i+1,j)) && (is_old_road(i-1,j)) && (is_old_road(i,j+1)) && (is_old_road(i,j-1)))
+				if ((is_old_road(i-1,j)) && (is_old_road(i+1,j)) && (is_old_road(i,j-1)) && (is_old_road(i,j+1)))
+					current_terrain.terrain[i][j] = 420;
+				if (!(is_old_road(i-1,j)) && !(is_old_road(i+1,j)) && !(is_old_road(i,j-1)) && !(is_old_road(i,j+1)))
 					current_terrain.terrain[i][j] = 420;
 				}
 
 	// process roads. next, roads on edge of terrain
-	for (i = 0; i < 48; i++)
-		if ((is_old_road(i,0)) && (boe_outdoor.terrain[i][0] > 70))
-			current_terrain.terrain[i][0] = 410;
-	for (i = 0; i < 48; i++)
-		if ((is_old_road(i,47)) && (boe_outdoor.terrain[i][47] > 70))
-			current_terrain.terrain[i][47] = 410;
-	for (j = 0; j < 48; j++)
-		if ((is_old_road(0,j)) && (boe_outdoor.terrain[0][j] > 70))
-			current_terrain.terrain[0][j] = 411;
-	for (j = 0; j < 48; j++)
-		if ((is_old_road(47,j)) && (boe_outdoor.terrain[47][j] > 70))
-			current_terrain.terrain[47][j] = 411;
-	
+	// This won't be perfect as the Editor reads only one old outdoor zone at a time.
+	for (i = 0; i < 48; i++) // j = 0
+		if ((is_old_road(i,0)) && (old_ter_variety[boe_outdoor.terrain[i][0]] == 15)) {
+				if (!(is_old_road(i-1,0)) && !(is_old_road(i+1,0)))
+					current_terrain.terrain[i][0] = 410;
+				if ((is_old_road(i-1,0)) || (is_old_road(i+1,0)))
+					current_terrain.terrain[i][0] = 411;
+				if ((is_old_road(i+1,0)) && (is_old_road(i,1)))
+					current_terrain.terrain[i][0] = 412;
+				if ((is_old_road(i-1,0)) && (is_old_road(i,1)))
+					current_terrain.terrain[i][0] = 415;
+				if ((is_old_road(i-1,0)) && (is_old_road(i+1,0)) && (is_old_road(i,1)))
+					current_terrain.terrain[i][0] = 419;
+}		
 
-	
+	for (i = 0; i < 48; i++) // j = 47
+			if ((is_old_road(i,47)) && (old_ter_variety[boe_outdoor.terrain[i][47]] == 15)) {	
+				if (!(is_old_road(i-1,47)) && !(is_old_road(i+1,47)))
+					current_terrain.terrain[i][47] = 410;
+				if ((is_old_road(i-1,47)) || (is_old_road(i+1,47)))
+					current_terrain.terrain[i][47] = 411;
+				if ((is_old_road(i+1,47)) && (is_old_road(i,46)))
+					current_terrain.terrain[i][47] = 413;
+				if ((is_old_road(i-1,47)) && (is_old_road(i,46)))
+					current_terrain.terrain[i][47] = 414;
+				if ((is_old_road(i-1,47)) && (is_old_road(i+1,47)) && (is_old_road(i,46)))
+					current_terrain.terrain[i][47] = 417;
+}		
+
+	for (j = 0; j < 48; j++) // i = 0
+			if ((is_old_road(0,j)) && (old_ter_variety[boe_outdoor.terrain[0][j]] == 15)) {
+				if ((is_old_road(0,j-1)) || (is_old_road(0,j+1))) 
+					current_terrain.terrain[0][j] = 410;
+				if (!(is_old_road(0,j-1)) && !(is_old_road(0,j+1)))
+					current_terrain.terrain[0][j] = 411;
+				if ((is_old_road(1,j)) && (is_old_road(0,j+1)))
+					current_terrain.terrain[0][j] = 412;
+				if ((is_old_road(1,j)) && (is_old_road(0,j-1)))
+					current_terrain.terrain[0][j] = 413;
+				if ((is_old_road(1,j)) && (is_old_road(0,j-1)) && (is_old_road(0,j+1)))
+					current_terrain.terrain[0][j] = 418;
+}		
+
+	for (j = 0; j < 48; j++) // i = 47
+			if ((is_old_road(47,j)) && (old_ter_variety[boe_outdoor.terrain[47][j]] == 15)) {	
+				if ((is_old_road(47,j-1)) || (is_old_road(47,j+1))) 
+					current_terrain.terrain[47][j] = 410;
+				if (!(is_old_road(47,j-1)) && !(is_old_road(47,j+1)))
+					current_terrain.terrain[47][j] = 411;
+				if ((is_old_road(46,j)) && (is_old_road(47,j-1)))
+					current_terrain.terrain[47][j] = 414;
+				if ((is_old_road(46,j)) && (is_old_road(47,j+1)))
+					current_terrain.terrain[47][j] = 415;
+				if ((is_old_road(46,j)) && (is_old_road(47,j+1)) && (is_old_road(47,j-1)))
+					current_terrain.terrain[47][j] = 416;
+}		
+
+			current_section_on_surface = TRUE;
 }
 
 Boolean is_old_road(short i,short j)
 {
- 		  return(old_ter_variety[boe_outdoor.terrain[i][j]] == 13);
+ 		  if (old_ter_variety[boe_outdoor.terrain[i][j]] == 14)
+				return TRUE;
+ 		  if (old_ter_variety[boe_outdoor.terrain[i][j]] == 15)
+				return TRUE; 		  
+ 		  if (old_ter_variety[boe_outdoor.terrain[i][j]] == 16)
+				return TRUE; 		  
+				
+			return FALSE;
 }
 
 Boolean is_old_wall(short ter)
@@ -2783,7 +2970,6 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 		if ((boe_town.special_locs[i].x > 0) && (boe_town.special_locs[i].y > 0) && (boe_town.spec_id[i] != kNO_TOWN_SPECIALS)) {
 			town.special_rects[i].left = town.special_rects[i].right = boe_town.special_locs[i].x;
 			town.special_rects[i].top = town.special_rects[i].bottom = boe_town.special_locs[i].y;
-			
 			town.spec_id[i] = boe_town.spec_id[i] + 10;
 			}
 
@@ -2916,23 +3102,17 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 			if ((boe_big_town.creatures[i].special_on_kill < 0) || (boe_big_town.creatures[i].special_on_kill >= 256))
 				town.creatures[i].memory_cells[4] = 0;
 			else town.creatures[i].memory_cells[4] = boe_big_town.creatures[i].special_on_kill + 10;
-				
-		
 			}
 			
 	for (i = 0; i < town_size; i++)
 		for (j = 0; j < town_size; j++) {
 			t_d.floor[i][j] = (unsigned char)old_ter_to_floor[boe_big_town.terrain[i][j]];
 			t_d.terrain[i][j] = old_ter_to_ter[boe_big_town.terrain[i][j]];
-
-			if (t_d.floor[i][j] < 4)
-				current_section_on_surface = FALSE;
-				else if ((t_d.floor[i][j] >= 37) && (t_d.floor[i][j] <= 40))
-					current_section_on_surface = TRUE;
 			}
 
-			
-	town.is_on_surface = current_section_on_surface;
+			if (town.lighting > 0)
+				current_section_on_surface = FALSE;
+				town.is_on_surface = current_section_on_surface;
 
 	// Process the items
 	for (i = 0; i < 64; i++) 
@@ -2970,7 +3150,7 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 		for (j = 1; j < town_size - 1; j++) { 
 			if ((is_old_wall(boe_big_town.terrain[i][j])) && (boe_big_town.terrain[i][j] != 5)
 			  && (boe_big_town.terrain[i][j] > 35)) {
-				// pick wall type. 0 east 1 s & e 2 s 3 none
+				// pick wall type. 0: E, 1: SE, 2: S, 3: none
 				if (is_old_wall(boe_big_town.terrain[i - 1][j])) { // wall to west
 					// if wall to w and n, L wall.
 					if (is_old_wall(boe_big_town.terrain[i][j - 1]))
@@ -2996,51 +3176,44 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 							door_script.loc.x = (t_coord)i;
 							door_script.loc.y = (t_coord)j;
 							sprintf(door_script.script_name,"door");
-							
+
 							switch (old_ter_variety[boe_big_town.terrain[i][j]]) {
-								case 1:
+								case 1: // secret door
 								t_d.terrain[i][j] = 18 + wall_adj; 
-								break; // s door
-								case 2:
+								break; 
+								case 2: // ordinary door
 									t_d.terrain[i][j] = 10 + wall_adj; 
 									door_script.memory_cells[0] = 0;
 									create_new_ter_script("door",door_script.loc,&door_script);
-								break; // door
-								case 3:
+								break; 
+								case 3: // locked door
 									t_d.terrain[i][j] = 10 + wall_adj; 
 									door_script.memory_cells[0] = 5;
 									create_new_ter_script("door",door_script.loc,&door_script);
-								break; // locked door
-								case 4:
+								break; 
+								case 4: // magically locked door
 									t_d.terrain[i][j] = 10 + wall_adj; 
 									door_script.memory_cells[0] = 15;
 									create_new_ter_script("magicdoor",door_script.loc,&door_script);
-								break; // m locked door
-								case 5:
+								break; 
+								case 5: // impassable door
 									t_d.terrain[i][j] = 10 + wall_adj; 
 									door_script.memory_cells[0] = 200;
 									create_new_ter_script("door",door_script.loc,&door_script);
-								break; // impass door
-								case 6:
+								break;
+								case 6: // open door
 									t_d.terrain[i][j] = 14 + wall_adj; 
 									door_script.memory_cells[0] = 0;
 									create_new_ter_script("door",door_script.loc,&door_script);
-								break; // open door
-								case 7:
-									t_d.terrain[i][j] = 22 + wall_adj; 
-								break; // window
-								case 8:
+								break;
+								case 7: // closed gate
 									t_d.terrain[i][j] = 26 + wall_adj; 
-								break; // closed gate
-								case 9:
+								break;
+								case 8: // open gate
 									t_d.terrain[i][j] = 30 + wall_adj; 
-								break; // open gate
-								case 10:
-									t_d.terrain[i][j] = 34 + wall_adj; 
-								break; // cracked
-								case 11:
+								break;
+								case 9: // sign attached to a wall
 									t_d.terrain[i][j] = 2 + wall_adj; 
-									// sign
 									
 									for (k = 0; k < 15; k++)
 										if ((town.sign_locs[k].x == i) && (town.sign_locs[k].y == j)) {
@@ -3054,12 +3227,23 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 													}
 											}
 									break;
+								
+								case 10: // cracked wall
+									t_d.terrain[i][j] = 34 + wall_adj; 
+								break;
+								case 12: // window
+									t_d.terrain[i][j] = 22 + wall_adj; 
+								break;
+									
 								default: 
 								 t_d.terrain[i][j] = 2 + wall_adj; 
 								 break;
 								}
 							}
 					}
+				if (wall_type == 0)
+					t_d.floor[i][j] = t_d.floor[i - 1][j];
+					else t_d.floor[i][j] = t_d.floor[i][j - 1];
 
 				}
 			}
@@ -3118,8 +3302,13 @@ void port_boe_town_data(short which_town,Boolean is_mac_scen)
 			t_d.floor[town_size - 1][i] = 255;
 			}
 			
+	for (i = 0; i < town_size; i++)
+			for (j = 0; j < town_size; j++) 
+			if ((t_d.floor[i][j] == 194) || (t_d.floor[i][j] == 195)) 
+				t_d.height[i][j] = 16;
+			else
+				t_d.height[i][j] = 15;
 
-	
 }
 
 // BEGIN ROUTINES TO ADAPT BLADES OF EXILE SCENARIOS MADE IN WINDOWS
@@ -3491,12 +3680,6 @@ void port_town_script(char *script_name,char *directory_id,short which_town)
 	add_string(file_id,"// TOWN SCRIPT");
 	sprintf(str,"//    Town %d: %s\r", which_town,town.town_name);
 	add_string(file_id,str);
-	add_string(file_id,"// The BoE personality numbers and names for this town.");
-	for (short i = 0; i < 10; i++) {
-			sprintf(str,"\t // %d,\"%s\"", 10 * which_town + i,boe_scen_text.talk_strs[which_slot = i]);
-			add_string(file_id,str);
-		}
-
 	add_string(file_id,"// This is the special encounter script for this town.");
 	add_string(file_id,"// The states INIT_STATE, EXIT_STATE, and START_STATE have");
 	add_string(file_id,"// meanings that are described in the documenation. States you write");
@@ -3507,20 +3690,13 @@ void port_town_script(char *script_name,char *directory_id,short which_town)
 	add_string(file_id,"body;\r");
 	add_string(file_id,"beginstate INIT_STATE;");
 	add_string(file_id,"// This state called whenever this town is entered.");
-
 	for (short i = 0; i < 60; i++) {
 		if ((boe_big_town.creatures[i].personality >= 0) && (boe_big_town.creatures[i].number > 0)) {
-		short j = boe_big_town.creatures[i].personality % 10;
-		if ((boe_big_town.creatures[i].personality >= which_town * 10) && (boe_big_town.creatures[i].personality -10 < which_town * 10)) {
-			sprintf(str,"\t set_name(%d,\"%s\");", i + 6, boe_scen_text.talk_strs[which_slot = j]);
+			sprintf(str,"\t set_name(%d,\"%s\");", i + 6, 
+			old_blades_personality_names[boe_big_town.creatures[i].personality]);
 			add_string(file_id,str);
-		}
-		else {
-			sprintf(str,"\t set_name(%d,\"%d\");", i + 6,boe_big_town.creatures[i].personality);
-			add_string(file_id,str);
-				}
 			}
-		}
+		}	
 
 	add_string(file_id,"\r\t// Any town entry states.");
 	if (boe_town.spec_on_entry >= 0) {

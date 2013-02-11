@@ -267,16 +267,6 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit25]
-FileName=Graphics.cpp
-CompileCpp=1
-Folder=3D BoA Editor Windows
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit26]
 FileName=..\..\..\NewFolder\Dev-Cpp\Examples\BoA3DEditorSVN\3D_BoA_Editor_Windows_private.h
 CompileCpp=1

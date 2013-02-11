@@ -1510,7 +1510,6 @@ void load_all_outdoor_names(const char* to_open);
 void save_change_to_outdoor_size(short plus_north,short plus_west,short plus_south,short plus_east,short on_surface);
 void load_town(short which_town);
 void load_all_town_names(const char* to_open);
-void start_data_dump();
 Boolean create_basic_scenario(char* scen_name_short,char* scen_name_with_ext,char* scen_full_name,short out_width,short out_height,short on_surface,Boolean use_warriors_grove);
 bool import_boa_town();
 void EdSysBeep( /* short duration */ );
@@ -1520,8 +1519,6 @@ void import_blades_of_exile_scenario();
 bool import_boa_outdoors();
 short FSRead(FILE* file_id, long* len, char* data);
 short FSClose(FILE* file_id);
-
-// Query
 void start_full_data_dump();
 void start_town_data_dump();
 void start_full_town_data_dump();
@@ -1726,6 +1723,13 @@ Boolean string_not_clean(const char* str,short max_length,short strict_file_nami
 void flip_short(short* s);
 void alter_rect(macRECT* r);
 void flip_rect(macRECT* s);
+
+// Query
+void start_data_dump();
+void floor_type_data_dump();
+void terrain_type_data_dump();
+void creature_type_data_dump();
+void item_data_dump();
 
 // sound
 void load_sounds ();
