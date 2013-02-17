@@ -1601,6 +1601,14 @@ void import_blades_of_exile_scenario();
 bool import_boa_outdoors();
 short FSRead(FILE* file_id, long* len, char* data);
 short FSClose(FILE* file_id);
+bool get_should_play_sounds();
+void write_should_play_sounds(bool play);
+bool get_should_use_strict_adjusts();
+void write_should_use_strict_adjusts(bool use);
+bool get_always_show_heights();
+void write_always_show_heights(bool show);
+bool get_allow_arrow_key_navigation();
+void write_allow_arrow_key_navigation(bool allow);
 
 // Query
 void start_full_data_dump();
@@ -1761,6 +1769,7 @@ void set_up_terrain_buttons();
 void reset_mode_number();
 void set_up_view_buttons();
 void reset_small_drawn();
+void draw_ter_small();
 void draw_terrain();
 void place_right_buttons(/* short mode */);
 RECT terrainViewRect();

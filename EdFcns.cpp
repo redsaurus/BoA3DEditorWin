@@ -150,6 +150,10 @@ extern Boolean kill_next_win_char;
 extern short current_cursor;
 extern Boolean scroll_dialog_lock;
 
+extern bool allow_arrow_key_navigation;
+extern bool use_strict_adjusts;
+extern bool always_draw_heights;
+
 namespace tools{
 RECT toolCategoryTownRect;
 RECT toolCategoryOutdoorRect;
@@ -448,6 +452,7 @@ short locs_to_dir(location l1,location l2);
 void paste_selected_instance(location create_loc);
 void check_selected_item_number();
 void shift_selected_instance(short dx,short dy);
+void rotate_selected_instance(int dir);
 void create_navpoint(location spot_hit);
 void delete_navpoint(location spot_hit);
 void create_new_creature(short c_to_create,location create_loc,creature_start_type *c_to_make);
@@ -3739,31 +3744,93 @@ Boolean handle_syskeystroke(WPARAM wParam,LPARAM /* lParam */,short *handled)
 
 	if (((wParam == VK_LEFT) || (wParam == VK_DOWN) || (wParam == VK_UP) ||
 	(wParam == VK_RIGHT)) && (cur_viewing_mode != 1)) {
-		if ((wParam == VK_UP) && (selected_object_type!=SelectionType::None))
-			shift_selected_instance(0, -1);
-		if ((wParam == VK_RIGHT) && (selected_object_type!=SelectionType::None))
-			shift_selected_instance(1,0);
-		if ((wParam == VK_LEFT) && (selected_object_type!=SelectionType::None))
-			shift_selected_instance(-1,0);
-		if ((wParam == VK_DOWN) && (selected_object_type!=SelectionType::None))
-			shift_selected_instance(0, 1);
-		location new_loc = selected_instance_location();
-		if(new_loc.x>-1){
-			if((cur_viewing_mode == 0 && (abs(new_loc.x-cen_x)>4 || abs(new_loc.y-cen_y)>4)) || ((cur_viewing_mode==10 || cur_viewing_mode==11) && out_of_view_3D(new_loc))){
-				cen_x = new_loc.x;
-				cen_y = new_loc.y;
-				draw_terrain();
+		if (allow_arrow_key_navigation){
+			if(!(alt_key)){ //move the view
+				int map_size = (editing_town) ? max_zone_dim[town_type] : 48;
+				switch(wParam){
+				case VK_UP:
+					handle_scroll( map_size, eSCRL_Top, ctrl_key, shft_key );
+					break;
+				case VK_RIGHT:
+					handle_scroll( map_size, eSCRL_Right, ctrl_key, shft_key );
+					break;
+				case VK_LEFT:
+					handle_scroll( map_size, eSCRL_Left, ctrl_key, shft_key );
+					break;
+				case VK_DOWN:
+					handle_scroll( map_size, eSCRL_Bottom, ctrl_key, shft_key );
+					break;
+				}
+			}
+			else if(editing_town && alt_key && selected_object_type!=SelectionType::None){
+				if(!shft_key){ //move the selected instance
+					switch(wParam){
+					case VK_UP:
+						shift_selected_instance(0, -1);
+						break;
+					case VK_RIGHT:
+						shift_selected_instance(1,0);
+						break;
+					case VK_LEFT:
+						shift_selected_instance(-1,0);
+						break;
+					case VK_DOWN:
+						shift_selected_instance(0,1);
+						break;
+					}
+					location new_loc = selected_instance_location();
+					if(new_loc.x>-1){
+						//TODO: Update this for resizable windows
+						if((cur_viewing_mode == 0 && (abs(new_loc.x-cen_x)>4 || abs(new_loc.y-cen_y)>4)) || ((cur_viewing_mode==10 || cur_viewing_mode==11) && out_of_view_3D(new_loc))){
+							cen_x = new_loc.x;
+							cen_y = new_loc.y;
+							draw_terrain();
+						}
+					}
+				}
+				else if(shft_key && selected_object_type==SelectionType::Creature){ //rotate the selected instance
+					switch(wParam){
+					case VK_UP:
+					case VK_DOWN:
+						rotate_selected_instance(2);
+						break;
+					case VK_RIGHT:
+						rotate_selected_instance(-1);
+						break;
+					case VK_LEFT:
+						rotate_selected_instance(1);
+						break;
+					}
+				}
 			}
 		}
+		else{ //fall back on old functionality
+			if ((wParam == VK_UP) && (selected_object_type!=SelectionType::None))
+				shift_selected_instance(0, -1);
+			if ((wParam == VK_RIGHT) && (selected_object_type!=SelectionType::None))
+				shift_selected_instance(1,0);
+			if ((wParam == VK_LEFT) && (selected_object_type!=SelectionType::None))
+				shift_selected_instance(-1,0);
+			if ((wParam == VK_DOWN) && (selected_object_type!=SelectionType::None))
+				shift_selected_instance(0, 1);
+			location new_loc = selected_instance_location();
+			if(new_loc.x>-1){
+				if((cur_viewing_mode == 0 && (abs(new_loc.x-cen_x)>4 || abs(new_loc.y-cen_y)>4)) || ((cur_viewing_mode==10 || cur_viewing_mode==11) && out_of_view_3D(new_loc))){
+					cen_x = new_loc.x;
+					cen_y = new_loc.y;
+					draw_terrain();
+				}
+			}
 
-		if ((wParam == VK_UP) && (selected_square.x > 0) && (selected_square.y > 0))
-			shift_square_contents(0, -1);
-		if ((wParam == VK_RIGHT) && (selected_square.x > 0) && (selected_square.y > 0))
-			shift_square_contents(1, 0);
-		if ((wParam == VK_LEFT) && (selected_square.x > 0) && (selected_square.y > 0))
-			shift_square_contents(-1, 0);
-		if ((wParam == VK_DOWN) && (selected_square.x > 0) && (selected_square.y > 0))
-			shift_square_contents(0, 1);
+			if ((wParam == VK_UP) && (selected_square.x > 0) && (selected_square.y > 0))
+				shift_square_contents(0, -1);
+			if ((wParam == VK_RIGHT) && (selected_square.x > 0) && (selected_square.y > 0))
+				shift_square_contents(1, 0);
+			if ((wParam == VK_LEFT) && (selected_square.x > 0) && (selected_square.y > 0))
+				shift_square_contents(-1, 0);
+			if ((wParam == VK_DOWN) && (selected_square.x > 0) && (selected_square.y > 0))
+				shift_square_contents(0, 1);
+		}
 
 		draw_terrain();
 		return FALSE;
@@ -5571,7 +5638,14 @@ void shut_down_menus()
 
 		for (short i = 101; i < 126; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
-		ModifyMenu(menu,126,(play_sounds) ? (MF_GRAYED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) : (MF_GRAYED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),126,"Play Sounds");
+		ModifyMenu(menu,126,(play_sounds) ? (MF_GRAYED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) :
+			(MF_GRAYED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),126,"Play Sounds");
+		ModifyMenu(menu,127,(use_strict_adjusts) ? (MF_GRAYED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) : 
+			(MF_GRAYED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),127,"Kelandons Strict 2D Icon Adjusts");
+		ModifyMenu(menu,128,(always_draw_heights) ? (MF_GRAYED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) : 
+			(MF_GRAYED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),128,"Always Show Height Labels");
+		ModifyMenu(menu,129,(allow_arrow_key_navigation) ? (MF_GRAYED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) : 
+			(MF_GRAYED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),129,"Allow Arrow Key Navigation");
 		for (short i = 201; i < 225; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		for (short i = 301; i < 321; i++)
@@ -5596,6 +5670,12 @@ void shut_down_menus()
 	if (editing_town == TRUE) {
 		ModifyMenu(menu,126,(play_sounds) ? (MF_ENABLED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) :
 			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),126,"Play Sounds");
+		ModifyMenu(menu,127,(use_strict_adjusts) ? (MF_ENABLED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) : 
+			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),127,"Kelandons Strict 2D Icon Adjusts");
+		ModifyMenu(menu,128,(always_draw_heights) ? (MF_ENABLED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) : 
+			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),128,"Always Show Height Labels");
+		ModifyMenu(menu,129,(allow_arrow_key_navigation) ? (MF_ENABLED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) : 
+			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),129,"Allow Arrow Key Navigation");
 		for (short i = 101; i < 122; i++)
 			EnableMenuItem(menu,i,MF_ENABLED | MF_BYCOMMAND);
 		for (short i = 122; i < 124; i++)
@@ -5617,6 +5697,12 @@ void shut_down_menus()
 	else {
 		ModifyMenu(menu,126,(play_sounds) ? (MF_ENABLED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) :
 			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),126,"Play Sounds");
+		ModifyMenu(menu,127,(use_strict_adjusts) ? (MF_ENABLED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) : 
+			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),127,"Kelandons Strict 2D Icon Adjusts");
+		ModifyMenu(menu,128,(always_draw_heights) ? (MF_ENABLED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) : 
+			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),128,"Always Show Height Labels");
+		ModifyMenu(menu,129,(allow_arrow_key_navigation) ? (MF_ENABLED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) : 
+			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),129,"Allow Arrow Key Navigation");
 		for (short i = 103; i < 110; i++)
 			EnableMenuItem(menu,i,MF_GRAYED | MF_BYCOMMAND);
 		EnableMenuItem(menu,120,MF_GRAYED | MF_BYCOMMAND);

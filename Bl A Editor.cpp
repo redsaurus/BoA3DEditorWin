@@ -49,12 +49,14 @@ extern RECT kRect3DEditScrn;
 extern void update_screen_locs(void);
 
 extern Boolean play_sounds;
-extern void write_should_play_sounds(bool play);
-extern bool get_should_play_sounds();
 
 Boolean change_made_town = FALSE;
 Boolean change_made_outdoors = FALSE;
 Boolean file_is_loaded = FALSE;
+
+bool use_strict_adjusts;
+bool always_draw_heights;
+bool allow_arrow_key_navigation;
 
 // DATA TO EDIT
 scenario_data_type	scenario;
@@ -431,6 +433,9 @@ BOOL InitInstance( HINSTANCE hInstance, int nCmdShow )
 	check_colors();
 	update_item_menu();
 	play_sounds = get_should_play_sounds();
+	use_strict_adjusts = get_should_use_strict_adjusts();
+	always_draw_heights = get_always_show_heights();
+	allow_arrow_key_navigation = get_allow_arrow_key_navigation();
 	shut_down_menus(/* 0 */);
 
 	load_sounds();
@@ -1222,6 +1227,35 @@ void handle_edit_menu(int item_hit)
 			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),126,"Play Sounds");
 			write_should_play_sounds(play_sounds);
 			play_sound(0);
+			break;
+
+		case 27: // toggle adjust usage
+			use_strict_adjusts = !use_strict_adjusts;
+			menu = GetMenu(mainPtr);
+			ModifyMenu(menu,127,(use_strict_adjusts) ? (MF_ENABLED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) :
+			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),127,"Kelandons Strict 2D Icon Adjusts");
+			write_should_use_strict_adjusts(use_strict_adjusts);
+			set_up_terrain_buttons();
+			if (cur_viewing_mode == 1){
+				small_any_drawn=FALSE;
+				draw_ter_small();
+			}
+			else
+				redraw_screen();
+			break;
+		case 28: // toggle height labelling
+			always_draw_heights = !always_draw_heights;
+			menu = GetMenu(mainPtr);
+			ModifyMenu(menu,128,(always_draw_heights) ? (MF_ENABLED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) :
+			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),128,"Always Show Height Labels");
+			write_always_show_heights(always_draw_heights);
+			break;
+		case 29: //toggle arrow key handling
+			allow_arrow_key_navigation = !allow_arrow_key_navigation;
+			menu = GetMenu(mainPtr);
+			ModifyMenu(menu,129,(allow_arrow_key_navigation) ? (MF_ENABLED | MF_CHECKED | MF_BYCOMMAND | MF_STRING) :
+			(MF_ENABLED | MF_UNCHECKED | MF_BYCOMMAND | MF_STRING),129,"Allow Arrow Key Navigation");
+			write_allow_arrow_key_navigation(allow_arrow_key_navigation);
 			break;
 		}
 	draw_main_screen();

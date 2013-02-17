@@ -175,7 +175,10 @@ short FSWrite(FILE *file_id, long *len, char *data);
 // registry constant
 const char* kRegistryKey = "Software\\Spiderweb Software\\BoA 3D Editor";
 const char* kRegistryName = "BoA DATA Dirctory";
-const char* kRegistryPlaySounds = "PlaySounds";
+
+#define NUM_BOOL_KEYS 4
+const char* BOOL_PREF_KEYS[NUM_BOOL_KEYS] = {"PlaySounds","UseStrictAdjustsIn2D","AllowArrowKeyNavigation","AlwaysShowHeightsIn2D"};
+const bool BOOL_PREF_DEFAULT_VALUES[NUM_BOOL_KEYS] = {false,false,false,true};
 
 bool read_BoAFilesFolder_from_Pref( char * boaFolder )
 {
@@ -214,31 +217,77 @@ bool check_BoAFilesFolder( char * boaFolder )
 
 //user preference settings functions
 
-bool get_should_play_sounds()
+bool get_user_pref_bool_value(int which)
 {
-	int should_we_play_sounds;
+	int bool_value;
 	HKEY hKey; 
 	DWORD len = 4;
 	DWORD type = REG_DWORD;
-	
+
+	if (which<0 || which>NUM_BOOL_KEYS)
+		return(false);
+
 	if (RegOpenKey(HKEY_CURRENT_USER, kRegistryKey, &hKey) != ERROR_SUCCESS) 
-		return true;//default is play sounds
-	if( RegQueryValueEx( hKey, kRegistryPlaySounds, NULL, (LPDWORD) &type, (BYTE *) &should_we_play_sounds, &len ) != ERROR_SUCCESS) 
-		return true;
-	return should_we_play_sounds;
+		return BOOL_PREF_DEFAULT_VALUES[which];
+	if( RegQueryValueEx( hKey, BOOL_PREF_KEYS[which], NULL, (LPDWORD) &type, (BYTE *) &bool_value, &len ) != ERROR_SUCCESS) 
+		return BOOL_PREF_DEFAULT_VALUES[which];
+	return bool_value;
+}
+
+void write_user_pref_bool_value(int which, bool value)
+{
+	HKEY hKey; 
+	int bool_value = value;
+
+	if (which<0 || which>NUM_BOOL_KEYS)
+		return;
+
+	if (RegCreateKey(HKEY_CURRENT_USER, kRegistryKey, &hKey) != ERROR_SUCCESS) 
+		return;
+    RegSetValueEx( hKey, BOOL_PREF_KEYS[which], NULL, REG_DWORD, (BYTE *) &bool_value, 4 );
+	RegCloseKey( hKey ); 
+}
+
+bool get_should_play_sounds()
+{
+	return(get_user_pref_bool_value(0));
 }
 
 void write_should_play_sounds(bool play)
 {
-	HKEY hKey; 
-	int should_we_play_sounds = play;
-
-	if (RegCreateKey(HKEY_CURRENT_USER, kRegistryKey, &hKey) != ERROR_SUCCESS) 
-		return;
-    RegSetValueEx( hKey, kRegistryPlaySounds, NULL, REG_DWORD, (BYTE *) &should_we_play_sounds, 4 );
-	RegCloseKey( hKey ); 
+	write_user_pref_bool_value(0,play);
 }
 
+bool get_should_use_strict_adjusts()
+{
+	return(get_user_pref_bool_value(1));
+}
+
+void write_should_use_strict_adjusts(bool use)
+{
+	write_user_pref_bool_value(1,use);
+}
+
+bool get_always_show_heights()
+{
+	return(get_user_pref_bool_value(2));
+}
+
+void write_always_show_heights(bool show)
+{
+	write_user_pref_bool_value(2,show);
+}
+
+bool get_allow_arrow_key_navigation()
+{
+	return(get_user_pref_bool_value(3));
+}
+
+void write_allow_arrow_key_navigation(bool allow)
+{
+	write_user_pref_bool_value(3,allow);
+}
+//end user preference settings functions
 
 bool init_directories_with_pref( char * boaFolder )
 {

@@ -182,6 +182,9 @@ BEGIN
         MENUITEM "Load Outdoor Zone &Below\tCtrl+Down", 123
         MENUITEM SEPARATOR
         MENUITEM "Play Sounds",                 126
+        MENUITEM "Kelandons Strict 2D Icon Adjusts", 127
+        MENUITEM "Always Show Height Labels",   128
+        MENUITEM "Allow Arrow Key Navigation",  129
     END
     POPUP "&Scenario"
     BEGIN
