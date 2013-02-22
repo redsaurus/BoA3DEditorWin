@@ -9,6 +9,7 @@
 // written in Mac format, and only the Windows version has to flip the formats.
 // Just FYI.
 
+// messing with these caused a real stuff up!
 #include "stdafx.h"
 #include <cctype>
 #include <commdlg.h>
@@ -1126,7 +1127,7 @@ void oops_error(short error)
 //	beep();
 
 	sprintf((char *) error_str,"Giving the scenario editor more memory might also help. Be sure to back your scenario up often. Error number: %d.", (int)error);
-	give_error("MAR The program encountered an error while loading/saving/creating the scenario. To prevent future problems, the program will now terminate. Trying again may solve the problem.",(char *) error_str,0);
+	give_error("MAR again may solve the problem.",(char *) error_str,0);
 //	file_is_loaded = FALSE;
 //	redraw_screen();
 }
@@ -1982,7 +1983,8 @@ Boolean create_basic_scenario(char *scen_name_short,char *scen_name_with_ext,cha
 	scenario.port();	
 	len = sizeof(scenario_data_type); // write scenario data
 	if ((error = FSWrite(scen_file_id, &len, (char *) &scenario)) != 0) {
-		oops_error(103);
+		give_error("Port Town Script was not finished 1985.","",0);               
+//		oops_error(103);
 		return FALSE;
 		}		
 	scenario.port();
@@ -2533,8 +2535,8 @@ void import_blades_of_exile_scenario()
 		len = sizeof(old_blades_town_record_type);
 		error = FSRead(file_id, &len , (char *) &boe_town);
 		if (error != 0) {
-			 FSClose(file_id);
-			 oops_error(310);
+		give_error("Port Town Script was not finished 2536.","",0);
+//			 oops_error(310);
 			 return;
 			 }
 		if (cur_scen_is_mac == TRUE)
@@ -2557,8 +2559,9 @@ void import_blades_of_exile_scenario()
 				break;
 			}
 		if (error != 0) {
+		give_error("Port Town Script was not finished 2560.","",0);                  
 			 FSClose(file_id);
-			 oops_error(311);
+//			 oops_error(311);
 			 }
 
 		for (i = 0; i < 140; i++) {
@@ -2569,7 +2572,12 @@ void import_blades_of_exile_scenario()
 
 		len = sizeof(old_blades_talking_record_type);
 		error = FSRead(file_id, &len , (char *) &boe_talk_data);
-		if (error != 0) {FSClose(file_id);oops_error(312); return;}
+		if (error != 0) {
+		give_error("Port Town Script was not finished 2574.","",0);                  
+			FSClose(file_id);
+//			oops_error(312); 
+			return;
+			}
 		if (cur_scen_is_mac == TRUE)
 			boe_port_talk_nodes();
 
@@ -2626,7 +2634,8 @@ void import_blades_of_exile_scenario()
 		len = kSizeOfTown_record_type;
 		if ((error = FSWrite(new_scen_id, &len, (char *) &town)) != 0)
 			{
-			 oops_error(313);
+		give_error("Port Town Script was not finished 2635.","",0);
+//			 oops_error(313);
 			 return;
 			 }
 		town.port();
@@ -3672,11 +3681,11 @@ void port_town_script(char *script_name,char *directory_id,short which_town)
 	sprintf(file_name,"%s%s",directory_id,script_name);
 	if (NULL == (file_id = fopen(file_name, "wb"))) {
 		sprintf(error,"Tried to create a town script for town %d, %s, but there was an error.",which_town,town.town_name);
-		give_error(error,"",0);
+		give_error("Port Town Script was not finished.","",0);
 		return;
 	FSClose(file_id);
 		}
-
+		
 	add_string(file_id,"// TOWN SCRIPT");
 	sprintf(str,"//    Town %d: %s\r", which_town,town.town_name);
 	add_string(file_id,str);
@@ -3978,8 +3987,10 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			add_short_string_to_file(file_id,"\tchange_spec_item(",node->ex1a,",-1);");
 			break;
 		case 52: // one time do nothing
+			add_string(file_id,"// Node Type 52: One Time Do Nothing");
 			break;
 		case 53: // one time do nothing and set
+			add_string(file_id,"// Node Type 53: One Time Do Nothing and Set");		
 			if ((node->sd1 >= 0) && (node->sd2 >= 0)) 
 				add_ish_string_to_file(file_id,"\tset_flag(",node->sd1,",",node->sd2,",250);");
 			break;
@@ -4344,7 +4355,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			if (node->ex1b >= 0)
 				add_short_string_to_file(file_id,"\t\t// set_state_continue(",node->ex1b + 10,");");			
 			else add_string(file_id,"\t\t// end();");			
-			
+			break;			
 		case 144: // item class on space, take
 				add_big_string_to_file(file_id,"\tif (take_item_of_class_on_spot(",node->ex1a,",",node->ex1b,",",node->ex2a,") > 0)");
 				if (node->ex2b >= 0)			
@@ -4366,7 +4377,7 @@ void port_a_special_node(old_blades_special_node_type *node,short node_num,FILE 
 			else add_string(file_id,"\t\t\tend();");
 			add_string(file_id,"\t\ti = i + 1;");
 			add_string(file_id,"\t\t}");
-
+			break;
 		case 147: // day reached
 			add_short_string_to_file(file_id,"\tif (what_day_of_scenario() >= ",node->ex1a,")");
 			if (node->ex1b >= 0)

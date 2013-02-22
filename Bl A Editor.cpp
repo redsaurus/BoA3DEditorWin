@@ -12,7 +12,7 @@
 #include "stdafx.h"
 #include "Resource.h"
 #include "global.h"
-#define kVersion "   Version:  Monday  11  February  2013"
+#define kVersion "   Version:  Monday  18  February  2013"
 
 // Global variables
 
@@ -612,7 +612,7 @@ void handle_file_menu(int item_hit)
 			break;
 			}
 		break;
-			
+
 		case 6: // Quit
 			if (save_check(869) == FALSE)
 				break;
@@ -1612,6 +1612,7 @@ void check_game_done()
 	if (force_game_end == TRUE) {
 		lose_graphics();
 		game_killed_once = TRUE;
+		give_error("Port Town Script was not finished 1614.","",0);
    		PostQuitMessage(0);
 		}
 }
