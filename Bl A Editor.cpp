@@ -12,7 +12,7 @@
 #include "stdafx.h"
 #include "Resource.h"
 #include "global.h"
-#define kVersion "   Version:  Monday  18  February  2013"
+#define kVersion "   Version:  Saturday  2  March  2013"
 
 // Global variables
 
@@ -56,7 +56,7 @@ location cur_out;
 short dlg_units_x,dlg_units_y;
 Boolean small_any_drawn = FALSE;
 Boolean kill_next_win_char = FALSE;
- 
+
 // MAIN WHAT'S GOING ON VARIABLES
 short current_drawing_mode = 0; // 0 - floor 1 - terrain 2 - height
 short town_type = 0;  // 0 - big 1 - ave 2 - small
@@ -94,8 +94,8 @@ short overall_mode = 0;
 
 // regular select modes
 // 30 - place north entrance
-// 31 - place west entrance 
-// 32 - place south entrance 
+// 31 - place west entrance
+// 32 - place south entrance
 // 33 - place east entrance
 
 // 40 - select instance
@@ -195,7 +195,7 @@ int APIENTRY _tWinMain (HINSTANCE hInstance,
 	MSG msg;
 	MyRegisterClass(hInstance);
 
-	if (!InitInstance(hInstance, nCmdShow)) 
+	if (!InitInstance(hInstance, nCmdShow))
 		return FALSE;
 
 	accel = LoadAccelerators(hInstance, (LPCTSTR)IDC_BOA3DEDITOR);
@@ -214,7 +214,7 @@ void MyRegisterClass( HINSTANCE hInstance )
 {
 	WNDCLASSEX wndclass,wndclass2;
 
-	wndclass.cbSize			= sizeof(WNDCLASSEX); 
+	wndclass.cbSize			= sizeof(WNDCLASSEX);
 	wndclass.style			= CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
 	wndclass.lpfnWndProc	= (WNDPROC)WndProc;
 	wndclass.cbClsExtra		= 0;
@@ -229,7 +229,7 @@ void MyRegisterClass( HINSTANCE hInstance )
 
 	RegisterClassEx(&wndclass);
 
-	wndclass2.cbSize		= sizeof(WNDCLASSEX); 
+	wndclass2.cbSize		= sizeof(WNDCLASSEX);
 	wndclass2.style			= CS_HREDRAW | CS_VREDRAW | CS_BYTEALIGNWINDOW;
 	wndclass2.lpfnWndProc	= (WNDPROC)WndProc;
 	wndclass2.cbClsExtra	= 0;
@@ -253,7 +253,7 @@ LRESULT CALLBACK folderErrMsgWndProc(HWND hDlg, UINT message, WPARAM wParam, LPA
 		return TRUE;
 
 	case WM_COMMAND:
-		if (LOWORD(wParam) == IDOK) 
+		if (LOWORD(wParam) == IDOK)
 		{
 			EndDialog(hDlg, LOWORD(wParam));
 			return TRUE;
@@ -538,7 +538,7 @@ void handle_menu_choice(short choice)
 			case 1:
 				handle_edit_menu(menu_item % 100);
 				break;
-			case 2: 
+			case 2:
 				handle_campaign_menu(menu_item % 100);
 				break;
 			case 3:
@@ -551,17 +551,17 @@ void handle_menu_choice(short choice)
 			case 6: case 7: case 8: case 9: case 10:
 				handle_item_menu(menu_item - 600);
 				break;
-			case 11: case 12: case 13: 
+			case 11: case 12: case 13:
 				handle_monst_menu(menu_item - 1100);
 				break;
 			case 15:
-				handle_help_menu(menu_item % 100);					 
+				handle_help_menu(menu_item % 100);
 				break;
 			case 16:	// patch for ctrl-<key> command
 				handle_keystroke( choice % 100, 0 );
 				break;
 			}
-		} 
+		}
 }
 
 void handle_file_menu(int item_hit)
@@ -570,7 +570,7 @@ void handle_file_menu(int item_hit)
 		case 1: // Open Scenario
 			if (change_made_town || change_made_outdoors) {
 				if (save_check(858) == FALSE)
-					break;							
+					break;
 			}
 			load_campaign();
 			if (file_is_loaded) {
@@ -900,15 +900,15 @@ void handle_edit_menu(int item_hit)
 			break;
 
 		case 24: // Decrease Group Display Mode
-		 if (hintbook_mode8 == 0) 
+		 if (hintbook_mode8 == 0)
 	     hintbook_mode8 = 11;
 		 else hintbook_mode8 = hintbook_mode8 - 1;
 			 small_any_drawn = FALSE;
 			 draw_terrain();
 			break;
-			
+
 		case 25: // Increase Group Display Mode
-		 if (hintbook_mode8 == 11) 
+		 if (hintbook_mode8 == 11)
 	     hintbook_mode8 = 0;
 		 else hintbook_mode8 = hintbook_mode8 + 1;
 			 small_any_drawn = FALSE;
@@ -923,7 +923,7 @@ void handle_edit_menu(int item_hit)
 void handle_campaign_menu(int item_hit)
 {
 		 short i;
-		 
+
 	switch (item_hit) {
 		case 1: // Edit Town
 			small_any_drawn = FALSE;
@@ -994,7 +994,7 @@ void handle_campaign_menu(int item_hit)
 			if (load_individual_scenario_data(file_name /*,TRUE */) == FALSE) {
 				file_is_loaded = FALSE;
 				return;
-				}			
+				}
 			update_item_menu();
 			set_up_terrain_buttons();
 			place_right_buttons(); /* (0) */
@@ -1093,13 +1093,13 @@ void handle_campaign_menu(int item_hit)
 
 void handle_town_menu(int item_hit)
 {
-	short i,x;	
+	short i,x;
 
 	switch (item_hit) {
 		case 1: // Load Different Town
 			if (change_made_town == TRUE) {
 				if (save_check(859) == FALSE)
-					break;							
+					break;
 			}
 			x =  get_a_number(855,cur_town,0,scenario.num_towns - 1);
 			if (x >= 0) {
@@ -1119,14 +1119,14 @@ void handle_town_menu(int item_hit)
 		case 2: // Town Details
 				 edit_town_details();
 				 change_made_town = TRUE;
-			break; 
+			break;
 
 		case 3: // Town Wandering Monsters
 				 edit_town_wand();
 				 change_made_town = TRUE;
-			break; 
+			break;
 // q_3DModEnd
-		case 4: // Set Town Boundaries							
+		case 4: // Set Town Boundaries
 			overall_mode = 17;
 			mode_count = 2;
 			set_cursor(5);
@@ -1145,7 +1145,7 @@ void handle_town_menu(int item_hit)
 		case 7:  //Edit Area Descriptions
 			 edit_town_strs();
 			break;
-			
+
 		case 9: //Set Starting Location
 			if (fancy_choice_dialog(867,0) == 2)
 					break;
@@ -1153,36 +1153,36 @@ void handle_town_menu(int item_hit)
 			overall_mode = 72;
 			set_cursor(7);
 			break;
-		case 11: // Add Random Items 
+		case 11: // Add Random Items
 				if (fancy_choice_dialog(863,0) == 2)
 					break;
 				place_items_in_town();
-				change_made_town = TRUE; 
+				change_made_town = TRUE;
 				redraw_screen();
-				 break; 
+				 break;
 		case 12: // Set All Items Not Property
 				for (i = 0; i < 144; i++)
 					town.preset_items[i].properties = town.preset_items[i].properties & 253;
 				fancy_choice_dialog(861,0);
 				draw_terrain();
-				change_made_town = TRUE; 
-				break; 
+				change_made_town = TRUE;
+				break;
 		case 13: // Set All Items Property
 				for (i = 0; i < 144; i++)
 					town.preset_items[i].properties = town.preset_items[i].properties | 2;
 				fancy_choice_dialog(879,0);
 				draw_terrain();
-				change_made_town = TRUE; 
-				break; 
+				change_made_town = TRUE;
+				break;
 		case 15: // Clear All Items
 			if (fancy_choice_dialog(862,0) == 2)
 				break;
 			for (i = 0; i < 144; i++)
 				town.preset_items[i].clear_item_type();
 			draw_terrain();
-			change_made_town = TRUE; 
+			change_made_town = TRUE;
 			redraw_screen();
-			break; 
+			break;
 
 		case 16: // Clear All Monsters
 			if (fancy_choice_dialog(878,0) == 2)
@@ -1190,7 +1190,7 @@ void handle_town_menu(int item_hit)
 			for (i = 0; i < 80; i++)
 				town.creatures[i].clear_creature_start_type();
 			draw_terrain();
-			change_made_town = TRUE; 
+			change_made_town = TRUE;
 			redraw_screen();
 			break;
 		case 17: // Clear All Special Encounters
@@ -1200,9 +1200,9 @@ void handle_town_menu(int item_hit)
 				town.spec_id[x] = kNO_TOWN_SPECIALS;
 				SetMacRect(&town.special_rects[x],-1,-1,-1,-1);
 				}
-			change_made_town = TRUE; 
+			change_made_town = TRUE;
 			redraw_screen();
-			break;	
+			break;
 		case 18: // Clear All Preset Fields, 0:8
 			if (fancy_choice_dialog(883,0) == 2)
 				break;
@@ -1212,7 +1212,7 @@ void handle_town_menu(int item_hit)
 			}
 			change_made_town = TRUE;
 			redraw_screen();
-			break; 
+			break;
 		case 19:// Clear All Placed Stains, 14:21
 			if (fancy_choice_dialog(884,0) == 2)
 				break;
@@ -1234,7 +1234,7 @@ void handle_town_menu(int item_hit)
 void handle_outdoor_menu(int item_hit)
 {
 	short x;
-				
+
 	switch (item_hit) {
 		case 1: // Load Different Outdoor Section
 			if (change_made_outdoors == TRUE) {
@@ -1261,7 +1261,7 @@ void handle_outdoor_menu(int item_hit)
 				draw_main_screen();
 				change_made_outdoors = TRUE;
 				break;
-				
+
 		case 3: // Edit Outdoor Wandering Monsters
 				 edit_out_wand(0);
 				 change_made_outdoors = TRUE;
@@ -1287,7 +1287,7 @@ void handle_outdoor_menu(int item_hit)
 		case 8: //Edit Area Descriptions
 				 edit_out_strs();
 				 change_made_outdoors = TRUE;
-				 break; 
+				 break;
 		case 10: //Set Starting Location
 			if (fancy_choice_dialog(864,0) == 2)
 				return;
@@ -1337,7 +1337,7 @@ void handle_monst_menu(int item_hit)
 
 
 void handle_help_menu(int item_hit)
-{   
+{
 
 	switch (item_hit) {
 		case 1: // 2D Editor Credits: "About Blades Scenario Editor"
@@ -1345,11 +1345,11 @@ void handle_help_menu(int item_hit)
 				break;
 		case 2: // 3D Editor Credits
 				fancy_choice_dialog(1063,0);
-			break;	
+			break;
 		case 3: // 3D Editor - Getting Started
 				fancy_choice_dialog(986,0);
-			break;	
-			
+			break;
+
 		case 4: //   Write Scenario Data to Text File
 			if (fancy_choice_dialog(866,0) == 1) {
          last_file_printed = 0;
@@ -1374,7 +1374,7 @@ void handle_help_menu(int item_hit)
 				 start_full_town_data_dump();
 				 }
 			break;
-			
+
 		case 8: // Repeat Printing of Last File
          if (last_file_printed == 0) {
 				 set_string("Repeat Printing of Last File:","Scenario Data.txt");
@@ -1436,7 +1436,7 @@ void handle_help_menu(int item_hit)
 				 start_currentout_data_dump();
 				 }
 			break;
-			
+
 		case 11: // Write Scenario Text To Text File
 			if (fancy_choice_dialog(889,0) == 1) {
                  last_file_printed = 14;
@@ -1452,7 +1452,7 @@ void handle_help_menu(int item_hit)
 		case 14: // Shortcut keys 2 screen
 				fancy_choice_dialog(988,0);
 			break;
-			
+
 		case 15: // Shortcut keys 3 screen
 				fancy_choice_dialog(989,0);
 			break;
@@ -1465,25 +1465,25 @@ void handle_help_menu(int item_hit)
 			break;
 		case 18: //   Write Scenario Terrain Data to Text File
 			if (fancy_choice_dialog(847,0) == 1) {
-               last_file_printed = 18;                                           
+               last_file_printed = 18;
 				terrain_type_data_dump();
 			}
 			break;
 		case 19: //   Write Scenario Creature Data to Text File
 			if (fancy_choice_dialog(848,0) == 1) {
-               last_file_printed = 19;                                           
+               last_file_printed = 19;
 				creature_type_data_dump();
 			}
-			break;                        				
+			break;
 		case 20: //   Write Scenario Item Data to Text File
 			if (fancy_choice_dialog(849,0) == 1) {
-               last_file_printed = 20;                                           
+               last_file_printed = 20;
 				item_data_dump();
 			}
-			break;	
-			
+			break;
+
 		}
-	draw_main_screen();		
+	draw_main_screen();
 }
 
 void check_colors()
@@ -1514,7 +1514,7 @@ void max_window(HWND window)
 */
 
 short check_cd_event(HWND hwnd,UINT message,WPARAM wparam,LPARAM lparam)
-{	
+{
 	POINT press;
 	short wind_hit = -1,item_hit = -1;
 	short low;
@@ -1612,7 +1612,6 @@ void check_game_done()
 	if (force_game_end == TRUE) {
 		lose_graphics();
 		game_killed_once = TRUE;
-		give_error("Port Town Script was not finished 1614.","",0);
    		PostQuitMessage(0);
 		}
 }

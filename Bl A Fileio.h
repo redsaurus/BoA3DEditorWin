@@ -1,6 +1,7 @@
 // Bl A Fileio.h for the scenario Shadow of the Stranger
 // This file contains information specific to the scenario being ported.
 // The intention is to eventually replace this header file with an external file that is loaded at run-time and can be edited by the user.
+// Removing WriteAllow for town 26 stopped the crash, problem lies in this town.
 
 #pragma once
 
