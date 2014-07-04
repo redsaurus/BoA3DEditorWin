@@ -2074,7 +2074,7 @@ Boolean create_basic_scenario(char *scen_name_short,char *scen_name_with_ext,cha
 	slash[0] = 92;
 
 	char new_directory[_MAX_PATH];
-	sprintf(new_directory,"%s%s%s",/*store_editor_path*/store_scenarios_path,slash,scen_name_short);
+	sprintf(new_directory,"%s%s%s",/*store_editor_path*/store_scenarios_path,slash,scen_full_name);
 	error = (short)CreateDirectory(new_directory,NULL);
 
 	sprintf((char *) scen_script_name,"%s.txt",scen_name_short);
