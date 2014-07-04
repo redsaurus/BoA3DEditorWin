@@ -327,7 +327,8 @@ int get_right_sbar_max(){
 	
 	//The control maximum should be equal to the total number of icon rows minus the 
 	//number of full rows which are visible at any given time
-	int max=iconRows-((terrain_buttons_rect.bottom-terrain_buttons_rect.top)/(iconHeight+1)); //add 1 to icon height for spacing
+	int max=iconRows-((terrain_buttons_rect.bottom-terrain_buttons_rect.top-3*RIGHT_BUTTONS_Y_SHIFT)/(iconHeight+1)); //add 1 to icon height for spacing
+	//TODO: make this work properly, not just hacked together!
 	//naturally this should be limited to be non-negative, 
 	//if there's extra space the scrollbar should just do nothing
 	if(max<0)
